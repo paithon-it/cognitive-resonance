@@ -93,6 +93,32 @@ def read_rephase(path) -> dict:
     return d
 
 
+REPHASE_BIS_KEYS = ("y", "image", "a", "z_H", "z_M")
+REPHASE_BIS_MACHINES = ("M0", "Mpair", "Mframe")
+
+
+def read_rephase_bis(path) -> dict:
+    """rephase_bis/{task}_s{seed}.npz (§ 6 bis): z_M has one row per machine, named in `machines`."""
+    path = Path(path)
+    m = REPHASE_RE.match(path.name)
+    if not m:
+        raise ContractError(f"{path.name}: name does not match {{task}}_s{{seed}}.npz")
+    d = _load(path)
+    _need(d, REPHASE_BIS_KEYS + ("machines",) + tuple("val_" + k for k in REPHASE_BIS_KEYS), path)
+    names = [str(x) for x in d["machines"]]
+    if sorted(names) != sorted(REPHASE_BIS_MACHINES):
+        raise ContractError(f"{path.name}: machines must be {list(REPHASE_BIS_MACHINES)}, got {names}")
+    for prefix in ("", "val_"):
+        keys = tuple(prefix + k for k in REPHASE_BIS_KEYS)
+        if d[prefix + "z_M"].ndim != 2 or d[prefix + "z_M"].shape[0] != len(names):
+            raise ContractError(f"{path.name}: {prefix}z_M must be (number of machines, N)")
+        _same_length(d, keys, path, axis_of={prefix + "z_M": 1})
+        _binary(d[prefix + "y"], path)
+        _finite(d, keys, path)
+    d.update(task=m["task"], seed=int(m["seed"]), file=path.name, machine_names=names)
+    return d
+
+
 def read_people_fold(path) -> dict:
     """people/fold{f}_s{seed}.npz: logits (number of lambdas, N, 10) on the unseen half."""
     path = Path(path)

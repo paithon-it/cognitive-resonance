@@ -17,6 +17,7 @@ TASKS = ("cat_dog", "deer_horse", "automobile_truck", "airplane_ship", "bird_fro
 MUS = (0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0)
 LAMBDAS_REPHASE = (0.0, 0.3, 1.0, 3.0, 10.0)
 LAMBDAS_PEOPLE = (0.0, 1.0, 3.0, 10.0)
+MACHINES_BIS = ("M0", "Mpair", "Mframe")
 
 
 def _nets(gen, n_images, presentations, d, mu, signs, rho_img=0.6, scale=1.3):
@@ -87,6 +88,38 @@ def write_rephase(folder, tasks=TASKS, seeds=(0, 1), lambdas=LAMBDAS_REPHASE, n_
             np.savez(folder / f"{task}_s{sd}.npz", y=y, image=image, a=a, z_H=zh, z_H2=zh2, z_M=zm,
                      lambdas=np.array(lambdas), val_y=vy, val_image=vimage, val_a=va, val_z_H=vzh,
                      val_z_H2=vzh2, val_z_M=vzm)
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
+def _rephase_bis_cues(gen, n_images, presentations, d):
+    """H as in E2; M0 reads the image, Mpair also the frame against H, Mframe only the frame."""
+    y_img = (np.arange(n_images) >= n_images // 2).astype(int)
+    image = np.repeat(np.arange(n_images), presentations)
+    y = y_img[image]
+    s = 2.0 * y - 1.0
+    a = gen.normal(0.0, math.sqrt(2.0), image.size)
+    common = gen.standard_normal(n_images)
+    noise = lambda r: (r ** 0.5 * common + (1 - r) ** 0.5 * gen.standard_normal(n_images))[image]  # noqa: E731
+    zh = s * d / 2 + noise(0.6) + 0.4 * gen.standard_normal(image.size) + 0.8 * a
+    m0 = s * d / 2 + noise(0.6) + 0.4 * gen.standard_normal(image.size)
+    mpair = s * 0.9 * d / 2 + noise(0.4) + 0.4 * gen.standard_normal(image.size) - 0.7 * a
+    mframe = 0.6 * gen.standard_normal(image.size) - 0.8 * a
+    return y, image, a, zh, np.array([m0, mpair, mframe])
+
+
+def write_rephase_bis(folder, tasks=TASKS, seeds=(0, 1), n_images=2000, presentations=5, n_val=1000,
+                      seed=10) -> None:
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for ti, task in enumerate(tasks):
+        d = 1.6 + 0.25 * ti
+        for sd in seeds:
+            gen = np.random.default_rng([seed, ti, sd])
+            y, image, a, zh, zm = _rephase_bis_cues(gen, n_images, presentations, d)
+            vy, vimage, va, vzh, vzm = _rephase_bis_cues(gen, n_val, 1, d)
+            np.savez(folder / f"{task}_s{sd}.npz", y=y, image=image, a=a, z_H=zh, z_M=zm,
+                     machines=np.array(MACHINES_BIS), val_y=vy, val_image=vimage, val_a=va, val_z_H=vzh,
+                     val_z_M=vzm)
     (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
 
 

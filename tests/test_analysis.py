@@ -82,3 +82,47 @@ def test_people_end_to_end(tmp_path):
     r = json.loads(out.read_text())
     assert set(r["criteria"]) == {"H3a", "H3b"}
     assert r["turing_meter"]["commit"]
+
+
+def test_rephase_bis_criteria(tmp_path):
+    import rephase_bis
+    synthetic.write_rephase_bis(tmp_path, tasks=("cat_dog", "deer_horse", "bird_frog"), seeds=(0, 1),
+                                n_images=400, n_val=400)
+    units = [rephase_bis.unit((f, 60)) for f in sorted(tmp_path.glob("*.npz"))]
+    c = rephase_bis.criteria(units)
+    assert set(c) == {"B1", "B2", "B3", "B4", "B5"}
+    assert all(v["outcome"] in ("pass", "fail") for v in c.values())
+    u = units[0]
+    assert u["judges"]["H"]["slope_on_a"] > 0 > u["judges"]["Mframe"]["slope_on_a"]
+    assert u["differences"]["Mpair"]["phi_ci"] is not None
+    # the toy is built so that the frame-only machine is at chance and helps as 1/sin(phi) says
+    assert c["B1"]["mframe_contains_zero"] >= 4
+    assert c["B4"]["median_ratio_tuned_over_inv_sin_phi"] == pytest.approx(1.0, abs=0.1)
+    rows = rephase_bis.by_machine(units)
+    assert set(rows) == {"H", "M0", "Mpair", "Mframe"}
+
+
+def test_tu_app_nonneg_any_k():
+    import rephase_bis
+    from cognitive_resonance import model
+    for k, rho in ((-0.8, -0.95), (0.0, -0.5), (0.9, -0.3)):
+        grid = np.linspace(0, 50, 200001)
+        best = max(1.0, float(np.max(model.tu_signed(grid, k, rho))))
+        assert rephase_bis.tu_app_nonneg(k, rho) == pytest.approx(best, rel=1e-6)
+    assert rephase_bis.tu_app_nonneg(-0.5, 0.3) == 1.0
+
+
+def test_exploratory_null_positive_weight(tmp_path):
+    synthetic.write_rephase(tmp_path, tasks=("cat_dog",), seeds=(0,), n_images=400, n_val=400)
+    f = tmp_path / "cat_dog_s0.npz"
+    with np.load(f, allow_pickle=False) as z:
+        arrays = {k: z[k] for k in z.files}
+    for key in ("z_M", "val_z_M"):                     # machines with lambda > 0 reversed, as in the real E2
+        arrays[key][1:] = -arrays[key][1:]
+    np.savez(f, **arrays)
+    units = [rephase.unit((f, 40, False))]
+    e = rephase.exploratory_null(units, tmp_path, workers=1)
+    assert e["exploratory"] and e["pairs"] == 4
+    assert e["crossing_at_positive_weight"] == 4
+    assert e["median_ratio_w0_over_predicted"] == pytest.approx(1.0, abs=0.1)
+    assert e["max_abs_difference_tu_app_reversed"] < 1e-9

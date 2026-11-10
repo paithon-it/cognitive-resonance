@@ -56,3 +56,17 @@ def test_people_readers(tmp_path):
     np.savez(bad, image=np.arange(3), y=np.arange(3), logits=np.zeros((2, 3, 9)), lambdas=np.zeros(2))
     with pytest.raises(raw.ContractError):
         raw.read_people_fold(bad)
+
+
+def test_rephase_bis_reader(tmp_path):
+    synthetic.write_rephase_bis(tmp_path, tasks=("cat_dog",), seeds=(0,), n_images=40, n_val=20)
+    d = raw.read_rephase_bis(tmp_path / "cat_dog_s0.npz")
+    assert d["machine_names"] == ["M0", "Mpair", "Mframe"]
+    assert d["z_M"].shape == (3, 200) and d["val_z_M"].shape == (3, 20)
+    bad = tmp_path / "x_s0.npz"
+    with np.load(tmp_path / "cat_dog_s0.npz", allow_pickle=False) as f:
+        arrays = {k: f[k] for k in f.files}
+    arrays["machines"] = np.array(["M0", "Mpair", "Mother"])
+    np.savez(bad, **arrays)
+    with pytest.raises(raw.ContractError, match="machines"):
+        raw.read_rephase_bis(bad)
