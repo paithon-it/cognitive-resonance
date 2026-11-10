@@ -4,6 +4,7 @@
 #   bash gpu/run.sh pilot   [WORKERS]   # timing, frame probe, epochs x learning-rate grid at mu = 0, choice
 #   bash gpu/run.sh bench   [WORKERS] [SEEDS] [TASKS]    # E1
 #   bash gpu/run.sh rephase [WORKERS] [SEEDS] [TASKS]    # E2
+#   bash gpu/run.sh rephase_bis [WORKERS] [SEEDS] [TASKS]   # E2 bis (exploratory, protocol section 6 bis)
 #   bash gpu/run.sh people                               # E3: two base machines, then the fine-tuning
 # Results go to $RND/out/<stage>/; the configuration chosen by the pilot is $RND/out/pilot/config.json.
 set -uo pipefail
@@ -23,7 +24,7 @@ case "$STAGE" in
     done
     wait "${pids[@]}"
     python gpu/pilot.py choose "$OUT/pilot" > "$OUT/logs/pilot-choose.log" 2>&1 ;;
-  bench|rephase)
+  bench|rephase|rephase_bis)
     for w in $(seq 0 $((W - 1))); do
       python "gpu/$STAGE.py" "$OUT/$STAGE" "$CFG" "$w" "$W" ${3:+"$3"} ${4:+"$4"} > "$OUT/logs/$STAGE-$w.log" 2>&1 & pids+=($!)
     done

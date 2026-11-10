@@ -1,6 +1,6 @@
 """Writes manifest.json for one experiment folder from the per-unit records (protocol section 11).
 
-    python gpu/manifest.py OUT_ROOT bench|rephase|people [DEVIATION ...]
+    python gpu/manifest.py OUT_ROOT bench|rephase|rephase_bis|people [DEVIATION ...]
 
 OUT_ROOT is the folder with pilot/ and the experiment folders; the manifest lands in OUT_ROOT/<experiment>/.
 """
@@ -127,6 +127,50 @@ def rephase(root: Path, deviations) -> dict:
     return m
 
 
+def rephase_bis(root: Path, deviations) -> dict:
+    folder = root / "rephase_bis"
+    units = load_units(folder)
+    cfg = json.loads((root / "pilot" / "config.json").read_text())
+    rows = [u for k, u in units.items() if not k.startswith("_")]
+    acc = {}
+    for u in rows:
+        for role, info in u["nets"].items():
+            acc.setdefault(f"{u['task']}|{role}", []).append({"seed": u["seed"], **{k: v for k, v in info.items()
+                                                                                  if "acc" in k}})
+    m = common_block(root, units)
+    m.update({
+        "experiment": "E2 bis, the partner trained for the pair (protocol section 6 bis, exploratory)",
+        "files": sorted(p.name for p in folder.glob("*.npz")),
+        "file_pattern": "{task}_s{seed}.npz",
+        "keys": {"y": "0/1", "image": "index in the CIFAR-10 test set", "a": "frame value shown, a ~ N(0, 2)",
+                 "z_H": "person H: plus network, mu = 1, half A (same seeds as E2)",
+                 "z_M": "log-odds of each machine on its own (not the sum), shape (3, N), rows in the order of "
+                        "`machines`", "machines": "['M0', 'Mpair', 'Mframe']",
+                 "val_*": "the same on validation (val_image: CIFAR-10 training index)"},
+        "layout": f"each image appears {PRESENTATIONS} times in a row (np.repeat), with independent frames",
+        "halves": "as E2", "machine_training_frame": "a ~ N(0, 2), independent of the class",
+        "machines": {
+            "M0": "cross-entropy on half B, as M_0 of E2 (same seed)",
+            "Mpair": "binary cross-entropy of the summed log-odds (out1 - out0) + z_H, z_H from frozen H (eval "
+                     "mode, bf16) on the same augmented and framed presentation, no gradient, weight one, no "
+                     "standardisation",
+            "Mframe": "as Mpair, but the machine sees the framed image with its interior set to zero (normalised "
+                      "units), in training and in test; H sees the whole image"},
+        "frame": FRAME, "delta": cfg["delta"],
+        "torch_seeds": "as E2: crc32('rephase/<task>/s<seed>/<H|M>') & 0x7fffffff; the three machines share seed, "
+                       "initialisation, batch order, crops, flips and frames. With cudnn autotuning the runs are "
+                       "not bitwise reproducible: H and M0 are re-trained, close to but not identical with E2's",
+        "test_and_validation_frames": "the same eps as E2: numpy default_rng(crc32('rephase/<task>/s<seed>/"
+                                      "<test|val>-a')), a = sqrt(2) * eps",
+        "hyperparameters": {"network": NET, "optimiser": OPTIM, "augmentation": AUG, "epochs": cfg["epochs"],
+                            "max_lr": cfg["lr"], "batch_size": cfg["batch_size"], "train_images": 4500},
+        "control_accuracy": acc,
+        "unit_seconds": {k: u["seconds"] for k, u in units.items() if not k.startswith("_")},
+        "deviations": deviations,
+    })
+    return m
+
+
 def people(root: Path, deviations) -> dict:
     folder = root / "people"
     units = load_units(folder)
@@ -164,7 +208,7 @@ def main() -> None:
     dev_file = root / "deviations.json"           # optional: {"bench": ["..."], "rephase": [...], "people": [...]}
     if dev_file.exists():
         deviations += json.loads(dev_file.read_text()).get(exp, [])
-    m = {"bench": bench, "rephase": rephase, "people": people}[exp](root, deviations)
+    m = {"bench": bench, "rephase": rephase, "rephase_bis": rephase_bis, "people": people}[exp](root, deviations)
     (root / exp / "manifest.json").write_text(json.dumps(m, indent=1))
     print("manifest", exp, len(m["files"]), "files")
 

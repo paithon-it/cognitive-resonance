@@ -18,6 +18,7 @@ GPU: images normalised once, augmentation and frame applied batch by batch, no D
 | `pilot.py` | Throughput, frame probe, epochs and learning rate chosen at `mu = 0` on validation |
 | `bench.py` | E1: "plus", "minus" and "plus2" networks for every task, `mu` and seed |
 | `rephase.py` | E2: person H, control H', machines `M_lambda` trained against H's cue |
+| `rephase_bis.py` | E2 bis (section 6 bis, exploratory): `M0`, `Mpair` trained on the summed cue `z_H + z_M`, `Mframe` that sees only the frame |
 | `people.py` | E3: ResNet-18 base machines, fine-tuning against the CIFAR-10H cue on held-out halves |
 | `manifest.py` | `manifest.json` of each folder from the per-unit records |
 | `run.sh`, `queue.sh` | One stage; the whole sequence E1, E2, E3 |
@@ -35,6 +36,7 @@ rsync -a -e "$SSH" gpu "$GPU:rnd/work/"
 $SSH "$GPU" 'cd rnd/work && bash gpu/setup.sh && bash gpu/fetch_data.sh'
 $SSH "$GPU" 'cd rnd/work && bash gpu/run.sh pilot 3'          # writes rnd/out/pilot/config.json
 $SSH "$GPU" 'cd rnd/work && BENCH_SEEDS=0,1 setsid -f bash -c "bash gpu/queue.sh > ~/rnd/queue.log 2>&1"'
+$SSH "$GPU" 'cd rnd/work && bash gpu/run.sh rephase_bis && bash -c ". gpu/env.sh; . \$RND/venv/bin/activate; python gpu/manifest.py \$RND/out rephase_bis"'
 rsync -a -e "$SSH" --include '*/' --include '*.npz' --include 'manifest.json' --exclude '*' \
       "$GPU:rnd/out/bench/" results/raw/bench/       # the same for rephase/ and people/ (skip people/ckpt)
 $SSH "$GPU" 'rm -rf ~/rnd'                            # nothing is left on the machine
@@ -61,6 +63,11 @@ An optional `rnd/out/deviations.json` (`{"bench": ["..."], ...}`) is copied into
 - **E2 penalty.** Pearson correlation in the batch of the two cues towards the true class, after removing
   the class means of the batch; H frozen in eval mode on the same augmented, framed batch; machines'
   training frame `a ~ N(0, 2)`.
+- **E2 bis.** `Mpair` minimises the binary cross-entropy of `(out1 - out0) + z_H`, with `z_H` from the frozen H on
+  the same presentation, weight one and no standardisation; `Mframe` sees the framed image with its interior
+  set to zero, in training and in test. Same seeds as E2, so H and `M0` are re-trained, not reloaded: with
+  cudnn autotuning they come out close to E2's but not bitwise identical. `pilot/config.json` must hold the
+  pilot's values (30 epochs, peak learning rate 0.1, batch 256, `delta = 1`).
 - **E3.** Base ResNet-18: 40 epochs, peak learning rate 0.2, batch 256. Fine-tuning on one half of the test
   set: 8 epochs, learning rate 0.01 with cosine decay, batch 256, crop and flip; machine cue = true logit
   minus logsumexp of the others, people cue = `logit((h + 0.5) / (n + 1))`, class means removed in the batch.

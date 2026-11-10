@@ -161,6 +161,11 @@ def border_mask() -> torch.Tensor:
     return _BORDER
 
 
+def frame_only(x: torch.Tensor) -> torch.Tensor:
+    """The image with its interior set to zero (normalised units): only the frame is left."""
+    return x * border_mask()
+
+
 def apply_frame(x: torch.Tensor, a: torch.Tensor, delta: float) -> torch.Tensor:
     """The spurious cue: the outer 2-pixel border of every channel is set to a * delta (normalised units, no clipping)."""
     m = border_mask()
@@ -179,12 +184,13 @@ def batch_corr(c_m: torch.Tensor, c_h: torch.Tensor, y: torch.Tensor, n_classes:
 
 
 def train(model, X, Y, *, epochs, lr, bs, seed, frame=None, delta=1.0, extra=None, wd=5e-4, schedule="onecycle",
-          augmentation=True):
+          augmentation=True, loss_fn=None, view=None):
     """SGD with Nesterov momentum and a one-cycle schedule, as in silicon.py, mixed precision bf16.
 
     frame(y, gen) -> a or None draws the frame of each training image; extra(x, y, logits, idx) -> scalar adds a term
-    to the loss (idx are the positions of the batch in X). All randomness (order, crops, flips, frames) comes from
-    one generator seeded with `seed`. Returns the mean of the extra term over the last epoch, if any.
+    to the loss (idx are the positions of the batch in X); loss_fn(x, y, logits, idx) replaces the cross-entropy;
+    view(x) is what the model sees of the framed batch x (default: all of it). All randomness (order, crops, flips,
+    frames) comes from one generator seeded with `seed`. Returns the mean of the extra term over the last epoch.
     """
     gen = torch.Generator(device=DEV).manual_seed(seed)
     opt = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=wd, nesterov=True)
@@ -205,8 +211,8 @@ def train(model, X, Y, *, epochs, lr, bs, seed, frame=None, delta=1.0, extra=Non
                 x = apply_frame(x, frame(y, gen), delta)
             x = x.contiguous(memory_format=torch.channels_last)
             with torch.autocast("cuda", dtype=torch.bfloat16):
-                out = model(x)
-                loss = F.cross_entropy(out, y)
+                out = model(view(x) if view is not None else x)
+                loss = F.cross_entropy(out, y) if loss_fn is None else loss_fn(x, y, out, b)
             if extra is not None:
                 term = extra(x, y, out, b)
                 loss = loss + term
@@ -220,7 +226,7 @@ def train(model, X, Y, *, epochs, lr, bs, seed, frame=None, delta=1.0, extra=Non
 
 
 @torch.no_grad()
-def logits(model, X, a=None, delta=1.0, bs=2000) -> torch.Tensor:
+def logits(model, X, a=None, delta=1.0, bs=2000, view=None) -> torch.Tensor:
     """Logits in eval mode and full precision (TF32 convolutions), optionally with the frame a * delta."""
     model.eval()
     out = []
@@ -228,6 +234,8 @@ def logits(model, X, a=None, delta=1.0, bs=2000) -> torch.Tensor:
         x = X[k:k + bs]
         if a is not None:
             x = apply_frame(x, a[k:k + bs], delta)
+        if view is not None:
+            x = view(x)
         out.append(model(x.contiguous(memory_format=torch.channels_last)).float())
     return torch.cat(out)
 

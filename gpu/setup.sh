@@ -8,5 +8,5 @@ mkdir -p "$RND"
 python3 -m venv "$RND/venv"
 . "$RND/venv/bin/activate"
 pip install -q --no-cache-dir --upgrade pip
-pip install -q --no-cache-dir torch torchvision numpy
+pip install -q --no-cache-dir "torch==${TORCH_VERSION:-2.15.0}" "torchvision==${TORCHVISION_VERSION:-0.29.2}" numpy
 python -c "import torch, torchvision; print('torch', torch.__version__, 'torchvision', torchvision.__version__, 'cuda', torch.version.cuda, torch.cuda.is_available())"

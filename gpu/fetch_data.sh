@@ -26,7 +26,7 @@ if [ ! -d cifar-10-batches-py ]; then
   echo "$MD5  cifar-10-python.tar.gz" | md5sum -c -
   tar xzf cifar-10-python.tar.gz
 fi
-if [ ! -f cifar10h-counts.npy ]; then
+if [ -z "${SKIP_CIFAR10H:-}" ] && [ ! -f cifar10h-counts.npy ]; then   # only E3 needs it
   curl -sfL --retry 5 -o cifar10h-counts.npy \
     https://raw.githubusercontent.com/jcpeterson/cifar-10h/master/data/cifar10h-counts.npy
 fi

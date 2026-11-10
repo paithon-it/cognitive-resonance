@@ -92,6 +92,31 @@ def rephase(raw: Path):
               " ".join(f"{u[k][0]:.3f}" for u in out.values()))
 
 
+def rephase_bis(raw: Path):
+    files = sorted((raw / "rephase_bis").glob("*.npz"))
+    if not files:
+        return
+    out = {}
+    for p in files:
+        d = np.load(p)
+        y, vy, a = d["y"], d["val_y"], d["a"]
+        sdH = within_sd(d["val_z_H"], vy)
+        zH = d["z_H"] / sdH
+        rec = {"H": (acc(zH, y), slope_on_a(zH, a, y), 1.0, np.nan, np.nan)}
+        for i, k in enumerate(d["machines"]):
+            zm_raw = d["z_M"][i]
+            zm = zm_raw / within_sd(d["val_z_M"][i], vy)
+            rec[str(k)] = (acc(zm, y), slope_on_a(zm, a, y), within_corr(d["z_H"], zm_raw, y),
+                           acc(d["z_H"] + zm_raw, y), acc(zH + zm, y))
+        out[p.stem] = rec
+    print("\nE2 bis: median over units (task x seed): accuracy alone, within-class slope of the standardised cue "
+          "on a, raw within-class r with H, accuracy of z_H + z_M (raw and standardised, weight one)")
+    print(f"{'judge':<7} {'acc':>7} {'slope':>8} {'r(H,.)':>8} {'sum raw':>8} {'sum std':>8}")
+    for k in next(iter(out.values())):
+        v = np.array([u[k] for u in out.values()], dtype=float)
+        print(f"{k:<7} " + " ".join(f"{np.median(v[:, j]):+8.3f}" for j in range(5)))
+
+
 def people(raw: Path, counts_path):
     folder = raw / "people"
     if not list(folder.glob("*.npz")):
@@ -129,6 +154,8 @@ def main() -> None:
         bench(raw)
     if (raw / "rephase").exists():
         rephase(raw)
+    if (raw / "rephase_bis").exists():
+        rephase_bis(raw)
     if (raw / "people").exists():
         people(raw, counts)
 
