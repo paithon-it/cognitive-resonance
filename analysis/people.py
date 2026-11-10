@@ -192,7 +192,10 @@ def main():
                 r = measure.compare_votes(h[covered], n[covered], ok, m=10, repetitions=args.reps)
                 if "ideal_phi" in r:
                     r["tu_app"] = r["ideal_phi"] / r["dh"]
+                easy, hard = h[covered] >= 0.98, h[covered] < 0.8
                 rows[f"{lam:g}"] = {"accuracy": float(ok.mean()), "angle": r,
+                                    "accuracy_where_people_right": float(ok[easy].mean()),
+                                    "accuracy_where_people_split": float(ok[hard].mean()),
                                     "group": group_turing(sdt, counts[covered], n[covered], oof[i][covered],
                                                           y[covered], args.reps)}
             rec["lambdas"] = rows
@@ -225,7 +228,9 @@ def main():
                             "tu_app": med([r["angle"].get("tu_app") for r in rs]),
                             "k": med([r["angle"].get("k") for r in rs]),
                             "turing_group": med([r["group"]["turing_group"] for r in rs]),
-                            "acc_combined": med([r["group"]["acc_combined"] for r in rs])}
+                            "acc_combined": med([r["group"]["acc_combined"] for r in rs]),
+                            "accuracy_where_people_right": med([r["accuracy_where_people_right"] for r in rs]),
+                            "accuracy_where_people_split": med([r["accuracy_where_people_split"] for r in rs])}
     write_json(args.out, {
         "experiment": "E3", "protocol": "PROTOCOL.md § 7 (v1.2)", "raw": Path(args.raw).name,
         "manifest": raw.read_manifest(args.raw),
@@ -233,6 +238,8 @@ def main():
                          "function": "experiments/angle-between-errors/angle/measure.py: compare_votes, m = 10"},
         "cifar10h": {"file": Path(args.counts).name, "license": "CC BY-NC-SA 4.0, not redistributed",
                      **people},
+        "descriptive": "accuracy_where_people_right: the machine's accuracy on the images where at least 98% of the "
+                       "votes are right; accuracy_where_people_split: where fewer than 80% are (not in the protocol)",
         "combiner": "conditional logit on logit((c + 0.5)/(n + 1)) of each class's votes and the machine's log "
                     "probability of it; 5-fold cross-validation over images; group alone = plurality vote",
         "criteria": {"H3a": h3a, "H3b": h3b}, "by_lambda": summary, "seeds": per_seed,
