@@ -8,6 +8,7 @@ machines M_lambda. Writes all the measures and the outcome of H2a-H2c.
 from __future__ import annotations
 
 import argparse
+import json
 import math
 from pathlib import Path
 
@@ -15,7 +16,7 @@ import numpy as np
 
 from common import ROOT, Timer, environment, med, run_pool, verdict, write_json
 from cognitive_resonance import estimators as est
-from cognitive_resonance import raw
+from cognitive_resonance import model, raw
 
 
 def unit(job):
@@ -132,6 +133,65 @@ def by_lambda(units) -> dict:
     return rows
 
 
+# --- exploratory, not in the protocol: the null at positive weight of the reversed machines ----------
+
+def _null_positive(job):
+    """For the machines below chance with their interval, the signed curve of (H, M) at w > 0."""
+    path, cases = job
+    d = raw.read_rephase(path)
+    y = d["y"]
+    zh = est.standardize(d["z_H"], y, d["val_z_H"], d["val_y"])
+    half = est.split_halves(d["image"], y)
+    rows = []
+    for i, lam in cases:
+        zm = est.standardize(d["z_M"][i], y, d["val_z_M"][i], d["val_y"])
+        dh, dm = float(est.d_a(zh, y)), float(est.d_a(zm, y))
+        k = dm / dh
+        rho = float(est.pearson_within(zh, zm, y))
+        t = est.signed_curve(zh, zm, y)
+        w0 = est.null_from_curve(model.GRID_SIGNED, t, side=+1)
+        depth = est.null_depth_split(zh, zm, y, half)
+        # the same pair with the machine's cue reversed: measured again, not assumed
+        k_rev = float(est.d_a(-zm, y)) / dh
+        rho_rev = float(est.pearson_within(zh, -zm, y))
+        rows.append({"task": d["task"], "seed": d["seed"], "lambda": lam, "k": k, "rho": rho,
+                     "phi": float(model.angle_deg(rho)), "w0_positive": w0,
+                     "w0_predicted": 1.0 / abs(k), "w0_ratio": w0 * abs(k) if w0 is not None else None,
+                     "abs_tu_at_predicted_null": depth["abs_tu_at_null"],
+                     "k_reversed": k_rev, "rho_reversed": rho_rev,
+                     "tu_app": model.tu_peak_signed(k, rho), "tu_app_reversed": model.tu_peak_signed(k_rev, rho_rev),
+                     "max_abs_tu_measured": float(np.max(np.abs(t)))})
+    return rows
+
+
+def exploratory_null(units, raw_dir, workers) -> dict:
+    files = {Path(p).name: p for p in raw.list_units(raw_dir, raw.REPHASE_RE)}
+    jobs = []
+    for u in units:
+        cases = [(i, lam) for i, lam in enumerate(u["lambdas"]) if lam > 0
+                 and u["judges"][f"M{i}"]["d_a"] < 0 and u["judges"][f"M{i}"]["d_a_ci"][1] < 0]
+        if cases:
+            jobs.append((files[u["file"]], cases))
+    rows = [r for rs in run_pool(_null_positive, jobs, workers) for r in rs]
+    crossed = [r for r in rows if r["w0_positive"] is not None]
+    gap = [abs(r["tu_app"] - r["tu_app_reversed"]) for r in rows]
+    return {"exploratory": True,
+            "note": "Not in the protocol, added after seeing the data. Machines with lambda > 0 whose d_a is negative "
+                    "with its interval below zero: the signed turing of (H, M_lambda) at positive weights, where § 8 bis "
+                    "puts the null at w0 = 1/|k|. Interpolation as in E5; |Tu| at the predicted null with k from one "
+                    "half and the turing read on the other, as in H5b. The pair with the machine's cue reversed, "
+                    "(-k, -rho), is measured again: its apparent turing must be the same.",
+            "pairs": len(rows), "crossing_at_positive_weight": len(crossed),
+            "median_ratio_w0_over_predicted": med([r["w0_ratio"] for r in crossed]),
+            "ratio_quartiles": [float(np.percentile([r["w0_ratio"] for r in crossed], q)) for q in (25, 75)]
+            if crossed else None,
+            "median_abs_tu_at_predicted_null": med([r["abs_tu_at_predicted_null"] for r in rows]),
+            "median_tu_app": med([r["tu_app"] for r in rows]),
+            "median_tu_app_reversed": med([r["tu_app_reversed"] for r in rows]),
+            "max_abs_difference_tu_app_reversed": float(max(gap)) if gap else None,
+            "pairs_detail": rows}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--raw", default=str(ROOT / "results" / "raw" / "rephase"))
@@ -139,8 +199,17 @@ def main():
     ap.add_argument("--reps", type=int, default=1000)
     ap.add_argument("--fixed-weight", action="store_true")
     ap.add_argument("--workers", type=int, default=3)
+    ap.add_argument("--only-exploratory", action="store_true",
+                    help="add the exploratory block to an existing results file, leaving the rest as it is")
     args = ap.parse_args()
     timer = Timer()
+    if args.only_exploratory:
+        out = json.loads(Path(args.out).read_text())
+        out["exploratory_null_positive_weight"] = exploratory_null(out["units"], args.raw, args.workers)
+        write_json(args.out, out)
+        e = out["exploratory_null_positive_weight"]
+        print("exploratory:", e["pairs"], "pairs,", e["crossing_at_positive_weight"], "cross at w > 0")
+        return
     files = raw.list_units(args.raw, raw.REPHASE_RE)
     if not files:
         raise SystemExit(f"no rephase files in {args.raw}")
@@ -152,6 +221,7 @@ def main():
                         "bootstrap_weight": "fixed at the whole-data choice" if args.fixed_weight
                         else "chosen again in each resample on 13 weights"},
            "criteria": criteria(units), "by_lambda": by_lambda(units), "units": units,
+           "exploratory_null_positive_weight": exploratory_null(units, args.raw, args.workers),
            "minutes": timer.minutes(), "environment": environment()}
     write_json(args.out, out)
     for h, v in out["criteria"].items():
