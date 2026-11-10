@@ -125,6 +125,7 @@ def by_lambda(units) -> dict:
             "d_m": med([u["judges"][m]["d_a"] for u in units]), "d_h": med([u["judges"]["H"]["d_a"] for u in units]),
             "tu_tuned": med([u["pairs"][m]["tu_tuned"] for u in units]),
             "tu_app": med([u["pairs"][m]["tu_app"] for u in units]),
+            "tu_app_nonneg": med([model.tu_app_nonneg(u["pairs"][m]["k"], u["pairs"][m]["rho"]) for u in units]),
             "d_pair_tuned": med([u["pairs"][m]["d_pair_tuned"] for u in units]),
             "slope_m_on_a": med([u["judges"][m]["slope_on_a"] for u in units]),
             "slope_h_on_a": med([u["judges"]["H"]["slope_on_a"] for u in units])}
@@ -200,11 +201,13 @@ def main():
     ap.add_argument("--fixed-weight", action="store_true")
     ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--only-exploratory", action="store_true",
-                    help="add the exploratory block to an existing results file, leaving the rest as it is")
+                    help="add the exploratory block to an existing results file and refresh its medians, "
+                         "leaving the measures as they are")
     args = ap.parse_args()
     timer = Timer()
     if args.only_exploratory:
         out = json.loads(Path(args.out).read_text())
+        out["by_lambda"] = by_lambda(out["units"])
         out["exploratory_null_positive_weight"] = exploratory_null(out["units"], args.raw, args.workers)
         write_json(args.out, out)
         e = out["exploratory_null_positive_weight"]

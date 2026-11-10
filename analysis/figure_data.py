@@ -17,7 +17,6 @@ from cognitive_resonance import model
 
 PHIS = (30, 60, 90, 120, 150)
 FINE = np.exp(np.linspace(math.log(1 / 64), math.log(64), 241))
-CURVE_MUS = (0.0, 0.5, 1.0, 2.0)
 
 
 def theory() -> dict:
@@ -38,11 +37,21 @@ def load(path):
     return json.loads(p.read_text()) if p.is_file() else None
 
 
+def _r(values, nd=5):
+    return [None if v is None else round(float(v), nd) for v in values]
+
+
 def bench(e1) -> dict | None:
     if e1 is None:
         return None
     mus = sorted({u["mu"] for u in e1["units"]})
-    pick = [m for m in CURVE_MUS if m in mus] or mus[:: max(1, len(mus) // 4)]
+    pick = mus
+    by_unit = [{"task": u["task"], "seed": u["seed"], "mu": u["mu"],
+                **{kind: {"phi": u["pairs"][kind]["phi"], "k": u["pairs"][kind]["k"],
+                          "tu_tuned": u["pairs"][kind]["tu_tuned"], "tu_app": u["pairs"][kind]["tu_app"],
+                          "measured": _r(u["pairs"][kind]["curve_measured"]),
+                          "predicted": _r(u["pairs"][kind]["curve_predicted"])} for kind in ("opposite", "same")}}
+               for u in e1["units"]]
     curves = {}
     for kind in ("opposite", "same"):
         curves[kind] = {}
@@ -56,7 +65,10 @@ def bench(e1) -> dict | None:
                                       "measured_q75": np.nanpercentile(meas, 75, 0).tolist(),
                                       "n_pairs": len(us)}
     return {"by_mu": e1["by_mu"], "grid": [float(x) for x in model.GRID], "curves": curves,
-            "note": "medians over tasks and seeds; phi from Pearson (primary) and tetrachoric (bridge)"}
+            "curves_by_unit": by_unit,
+            "note": "by_mu and curves: medians over tasks and seeds (two seeds); tu_app is the prediction from the "
+                    "measured k and phi; curves_by_unit: Tu(w) measured and predicted for every task, seed and mu, "
+                    "on the 49 weights of `grid`; phi from Pearson (primary) and tetrachoric (bridge)"}
 
 
 def null_examples(e5) -> dict | None:
@@ -96,18 +108,25 @@ def main():
     ap.add_argument("--out", default=str(ROOT / "results" / "figure_data.json"))
     args = ap.parse_args()
     r = Path(args.results)
-    e1, e2, e3, e4, e5 = (load(r / f) for f in ("e1_bench.json", "e2_rephase.json", "e3_people.json",
-                                                "e4_reread.json", "e5_null.json"))
+    e1, e2, e3, e4, e5, e2bis = (load(r / f) for f in ("e1_bench.json", "e2_rephase.json", "e3_people.json",
+                                                       "e4_reread.json", "e5_null.json", "e2bis_rephase.json"))
     out = {"a_theory": theory(), "b_bench": bench(e1),
-           "c_rephase": e2["by_lambda"] if e2 else None,
+           "c_rephase": ({"by_lambda": e2["by_lambda"],
+                          "exploratory_null_positive_weight": {k: v for k, v in
+                                                               e2.get("exploratory_null_positive_weight", {}).items()
+                                                               if k != "pairs_detail"} or None,
+                          "e2bis_by_machine": e2bis["by_machine"] if e2bis else None} if e2 else None),
            "d_people": ({"by_lambda": e3["by_lambda"],
                          "base": {s: {"accuracy": v["base"]["accuracy"], "phi": v["base"]["angle"].get("phi"),
                                       "phi_ci": v["base"]["angle"].get("phi_ci"),
+                                      "tu_app": (v["base"]["angle"]["ideal_phi"] / v["base"]["angle"]["dh"]
+                                                 if v["base"]["angle"].get("ideal_phi") else None),
                                       "turing_group": v["base"]["group"]["turing_group"]}
                                   for s, v in e3["seeds"].items() if "base" in v}} if e3 else None),
            "e_reread": e4["pairs"] if e4 else None,
            "f_null": null_examples(e5),
-           "missing": [n for n, x in (("e1", e1), ("e2", e2), ("e3", e3), ("e4", e4), ("e5", e5)) if x is None]}
+           "missing": [n for n, x in (("e1", e1), ("e2", e2), ("e3", e3), ("e4", e4), ("e5", e5),
+                                      ("e2bis", e2bis)) if x is None]}
     write_json(args.out, out)
     print("missing:", out["missing"])
 

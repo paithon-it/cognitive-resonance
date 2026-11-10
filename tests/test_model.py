@@ -143,3 +143,11 @@ def test_null_width_k1_closed_form_and_grows_with_angle():
 def test_open_null_when_k_small():
     near, far = model.null_edges(0.4, 0.1)
     assert math.isfinite(near) and far == -math.inf
+
+
+@pytest.mark.parametrize("k", [-0.8, -0.2, 0.0, 0.5, 1.3])
+@pytest.mark.parametrize("rho", [-0.95, -0.4, 0.3])
+def test_tu_app_nonneg_is_the_maximum_over_positive_weights(k, rho):
+    grid = np.linspace(0, 200, 400001)
+    best = max(1.0, float(np.max(model.tu_signed(grid, k, rho))))
+    assert model.tu_app_nonneg(k, rho) == pytest.approx(best, rel=1e-5)

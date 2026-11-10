@@ -24,15 +24,8 @@ MACHINES = raw.REPHASE_BIS_MACHINES
 
 
 def tu_app_nonneg(k, rho) -> float | None:
-    """Maximum of Tu(w) over w >= 0 for k of any sign: the Fano peak when it falls at w > 0."""
-    if not abs(rho) < 1:
-        return None
-    if k > 0:
-        return model.tu_app(k, rho)
-    den = 1.0 - rho * k
-    if den > 0 and (k - rho) / den > 0:
-        return model.tu_peak_signed(k, rho)
-    return 1.0
+    """Maximum of Tu(w) over w >= 0 for k of any sign (model.tu_app_nonneg)."""
+    return model.tu_app_nonneg(k, rho) if abs(rho) < 1 else None
 
 
 def unit(job):

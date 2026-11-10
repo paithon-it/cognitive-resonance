@@ -273,3 +273,20 @@ def null_width_diff(k, rho, level: float = 0.5) -> float:
     """Width of the null as a difference of weights, |far - near|."""
     near, far = null_edges(k, rho, level)
     return abs(far - near)
+
+
+def tu_app_nonneg(k, rho) -> float:
+    """Maximum of Tu(w) over w >= 0 for k of any sign.
+
+    For k > 0 it is `tu_app`. For k <= 0 (a judge below chance) the Fano peak falls at a positive
+    weight when (k - rho) / (1 - rho k) > 0, and then it is worth sqrt(1 + k^2 - 2 k rho) / sin phi;
+    otherwise the best is the person alone, 1.
+    """
+    if not abs(rho) < 1:
+        raise ValueError("rho must be strictly between -1 and 1")
+    if k > 0:
+        return tu_app(k, rho)
+    den = 1.0 - rho * k
+    if den > 0 and (k - rho) / den > 0:
+        return tu_peak_signed(k, rho)
+    return 1.0
