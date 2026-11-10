@@ -276,6 +276,27 @@ def e2bis(d):
         f"{f(b4['median_ratio_tuned_over_inv_sin_phi'])} (needs 0.9-1.1).",
         f"- **B5** {outcome(b5)}: median tuned / Tu_app for Mpair = {f(b5['median_ratio_tuned_over_tu_app'])} "
         f"(needs 0.9-1.1)."]
+    mp, mf, m0 = bm["Mpair"], bm["Mframe"], bm["M0"]
+    outside = sum(1 for u in d["units"] for m in ("Mpair", "Mframe")
+                  if not (u["differences"][m]["pair_ci"][0] <= u["differences"][m]["pair"] <= u["differences"][m]["pair_ci"][1]))
+    lines.append(
+        "**How to read E2 bis.** The machine trained on the error of the sum did not flip its cue: it learned the "
+        f"frame against the person (slope {f(mp['slope_on_a'], 2)}, the person's {f(bm['H']['slope_on_a'], 2)}) and "
+        f"almost nothing of the image (d_a {f(mp['d_a'], 2)}, k = {f(mp['k'], 3)}). It behaves like the machine that "
+        f"sees only the frame (d_a {f(mf['d_a'], 3)}, phi {f(mf['phi'], 0)} against {f(mp['phi'], 0)} degrees). "
+        f"Its angle with the person is a real one, {f(mp['phi'], 0)} degrees, and the model predicts the pair: tuned "
+        f"turing {f(mp['tu_tuned'], 2)} against {f(mp['tu_app_nonneg'], 2)} from k and phi, and "
+        f"{f(mf['tu_tuned'], 2)} against 1/sin(phi) = {f(mf['inv_sin_phi'], 2)} for the frame-only machine. But "
+        f"a person worth {f(bm['H']['d_a'], 2)} gains more from the ordinary machine (pair {f(m0['d_pair_tuned'], 2)}) "
+        f"than from the one trained for the pair ({f(mp['d_pair_tuned'], 2)}): here the best partner is still the best "
+        "soloist, and B3 fails. B1 fails only because in "
+        f"{b1['units'] - b1['mpair_above_chance']} units of {b1['units']} the interval of Mpair's d_a contains zero: there it is at chance, not below.")
+    lines.append(
+        f"A note on the intervals: in {outside} of {2 * len(d['units'])} paired differences of the pair's sensitivity "
+        "the point estimate falls outside its own interval. The point estimate tunes the weight on 49 weights, the "
+        "resamples on 13 (§ 3), and here the peak is narrow and falls between two of the 13: the intervals sit low. "
+        "No outcome depends on it: the pair's differences are negative in the point estimates too, and an interval "
+        "that sits low only makes B4 harder to pass.")
     return "\n\n".join(lines)
 
 
