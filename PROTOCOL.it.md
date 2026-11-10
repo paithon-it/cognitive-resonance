@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 1.2, 10 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 1.3, 10 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -173,6 +173,47 @@ Ipotesi e criteri:
 
 Se H2a non passa si riporta di quanto l'angolo si è mosso.
 
+## 6 bis. E2 bis. Il compagno addestrato per la coppia (esplorativo)
+
+Aggiunto con la versione 1.3, **dopo** aver visto i dati di E2 ed E3: non è una prova
+registrata prima, e come tale va letta. Le attese qui sotto sono scritte prima della corsa.
+
+**Perché.** In E2 la penalità sulla correlazione è stata soddisfatta nel modo più
+economico: la macchina ha capovolto il proprio indizio (`k < 0`). È un'antifase finta,
+perché la coppia `(k, rho)` e la coppia `(-k, -rho)` sono la stessa coppia: basta
+credere alla macchina al contrario. Si prova allora la ricetta che la scorciatoia non
+la ammette: la macchina impara dall'errore della **somma**.
+
+- **H e `M_0`** come in E2: stessi compiti, stessi semi, stesse metà, stessa cornice.
+- **`M_coppia`.** Stessa rete di `M_0`, metà B, cornice che non dipende dalla classe.
+  La perdita è l'entropia incrociata dell'indizio somma `z_H + z_M`; H è congelata e
+  guarda la stessa presentazione.
+- **`M_cornice`.** Come `M_coppia`, ma vede solo la cornice: l'interno dell'immagine è
+  azzerato (in unità normalizzate). Da sola non può sapere niente della classe: è il
+  caso `k = 0`, per cui il modello prevede `Tu = 1 / sin(phi)`.
+- **Misure** come in E2, con gli stessi stimatori e lo stesso bootstrap.
+
+Attese:
+
+- **B1.** `M_coppia` e `M_cornice` non scendono sotto il caso (per `M_coppia` l'intervallo
+  di `d_a` sta sopra lo zero; per `M_cornice` lo contiene) e la pendenza del loro indizio
+  su `a` ha segno opposto a quella di H, in ogni unità.
+- **B2.** `phi(H, M_coppia) - phi(H, M_0) > 0`, con intervallo che esclude lo zero in
+  ogni seme, in almeno 3 compiti su 5.
+- **B3, il miglior compagno non è il miglior solista.** `M_coppia` da sola è meno
+  sensibile di `M_0`, e la coppia `(H, M_coppia)` è più sensibile della coppia
+  `(H, M_0)`, con intervalli delle due differenze che escludono lo zero in ogni seme,
+  in almeno 3 compiti su 5.
+- **B4, la macchina che non sa niente.** Il turing sintonizzato della coppia
+  `(H, M_cornice)` ha l'intervallo sopra 1 in ogni seme in almeno 3 compiti su 5, e in
+  mediana sta entro il 10% da `1 / sin(phi)`.
+- **B5.** Per `M_coppia` il turing sintonizzato sta, in mediana, entro il 10% dal turing
+  apparente calcolato da `k` e `phi`.
+
+Dati grezzi: `rephase_bis/{compito}_s{seme}.npz` con `y, image, a, z_H, z_M` (una riga
+per macchina, nell'ordine di `machines` = `M0, Mpair, Mframe`) e gli stessi con prefisso
+`val_`; `manifest.json`.
+
 ## 7. E3. Persone vere
 
 - **Dati.** CIFAR-10H (Peterson e colleghi, 2019): circa 51 voti umani per ciascuna
@@ -297,4 +338,6 @@ Nessuna. La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni co
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e
 l'esperimento E5 sul nullo (§ 8 bis): è stata scritta a corse della GPU avviate, ma
-prima di ogni analisi dei dati grezzi, e non cambia niente di ciò che c'era.
+prima di ogni analisi dei dati grezzi, e non cambia niente di ciò che c'era. La versione
+1.3 aggiunge E2 bis (§ 6 bis), esplorativo: è scritta dopo aver visto i dati di E2 ed E3
+e prima della sua corsa, e non tocca criteri né risultati delle altre prove.
