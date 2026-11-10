@@ -334,7 +334,65 @@ l'analisi, dopo, a partire da questi file. Un file `.npz` per unità, in `result
 
 ## Deviazioni
 
-Nessuna. La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
+Tutte del 10 novembre 2026. Le prime vengono dalle corse; le altre sono scelte
+dell'analisi dove il protocollo lasciava un margine, fissate prima di leggere i dati veri.
+
+**Le corse.**
+
+- **E1 con due semi** (0 e 1) invece di tre. Con 30 epoche una rete costa circa 12,5
+  secondi e E1 con tre semi era stimato in circa 70 minuti, oltre il tetto di 60: è la
+  prima riduzione del § 10. Con due semi la stima era di circa 47 minuti.
+- **Il pilota** ha fissato 30 epoche, passo 0,1, lotto 256 e `delta = 1`; la sonda lineare
+  ritrova `a` con `R^2 = 1,00`.
+- **La cornice** è *impostata* al valore `a · delta` sul bordo di 2 pixel dei tre canali,
+  in unità normalizzate, dopo ritaglio e ribaltamento: non è sommata all'immagine.
+- **I semi.** Ogni giudice ha il suo seme, lo stesso a ogni `mu`; i numeri `eps` della
+  cornice di validazione e di prova sono gli stessi per i tre giudici di un'unità e per
+  ogni `mu`.
+- **E3** senza pilota: iperparametri fissati prima, 40 epoche a passo 0,2 per la macchina
+  di base, 8 epoche a passo 0,01 con discesa a coseno fino a zero per l'affinamento.
+- **I manifest** scritti dalle corse (anche quello di `rephase/`) citano la versione 1.1:
+  è la versione scritta negli script della GPU. Le versioni 1.2 e 1.3 non cambiano niente
+  di ciò che E1, E2 ed E3 fanno.
+
+**L'analisi.**
+
+- **E0.** Il protocollo non fissa `dH`: si è usato `dH = 1`. Metà della varianza del
+  rumore appartiene all'immagine (comune alle sue 5 presentazioni), con lo stesso `rho` ai
+  due livelli; validazione di 1.000 immagini per 5 presentazioni. Aggiunto, senza
+  criterio, lo stesso conto a `dH = 2`.
+- **AUC uguale a 0 o a 1**: spostata di mezza coppia dal bordo, perché `d_a` resti finito.
+  Quante volte succede si riporta.
+- **Bootstrap**: ricampionamento multinomiale delle immagini (turing-meter usa pesi di
+  Poisson). Le due metà del turing sintonizzato si estraggono classe per classe, con un
+  seme fisso.
+- **H1a.** Un compito conta se l'intervallo di `phi` sta sopra i 90 gradi in tutti i semi,
+  a tutti e due i valori più alti di `mu`.
+- **H1b.** L'estremo inferiore del turing sintonizzato si confronta con `sqrt(1 + k^2)`
+  calcolato con il `k` puntuale.
+- **H1c.** L'errore relativo è misurato rispetto al turing sintonizzato.
+- **H1e.** «`rho` sale con `mu`» non ha una soglia: si usa quella di H1a e H2a,
+  correlazione di rango mediana almeno 0,9.
+- **H1f.** Il riferimento è, per compito, la media sui semi della coppia opposta
+  sintonizzata a `mu = 0`; a ogni `mu` decide la mediana del rapporto.
+- **H2a, H2b, H3a.** Un compito (per H3a, l'esperimento) conta se la condizione vale allo
+  stesso `lambda` in tutti i semi. **H3b**: decide la stima puntuale dell'angolo.
+- **E3.** Il combinatore è un logit condizionato su `logit((c + 0,5) / (n + 1))` dei voti
+  di ogni classe e sul logaritmo della probabilità della macchina, con convalida
+  incrociata a 5 parti sulle immagini. Il gruppo da solo è il voto di maggioranza;
+  sensibilità con `m = 10`; il turing del gruppo è la sensibilità del combinatore divisa
+  per quella della maggioranza. La differenza appaiata degli angoli usa le formule e il
+  seme di `compare_votes`.
+- **E5.** La larghezza del nullo è il rapporto fra il bordo lontano e quello vicino, la
+  convenzione della banda: con la differenza dei pesi il logaritmo cambia segno vicino a
+  1 e il criterio di H5c non si legge (la differenza si riporta comunque). Nullo e bordi
+  per interpolazione lineare in `w`. H5e divide per
+  `sqrt(1 + k^2 - 2 k cos(phi)) / sin(phi)` senza il vincolo dei pesi non negativi (il
+  picco del profilo di Fano). In H5d la deviazione standard di `a` si stima su prova e
+  validazione separatamente, e il verso viene dal segno della pendenza della rete «meno»
+  sulla prova.
+
+**Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e
 l'esperimento E5 sul nullo (§ 8 bis): è stata scritta a corse della GPU avviate, ma

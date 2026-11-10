@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 1.2, 10 November 2026. Written and recorded in the repository **before any run**:
+Version 1.3, 10 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -172,6 +172,48 @@ Hypotheses and criteria:
 
 If H2a does not pass, we report how far the angle has moved.
 
+## 6 bis. E2 bis. The partner trained for the pair (exploratory)
+
+Added with version 1.3, **after** seeing the data of E2 and E3: it is not a test
+registered beforehand, and it must be read as such. The expectations below are written
+before the run.
+
+**Why.** In E2 the penalty on the correlation was satisfied in the cheapest way: the
+machine flipped its own cue (`k < 0`). It is a fake antiphase, because the pair
+`(k, rho)` and the pair `(-k, -rho)` are the same pair: it is enough to believe the
+machine in reverse. So we try the recipe that does not allow the shortcut: the machine
+learns from the error of the **sum**.
+
+- **H and `M_0`** as in E2: same tasks, same seeds, same halves, same frame.
+- **`M_pair`.** The same network as `M_0`, half B, a frame that does not depend on the
+  class. The loss is the cross-entropy of the summed cue `z_H + z_M`; H is frozen and
+  looks at the same presentation.
+- **`M_frame`.** Like `M_pair`, but it sees only the frame: the inside of the image is
+  set to zero (in normalized units). On its own it cannot know anything about the class:
+  it is the case `k = 0`, for which the model predicts `Tu = 1 / sin(phi)`.
+- **Measures** as in E2, with the same estimators and the same bootstrap.
+
+Expectations:
+
+- **B1.** `M_pair` and `M_frame` do not fall below chance (for `M_pair` the interval of
+  `d_a` lies above zero; for `M_frame` it contains it) and the slope of their cue on `a`
+  has the opposite sign to that of H, in every unit.
+- **B2.** `phi(H, M_pair) - phi(H, M_0) > 0`, with an interval that excludes zero in
+  every seed, in at least 3 tasks out of 5.
+- **B3, the best partner is not the best soloist.** `M_pair` alone is less sensitive than
+  `M_0`, and the pair `(H, M_pair)` is more sensitive than the pair `(H, M_0)`, with
+  intervals of the two differences that exclude zero in every seed, in at least 3 tasks
+  out of 5.
+- **B4, the machine that knows nothing.** The tuned turing of the pair `(H, M_frame)` has
+  its interval above 1 in every seed in at least 3 tasks out of 5, and its median is
+  within 10% of `1 / sin(phi)`.
+- **B5.** For `M_pair` the tuned turing is, in median, within 10% of the apparent turing
+  computed from `k` and `phi`.
+
+Raw data: `rephase_bis/{task}_s{seed}.npz` with `y, image, a, z_H, z_M` (one row per
+machine, in the order of `machines` = `M0, Mpair, Mframe`) and the same with the prefix
+`val_`; `manifest.json`.
+
 ## 7. E3. Real people
 
 - **Data.** CIFAR-10H (Peterson and colleagues, 2019): about 51 human votes for each of
@@ -294,8 +336,71 @@ afterwards, from these files. One `.npz` file per unit, in `results/raw/`:
 
 ## Deviations
 
-None. Version 1.1 is from the same day as version 1 and comes before any run: it
+All dated 10 November 2026. The first come from the runs; the others are choices of the
+analysis where the protocol left room, fixed before reading the real data.
+
+**The runs.**
+
+- **E1 with two seeds** (0 and 1) instead of three. With 30 epochs one network costs about
+  12.5 seconds, and E1 with three seeds was estimated at about 70 minutes, over the
+  60-minute cap: it is the first reduction of § 10. With two seeds the estimate was about
+  47 minutes.
+- **The pilot** fixed 30 epochs, learning rate 0.1, batch 256 and `delta = 1`; the linear
+  probe recovers `a` with `R^2 = 1.00`.
+- **The frame** is *set* to the value `a · delta` on the 2-pixel border of the three
+  channels, in normalized units, after cropping and flipping: it is not added to the
+  image.
+- **Seeds.** Each judge has its own seed, the same at every `mu`; the numbers `eps` of the
+  validation and test frames are the same for the three judges of a unit and for every
+  `mu`.
+- **E3** without a pilot: hyperparameters fixed beforehand, 40 epochs at learning rate
+  0.2 for the base machine, 8 epochs at learning rate 0.01 with a cosine decay to zero
+  for the fine-tuning.
+- **The manifests** written by the runs (that of `rephase/` too) cite version 1.1: it is
+  the version written in the GPU scripts. Versions 1.2 and 1.3 change nothing of what E1,
+  E2 and E3 do.
+
+**The analysis.**
+
+- **E0.** The protocol does not fix `dH`: we used `dH = 1`. Half of the noise variance
+  belongs to the image (shared by its 5 presentations), with the same `rho` at both
+  levels; validation of 1,000 images times 5 presentations. Added, without a criterion,
+  the same computation at `dH = 2`.
+- **AUC equal to 0 or 1**: moved half a pair from the edge, so that `d_a` stays finite.
+  How often it happens is reported.
+- **Bootstrap**: multinomial resampling of the images (turing-meter uses Poisson
+  weights). The two halves of the tuned turing are drawn class by class, with a fixed
+  seed.
+- **H1a.** A task counts if the interval of `phi` lies above 90 degrees in every seed, at
+  both of the two highest values of `mu`.
+- **H1b.** The lower end of the tuned turing is compared with `sqrt(1 + k^2)` computed
+  with the point estimate of `k`.
+- **H1c.** The relative error is measured with respect to the tuned turing.
+- **H1e.** "`rho` rises with `mu`" has no threshold: we use that of H1a and H2a, a median
+  rank correlation of at least 0.9.
+- **H1f.** The reference is, per task, the mean over seeds of the tuned opposite pair at
+  `mu = 0`; at each `mu` the median of the ratio decides.
+- **H2a, H2b, H3a.** A task (for H3a, the experiment) counts if the condition holds at
+  the same `lambda` in every seed. **H3b**: the point estimate of the angle decides.
+- **E3.** The combiner is a conditional logit on `logit((c + 0.5) / (n + 1))` of each
+  class's votes and on the log probability of the machine, with 5-fold cross-validation
+  over images. The group alone is the plurality vote; sensitivities with `m = 10`; the
+  turing of the group is the sensitivity of the combiner over that of the plurality. The
+  paired difference of the angles uses the formulas and the seed of `compare_votes`.
+- **E5.** The width of the null is the ratio between the far and the near edge, the
+  convention of the band: with the difference of weights the logarithm changes sign near
+  1 and the criterion of H5c cannot be read (the difference is reported anyway). Null and
+  edges by linear interpolation in `w`. H5e divides by
+  `sqrt(1 + k^2 - 2 k cos(phi)) / sin(phi)` without the restriction to non-negative
+  weights (the peak of the Fano profile). In H5d the standard deviation of `a` is
+  estimated on test and validation separately, and the direction comes from the sign of
+  the slope of the "minus" network on the test set.
+
+**The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and
 experiment E5 on the null (§ 8 bis): it was written with the GPU runs started, but
-before any analysis of the raw data, and it changes nothing of what was there.
+before any analysis of the raw data, and it changes nothing of what was there. Version
+1.3 adds E2 bis (§ 6 bis), exploratory: it is written after seeing the data of E2 and E3
+and before its run, and it touches neither the criteria nor the results of the other
+tests.
