@@ -64,6 +64,7 @@ una pagina, è in [`docs/identity.md`](docs/identity.md).
 | E0 | lo strumento su dati del modello: errore sistematico e copertura | simulati |
 | E1 | il banco: piccole reti convoluzionali su cinque coppie di classi di CIFAR-10, una cornice la cui luminosità le reti «più» e «meno» imparano in versi opposti, una manopola `mu` che regola l'angolo | corse su GPU |
 | E2 | il rifasamento: una macchina addestrata a scorrelarsi da una rete con un pregiudizio, senza sapere quale | corse su GPU |
+| E2 bis | il compagno addestrato sull'errore della coppia, e uno che vede solo la cornice (esplorativo, v1.3, dopo E2 ed E3) | corse su GPU |
 | E3 | persone vere: i voti di CIFAR-10H contro una ResNet-18, e versioni affinate verso la controfase | corse su GPU, CIFAR-10H |
 | E4 | le coppie già misurate, rilette su questa scala | angoli pubblicati |
 | E5 | il nullo, con pesi di ogni segno (aggiunto nella v1.2, prima di ogni analisi) | i file di E1 |
@@ -102,9 +103,11 @@ Con i file grezzi delle corse su GPU in `results/raw/`:
 uv run python analysis/bench.py                # E1, results/e1_bench.json
 uv run python analysis/null.py                 # E5, results/e5_null.json
 uv run python analysis/rephase.py              # E2, results/e2_rephase.json
+uv run python analysis/rephase_bis.py          # E2 bis, results/e2bis_rephase.json
 uv run python analysis/download_cifar10h.py    # i voti di CIFAR-10H in data/ (fuori da git)
 uv run python analysis/people.py --turing-meter PERCORSO_DEL_CLONE_DI_TURING_METER   # E3
 uv run python analysis/figure_data.py          # results/figure_data.json
+uv run python analysis/results_md.py           # results/RESULTS.md
 ```
 
 E3 importa `compare_votes` da un clone locale di turing-meter e ne scrive il commit in

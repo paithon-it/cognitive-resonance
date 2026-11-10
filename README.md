@@ -60,6 +60,7 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E0 | the instrument on data from the model: bias and coverage | simulated |
 | E1 | the bench: small CNNs on five CIFAR-10 class pairs, a frame whose brightness the "plus" and "minus" networks learn in opposite directions, a knob `mu` that sets the angle | GPU runs |
 | E2 | rephasing: a machine trained to decorrelate from a biased network, without being told the bias | GPU runs |
+| E2 bis | the partner trained on the error of the pair, and one that sees only the frame (exploratory, v1.3, after E2 and E3) | GPU runs |
 | E3 | real people: CIFAR-10H votes against a ResNet-18, and versions fine-tuned toward antiphase | GPU runs, CIFAR-10H |
 | E4 | the pairs already measured, reread on this scale | published angles |
 | E5 | the null, with weights of either sign (added in v1.2, before any analysis) | the files of E1 |
@@ -96,9 +97,11 @@ With the raw files of the GPU runs in `results/raw/`:
 uv run python analysis/bench.py                # E1, results/e1_bench.json
 uv run python analysis/null.py                 # E5, results/e5_null.json
 uv run python analysis/rephase.py              # E2, results/e2_rephase.json
+uv run python analysis/rephase_bis.py          # E2 bis, results/e2bis_rephase.json
 uv run python analysis/download_cifar10h.py    # CIFAR-10H votes into data/ (not tracked)
 uv run python analysis/people.py --turing-meter PATH_TO_TURING_METER_CLONE   # E3
 uv run python analysis/figure_data.py          # results/figure_data.json
+uv run python analysis/results_md.py           # results/RESULTS.md
 ```
 
 E3 imports `compare_votes` from a local clone of turing-meter, and writes its commit in
