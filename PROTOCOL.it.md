@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 1, 10 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 1.1, 10 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -72,18 +72,23 @@ strumento di turing-meter (§ 7).
 - **Previsione.** `Tu_pred(w)` del § 2 con `k` e `rho` misurati: nessun parametro libero.
 - **Banda misurata.** Sui pesi della griglia, per interpolazione lineare in `ln w`.
 - **Incertezza.** Bootstrap sulle immagini (tutte le presentazioni della stessa immagine
-  restano insieme), 1.000 ricampionamenti, intervalli percentili al 95 per cento.
+  restano insieme), 1.000 ricampionamenti, intervalli percentili al 95 per cento. In
+  ogni ricampionamento il peso della sintonia si sceglie di nuovo, su una griglia più
+  rada (13 pesi); se il tempo di calcolo non basta resta quello scelto sui dati interi,
+  e lo si dichiara nei risultati.
 
 ## 4. E0. Lo strumento sul modello
 
 Dati generati dal modello del § 2, con la numerosità del banco (2.000 immagini per 5
 presentazioni), `k` in {0,7; 1; 1,5} e `rho` in {0,6; 0,3; 0; -0,3; -0,6; -0,8; -0,9;
--0,95}; almeno 200 esperimenti per situazione.
+-0,95}; 200 esperimenti per situazione per l'errore sistematico. La copertura costa un
+ricampionamento intero per esperimento, e si verifica su un insieme ridotto: `k = 1`,
+`rho` in {0; -0,6; -0,9}, 100 esperimenti, 300 ricampionamenti.
 
 - **Criterio E0a.** Errore sistematico del turing sintonizzato entro il 5 per cento del
   vero per `rho >= -0,9`.
-- **Criterio E0b.** L'intervallo al 95 per cento contiene il vero fra 90 e 98 volte su
-  cento.
+- **Criterio E0b.** Sull'insieme ridotto, l'intervallo al 95 per cento contiene il vero
+  fra 90 e 98 volte su cento.
 - Per `rho = -0,95` si riporta di quanto lo strumento sbaglia, senza criterio: lì la
   coppia sbaglia così poco che la sensibilità si stima male.
 
@@ -218,7 +223,7 @@ una sola cartella, che alla fine si cancella.
 ## 11. Dati grezzi: il contratto
 
 Gli script della GPU scrivono solo indizi caso per caso; tutte le misure le fa
-l'analisi, sul portatile. Un file `.npz` per unità, in `results/raw/`:
+l'analisi, dopo, a partire da questi file. Un file `.npz` per unità, in `results/raw/`:
 
 - `bench/{compito}_mu{mu}_s{seme}.npz`: `y` (0/1), `image` (indice dell'immagine di
   prova), `a` (cornice mostrata), `z_plus`, `z_minus`, `z_plus2` (log-odds verso la
@@ -233,4 +238,6 @@ l'analisi, sul portatile. Un file `.npz` per unità, in `results/raw/`:
 
 ## Deviazioni
 
-Nessuna, alla versione 1.
+Nessuna. La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
+precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
+tempo disponibile.
