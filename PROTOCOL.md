@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 1.1, 10 November 2026. Written and recorded in the repository **before any run**:
+Version 1.2, 10 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -17,7 +17,7 @@ turings,
     Tu_app = sqrt(1 + k^2 - 2 k cos(phi)) / sin(phi),      k = dM / dH,
 
 grows without bound as `phi` goes toward 180 degrees: errors in antiphase cancel out. We
-call this condition **cognitive resonance**, and there are five questions.
+call this condition **cognitive resonance**, and there are six questions.
 
 - **Q1.** Does the promise of the formula beyond 90 degrees come true on real networks,
   with real images, or does it stay in the Gaussian model?
@@ -27,6 +27,8 @@ call this condition **cognitive resonance**, and there are five questions.
   ("rephasing")? And is the best machine for the pair the best one on its own?
 - **Q4.** With real people, does the angle open?
 - **Q5.** Where do the pairs already measured sit on this scale?
+- **Q6.** Next to the peak, is there a null, a weight at which the pair is worth nothing? Under
+  which conditions does it appear? (Added in version 1.2: see § 8 bis.)
 
 ## 2. The model
 
@@ -205,6 +207,58 @@ rereading, without criteria: ChatBench 81 degrees, αNLI 64, HAIID text 65, HAII
 78, objects 59; two people with each other 66 and 54; two networks with each other
 between 22 and 43.
 
+## 8 bis. E5. The null
+
+Added on 10 November 2026 with version 1.2, at the author's request, with the GPU runs
+already started and **before the analysis of the raw data was written or looked at**. It
+needs no new runs: it uses the files of E1.
+
+**The model.** If the weight can have any sign, the signed turing is
+`Tu(w) = (1 + w k) / sqrt(1 + w^2 + 2 rho w)`, and its square is a Fano profile:
+
+    Tu(w)^2 = k^2 (q + eps)^2 / (1 + eps^2)
+    eps = (w + cos(phi)) / sin(phi),      q = (1 - k cos(phi)) / (k sin(phi))
+
+- **The null** is at `w0 = -1/k` (`eps = -q`), for every angle: the two signals cancel
+  and only the noise is left. Beyond the null the turing is negative: the pair errs
+  systematically.
+- **The peak** is at `eps = 1/q` and is worth `Tu_app`.
+- `q = 0` at the useful angle, `cos(phi) = 1/k`: the peak disappears and only the null
+  is left.
+- **The width of the null** is the interval of weights in which `|Tu| < 1/2`. For
+  `k = 1` it grows with the angle, the opposite of the band of the peak.
+- **Two conditions.** With `k > 0` (both above chance) the null requires a negative
+  weight: trusting in reverse. With `k < 0` (one of the two below chance, that is, in
+  systematic error) it appears at a positive weight, `w0 = 1/|k|`.
+
+**Estimators.** Signed sensitivity: `d_a = sqrt(2) z(AUC)`, negative when the AUC is
+below 0.5. Extended grid: the 49 weights of § 3 also with the minus sign. Measured null:
+the weight at which the signed turing crosses zero, by linear interpolation between the
+two neighbouring grid points. Measured width: the interval in which `|Tu| < 1/2`, by
+interpolation. The predictions use the measured `k` and `rho`.
+
+Hypotheses and criteria:
+
+- **H5a, the null is there and where it should be.** In all the pairs of the bench,
+  opposite and equal, the signed turing crosses zero at a negative weight, and the
+  product `w0 k` has a median between -1.1 and -0.9.
+- **H5b, it is deep.** At the predicted weight `-1/k`, computed on half of the images,
+  the absolute value of the turing measured on the other half has a median below 0.1.
+- **H5c, the width follows the angle, the opposite of the peak.** The logarithm of the
+  measured width has a median within 30 per cent of the predicted one, and the width
+  grows with `phi` (rank correlation at least 0.7 over all the pairs of the bench).
+- **H5d, the null at positive trust.** In the opposite pairs with `mu >= 1` we take the
+  presentations in which the frame points against the truth for the machine (the
+  "minus" network) beyond one standard deviation of `a`; the direction is derived from
+  the sign of the slope of the machine's cue on `a`, it is not assumed. The cues are
+  standardized on the validation set with the same selection. Where the sensitivity of
+  the machine is negative, with an interval that excludes zero, the signed turing
+  crosses zero at a positive weight, and the ratio between the measured weight and the
+  predicted one, `1/|k|`, has a median between 0.8 and 1.25.
+- **H5e, the whole curve.** In the pairs of the bench the mean absolute error between
+  the measured and the predicted signed turing, on the extended grid, divided by
+  `Tu_app`, has a median below 10 per cent.
+
 ## 9. What would count against the idea
 
 - If H1c does not pass, the formula does not hold beyond 90 degrees even on a bench
@@ -213,6 +267,7 @@ between 22 and 43.
   for Gaussian cues and not for networks.
 - If H2a does not pass, antiphase cannot be learned from errors: it can only be planted.
 - If H3a does not pass, with real people we do not know how to build it.
+- If H5a or H5b do not pass, the null is a property of the model and not of the networks.
 
 ## 10. Order, times, cleanup
 
@@ -241,4 +296,6 @@ afterwards, from these files. One `.npz` file per unit, in `results/raw/`:
 
 None. Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
-been run in the time available.
+been run in the time available. Version 1.2, from the same day, adds question Q6 and
+experiment E5 on the null (§ 8 bis): it was written with the GPU runs started, but
+before any analysis of the raw data, and it changes nothing of what was there.
