@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 1.1, 10 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 1.2, 10 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -16,7 +16,7 @@ la regione oltre i 90 gradi non è stata esplorata. La formula dei turing appare
     Tu_app = sqrt(1 + k^2 - 2 k cos(phi)) / sin(phi),      k = dM / dH,
 
 cresce senza limite quando `phi` va verso i 180 gradi: errori in controfase si
-cancellano. Chiamiamo **risonanza cognitiva** questa condizione, e le domande sono cinque.
+cancellano. Chiamiamo **risonanza cognitiva** questa condizione, e le domande sono sei.
 
 - **D1.** La promessa della formula oltre i 90 gradi si realizza su reti vere, con
   immagini vere, o resta nel modello gaussiano?
@@ -26,6 +26,8 @@ cancellano. Chiamiamo **risonanza cognitiva** questa condizione, e le domande so
   mente («rifasamento»)? E la macchina migliore per la coppia è la migliore da sola?
 - **D4.** Con persone vere l'angolo si apre?
 - **D5.** Dove stanno, su questa scala, le coppie già misurate?
+- **D6.** Accanto al picco esiste un nullo, un peso a cui la coppia non vale niente? In
+  quali condizioni compare? (Aggiunta della versione 1.2: vedi § 8 bis.)
 
 ## 2. Il modello
 
@@ -204,6 +206,58 @@ e il turing apparente che la stessa coppia avrebbe a parità di sensibilità. È
 rilettura, senza criteri: ChatBench 81 gradi, αNLI 64, HAIID testo 65, HAIID immagini
 78, oggetti 59; due persone fra loro 66 e 54; due reti fra loro fra 22 e 43.
 
+## 8 bis. E5. Il nullo
+
+Aggiunto il 10 novembre 2026 con la versione 1.2, su richiesta dell'autore, a corse
+della GPU già avviate e **prima che l'analisi dei dati grezzi fosse scritta o
+guardata**. Non chiede corse nuove: usa i file di E1.
+
+**Il modello.** Se il peso può avere ogni segno, il turing con il segno è
+`Tu(w) = (1 + w k) / sqrt(1 + w^2 + 2 rho w)`, e il suo quadrato è un profilo di Fano:
+
+    Tu(w)^2 = k^2 (q + eps)^2 / (1 + eps^2)
+    eps = (w + cos(phi)) / sin(phi),      q = (1 - k cos(phi)) / (k sin(phi))
+
+- **Il nullo** sta a `w0 = -1/k` (`eps = -q`), per ogni angolo: i due segnali si
+  cancellano e resta il rumore. Oltre il nullo il turing è negativo: la coppia sbaglia
+  in modo sistematico.
+- **Il picco** sta a `eps = 1/q` e vale `Tu_app`.
+- `q = 0` all'angolo utile, `cos(phi) = 1/k`: il picco sparisce e resta solo il nullo.
+- **La larghezza del nullo** è l'intervallo di pesi in cui `|Tu| < 1/2`. Per `k = 1`
+  cresce con l'angolo, al contrario della banda del picco.
+- **Due condizioni.** Con `k > 0` (tutti e due sopra il caso) il nullo chiede un peso
+  negativo: fidarsi al contrario. Con `k < 0` (uno dei due sotto il caso, cioè in
+  errore sistematico) compare a un peso positivo, `w0 = 1/|k|`.
+
+**Stimatori.** Sensibilità con il segno: `d_a = sqrt(2) z(AUC)`, negativa quando
+l'AUC è sotto 0,5. Griglia estesa: i 49 pesi del § 3 anche con il segno meno. Nullo
+misurato: il peso in cui il turing con il segno attraversa lo zero, per interpolazione
+lineare fra i due punti di griglia vicini. Larghezza misurata: l'intervallo in cui
+`|Tu| < 1/2`, per interpolazione. Le previsioni usano `k` e `rho` misurati.
+
+Ipotesi e criteri:
+
+- **H5a, il nullo c'è ed è dove deve.** In tutte le coppie del banco, opposte e
+  uguali, il turing con il segno attraversa lo zero a un peso negativo, e il prodotto
+  `w0 k` sta in mediana fra -1,1 e -0,9.
+- **H5b, è profondo.** Al peso previsto `-1/k`, calcolato su metà delle immagini, il
+  valore assoluto del turing misurato sull'altra metà sta in mediana sotto 0,1.
+- **H5c, la larghezza segue l'angolo, al contrario del picco.** Il logaritmo della
+  larghezza misurata sta in mediana entro il 30 per cento di quello previsto, e la
+  larghezza cresce con `phi` (correlazione di rango almeno 0,7 su tutte le coppie del
+  banco).
+- **H5d, il nullo a fiducia positiva.** Nelle coppie opposte con `mu >= 1` si prendono
+  le presentazioni in cui la cornice punta contro la verità per la macchina (la rete
+  «meno») oltre una deviazione standard di `a`; il verso si ricava dal segno della
+  pendenza dell'indizio della macchina su `a`, non si assume. Gli indizi si
+  standardizzano sulla validazione con la stessa selezione. Dove la sensibilità della
+  macchina è negativa, con un intervallo che esclude lo zero, il turing con il segno
+  attraversa lo zero a un peso positivo, e il rapporto fra il peso misurato e quello
+  previsto, `1/|k|`, sta in mediana fra 0,8 e 1,25.
+- **H5e, tutta la curva.** Nelle coppie del banco l'errore assoluto medio fra il turing
+  con il segno misurato e quello previsto, sulla griglia estesa, diviso per `Tu_app`,
+  sta in mediana sotto il 10 per cento.
+
 ## 9. Che cosa conterebbe contro l'idea
 
 - Se H1c non passa, la formula non regge oltre i 90 gradi neppure su un banco costruito
@@ -212,6 +266,7 @@ rilettura, senza criteri: ChatBench 81 gradi, αNLI 64, HAIID testo 65, HAIID im
   per indizi gaussiani e non per le reti.
 - Se H2a non passa, la controfase non si impara dagli errori: si può solo piantare.
 - Se H3a non passa, con persone vere non sappiamo costruirla.
+- Se H5a o H5b non passano, il nullo è una proprietà del modello e non delle reti.
 
 ## 10. Ordine, tempi, pulizia
 
@@ -240,4 +295,6 @@ l'analisi, dopo, a partire da questi file. Un file `.npz` per unità, in `result
 
 Nessuna. La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
-tempo disponibile.
+tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e
+l'esperimento E5 sul nullo (§ 8 bis): è stata scritta a corse della GPU avviate, ma
+prima di ogni analisi dei dati grezzi, e non cambia niente di ciò che c'era.
