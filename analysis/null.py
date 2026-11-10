@@ -59,6 +59,7 @@ def positive_null(d, reps) -> dict:
     w0 = est.null_from_curve(model.GRID_SIGNED, t, side=+1)
     pred = model.tu_signed(model.GRID_SIGNED, k, rho)
     out.update({"d_h": dh, "d_m": dm, "d_m_ci": est.ci(dm_boot), "k": k, "rho": rho,
+                "person_at_auc_edge": bool(est.at_edge(zh, ys)),
                 "phi": float(model.angle_deg(rho)), "w0_positive": w0,
                 "w0_predicted": 1.0 / abs(k) if k < 0 else None,
                 "w0_ratio": w0 * abs(k) if (w0 is not None and k < 0) else None,
@@ -128,6 +129,7 @@ def criteria(units) -> dict:
                          crossing_at_positive_weight=len(ok), median_ratio_measured_over_predicted=mr,
                          median_k=med([p["k"] for p in cases]), median_d_m=med([p["d_m"] for p in cases]),
                          median_n_selected=med([p["n_selected"] for p in cases]),
+                         person_at_auc_edge=sum(p.get("person_at_auc_edge", False) for p in cases),
                          rule="where d_a(machine) < 0 with its interval, the signed turing crosses zero at a positive "
                               "weight, and median w0 / (1/|k|) in [0.8, 1.25]")
     mae = med([p["mae_over_peak"] for _, _, p in allp])
