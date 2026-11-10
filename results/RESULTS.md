@@ -45,7 +45,7 @@ Data from the model of § 2 with the bench's size (2,000 images x 5 presentation
 
 - At rho = -0.95 (no criterion) the bias is 1.3% for k = 0.7, 3.5% for k = 1.0, -8.2% for k = 1.5; the share of experiments where a half separates the classes completely (AUC = 1) is 0.00, 0.14, 0.98. The tetrachoric drifts there too.
 
-- Added, without a criterion: the same simulation at dH = 2 (50 experiments). The instrument saturates when the pair's d_a passes about 6: there the AUC of a half reaches 1.
+- Added, without a criterion: the same simulation at dH = 2 (50 experiments). The instrument saturates when the pair's d_a goes beyond 6 to 7: there the AUC of a half reaches 1, and the tuned turing falls short of the truth.
 
 | k | rho | bias % at dH = 2 | share at AUC = 1 |
 |---|---|---|---|

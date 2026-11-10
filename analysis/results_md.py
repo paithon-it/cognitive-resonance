@@ -65,7 +65,8 @@ def e0(d):
         + "; the share of experiments where a half separates the classes completely (AUC = 1) is "
         + ", ".join(f(b["share_at_edge"], 2) for b in d["rho_minus_0_95"]) + ". The tetrachoric drifts there too.",
         "- Added, without a criterion: the same simulation at dH = 2 (50 experiments). The instrument saturates "
-        "when the pair's d_a passes about 6: there the AUC of a half reaches 1.",
+        "when the pair's d_a goes beyond 6 to 7: there the AUC of a half reaches 1, and the tuned turing falls "
+        "short of the truth.",
         table(["k", "rho", "bias % at dH = 2", "share at AUC = 1"], chk)])
 
 
