@@ -1,0 +1,40 @@
+{
+ "task": "cat-dog",
+ "seed": 0,
+ "lambda0": {
+  "train_half_B": {
+   "acc": 0.9251,
+   "cross_entropy": 0.1981,
+   "r_with_H": 0.4515
+  },
+  "test": {
+   "acc": 0.842,
+   "cross_entropy": 0.3433,
+   "r_with_H": 0.4671
+  }
+ },
+ "lambda0.3": {
+  "train_half_B": {
+   "acc": 0.3887,
+   "cross_entropy": 0.6968,
+   "r_with_H": -0.9501
+  },
+  "test": {
+   "acc": 0.3865,
+   "cross_entropy": 0.6966,
+   "r_with_H": -0.9406
+  }
+ },
+ "lambda3": {
+  "train_half_B": {
+   "acc": 0.3771,
+   "cross_entropy": 0.7083,
+   "r_with_H": -0.9409
+  },
+  "test": {
+   "acc": 0.389,
+   "cross_entropy": 0.7078,
+   "r_with_H": -0.9307
+  }
+ }
+}

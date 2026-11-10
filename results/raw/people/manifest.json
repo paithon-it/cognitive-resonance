@@ -1,0 +1,192 @@
+{
+ "protocol": "PROTOCOL.it.md v1.1 (2026-11-10)",
+ "versions": {
+  "python": "3.12.3",
+  "torch": "2.15.0+cu132",
+  "torchvision": "0.29.2+cu132",
+  "cuda": "13.2",
+  "cudnn": 92600,
+  "numpy": "2.5.4",
+  "gpu": "NVIDIA L4"
+ },
+ "stage_time": {
+  "stage": "people",
+  "workers": 1,
+  "start_unix": 1794348496,
+  "end_unix": 1794349164,
+  "wall_seconds": 668
+ },
+ "experiment": "E3, real people (protocol section 7)",
+ "files": [
+  "base_s0.npz",
+  "base_s1.npz",
+  "fold0_s0.npz",
+  "fold0_s1.npz",
+  "fold1_s0.npz",
+  "fold1_s1.npz"
+ ],
+ "keys": {
+  "base_s{seed}.npz": "image (0..9999, CIFAR-10 test index), y (0-9), logits (10000, 10) of the base",
+  "fold{f}_s{seed}.npz": "image (the CIFAR-10 test indices of half f), y, logits (len(lambdas), 5000, 10) measured on half f after fine-tuning on the other half, lambdas"
+ },
+ "halves": "the 10,000 test images split per class 500 + 500 with numpy default_rng(crc32('people/halves'))",
+ "machine": "ResNet-18 for CIFAR of silicon.py (Machine), trained on the 50,000 training images",
+ "people_cue": "logit((h + 0.5) / (n + 1)), h correct votes out of n, from cifar10h-counts.npy",
+ "machine_cue": "true logit minus logsumexp of the other nine",
+ "penalty": "lambda * Pearson correlation in the batch between machine and people cues, after removing the mean of each true class in the batch; lambda = 0 trains without the term",
+ "lambdas": [
+  0.0,
+  1.0,
+  3.0,
+  10.0
+ ],
+ "hyperparameters": {
+  "base_epochs": 40,
+  "base_lr": 0.2,
+  "base_batch_size": 256,
+  "ft_epochs": 8,
+  "ft_lr": 0.01,
+  "ft_batch_size": 256,
+  "ft_schedule": "cosine to zero",
+  "weight_decay": 0.0005,
+  "optimiser": "SGD Nesterov momentum 0.9, bf16 autocast; base: one-cycle; fine-tuning: cosine from ft_lr to zero, BatchNorm in training mode",
+  "augmentation": "random 32x32 crop of the image reflect-padded by 4 pixels, random horizontal flip"
+ },
+ "torch_seeds": "base: crc32('people/s<seed>/base'); fine-tuning: crc32('people/s<seed>/fold<f>/ft'), shared by every lambda",
+ "units": {
+  "base_s0": {
+   "unit": "base_s0",
+   "torch_seed": 168691225,
+   "train_seconds": 268.7,
+   "test_acc": 0.9446
+  },
+  "base_s1": {
+   "unit": "base_s1",
+   "torch_seed": 1095947708,
+   "train_seconds": 268.9,
+   "test_acc": 0.9432
+  },
+  "finetune_s0": {
+   "unit": "finetune_s0",
+   "folds": {
+    "fold0": {
+     "torch_seed": 1257116426,
+     "tuned_on": "half 1",
+     "measured_on": "half 0",
+     "lambda0": {
+      "train_seconds": 11.7,
+      "batch_corr_last_epoch": 0.3764,
+      "acc_measured_half": 0.9396
+     },
+     "lambda1": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.4778,
+      "acc_measured_half": 0.926
+     },
+     "lambda3": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.6328,
+      "acc_measured_half": 0.891
+     },
+     "lambda10": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.5105,
+      "acc_measured_half": 0.1778
+     }
+    },
+    "fold1": {
+     "torch_seed": 1918006383,
+     "tuned_on": "half 0",
+     "measured_on": "half 1",
+     "lambda0": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": 0.3428,
+      "acc_measured_half": 0.9408
+     },
+     "lambda1": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.4666,
+      "acc_measured_half": 0.9256
+     },
+     "lambda3": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.6001,
+      "acc_measured_half": 0.887
+     },
+     "lambda10": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.4684,
+      "acc_measured_half": 0.1846
+     }
+    }
+   },
+   "seconds": 52.1,
+   "cifar10h": {
+    "votes_per_image_mean": 51.1,
+    "majority_agrees_with_label": 0.9921
+   }
+  },
+  "finetune_s1": {
+   "unit": "finetune_s1",
+   "folds": {
+    "fold0": {
+     "torch_seed": 623671348,
+     "tuned_on": "half 1",
+     "measured_on": "half 0",
+     "lambda0": {
+      "train_seconds": 11.7,
+      "batch_corr_last_epoch": 0.3587,
+      "acc_measured_half": 0.941
+     },
+     "lambda1": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.4938,
+      "acc_measured_half": 0.927
+     },
+     "lambda3": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.6271,
+      "acc_measured_half": 0.8892
+     },
+     "lambda10": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.3191,
+      "acc_measured_half": 0.1956
+     }
+    },
+    "fold1": {
+     "torch_seed": 495984465,
+     "tuned_on": "half 0",
+     "measured_on": "half 1",
+     "lambda0": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": 0.3313,
+      "acc_measured_half": 0.9422
+     },
+     "lambda1": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.4686,
+      "acc_measured_half": 0.9288
+     },
+     "lambda3": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.6016,
+      "acc_measured_half": 0.8838
+     },
+     "lambda10": {
+      "train_seconds": 5.7,
+      "batch_corr_last_epoch": -0.5472,
+      "acc_measured_half": 0.185
+     }
+    }
+   },
+   "seconds": 52.1,
+   "cifar10h": {
+    "votes_per_image_mean": 51.1,
+    "majority_agrees_with_label": 0.9921
+   }
+  }
+ },
+ "cifar10h_licence": "CC BY-NC-SA 4.0; the counts are not included here",
+ "deviations": []
+}

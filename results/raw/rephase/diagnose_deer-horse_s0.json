@@ -1,0 +1,40 @@
+{
+ "task": "deer-horse",
+ "seed": 0,
+ "lambda0": {
+  "train_half_B": {
+   "acc": 0.9791,
+   "cross_entropy": 0.0667,
+   "r_with_H": 0.5947
+  },
+  "test": {
+   "acc": 0.9435,
+   "cross_entropy": 0.1506,
+   "r_with_H": 0.6095
+  }
+ },
+ "lambda0.3": {
+  "train_half_B": {
+   "acc": 0.4293,
+   "cross_entropy": 0.698,
+   "r_with_H": -0.8913
+  },
+  "test": {
+   "acc": 0.4295,
+   "cross_entropy": 0.6985,
+   "r_with_H": -0.8706
+  }
+ },
+ "lambda3": {
+  "train_half_B": {
+   "acc": 0.2696,
+   "cross_entropy": 0.7054,
+   "r_with_H": -0.9456
+  },
+  "test": {
+   "acc": 0.2615,
+   "cross_entropy": 0.7059,
+   "r_with_H": -0.939
+  }
+ }
+}

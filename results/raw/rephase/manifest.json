@@ -1,0 +1,694 @@
+{
+ "protocol": "PROTOCOL.it.md v1.1 (2026-11-10)",
+ "versions": {
+  "python": "3.12.3",
+  "torch": "2.15.0+cu132",
+  "torchvision": "0.29.2+cu132",
+  "cuda": "13.2",
+  "cudnn": 92600,
+  "numpy": "2.5.4",
+  "gpu": "NVIDIA L4"
+ },
+ "stage_time": {
+  "stage": "rephase",
+  "workers": 1,
+  "start_unix": 1794347807,
+  "end_unix": 1794348494,
+  "wall_seconds": 687
+ },
+ "normalisation": {
+  "mean": [
+   0.491,
+   0.482,
+   0.447
+  ],
+  "std": [
+   0.247,
+   0.243,
+   0.262
+  ]
+ },
+ "cifar10_classes": [
+  "airplane",
+  "automobile",
+  "bird",
+  "cat",
+  "deer",
+  "dog",
+  "frog",
+  "horse",
+  "ship",
+  "truck"
+ ],
+ "pilot": {
+  "epochs": 30,
+  "lr": 0.1,
+  "batch_size": 256,
+  "delta": 1.0,
+  "rule": "smallest epochs within 0.5 accuracy points of the best grid cell (mean over the two pilot tasks), then the best learning rate at those epochs",
+  "grid_mean_val_acc": {
+   "e10_lr0.05": 0.8838,
+   "e10_lr0.1": 0.8862,
+   "e15_lr0.05": 0.8941,
+   "e15_lr0.1": 0.905,
+   "e20_lr0.05": 0.9061,
+   "e20_lr0.1": 0.9097,
+   "e30_lr0.05": 0.9166,
+   "e30_lr0.1": 0.9177
+  },
+  "probe": {
+   "ridge_alpha": 1.0,
+   "fit": "9,000 cat-dog training images, a ~ N(0,1)",
+   "test": "1,000 validation images x 5 presentations, a ~ N(0,1)",
+   "r2_by_delta": {
+    "0.25": 1.0,
+    "0.5": 1.0,
+    "1.0": 1.0
+   }
+  },
+  "timing": {
+   "net_1ep_s": 1.59,
+   "net_3ep_s": 1.24,
+   "net_img_per_s": 21774,
+   "resnet_img_per_s": 7566,
+   "resnet_first_epoch_s": 5.58,
+   "versions": {
+    "python": "3.12.3",
+    "torch": "2.15.0+cu132",
+    "torchvision": "0.29.2+cu132",
+    "cuda": "13.2",
+    "cudnn": 92600,
+    "numpy": "2.5.4",
+    "gpu": "NVIDIA L4"
+   }
+  }
+ },
+ "experiment": "E2, rephasing (protocol section 6)",
+ "files": [
+  "airplane-ship_s0.npz",
+  "airplane-ship_s1.npz",
+  "automobile-truck_s0.npz",
+  "automobile-truck_s1.npz",
+  "bird-frog_s0.npz",
+  "bird-frog_s1.npz",
+  "cat-dog_s0.npz",
+  "cat-dog_s1.npz",
+  "deer-horse_s0.npz",
+  "deer-horse_s1.npz"
+ ],
+ "file_pattern": "{task}_s{seed}.npz",
+ "keys": {
+  "y": "0/1",
+  "image": "index in the CIFAR-10 test set",
+  "a": "frame value shown, a ~ N(0, 2)",
+  "z_H": "person H: plus network, mu = 1, half A",
+  "z_H2": "control H': plus network, mu = 1, half B",
+  "z_M": "machines, shape (len(lambdas), N), half B, frame independent of class",
+  "lambdas": "penalty weights",
+  "val_*": "the same on validation (val_image: CIFAR-10 training index)"
+ },
+ "layout": "each image appears 5 times in a row (np.repeat), with independent frames",
+ "halves": "the 9,000 training images of the task (validation excluded) split per class in two halves of 2,250 + 2,250 (A = first half of the same permutation that draws the validation set)",
+ "machine_training_frame": "a ~ N(0, 2), independent of the class",
+ "penalty": "lambda * Pearson correlation in the batch between sgn*z_M and sgn*z_H (sgn = +1 for class 1, -1 for class 0), after removing the mean of each true class in the batch; H frozen in eval mode, forward on the same augmented and framed batch (bf16); lambda = 0 trains without the term",
+ "frame": "the outer 2-pixel border of all three channels is set to a * delta, in normalised units (after per-channel normalisation), applied after crop and flip, without clipping",
+ "delta": 1.0,
+ "torch_seeds": "crc32('rephase/<task>/s<seed>/<H|H2|M>') & 0x7fffffff; every M_lambda of a unit shares seed, initialisation, batch order, crops, flips and frames",
+ "test_and_validation_frames": "a = sqrt(2) * eps, eps from numpy default_rng(crc32('rephase/<task>/s<seed>/<test|val>-a'))",
+ "hyperparameters": {
+  "network": "Net of turing-meter experiments/angle-between-errors/gpu/silicon.py with a 2-way head: conv3x3 48-96, maxpool, 96-192, maxpool, 192, global average pool, linear; BatchNorm and ReLU after every convolution",
+  "optimiser": "SGD, Nesterov momentum 0.9, weight decay 5e-4, one-cycle schedule (PyTorch OneCycleLR defaults), bf16 autocast",
+  "augmentation": "random 32x32 crop of the image reflect-padded by 4 pixels, random horizontal flip",
+  "epochs": 30,
+  "max_lr": 0.1,
+  "batch_size": 256,
+  "train_images": 4500
+ },
+ "control_accuracy": {
+  "airplane-ship|H": [
+   {
+    "seed": 0,
+    "test_acc": 0.8582,
+    "val_acc": 0.8528
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8521,
+    "val_acc": 0.8478
+   }
+  ],
+  "airplane-ship|H2": [
+   {
+    "seed": 0,
+    "test_acc": 0.8511,
+    "val_acc": 0.8476
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8546,
+    "val_acc": 0.8512
+   }
+  ],
+  "airplane-ship|M0": [
+   {
+    "seed": 0,
+    "test_acc": 0.9347,
+    "val_acc": 0.9412,
+    "batch_corr_last_epoch": 0.6205
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.9327,
+    "val_acc": 0.9434,
+    "batch_corr_last_epoch": 0.6153
+   }
+  ],
+  "airplane-ship|M0.3": [
+   {
+    "seed": 0,
+    "test_acc": 0.3343,
+    "val_acc": 0.3594,
+    "batch_corr_last_epoch": -0.9296
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.2281,
+    "val_acc": 0.233,
+    "batch_corr_last_epoch": -0.9329
+   }
+  ],
+  "airplane-ship|M1": [
+   {
+    "seed": 0,
+    "test_acc": 0.1882,
+    "val_acc": 0.1956,
+    "batch_corr_last_epoch": -0.9696
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.2745,
+    "val_acc": 0.2738,
+    "batch_corr_last_epoch": -0.9614
+   }
+  ],
+  "airplane-ship|M3": [
+   {
+    "seed": 0,
+    "test_acc": 0.2256,
+    "val_acc": 0.234,
+    "batch_corr_last_epoch": -0.9202
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.1771,
+    "val_acc": 0.1852,
+    "batch_corr_last_epoch": -0.9758
+   }
+  ],
+  "airplane-ship|M10": [
+   {
+    "seed": 0,
+    "test_acc": 0.1709,
+    "val_acc": 0.1748,
+    "batch_corr_last_epoch": -0.9785
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.1761,
+    "val_acc": 0.182,
+    "batch_corr_last_epoch": -0.9735
+   }
+  ],
+  "automobile-truck|H": [
+   {
+    "seed": 0,
+    "test_acc": 0.8754,
+    "val_acc": 0.8752
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8938,
+    "val_acc": 0.9064
+   }
+  ],
+  "automobile-truck|H2": [
+   {
+    "seed": 0,
+    "test_acc": 0.8919,
+    "val_acc": 0.8992
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8894,
+    "val_acc": 0.9028
+   }
+  ],
+  "automobile-truck|M0": [
+   {
+    "seed": 0,
+    "test_acc": 0.9462,
+    "val_acc": 0.9512,
+    "batch_corr_last_epoch": 0.5897
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.9428,
+    "val_acc": 0.9488,
+    "batch_corr_last_epoch": 0.6494
+   }
+  ],
+  "automobile-truck|M0.3": [
+   {
+    "seed": 0,
+    "test_acc": 0.2122,
+    "val_acc": 0.1966,
+    "batch_corr_last_epoch": -0.9518
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.4224,
+    "val_acc": 0.4156,
+    "batch_corr_last_epoch": -0.9425
+   }
+  ],
+  "automobile-truck|M1": [
+   {
+    "seed": 0,
+    "test_acc": 0.3758,
+    "val_acc": 0.367,
+    "batch_corr_last_epoch": -0.9666
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.4755,
+    "val_acc": 0.4676,
+    "batch_corr_last_epoch": -0.9539
+   }
+  ],
+  "automobile-truck|M3": [
+   {
+    "seed": 0,
+    "test_acc": 0.3475,
+    "val_acc": 0.3336,
+    "batch_corr_last_epoch": -0.975
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.1596,
+    "val_acc": 0.1426,
+    "batch_corr_last_epoch": -0.9498
+   }
+  ],
+  "automobile-truck|M10": [
+   {
+    "seed": 0,
+    "test_acc": 0.1782,
+    "val_acc": 0.1728,
+    "batch_corr_last_epoch": -0.9431
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.2184,
+    "val_acc": 0.1988,
+    "batch_corr_last_epoch": -0.9517
+   }
+  ],
+  "bird-frog|H": [
+   {
+    "seed": 0,
+    "test_acc": 0.8346,
+    "val_acc": 0.8288
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8327,
+    "val_acc": 0.8332
+   }
+  ],
+  "bird-frog|H2": [
+   {
+    "seed": 0,
+    "test_acc": 0.83,
+    "val_acc": 0.8342
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8344,
+    "val_acc": 0.8242
+   }
+  ],
+  "bird-frog|M0": [
+   {
+    "seed": 0,
+    "test_acc": 0.9236,
+    "val_acc": 0.9294,
+    "batch_corr_last_epoch": 0.5905
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.923,
+    "val_acc": 0.925,
+    "batch_corr_last_epoch": 0.5439
+   }
+  ],
+  "bird-frog|M0.3": [
+   {
+    "seed": 0,
+    "test_acc": 0.8767,
+    "val_acc": 0.8752,
+    "batch_corr_last_epoch": -0.0715
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.4893,
+    "val_acc": 0.4938,
+    "batch_corr_last_epoch": -0.9581
+   }
+  ],
+  "bird-frog|M1": [
+   {
+    "seed": 0,
+    "test_acc": 0.2155,
+    "val_acc": 0.225,
+    "batch_corr_last_epoch": -0.9681
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.2891,
+    "val_acc": 0.293,
+    "batch_corr_last_epoch": -0.9551
+   }
+  ],
+  "bird-frog|M3": [
+   {
+    "seed": 0,
+    "test_acc": 0.2,
+    "val_acc": 0.2006,
+    "batch_corr_last_epoch": -0.9778
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.2148,
+    "val_acc": 0.2268,
+    "batch_corr_last_epoch": -0.9778
+   }
+  ],
+  "bird-frog|M10": [
+   {
+    "seed": 0,
+    "test_acc": 0.2135,
+    "val_acc": 0.2062,
+    "batch_corr_last_epoch": -0.9581
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.1879,
+    "val_acc": 0.1928,
+    "batch_corr_last_epoch": -0.982
+   }
+  ],
+  "cat-dog|H": [
+   {
+    "seed": 0,
+    "test_acc": 0.6934,
+    "val_acc": 0.6974
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.6799,
+    "val_acc": 0.6898
+   }
+  ],
+  "cat-dog|H2": [
+   {
+    "seed": 0,
+    "test_acc": 0.7102,
+    "val_acc": 0.725
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.6989,
+    "val_acc": 0.7106
+   }
+  ],
+  "cat-dog|M0": [
+   {
+    "seed": 0,
+    "test_acc": 0.8503,
+    "val_acc": 0.8394,
+    "batch_corr_last_epoch": 0.4363
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8469,
+    "val_acc": 0.8378,
+    "batch_corr_last_epoch": 0.4173
+   }
+  ],
+  "cat-dog|M0.3": [
+   {
+    "seed": 0,
+    "test_acc": 0.3662,
+    "val_acc": 0.3634,
+    "batch_corr_last_epoch": -0.9515
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.3751,
+    "val_acc": 0.3668,
+    "batch_corr_last_epoch": -0.9649
+   }
+  ],
+  "cat-dog|M1": [
+   {
+    "seed": 0,
+    "test_acc": 0.3829,
+    "val_acc": 0.3758,
+    "batch_corr_last_epoch": -0.9677
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.3534,
+    "val_acc": 0.3464,
+    "batch_corr_last_epoch": -0.9691
+   }
+  ],
+  "cat-dog|M3": [
+   {
+    "seed": 0,
+    "test_acc": 0.3908,
+    "val_acc": 0.386,
+    "batch_corr_last_epoch": -0.9496
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.3439,
+    "val_acc": 0.3422,
+    "batch_corr_last_epoch": -0.9782
+   }
+  ],
+  "cat-dog|M10": [
+   {
+    "seed": 0,
+    "test_acc": 0.3525,
+    "val_acc": 0.3578,
+    "batch_corr_last_epoch": -0.9572
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.3608,
+    "val_acc": 0.3528,
+    "batch_corr_last_epoch": -0.9599
+   }
+  ],
+  "deer-horse|H": [
+   {
+    "seed": 0,
+    "test_acc": 0.852,
+    "val_acc": 0.8552
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8574,
+    "val_acc": 0.851
+   }
+  ],
+  "deer-horse|H2": [
+   {
+    "seed": 0,
+    "test_acc": 0.8498,
+    "val_acc": 0.8478
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8489,
+    "val_acc": 0.84
+   }
+  ],
+  "deer-horse|M0": [
+   {
+    "seed": 0,
+    "test_acc": 0.9414,
+    "val_acc": 0.9324,
+    "batch_corr_last_epoch": 0.5786
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.9387,
+    "val_acc": 0.9388,
+    "batch_corr_last_epoch": 0.5949
+   }
+  ],
+  "deer-horse|M0.3": [
+   {
+    "seed": 0,
+    "test_acc": 0.4271,
+    "val_acc": 0.4146,
+    "batch_corr_last_epoch": -0.8862
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.8565,
+    "val_acc": 0.8498,
+    "batch_corr_last_epoch": -0.0542
+   }
+  ],
+  "deer-horse|M1": [
+   {
+    "seed": 0,
+    "test_acc": 0.3157,
+    "val_acc": 0.3098,
+    "batch_corr_last_epoch": -0.8413
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.4721,
+    "val_acc": 0.4782,
+    "batch_corr_last_epoch": -0.9637
+   }
+  ],
+  "deer-horse|M3": [
+   {
+    "seed": 0,
+    "test_acc": 0.2564,
+    "val_acc": 0.2566,
+    "batch_corr_last_epoch": -0.9429
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.3718,
+    "val_acc": 0.3876,
+    "batch_corr_last_epoch": -0.9701
+   }
+  ],
+  "deer-horse|M10": [
+   {
+    "seed": 0,
+    "test_acc": 0.2152,
+    "val_acc": 0.2044,
+    "batch_corr_last_epoch": -0.9391
+   },
+   {
+    "seed": 1,
+    "test_acc": 0.2029,
+    "val_acc": 0.2008,
+    "batch_corr_last_epoch": -0.9781
+   }
+  ]
+ },
+ "unit_seconds": {
+  "airplane-ship_s0": 77.4,
+  "airplane-ship_s1": 55.4,
+  "automobile-truck_s0": 77.2,
+  "automobile-truck_s1": 55.4,
+  "bird-frog_s0": 77.4,
+  "bird-frog_s1": 55.4,
+  "cat-dog_s0": 80.8,
+  "cat-dog_s1": 69.8,
+  "deer-horse_s0": 77.3,
+  "deer-horse_s1": 55.5
+ },
+ "diagnostics": {
+  "diagnose_cat-dog_s0": {
+   "task": "cat-dog",
+   "seed": 0,
+   "lambda0": {
+    "train_half_B": {
+     "acc": 0.9251,
+     "cross_entropy": 0.1981,
+     "r_with_H": 0.4515
+    },
+    "test": {
+     "acc": 0.842,
+     "cross_entropy": 0.3433,
+     "r_with_H": 0.4671
+    }
+   },
+   "lambda0.3": {
+    "train_half_B": {
+     "acc": 0.3887,
+     "cross_entropy": 0.6968,
+     "r_with_H": -0.9501
+    },
+    "test": {
+     "acc": 0.3865,
+     "cross_entropy": 0.6966,
+     "r_with_H": -0.9406
+    }
+   },
+   "lambda3": {
+    "train_half_B": {
+     "acc": 0.3771,
+     "cross_entropy": 0.7083,
+     "r_with_H": -0.9409
+    },
+    "test": {
+     "acc": 0.389,
+     "cross_entropy": 0.7078,
+     "r_with_H": -0.9307
+    }
+   }
+  },
+  "diagnose_deer-horse_s0": {
+   "task": "deer-horse",
+   "seed": 0,
+   "lambda0": {
+    "train_half_B": {
+     "acc": 0.9791,
+     "cross_entropy": 0.0667,
+     "r_with_H": 0.5947
+    },
+    "test": {
+     "acc": 0.9435,
+     "cross_entropy": 0.1506,
+     "r_with_H": 0.6095
+    }
+   },
+   "lambda0.3": {
+    "train_half_B": {
+     "acc": 0.4293,
+     "cross_entropy": 0.698,
+     "r_with_H": -0.8913
+    },
+    "test": {
+     "acc": 0.4295,
+     "cross_entropy": 0.6985,
+     "r_with_H": -0.8706
+    }
+   },
+   "lambda3": {
+    "train_half_B": {
+     "acc": 0.2696,
+     "cross_entropy": 0.7054,
+     "r_with_H": -0.9456
+    },
+    "test": {
+     "acc": 0.2615,
+     "cross_entropy": 0.7059,
+     "r_with_H": -0.939
+    }
+   }
+  }
+ },
+ "deviations": []
+}
