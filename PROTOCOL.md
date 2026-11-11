@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 1.3, 10 November 2026. Written and recorded in the repository **before any run**:
+Version 1.4, 11 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -214,6 +214,52 @@ Raw data: `rephase_bis/{task}_s{seed}.npz` with `y, image, a, z_H, z_M` (one row
 machine, in the order of `machines` = `M0, Mpair, Mframe`) and the same with the prefix
 `val_`; `manifest.json`.
 
+## 6 ter. E2 ter. The soloist that learns the person (exploratory)
+
+Added with version 1.4, on 11 November 2026, **after** seeing all the results and after a
+review of the draft of the article: it is not a test registered beforehand. The
+expectations below are written before the run.
+
+**Why.** In E2 bis the machine trained from scratch on the error of the sum learned almost
+nothing but to remove the bias of H, and of the task it knows almost nothing: the best
+soloist remained the best partner (B3 does not pass). What is left is to start from the
+soloist, so that it does not have to choose between the task and the correction.
+
+- **H and `M_0`** as in E2 and E2 bis: same tasks, same seeds, same halves, same frame.
+- **`M_0+`, the control.** `M_0` fine-tuned on half B with its normal loss: 10 epochs, a
+  learning rate one fifth of the pilot's, cosine decay to zero. It is there so as not to
+  mistake ten more epochs for an effect of the recipe.
+- **`M_due`** (Italian for "two": two losses). `M_0` fine-tuned in the same way, with the
+  mixed loss: cross-entropy of its own cue plus cross-entropy of the summed cue
+  `z_H + z_M`; H is frozen and looks at the same presentation.
+- **`M_ramo`** (Italian for "branch"). `M_0` frozen, plus a branch: a new network that sees
+  only the frame (like `M_frame`), trained with the pilot's hyperparameters on the
+  cross-entropy of `z_H + z_M0 + z_ramo`. The cue of the machine is `z_M0 + z_ramo`.
+- **Measures** as in E2 bis, with the same estimators and the same bootstrap; in addition,
+  the sensitivity of the tuned pair against that of `M_0+` alone.
+
+Expectations:
+
+- **T1, it does not forget.** `d_a(M_due)` is at least 0.9 times `d_a(M_0+)`, in median
+  over the units, and the slope of the cue of `M_due` on `a` has the opposite sign to
+  that of H in every unit.
+- **T2, the angle opens.** `phi(H, M) - phi(H, M_0+) > 0`, with an interval that excludes
+  zero in every seed, in at least 3 tasks out of 5; it is judged for `M_due` and for
+  `M_ramo`.
+- **T3, the partner beats the soloist.** The tuned pair `(H, M)` is more sensitive than
+  the pair `(H, M_0+)`, with an interval of the difference that excludes zero in every
+  seed, in at least 3 tasks out of 5; it is judged for `M_due` and for `M_ramo`. Stated
+  expectation: it passes, narrowly. The ceiling is the pair without bias of E1
+  (`mu = 0`).
+- **T4.** The tuned turing is, in median, within 10% of the apparent turing computed
+  from `k` and `phi`, for both machines.
+- **T5, the pair against the machine.** The tuned pair `(H, M_due)` is more sensitive
+  than `M_0+` alone, with an interval of the difference that excludes zero in every
+  seed, in at least 3 tasks out of 5. Stated expectation: uncertain.
+
+Raw data: `rephase_ter/{task}_s{seed}.npz`, like `rephase_bis/`, with `machines` =
+`M0, M0plus, Mdue, Mramo`; `manifest.json`.
+
 ## 7. E3. Real people
 
 - **Data.** CIFAR-10H (Peterson and colleagues, 2019): about 51 human votes for each of
@@ -240,6 +286,46 @@ Hypotheses:
   excludes zero. The stated expectation is uncertain: with five thousand images and one
   person in twenty getting it wrong, it may well not open.
 - **H3b.** The angle stays below 90 degrees for every `lambda`.
+
+## 7 bis. E3 bis. The recipe of the sum with real people (exploratory)
+
+Added with version 1.4, under the same conditions as E2 ter: after seeing all the
+results, with the expectations written before the run.
+
+**Why.** E3 tried on people the recipe of punishment, the one that did not work on the
+bench. The recipe of the sum came later, and it has not been tried with people.
+
+- **Data, base machine, halves and fine-tuning** as in E3: same seeds, same two halves, 8
+  epochs at learning rate 0.01 with a cosine decay, starting from the base machine.
+- **The people's cue**, over ten classes: `u_c = log((v_c + 0.5) / (n + 5))`, with `v_c`
+  the votes for class `c` out of `n`.
+- **Three recipes**, with their Italian names. `controllo` (control): cross-entropy of
+  the logits of the machine (it is `lambda = 0` of E3, done again). `somma` (sum):
+  cross-entropy of `u + z_M`. `mista` (mixed): the sum of the two.
+- **Measures** as in E3 (angle, accuracy of the machine, apparent turings, turing of the
+  group with the combiner), on the half not used for the fine-tuning. In addition, the
+  accuracy of `argmax(u + z_M)`, next to that of the majority of the votes.
+
+Expectations:
+
+- **P1, it does not collapse.** With `mista` the accuracy of the machine alone does not
+  fall more than 2 points below that of the control, in every half and in every seed.
+  For `somma` no expectation: it is reported.
+- **P2, the angle opens.** For at least one of the two recipes the angle on the unseen
+  half is more open than in the control, with an interval of the difference (paired
+  bootstrap over images) that excludes zero, the same recipe in all seeds.
+- **P3, the apparent turings rise.** For the same recipe as P2 the apparent turings
+  exceed those of the control, with an interval of the difference that excludes zero in
+  all seeds. It is the point where punishment failed. Stated expectation: uncertain,
+  with five thousand images and one person in twenty getting it wrong.
+- **P4.** The angle stays below 90 degrees for both recipes (point estimate).
+- **P5, the group.** The turing of the group with the combiner, for `mista`, exceeds that
+  of the control with an interval of the difference that excludes zero in all seeds.
+  Stated expectation: uncertain.
+
+Raw data: `people_bis/fold{f}_s{seed}.npz` with `image`, `y`, `logits` of shape
+(3, N, 10) and `recipes` = `controllo, somma, mista`; `people_bis/base_s{seed}.npz`;
+`manifest.json`.
 
 ## 8. E4. The pairs already measured
 
@@ -403,4 +489,8 @@ experiment E5 on the null (§ 8 bis): it was written with the GPU runs started, 
 before any analysis of the raw data, and it changes nothing of what was there. Version
 1.3 adds E2 bis (§ 6 bis), exploratory: it is written after seeing the data of E2 and E3
 and before its run, and it touches neither the criteria nor the results of the other
-tests.
+tests. Version 1.4, of 11 November, adds E2 ter (§ 6 ter) and E3 bis (§ 7 bis),
+exploratory: they come from a review of the draft of the article, they are written
+after seeing all the results and before their runs, and they touch neither the criteria
+nor the results of the other tests. On the server the two runs use a sub-folder of their
+own, which is deleted at the end.
