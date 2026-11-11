@@ -1,6 +1,6 @@
 """Writes manifest.json for one experiment folder from the per-unit records (protocol section 11).
 
-    python gpu/manifest.py OUT_ROOT bench|rephase|rephase_bis|people [DEVIATION ...]
+    python gpu/manifest.py OUT_ROOT bench|rephase|rephase_bis|rephase_ter|people|people_bis [DEVIATION ...]
 
 OUT_ROOT is the folder with pilot/ and the experiment folders; the manifest lands in OUT_ROOT/<experiment>/.
 """
@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import CLASSES, FRAME_WIDTH, MEAN, N_VAL_PER_CLASS, PRESENTATIONS, SPLIT_SEED, STD, TASKS  # noqa: E402
 
 PROTOCOL = "PROTOCOL.it.md v1.1 (2026-11-10)"
+PROTOCOL_V14 = "PROTOCOL.it.md v1.4 (2026-11-11)"          # E2 ter and E3 bis are written in this version
 NET = ("Net of turing-meter experiments/angle-between-errors/gpu/silicon.py with a 2-way head: conv3x3 48-96, "
        "maxpool, 96-192, maxpool, 192, global average pool, linear; BatchNorm and ReLU after every convolution")
 OPTIM = "SGD, Nesterov momentum 0.9, weight decay 5e-4, one-cycle schedule (PyTorch OneCycleLR defaults), bf16 autocast"
@@ -171,6 +172,62 @@ def rephase_bis(root: Path, deviations) -> dict:
     return m
 
 
+def rephase_ter(root: Path, deviations) -> dict:
+    folder = root / "rephase_ter"
+    units = load_units(folder)
+    cfg = json.loads((root / "pilot" / "config.json").read_text())
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from rephase_ter import FT_EPOCHS, FT_LR_DIVISOR
+    rows = [u for k, u in units.items() if not k.startswith("_")]
+    acc = {}
+    for u in rows:
+        for role, info in u["nets"].items():
+            acc.setdefault(f"{u['task']}|{role}", []).append({"seed": u["seed"], **{k: v for k, v in info.items()
+                                                                                  if "acc" in k}})
+    m = common_block(root, units)
+    m.update({
+        "protocol": PROTOCOL_V14,
+        "experiment": "E2 ter, the soloist that learns the person (protocol section 6 ter, exploratory)",
+        "files": sorted(p.name for p in folder.glob("*.npz")),
+        "file_pattern": "{task}_s{seed}.npz",
+        "keys": {"y": "0/1", "image": "index in the CIFAR-10 test set", "a": "frame value shown, a ~ N(0, 2)",
+                 "z_H": "person H: plus network, mu = 1, half A (same seeds as E2 and E2 bis)",
+                 "z_M": "log-odds of each machine on its own (not the sum with H), shape (4, N), rows in the order "
+                        "of `machines`; for Mramo z_M0 + z_branch", "machines": "['M0', 'M0plus', 'Mdue', 'Mramo']",
+                 "val_*": "the same on validation (val_image: CIFAR-10 training index)"},
+        "layout": f"each image appears {PRESENTATIONS} times in a row (np.repeat), with independent frames",
+        "halves": "as E2", "machine_training_frame": "a ~ N(0, 2), independent of the class",
+        "machines": {
+            "M0": "cross-entropy on half B, as M_0 of E2 and E2 bis (same seed)",
+            "M0plus": f"a copy of M0 fine-tuned on half B with cross-entropy: {FT_EPOCHS} epochs, learning rate "
+                      f"the pilot's divided by {FT_LR_DIVISOR} ({cfg['lr'] / FT_LR_DIVISOR:g}), cosine from it to zero, "
+                      "BatchNorm in training mode",
+            "Mdue": "a copy of M0 fine-tuned as M0plus (same seed, batch order, crops, flips and frames); loss: its "
+                    "cross-entropy plus the binary cross-entropy of the summed log-odds (out1 - out0) + z_H, z_H from "
+                    "frozen H (eval mode, bf16) on the same augmented and framed presentation, no gradient, weight "
+                    "one, no standardisation",
+            "Mramo": "M0 frozen (eval mode) plus a branch: a new network that sees the framed image with its interior "
+                     "set to zero, trained from scratch with the pilot's epochs, learning rate and one-cycle schedule "
+                     "on the binary cross-entropy of z_H + z_M0 + z_branch (H and M0 frozen, whole framed "
+                     "presentation, no gradient); recorded cue z_M0 + z_branch"},
+        "frame": FRAME, "delta": cfg["delta"],
+        "torch_seeds": "H and M0 as E2: crc32('rephase/<task>/s<seed>/<H|M>') & 0x7fffffff; the fine-tuning of "
+                       "M0plus and Mdue: crc32('rephase/<task>/s<seed>/ter'), shared; the branch of Mramo: "
+                       "crc32('rephase/<task>/s<seed>/ramo'). With cudnn autotuning the runs are not bitwise "
+                       "reproducible: H and M0 are re-trained, close to but not identical with E2's and E2 bis's",
+        "test_and_validation_frames": "the same eps as E2: numpy default_rng(crc32('rephase/<task>/s<seed>/"
+                                      "<test|val>-a')), a = sqrt(2) * eps",
+        "hyperparameters": {"network": NET, "optimiser": OPTIM, "augmentation": AUG, "epochs": cfg["epochs"],
+                            "max_lr": cfg["lr"], "batch_size": cfg["batch_size"], "train_images": 4500,
+                            "fine_tuning": {"epochs": FT_EPOCHS, "lr": cfg["lr"] / FT_LR_DIVISOR,
+                                            "schedule": "cosine from lr to zero (CosineAnnealingLR)"}},
+        "control_accuracy": acc,
+        "unit_seconds": {k: u["seconds"] for k, u in units.items() if not k.startswith("_")},
+        "deviations": deviations,
+    })
+    return m
+
+
 def people(root: Path, deviations) -> dict:
     folder = root / "people"
     units = load_units(folder)
@@ -202,13 +259,50 @@ def people(root: Path, deviations) -> dict:
     return m
 
 
+def people_bis(root: Path, deviations) -> dict:
+    folder = root / "people_bis"
+    units = load_units(folder)
+    cfg = json.loads((root / "pilot" / "config.json").read_text())
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from people import DEFAULTS
+    from people_bis import RECIPES
+    P = dict(DEFAULTS)
+    P.update(cfg.get("people", {}))
+    m = {"protocol": PROTOCOL_V14, "versions": units.get("_versions"), "stage_time": units.get("_stage"),
+         "experiment": "E3 bis, the recipe of the sum with real people (protocol section 7 bis, exploratory)",
+         "files": sorted(p.name for p in folder.glob("*.npz")),
+         "keys": {"base_s{seed}.npz": "image (0..9999, CIFAR-10 test index), y (0-9), logits (10000, 10) of the base",
+                  "fold{f}_s{seed}.npz": "image (the CIFAR-10 test indices of half f), y, logits (3, 5000, 10) "
+                                         "measured on half f after fine-tuning on the other half, one row per "
+                                         "recipe in the order of `recipes`"},
+         "halves": "as E3: the 10,000 test images split per class 500 + 500 with numpy "
+                   "default_rng(crc32('people/halves'))",
+         "machine": "as E3: ResNet-18 for CIFAR of silicon.py (Machine), trained on the 50,000 training images, "
+                    "same seeds and settings (re-trained, not reloaded)",
+         "people_cue": "u_c = log((v_c + 0.5) / (n + 5)), v_c votes for class c out of n, from cifar10h-counts.npy",
+         "recipes": {"controllo": "cross-entropy of the machine's logits (lambda = 0 of E3)",
+                     "somma": "cross-entropy of u + logits",
+                     "mista": "cross-entropy of the logits plus cross-entropy of u + logits"},
+         "recipe_order": list(RECIPES),
+         "hyperparameters": P | {"optimiser": "SGD Nesterov momentum 0.9, bf16 autocast; base: one-cycle; "
+                                              "fine-tuning: cosine from ft_lr to zero, BatchNorm in training mode",
+                                 "augmentation": AUG},
+         "torch_seeds": "as E3: base crc32('people/s<seed>/base'); fine-tuning crc32('people/s<seed>/fold<f>/ft'), "
+                        "shared by the three recipes",
+         "units": {k: v for k, v in units.items() if not k.startswith("_")},
+         "cifar10h_licence": "CC BY-NC-SA 4.0; the counts are not included here",
+         "deviations": deviations}
+    return m
+
+
 def main() -> None:
     root, exp = Path(sys.argv[1]), sys.argv[2]
     deviations = list(sys.argv[3:])
     dev_file = root / "deviations.json"           # optional: {"bench": ["..."], "rephase": [...], "people": [...]}
     if dev_file.exists():
         deviations += json.loads(dev_file.read_text()).get(exp, [])
-    m = {"bench": bench, "rephase": rephase, "rephase_bis": rephase_bis, "people": people}[exp](root, deviations)
+    m = {"bench": bench, "rephase": rephase, "rephase_bis": rephase_bis, "rephase_ter": rephase_ter, "people": people,
+         "people_bis": people_bis}[exp](root, deviations)
     (root / exp / "manifest.json").write_text(json.dumps(m, indent=1))
     print("manifest", exp, len(m["files"]), "files")
 

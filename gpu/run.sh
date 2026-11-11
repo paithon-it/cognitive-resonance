@@ -5,7 +5,9 @@
 #   bash gpu/run.sh bench   [WORKERS] [SEEDS] [TASKS]    # E1
 #   bash gpu/run.sh rephase [WORKERS] [SEEDS] [TASKS]    # E2
 #   bash gpu/run.sh rephase_bis [WORKERS] [SEEDS] [TASKS]   # E2 bis (exploratory, protocol section 6 bis)
+#   bash gpu/run.sh rephase_ter [WORKERS] [SEEDS] [TASKS]   # E2 ter (exploratory, protocol section 6 ter)
 #   bash gpu/run.sh people                               # E3: two base machines, then the fine-tuning
+#   bash gpu/run.sh people_bis                           # E3 bis (exploratory, section 7 bis): the same, three recipes
 # Results go to $RND/out/<stage>/; the configuration chosen by the pilot is $RND/out/pilot/config.json.
 set -uo pipefail
 . "$(dirname "$0")/env.sh"
@@ -24,7 +26,7 @@ case "$STAGE" in
     done
     wait "${pids[@]}"
     python gpu/pilot.py choose "$OUT/pilot" > "$OUT/logs/pilot-choose.log" 2>&1 ;;
-  bench|rephase|rephase_bis)
+  bench|rephase|rephase_bis|rephase_ter)
     for w in $(seq 0 $((W - 1))); do
       python "gpu/$STAGE.py" "$OUT/$STAGE" "$CFG" "$w" "$W" ${3:+"$3"} ${4:+"$4"} > "$OUT/logs/$STAGE-$w.log" 2>&1 & pids+=($!)
     done
@@ -36,6 +38,14 @@ case "$STAGE" in
     done
     for s in 0 1; do
       python gpu/people.py finetune "$OUT/people" "$CFG" "$s" > "$OUT/logs/people-ft-$s.log" 2>&1
+    done ;;
+  people_bis)
+    # as people, in its own folder: the base machines again (E3's seeds and settings), then the three recipes
+    for s in 0 1; do
+      [ -f "$OUT/people_bis/base_s$s.npz" ] || python gpu/people_bis.py base "$OUT/people_bis" "$CFG" "$s" > "$OUT/logs/people_bis-base-$s.log" 2>&1
+    done
+    for s in 0 1; do
+      python gpu/people_bis.py finetune "$OUT/people_bis" "$CFG" "$s" > "$OUT/logs/people_bis-ft-$s.log" 2>&1
     done ;;
   *) echo "unknown stage $STAGE"; exit 2 ;;
 esac
