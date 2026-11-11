@@ -18,6 +18,8 @@ MUS = (0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0)
 LAMBDAS_REPHASE = (0.0, 0.3, 1.0, 3.0, 10.0)
 LAMBDAS_PEOPLE = (0.0, 1.0, 3.0, 10.0)
 MACHINES_BIS = ("M0", "Mpair", "Mframe")
+MACHINES_TER = ("M0", "M0plus", "Mdue", "Mramo")
+RECIPES_PEOPLE_BIS = ("controllo", "somma", "mista")
 
 
 def _nets(gen, n_images, presentations, d, mu, signs, rho_img=0.6, scale=1.3):
@@ -123,6 +125,40 @@ def write_rephase_bis(folder, tasks=TASKS, seeds=(0, 1), n_images=2000, presenta
     (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
 
 
+def _rephase_ter_cues(gen, n_images, presentations, d):
+    """H and M0 as in E2 bis; M0plus is M0 a little further on, Mdue keeps the image and learns the frame
+    against H, Mramo is M0 plus a branch that reads only the frame against H."""
+    y_img = (np.arange(n_images) >= n_images // 2).astype(int)
+    image = np.repeat(np.arange(n_images), presentations)
+    y = y_img[image]
+    s = 2.0 * y - 1.0
+    a = gen.normal(0.0, math.sqrt(2.0), image.size)
+    common = gen.standard_normal(n_images)
+    noise = lambda r: (r ** 0.5 * common + (1 - r) ** 0.5 * gen.standard_normal(n_images))[image]  # noqa: E731
+    zh = s * d / 2 + noise(0.6) + 0.4 * gen.standard_normal(image.size) + 0.8 * a
+    m0 = s * d / 2 + noise(0.6) + 0.4 * gen.standard_normal(image.size)
+    m0plus = m0 + s * 0.02 * d + 0.1 * gen.standard_normal(image.size)
+    mdue = s * 0.97 * d / 2 + noise(0.5) + 0.4 * gen.standard_normal(image.size) - 0.6 * a
+    mramo = m0 + 0.3 * gen.standard_normal(image.size) - 0.8 * a
+    return y, image, a, zh, np.array([m0, m0plus, mdue, mramo])
+
+
+def write_rephase_ter(folder, tasks=TASKS, seeds=(0, 1), n_images=2000, presentations=5, n_val=1000,
+                      seed=11) -> None:
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for ti, task in enumerate(tasks):
+        d = 1.6 + 0.25 * ti
+        for sd in seeds:
+            gen = np.random.default_rng([seed, ti, sd])
+            y, image, a, zh, zm = _rephase_ter_cues(gen, n_images, presentations, d)
+            vy, vimage, va, vzh, vzm = _rephase_ter_cues(gen, n_val, 1, d)
+            np.savez(folder / f"{task}_s{sd}.npz", y=y, image=image, a=a, z_H=zh, z_M=zm,
+                     machines=np.array(MACHINES_TER), val_y=vy, val_image=vimage, val_a=va, val_z_H=vzh,
+                     val_z_M=vzm)
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
 def people_world(n=10_000, seed=9):
     """Labels, CIFAR-10H-like counts and a hidden 'confusable' class per image."""
     gen = np.random.default_rng(seed)
@@ -162,4 +198,27 @@ def write_people(folder, counts_path, seeds=(0, 1), lambdas=LAMBDAS_PEOPLE, seed
             img = np.flatnonzero(fold_of == f)
             lg = np.stack([_logits(gen, y[img], other[img], hard[img], 1.0 / (1.0 + lam)) for lam in lambdas])
             np.savez(folder / f"fold{f}_s{sd}.npz", image=img, y=y[img], logits=lg, lambdas=np.array(lambdas))
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
+def write_people_bis(folder, counts_path, seeds=(0, 1), seed=12) -> None:
+    """E3 bis: the control follows the people's confusions as the base does, `somma` much less, `mista` half."""
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    y, other, hard, counts = people_world(seed=seed)
+    np.save(counts_path, counts)
+    n = y.size
+    follow = {"controllo": 1.0, "somma": 0.1, "mista": 0.5}
+    for sd in seeds:
+        gen = np.random.default_rng([seed, sd])
+        np.savez(folder / f"base_s{sd}.npz", image=np.arange(n), y=y, logits=_logits(gen, y, other, hard, 1.0))
+        fold_of = np.zeros(n, int)
+        for c in range(10):
+            members = np.flatnonzero(y == c)
+            fold_of[gen.permutation(members)[1::2]] = 1
+        for f in (0, 1):
+            img = np.flatnonzero(fold_of == f)
+            lg = np.stack([_logits(gen, y[img], other[img], hard[img], follow[r]) for r in RECIPES_PEOPLE_BIS])
+            np.savez(folder / f"fold{f}_s{sd}.npz", image=img, y=y[img], logits=lg,
+                     recipes=np.array(RECIPES_PEOPLE_BIS))
     (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))

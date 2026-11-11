@@ -95,9 +95,10 @@ def read_rephase(path) -> dict:
 
 REPHASE_BIS_KEYS = ("y", "image", "a", "z_H", "z_M")
 REPHASE_BIS_MACHINES = ("M0", "Mpair", "Mframe")
+REPHASE_TER_MACHINES = ("M0", "M0plus", "Mdue", "Mramo")
 
 
-def read_rephase_bis(path) -> dict:
+def read_rephase_bis(path, machines=REPHASE_BIS_MACHINES) -> dict:
     """rephase_bis/{task}_s{seed}.npz (§ 6 bis): z_M has one row per machine, named in `machines`."""
     path = Path(path)
     m = REPHASE_RE.match(path.name)
@@ -106,8 +107,8 @@ def read_rephase_bis(path) -> dict:
     d = _load(path)
     _need(d, REPHASE_BIS_KEYS + ("machines",) + tuple("val_" + k for k in REPHASE_BIS_KEYS), path)
     names = [str(x) for x in d["machines"]]
-    if sorted(names) != sorted(REPHASE_BIS_MACHINES):
-        raise ContractError(f"{path.name}: machines must be {list(REPHASE_BIS_MACHINES)}, got {names}")
+    if sorted(names) != sorted(machines):
+        raise ContractError(f"{path.name}: machines must be {list(machines)}, got {names}")
     for prefix in ("", "val_"):
         keys = tuple(prefix + k for k in REPHASE_BIS_KEYS)
         if d[prefix + "z_M"].ndim != 2 or d[prefix + "z_M"].shape[0] != len(names):
@@ -117,6 +118,11 @@ def read_rephase_bis(path) -> dict:
         _finite(d, keys, path)
     d.update(task=m["task"], seed=int(m["seed"]), file=path.name, machine_names=names)
     return d
+
+
+def read_rephase_ter(path) -> dict:
+    """rephase_ter/{task}_s{seed}.npz (§ 6 ter): as rephase_bis, with the machines M0, M0plus, Mdue, Mramo."""
+    return read_rephase_bis(path, REPHASE_TER_MACHINES)
 
 
 def read_people_fold(path) -> dict:
@@ -136,6 +142,32 @@ def read_people_fold(path) -> dict:
         raise ContractError(f"{path.name}: y outside 0-9")
     _finite(d, ("logits",), path)
     d.update(fold=int(m["fold"]), seed=int(m["seed"]), file=path.name)
+    return d
+
+
+PEOPLE_BIS_RECIPES = ("controllo", "somma", "mista")
+
+
+def read_people_bis_fold(path) -> dict:
+    """people_bis/fold{f}_s{seed}.npz (§ 7 bis): logits (3, N, 10), one row per recipe, named in `recipes`."""
+    path = Path(path)
+    m = FOLD_RE.match(path.name)
+    if not m:
+        raise ContractError(f"{path.name}: name does not match fold{{f}}_s{{seed}}.npz")
+    d = _load(path)
+    _need(d, ("image", "y", "logits", "recipes"), path)
+    names = [str(x) for x in d["recipes"]]
+    if sorted(names) != sorted(PEOPLE_BIS_RECIPES):
+        raise ContractError(f"{path.name}: recipes must be {list(PEOPLE_BIS_RECIPES)}, got {names}")
+    lg = d["logits"]
+    if lg.ndim != 3 or lg.shape[0] != len(names) or lg.shape[2] != 10:
+        raise ContractError(f"{path.name}: logits must be (number of recipes, N, 10)")
+    if lg.shape[1] != d["image"].size or d["y"].size != d["image"].size:
+        raise ContractError(f"{path.name}: lengths differ")
+    if d["y"].min() < 0 or d["y"].max() > 9:
+        raise ContractError(f"{path.name}: y outside 0-9")
+    _finite(d, ("logits",), path)
+    d.update(fold=int(m["fold"]), seed=int(m["seed"]), file=path.name, recipe_names=names)
     return d
 
 

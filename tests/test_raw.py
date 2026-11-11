@@ -70,3 +70,37 @@ def test_rephase_bis_reader(tmp_path):
     np.savez(bad, **arrays)
     with pytest.raises(raw.ContractError, match="machines"):
         raw.read_rephase_bis(bad)
+
+
+def test_rephase_ter_reader(tmp_path):
+    synthetic.write_rephase_ter(tmp_path, tasks=("cat_dog",), seeds=(0,), n_images=40, n_val=20)
+    d = raw.read_rephase_ter(tmp_path / "cat_dog_s0.npz")
+    assert d["machine_names"] == ["M0", "M0plus", "Mdue", "Mramo"]
+    assert d["z_M"].shape == (4, 200) and d["val_z_M"].shape == (4, 20)
+    with pytest.raises(raw.ContractError, match="machines"):     # an E2 ter file is not an E2 bis file
+        raw.read_rephase_bis(tmp_path / "cat_dog_s0.npz")
+    with np.load(tmp_path / "cat_dog_s0.npz", allow_pickle=False) as f:
+        arrays = {k: f[k] for k in f.files}
+    arrays["z_M"] = arrays["z_M"][:3]
+    np.savez(tmp_path / "x_s0.npz", **arrays)
+    with pytest.raises(raw.ContractError, match="z_M"):
+        raw.read_rephase_ter(tmp_path / "x_s0.npz")
+
+
+def test_people_bis_reader(tmp_path):
+    synthetic.write_people_bis(tmp_path, tmp_path / "counts.npy", seeds=(0,))
+    f = raw.read_people_bis_fold(tmp_path / "fold1_s0.npz")
+    assert f["logits"].shape == (3, 5000, 10) and f["fold"] == 1
+    assert f["recipe_names"] == ["controllo", "somma", "mista"]
+    bad = tmp_path / "fold0_s1.npz"
+    np.savez(bad, image=np.arange(3), y=np.arange(3), logits=np.zeros((3, 3, 10)),
+             recipes=np.array(["controllo", "somma", "altro"]))
+    with pytest.raises(raw.ContractError, match="recipes"):
+        raw.read_people_bis_fold(bad)
+    np.savez(bad, image=np.arange(3), y=np.arange(3), logits=np.zeros((2, 3, 10)),
+             recipes=np.array(["controllo", "somma", "mista"]))
+    with pytest.raises(raw.ContractError, match="logits"):
+        raw.read_people_bis_fold(bad)
+    with pytest.raises(raw.ContractError):                           # an E3 fold has lambdas, not recipes
+        synthetic.write_people(tmp_path / "e3", tmp_path / "c3.npy", seeds=(0,))
+        raw.read_people_bis_fold(tmp_path / "e3" / "fold0_s0.npz")
