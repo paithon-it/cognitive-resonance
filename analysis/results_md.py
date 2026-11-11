@@ -300,11 +300,102 @@ def e2bis(d):
     return "\n\n".join(lines)
 
 
+def e2ter(d, e1=None):
+    c = d["criteria"]
+    bm = d["by_machine"]
+    rows = [[m, f(r["d_a"], 2), f(r["slope_on_a"], 3), f(r["phi"], 1), f(r["k"], 2), f(r["tu_tuned"], 3),
+             f(r["tu_app_nonneg"], 3), f(r["d_pair_tuned"], 2), f(r["pair_minus_M0plus_alone"], 2)]
+            for m, r in bm.items() if m != "H"]
+    lines = ["## E2 ter. The soloist that learns the person (exploratory)",
+             "Added with protocol v1.4 after seeing all the results; the expectations were written before this run. "
+             "M0plus is M0 fine-tuned for 10 more epochs with its own loss (the control), Mdue M0 fine-tuned the same "
+             "way with its loss plus that of the sum, Mramo the frozen M0 plus a branch that sees only the frame. "
+             f"{len(d['units'])} units; medians. H alone: d_a {f(bm['H']['d_a'], 2)}, slope on a "
+             f"{f(bm['H']['slope_on_a'], 3)}.",
+             table(["machine", "d_a alone", "slope on a", "phi", "k", "tuned Tu", "Tu_app (w >= 0)", "d pair",
+                    "d pair - d_a(M0plus)"], rows)]
+    t1, t4, t5 = c["T1"], c["T4"], c["T5"]
+    lines.append(f"- **T1** {outcome(t1)}: median d_a(Mdue) / d_a(M0plus) = "
+                 f"{f(t1['median_ratio_d_a_Mdue_over_M0plus'])} (needs >= 0.9); the slope of Mdue on a is opposite to "
+                 f"H's in {t1['slope_opposite_to_h']} of {t1['units']} units (needs all).")
+    for m in ("Mdue", "Mramo"):
+        t2 = c[f"T2 {m}"]
+        lines.append(f"- **T2, {m}** {outcome(t2)}: tasks where phi opens from M0plus to {m} in every seed: "
+                     f"{t2['tasks_passing']} (needs {t2['tasks_needed']}); median difference "
+                     f"{f(t2['median_phi_difference'], 1)} degrees.")
+    for m in ("Mdue", "Mramo"):
+        t3 = c[f"T3 {m}"]
+        lines.append(f"- **T3, {m}** {outcome(t3)}: tasks where the tuned pair (H, {m}) beats (H, M0plus) in every "
+                     f"seed: {t3['tasks_passing']} (needs {t3['tasks_needed']}); median difference "
+                     f"{f(t3['median_pair_difference'], 2)} (d of the pair {f(t3['median_d_pair_M'], 2)} against "
+                     f"{f(t3['median_d_pair_M0plus'], 2)}).")
+    ratio = {m: f(t4["by_machine"][m]["median_ratio_tuned_over_tu_app"]) for m in ("Mdue", "Mramo")}
+    lines.append(f"- **T4** {outcome(t4)}: median tuned / Tu_app = {ratio['Mdue']} for Mdue and {ratio['Mramo']} "
+                 "for Mramo (needs 0.9-1.1 for both).")
+    lines.append(f"- **T5** {outcome(t5)}: tasks where the tuned pair (H, Mdue) beats M0plus alone in every seed: "
+                 f"{t5['tasks_passing']} (needs {t5['tasks_needed']}); median difference "
+                 f"{f(t5['median_difference'], 2)} (for Mramo, not judged: {f(t5['median_difference_Mramo'], 2)}).")
+    if e1 is not None and "0" in e1.get("by_mu", {}).get("opposite", {}):
+        ref = e1["by_mu"]["opposite"]["0"]
+        lines.append("The ceiling the protocol names for T3 is the unbiased pair of E1 (mu = 0): median d of the tuned "
+                     f"pair {f(ref['d_pair_tuned'], 2)}, with networks trained on all 9,000 training images of a task "
+                     "rather than on a half.")
+    return "\n\n".join(lines)
+
+
+def e3bis(d):
+    c = d["criteria"]
+    br = d["by_recipe"]
+    base = [[s, f(v["base"]["accuracy"], 4), f(v["base"]["angle"].get("phi"), 1),
+             f(v["base"]["angle"]["ideal_phi"] / v["base"]["angle"]["dh"], 3) if v["base"]["angle"].get("ideal_phi")
+             else "n/a", f(v["base"]["group"]["turing_group"], 3)] for s, v in d["seeds"].items() if "base" in v]
+    rows = [[nm, f(r["phi"], 1), f(r["accuracy"], 4), f(r["k"], 2), f(r["tu_app"], 3), f(r["turing_group"], 3),
+             f(r["accuracy_sum"], 4), f(r["accuracy_majority"], 4)] for nm, r in br.items()]
+    p1, p2, p3, p4, p5 = (c[h] for h in ("P1", "P2", "P3", "P4", "P5"))
+    lines = ["## E3 bis. The recipe of the sum with real people (exploratory)",
+             "Added with protocol v1.4 after seeing all the results; the expectations were written before this run. "
+             "The base machine is fine-tuned on one half of the test set and measured on the other, with three "
+             "recipes: `controllo` (its own cross-entropy, lambda = 0 of E3 again), `somma` (the cross-entropy of "
+             "u + z_M, with u_c = log((v_c + 0.5) / (n + 5)) the people's cue) and `mista` (the two together). "
+             f"CIFAR-10H: plurality {f(d['cifar10h']['plurality_accuracy'], 4)}, argmax(u) "
+             f"{f(d['cifar10h'].get('accuracy_of_argmax_u'), 4)}. turing-meter commit `{d['turing_meter']['commit']}`."]
+    if base:
+        lines.append(table(["seed", "base accuracy", "phi", "Tu_app", "group turing"], base))
+    lines += ["Fine-tuned machines on the unseen half (medians over seeds):",
+              table(["recipe", "phi", "accuracy", "k", "Tu_app", "group turing", "argmax(u + z_M)", "plurality"],
+                    rows)]
+    if "worst_mista_minus_controllo" in p1:
+        lines.append(f"- **P1** {outcome(p1)}: with mista the machine alone stays within 2 points of the control in "
+                     f"{p1['halves_within']} of {p1['halves']} halves; its worst difference from the control is "
+                     f"{f(100 * p1['worst_mista_minus_controllo'], 2)} points (somma, not judged: "
+                     f"{f(100 * p1['worst_somma_minus_controllo'], 2)}).")
+    else:
+        lines.append(f"- **P1** {outcome(p1)}: {p1.get('reason', '')}.")
+    lines += [
+        f"- **P2** {outcome(p2)}: recipes whose angle opens from the control with a paired interval above zero in "
+        f"every seed: {', '.join(p2.get('recipes_opening_in_every_seed') or []) or 'none'}.",
+        f"- **P3** {outcome(p3)}: recipes that pass P2 and raise the apparent turings with a paired interval above "
+        f"zero in every seed: {', '.join(p3.get('recipes_passing') or []) or 'none'} (raising them, with or without "
+        f"P2: {', '.join(p3.get('recipes_raising_tu_app_in_every_seed') or []) or 'none'}).",
+        f"- **P4** {outcome(p4)}: the largest angle of somma and mista is {f(p4.get('max_phi'), 1)} degrees.",
+        f"- **P5** {outcome(p5)}: difference of the group turing, mista minus control, by seed: "
+        + "; ".join(f"{s} {f(v['mista']['turing_group'], 3)} {f(v['mista']['turing_group_ci'], 3)}"
+                    for s, v in (p5.get("by_seed") or {}).items()) + "."]
+    return "\n\n".join(lines)
+
+
+EXPERIMENTS = (("e0_simulation.json", "E0"), ("e1_bench.json", "E1"), ("e5_null.json", "E5"),
+               ("e2_rephase.json", "E2"), ("e2bis_rephase.json", "E2 bis"), ("e2ter_rephase.json", "E2 ter"),
+               ("e3_people.json", "E3"), ("e3bis_people.json", "E3 bis"))
+ONLY_WHEN_RUN = ("e2ter_rephase.json", "e3bis_people.json")       # v1.4, exploratory: listed once their JSON exists
+
+
 def summary(r):
     rows = []
-    for name, label in (("e0_simulation.json", "E0"), ("e1_bench.json", "E1"), ("e5_null.json", "E5"),
-                        ("e2_rephase.json", "E2"), ("e2bis_rephase.json", "E2 bis"), ("e3_people.json", "E3")):
+    for name, label in EXPERIMENTS:
         d = load(r / name)
+        if d is None and name in ONLY_WHEN_RUN:
+            continue
         if d is None:
             rows.append([label, "not run yet", ""])
             continue
@@ -321,14 +412,20 @@ def main():
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     r = Path(args.results)
+    version = "v1.4" if any((r / name).is_file() for name in ONLY_WHEN_RUN) else "v1.3"
     sections = ["# Results", "Generated by `analysis/results_md.py` from the JSON files in this folder; hypotheses and "
-                "criteria are those of `PROTOCOL.md` (v1.3), with its deviations. Angles in degrees. Where the protocol left a choice "
-                "open, the choice is written next to the criterion in the JSON file (`rule`)."]
+                f"criteria are those of `PROTOCOL.md` ({version}), with its deviations. Angles in degrees. "
+                "Where the protocol left a choice open, the choice is written next to the criterion in the JSON file "
+                "(`rule`)."]
     sections.append(summary(r))
     for name, fn, label in (("e0_simulation.json", e0, "E0"), ("e1_bench.json", e1, "E1"),
                             ("e2_rephase.json", e2, "E2"), ("e2bis_rephase.json", e2bis, "E2 bis"),
-                            ("e3_people.json", e3, "E3"), ("e4_reread.json", e4, "E4"), ("e5_null.json", e5, "E5")):
+                            ("e2ter_rephase.json", lambda d: e2ter(d, load(r / "e1_bench.json")), "E2 ter"),
+                            ("e3_people.json", e3, "E3"), ("e3bis_people.json", e3bis, "E3 bis"),
+                            ("e4_reread.json", e4, "E4"), ("e5_null.json", e5, "E5")):
         d = load(r / name)
+        if d is None and name in ONLY_WHEN_RUN:
+            continue
         sections.append(fn(d) if d else f"## {label}\n\nNot run yet: the raw files are not available.")
     out = Path(args.out) if args.out else r / "RESULTS.md"
     out.write_text("\n\n".join(sections) + "\n")
