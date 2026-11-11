@@ -478,6 +478,35 @@ dell'analisi dove il protocollo lasciava un margine, fissate prima di leggere i 
   validazione separatamente, e il verso viene dal segno della pendenza della rete «meno»
   sulla prova.
 
+**E2 ter ed E3 bis.** Scelte dell'analisi fissate l'11 novembre 2026, a codice scritto e
+prima delle corse.
+
+- **T1.** Mediana sulle unità del rapporto `d_a(M_due) / d_a(M_0+)`; i segni delle
+  pendenze sono stime puntuali, come in B1; se `d_a(M_0+)` non è positivo in un'unità,
+  T1 non passa.
+- **T2, T3.** Quattro verdetti, uno per macchina. Un compito conta se l'estremo inferiore
+  dell'intervallo sta sopra lo zero in ogni seme; le differenze sono prese rispetto a
+  `M_0+` e appaiate sugli stessi ricampionamenti. Quelle rispetto a `M_0` si riportano
+  senza criterio.
+- **T4.** Un solo verdetto, che passa se passano tutte e due le macchine; turing
+  apparente come in B5 (massimo sui pesi non negativi, per `k` di ogni segno).
+- **T5.** Sensibilità della coppia sintonizzata `(H, M_due)` meno quella di `M_0+` da
+  sola, appaiate; `M_ramo` si riporta senza criterio.
+- **Il tetto di T3** (la coppia di E1 a `mu = 0`) si riporta come contesto, senza
+  criterio: quelle reti sono addestrate su 9.000 immagini, non su una metà.
+- **Affinamento di E2 ter.** Copia dei pesi di `M_0`, medie della normalizzazione
+  comprese; passo 0,02; `M_0+` e `M_due` condividono seme, ordine dei lotti, ritagli e
+  cornici.
+- **E3 bis.** Misure sull'unione delle due metà non viste, per seme, come in E3; la
+  maggioranza è il voto più frequente, con i pari merito divisi. P1: stime puntuali per
+  metà e per seme, e una discesa di 2 punti esatti passa. P3: passa solo se una ricetta
+  passa P2 e ha anche la differenza dei turing apparenti con l'estremo inferiore sopra lo
+  zero in ogni seme; i turing apparenti sono quelli di `compare_votes` (pesi non
+  negativi), e la differenza è appaiata sugli stessi ricampionamenti degli angoli. P4:
+  se una macchina è al livello del caso l'angolo non è definito, e P4 non è valutabile.
+  P5: solo `mista`.
+- **I manifest** delle due corse citano la versione 1.4.
+
 **Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e

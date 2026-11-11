@@ -482,6 +482,33 @@ analysis where the protocol left room, fixed before reading the real data.
   estimated on test and validation separately, and the direction comes from the sign of
   the slope of the "minus" network on the test set.
 
+**E2 ter and E3 bis.** Choices of the analysis fixed on 11 November 2026, with the code
+written and before the runs.
+
+- **T1.** Median over the units of the ratio `d_a(M_due) / d_a(M_0+)`; the signs of the
+  slopes are point estimates, as in B1; if `d_a(M_0+)` is not positive in a unit, T1
+  does not pass.
+- **T2, T3.** Four verdicts, one per machine. A task counts if the lower end of the
+  interval is above zero in every seed; the differences are taken against `M_0+` and
+  paired on the same resamples. Those against `M_0` are reported without a criterion.
+- **T4.** A single verdict, which passes if both machines pass; apparent turing as in B5
+  (maximum over the non-negative weights, for `k` of any sign).
+- **T5.** Sensitivity of the tuned pair `(H, M_due)` minus that of `M_0+` alone, paired;
+  `M_ramo` is reported without a criterion.
+- **The ceiling of T3** (the pair of E1 at `mu = 0`) is reported as context, without a
+  criterion: those networks are trained on 9,000 images, not on a half.
+- **Fine-tuning of E2 ter.** A copy of the weights of `M_0`, normalisation averages
+  included; step 0.02; `M_0+` and `M_due` share seed, batch order, crops and frames.
+- **E3 bis.** Measures on the union of the two unseen halves, per seed, as in E3; the
+  majority is the most frequent vote, with ties split. P1: point estimates per half and
+  per seed, and a drop of exactly 2 points passes. P3: it passes only if a recipe passes
+  P2 and also has the difference of the apparent turings with the lower end above zero
+  in every seed; the apparent turings are those of `compare_votes` (non-negative
+  weights), and the difference is paired on the same resamples as the angles. P4: if a
+  machine is at chance level the angle is not defined, and P4 cannot be evaluated. P5:
+  `mista` only.
+- **The manifests** of the two runs cite version 1.4.
+
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and
