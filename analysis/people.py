@@ -74,7 +74,9 @@ def plurality_correct(counts, y):
     return (counts[np.arange(y.size), y] == top[:, 0]) / ties
 
 
-def group_turing(sdt, counts, n, logits, y, reps=REPS) -> dict:
+def group_runs(sdt, counts, n, logits, y, reps=REPS):
+    """The group's quantities on the whole data and on each resample (Poisson weights on the images, seed
+    SEED: the same resamples for every machine on the same images), and the combiner's coefficients."""
     ok_comb, coefs = combine_cv(features(counts, n, logits), y)
     ok_group = plurality_correct(counts, y)
     ok_m = (np.argmax(logits, 1) == y).astype(float)
@@ -92,10 +94,18 @@ def group_turing(sdt, counts, n, logits, y, reps=REPS) -> dict:
     point = step(np.ones(y.size))
     gen = np.random.default_rng(SEED)
     runs = [step(gen.poisson(1.0, y.size).astype(float)) for _ in range(reps)]
+    return point, runs, coefs
+
+
+def group_turing(sdt, counts, n, logits, y, reps=REPS, runs_out: list | None = None) -> dict:
+    """The turing of the group with its intervals; `runs_out`, if given, receives the resamples."""
+    point, runs, coefs = group_runs(sdt, counts, n, logits, y, reps)
     for key in list(point):
         s = np.array([r[key] for r in runs])
         point[key + "_ci"] = [float(np.percentile(s, 2.5)), float(np.percentile(s, 97.5))]
     point["coefficients_by_fold"] = coefs
+    if runs_out is not None:
+        runs_out.extend(runs)
     return point
 
 
@@ -124,6 +134,21 @@ def paired_differences(sdt, h, oks: dict, reps=REPS) -> dict:
         out[nm] = {"phi_minus_phi_lambda0": float(point[i] - point[0]),
                    "ci": [float(np.percentile(diff, 2.5)), float(np.percentile(diff, 97.5))]}
     return out
+
+
+def measure_machine(measure, sdt, h, n, counts, y, logits, reps=REPS, group_runs_out: list | None = None):
+    """The measures of § 7 for one machine on the images given: whether it is right on each, and the angle with
+    the people (compare_votes, with the apparent turings), its accuracy where people agree and split, and the
+    turing of the group."""
+    ok = (np.argmax(logits, 1) == y).astype(float)
+    r = measure.compare_votes(h, n, ok, m=10, repetitions=reps)
+    if "ideal_phi" in r:
+        r["tu_app"] = r["ideal_phi"] / r["dh"]
+    easy, hard = h >= 0.98, h < 0.8
+    return ok, {"accuracy": float(ok.mean()), "angle": r,
+                "accuracy_where_people_right": float(ok[easy].mean()),
+                "accuracy_where_people_split": float(ok[hard].mean()),
+                "group": group_turing(sdt, counts, n, logits, y, reps, runs_out=group_runs_out)}
 
 
 def labels(folds, bases, size=10_000):
@@ -187,17 +212,9 @@ def main():
                 print(f"seed {s}: {int((~covered).sum())} images without an out-of-fold prediction, left out")
             oks, rows = {}, {}
             for i, lam in enumerate(lams):
-                ok = (np.argmax(oof[i][covered], 1) == y[covered]).astype(float)
-                oks[f"{lam:g}"] = ok
-                r = measure.compare_votes(h[covered], n[covered], ok, m=10, repetitions=args.reps)
-                if "ideal_phi" in r:
-                    r["tu_app"] = r["ideal_phi"] / r["dh"]
-                easy, hard = h[covered] >= 0.98, h[covered] < 0.8
-                rows[f"{lam:g}"] = {"accuracy": float(ok.mean()), "angle": r,
-                                    "accuracy_where_people_right": float(ok[easy].mean()),
-                                    "accuracy_where_people_split": float(ok[hard].mean()),
-                                    "group": group_turing(sdt, counts[covered], n[covered], oof[i][covered],
-                                                          y[covered], args.reps)}
+                oks[f"{lam:g}"], rows[f"{lam:g}"] = measure_machine(measure, sdt, h[covered], n[covered],
+                                                                    counts[covered], y[covered], oof[i][covered],
+                                                                    args.reps)
             rec["lambdas"] = rows
             rec["images"] = int(covered.sum())
             rec["paired"] = paired_differences(sdt, h[covered], oks, args.reps)

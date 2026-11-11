@@ -203,3 +203,111 @@ def test_rephase_ter_verdicts_on_constructed_units():
     units = [_ter_unit(t, s, alone_lo=-0.05 if t in tasks[:3] else 0.1) for t in tasks for s in (0, 1)]
     assert rephase_ter.criteria(units)["T5"]["outcome"] == "fail"
 
+
+# --- E3 bis --------------------------------------------------------------------------------------------
+
+def test_people_bis_cue():
+    import people_bis
+    counts = np.array([[50, 0, 0, 0, 0, 0, 0, 0, 0, 1], [5] * 10, [0] * 10])
+    u = people_bis.people_cue(counts)
+    assert u.shape == (3, 10)
+    assert np.exp(u).sum(1) == pytest.approx(np.ones(3))                  # a log probability over ten classes
+    assert u[0, 0] == pytest.approx(np.log(50.5 / 56)) and u[0, 1] == pytest.approx(np.log(0.5 / 56))
+    assert np.allclose(u[1], np.log(0.1)) and np.allclose(u[2], np.log(0.1))
+    # argmax(u + z): the people decide where the machine is unsure, the machine where people have no votes
+    y = np.array([0, 3, 7])
+    lg = np.zeros((3, 10))
+    lg[0, 9] = 1.0
+    lg[1, 3] = 1.0
+    lg[2, 7] = 0.5
+    assert people_bis.sum_correct(counts, lg, y).tolist() == [1.0, 1.0, 1.0]
+
+
+def test_people_bis_out_of_fold_order():
+    import people_bis
+    y = np.arange(10) % 10
+    lg = np.random.default_rng(0).normal(size=(3, 5, 10))
+    folds = [{"image": np.arange(5), "logits": lg, "recipe_names": ["mista", "controllo", "somma"]},
+             {"image": np.arange(5, 10), "logits": lg, "recipe_names": ["controllo", "somma", "mista"]}]
+    oof, covered = people_bis.out_of_fold(folds, y.size)
+    assert covered.all() and oof.shape == (3, 10, 10)
+    assert np.array_equal(oof[0, :5], lg[1]) and np.array_equal(oof[2, :5], lg[0])      # rows by name
+    assert np.array_equal(oof[1, 5:], lg[1])
+
+
+def test_people_bis_paired_group():
+    import people_bis
+    runs = {"controllo": [{"turing_group": 1.0}, {"turing_group": 1.1}, {"turing_group": 0.9}],
+            "mista": [{"turing_group": 1.2}, {"turing_group": 1.2}, {"turing_group": 1.1}]}
+    points = {"controllo": {"turing_group": 1.0}, "mista": {"turing_group": 1.15}}
+    g = people_bis.paired_group(points, runs)
+    assert set(g) == {"mista"} and g["mista"]["turing_group"] == pytest.approx(0.15)
+    assert g["mista"]["turing_group_ci"] == pytest.approx([0.105, 0.2])          # draws 0.2, 0.1, 0.2
+
+
+def _bis_seed(*, acc=None, phi=None, tu=None, group=None, angles=None):
+    """A seed of E3 bis reduced to what the criteria read: lower ends of the paired intervals are set."""
+    acc = acc or {"fold0": (0.94, 0.90, 0.93), "fold1": (0.94, 0.90, 0.93)}
+    phi, tu, group = phi or (1.0, 1.0), tu or (0.01, 0.01), group or (0.01, 0.01)
+    angles = angles or (68.0, 75.0, 72.0)
+    names = ("controllo", "somma", "mista")
+    paired = {r: {"phi": phi[i] + 1, "phi_ci": [phi[i], phi[i] + 2], "tu_app": tu[i] + 0.01,
+                  "tu_app_ci": [tu[i], tu[i] + 0.02], "turing_group": group[i] + 0.01,
+                  "turing_group_ci": [group[i], group[i] + 0.02]} for i, r in enumerate(names[1:])}
+    return {"accuracy_by_fold": {f: dict(zip(names, a)) for f, a in acc.items()},
+            "recipes": {r: {"angle": {} if angles[i] is None else {"phi": angles[i]}} for i, r in enumerate(names)},
+            "paired": paired}
+
+
+def test_people_bis_verdicts_on_constructed_seeds():
+    import people_bis
+    c = people_bis.criteria({"s0": _bis_seed(), "s1": _bis_seed()})
+    assert set(c) == {"P1", "P2", "P3", "P4", "P5"}
+    assert all(v["outcome"] == "pass" for v in c.values())
+    assert c["P2"]["recipes_opening_in_every_seed"] == ["somma", "mista"]
+    # P1: exactly 2 points below the control passes, a little more does not; somma is not judged
+    edge = {"fold0": (0.95, 0.80, 0.93), "fold1": (0.94, 0.80, 0.92)}
+    assert people_bis.criteria({"s0": _bis_seed(acc=edge)})["P1"]["outcome"] == "pass"
+    over = {"fold0": (0.95, 0.95, 0.9298), "fold1": (0.94, 0.94, 0.94)}
+    assert people_bis.criteria({"s0": _bis_seed(), "s1": _bis_seed(acc=over)})["P1"]["outcome"] == "fail"
+    one_half = {"fold0": (0.95, 0.95, 0.95)}
+    assert people_bis.criteria({"s0": _bis_seed(acc=one_half)})["P1"]["outcome"] == "not evaluable"
+    # P2: the same recipe in every seed
+    c = people_bis.criteria({"s0": _bis_seed(phi=(1.0, -1.0)), "s1": _bis_seed(phi=(-1.0, 1.0))})
+    assert c["P2"]["outcome"] == "fail" and c["P3"]["outcome"] == "fail"
+    # P3: the apparent turings must rise for a recipe that passes P2, not for another one
+    c = people_bis.criteria({"s0": _bis_seed(phi=(1.0, -1.0), tu=(-0.01, 0.01)),
+                             "s1": _bis_seed(phi=(1.0, -1.0), tu=(-0.01, 0.01))})
+    assert c["P2"]["recipes_opening_in_every_seed"] == ["somma"]
+    assert c["P3"]["recipes_raising_tu_app_in_every_seed"] == ["mista"]
+    assert c["P3"]["outcome"] == "fail"
+    # P4: point estimates of somma and mista; an angle that cannot be measured leaves it open
+    assert people_bis.criteria({"s0": _bis_seed(angles=(95.0, 80.0, 85.0))})["P4"]["outcome"] == "pass"
+    assert people_bis.criteria({"s0": _bis_seed(angles=(60.0, 90.5, 85.0))})["P4"]["outcome"] == "fail"
+    assert people_bis.criteria({"s0": _bis_seed(angles=(60.0, None, 85.0))})["P4"]["outcome"] == "not evaluable"
+    assert people_bis.criteria({"s0": _bis_seed(angles=(60.0, None, 95.0))})["P4"]["outcome"] == "fail"
+    # P5: mista only, in every seed
+    c = people_bis.criteria({"s0": _bis_seed(group=(-0.1, 0.01)), "s1": _bis_seed(group=(-0.1, 0.0))})
+    assert c["P5"]["outcome"] == "fail"
+    assert people_bis.criteria({"s0": _bis_seed(group=(-0.1, 0.01))})["P5"]["outcome"] == "pass"
+    assert people_bis.criteria({"s0": {"base": {}}})["P1"]["outcome"] == "not evaluable"
+
+
+@pytest.mark.skipif(not os.environ.get("TURING_METER"), reason="set TURING_METER to a turing-meter clone")
+def test_people_bis_end_to_end(tmp_path):
+    synthetic.write_people_bis(tmp_path / "people_bis", tmp_path / "counts.npy")
+    out = tmp_path / "e3bis.json"
+    subprocess.run([sys.executable, str(ANALYSIS / "people_bis.py"), "--raw", str(tmp_path / "people_bis"),
+                    "--counts", str(tmp_path / "counts.npy"), "--turing-meter", os.environ["TURING_METER"],
+                    "--out", str(out), "--reps", "30"], check=True)
+    r = json.loads(out.read_text())
+    assert set(r["criteria"]) == {"P1", "P2", "P3", "P4", "P5"}
+    for s in r["seeds"].values():
+        rec = s["recipes"]
+        for nm in ("somma", "mista"):                 # the paired step reproduces compare_votes on the whole data
+            assert s["paired"][nm]["tu_app"] == pytest.approx(rec[nm]["angle"]["tu_app"]
+                                                              - rec["controllo"]["angle"]["tu_app"])
+            assert s["paired"][nm]["phi"] == pytest.approx(rec[nm]["angle"]["phi"] - rec["controllo"]["angle"]["phi"])
+            assert s["paired"][nm]["turing_group"] == pytest.approx(rec[nm]["group"]["turing_group"]
+                                                                    - rec["controllo"]["group"]["turing_group"])
+        assert rec["controllo"]["accuracy_majority"] == pytest.approx(r["cifar10h"]["plurality_accuracy"])
