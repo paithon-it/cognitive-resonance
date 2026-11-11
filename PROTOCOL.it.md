@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 1.3, 10 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 1.4, 11 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -214,6 +214,51 @@ Dati grezzi: `rephase_bis/{compito}_s{seme}.npz` con `y, image, a, z_H, z_M` (un
 per macchina, nell'ordine di `machines` = `M0, Mpair, Mframe`) e gli stessi con prefisso
 `val_`; `manifest.json`.
 
+## 6 ter. E2 ter. Il solista che impara la persona (esplorativo)
+
+Aggiunto con la versione 1.4, l'11 novembre 2026, **dopo** aver visto tutti i risultati e
+dopo una revisione della bozza dell'articolo: non è una prova registrata prima. Le attese
+qui sotto sono scritte prima della corsa.
+
+**Perché.** In E2 bis la macchina addestrata da zero sull'errore della somma ha imparato
+quasi soltanto a togliere il pregiudizio di H, e del compito non sa quasi niente: il
+miglior solista è rimasto il miglior compagno (B3 non passa). Resta da provare a partire
+dal solista, perché non debba scegliere fra il compito e la correzione.
+
+- **H e `M_0`** come in E2 ed E2 bis: stessi compiti, stessi semi, stesse metà, stessa
+  cornice.
+- **`M_0+`, il controllo.** `M_0` affinata sulla metà B con la sua perdita normale: 10
+  epoche, passo un quinto di quello del pilota, discesa a coseno fino a zero. Serve a
+  non scambiare per effetto della ricetta dieci epoche in più.
+- **`M_due`.** `M_0` affinata allo stesso modo, con la perdita mista: entropia incrociata
+  del suo indizio più entropia incrociata dell'indizio somma `z_H + z_M`; H è congelata
+  e guarda la stessa presentazione.
+- **`M_ramo`.** `M_0` congelata, più un ramo: una rete nuova che vede solo la cornice
+  (come `M_cornice`), addestrata con gli iperparametri del pilota sull'entropia
+  incrociata di `z_H + z_M0 + z_ramo`. L'indizio della macchina è `z_M0 + z_ramo`.
+- **Misure** come in E2 bis, con gli stessi stimatori e lo stesso bootstrap; in più la
+  sensibilità della coppia sintonizzata contro quella di `M_0+` da sola.
+
+Attese:
+
+- **T1, non dimentica.** `d_a(M_due)` è almeno 0,9 volte `d_a(M_0+)`, in mediana sulle
+  unità, e la pendenza dell'indizio di `M_due` su `a` ha segno opposto a quella di H in
+  ogni unità.
+- **T2, l'angolo si apre.** `phi(H, M) - phi(H, M_0+) > 0`, con intervallo che esclude lo
+  zero in ogni seme, in almeno 3 compiti su 5; si giudica per `M_due` e per `M_ramo`.
+- **T3, il compagno batte il solista.** La coppia sintonizzata `(H, M)` è più sensibile
+  della coppia `(H, M_0+)`, con intervallo della differenza che esclude lo zero in ogni
+  seme, in almeno 3 compiti su 5; si giudica per `M_due` e per `M_ramo`. Attesa
+  dichiarata: passa, di poco. Il tetto è la coppia senza pregiudizio di E1 (`mu = 0`).
+- **T4.** Il turing sintonizzato sta, in mediana, entro il 10% dal turing apparente
+  calcolato da `k` e `phi`, per tutte e due le macchine.
+- **T5, la coppia contro la macchina.** La coppia sintonizzata `(H, M_due)` è più
+  sensibile di `M_0+` da sola, con intervallo della differenza che esclude lo zero in
+  ogni seme, in almeno 3 compiti su 5. Attesa dichiarata: incerta.
+
+Dati grezzi: `rephase_ter/{compito}_s{seme}.npz`, come `rephase_bis/`, con `machines` =
+`M0, M0plus, Mdue, Mramo`; `manifest.json`.
+
 ## 7. E3. Persone vere
 
 - **Dati.** CIFAR-10H (Peterson e colleghi, 2019): circa 51 voti umani per ciascuna
@@ -239,6 +284,47 @@ Ipotesi:
   che esclude lo zero. L'attesa dichiarata è incerta: con cinquemila immagini e una
   persona su venti che sbaglia, è possibile che non si apra.
 - **H3b.** L'angolo resta sotto i 90 gradi per ogni `lambda`.
+
+## 7 bis. E3 bis. La ricetta della somma con le persone vere (esplorativo)
+
+Aggiunto con la versione 1.4, alle stesse condizioni di E2 ter: dopo aver visto tutti i
+risultati, attese scritte prima della corsa.
+
+**Perché.** E3 ha provato sulle persone la ricetta della punizione, quella che sul banco
+non ha funzionato. La ricetta della somma è nata dopo, e con le persone non è stata
+provata.
+
+- **Dati, macchina di base, metà e affinamento** come in E3: stessi semi, stesse due
+  metà, 8 epoche a passo 0,01 con discesa a coseno, a partire dalla macchina di base.
+- **L'indizio delle persone**, su dieci classi: `u_c = log((v_c + 0,5) / (n + 5))`, con
+  `v_c` i voti per la classe `c` su `n`.
+- **Tre ricette.** `controllo`: entropia incrociata dei logit della macchina (è
+  `lambda = 0` di E3, rifatto). `somma`: entropia incrociata di `u + z_M`. `mista`: la
+  somma delle due.
+- **Misure** come in E3 (angolo, accuratezza della macchina, turing apparenti, turing
+  del gruppo con il combinatore), sulla metà non usata per l'affinamento. In più
+  l'accuratezza di `argmax(u + z_M)`, accanto a quella della maggioranza dei voti.
+
+Attese:
+
+- **P1, non crolla.** Con `mista` l'accuratezza della macchina da sola non scende più di
+  2 punti sotto quella del controllo, in ogni metà e in ogni seme. Per `somma` nessuna
+  attesa: si riporta.
+- **P2, l'angolo si apre.** Per almeno una delle due ricette l'angolo sulla metà non
+  vista è più aperto che nel controllo, con intervallo della differenza (bootstrap
+  appaiato sulle immagini) che esclude lo zero, la stessa ricetta in tutti i semi.
+- **P3, i turing apparenti salgono.** Per la stessa ricetta di P2 i turing apparenti
+  superano quelli del controllo, con intervallo della differenza che esclude lo zero in
+  tutti i semi. È il punto in cui la punizione ha fallito. Attesa dichiarata: incerta,
+  con cinquemila immagini e una persona su venti che sbaglia.
+- **P4.** L'angolo resta sotto i 90 gradi per tutte e due le ricette (stima puntuale).
+- **P5, il gruppo.** Il turing del gruppo con il combinatore, per `mista`, supera quello
+  del controllo con intervallo della differenza che esclude lo zero in tutti i semi.
+  Attesa dichiarata: incerta.
+
+Dati grezzi: `people_bis/fold{f}_s{seme}.npz` con `image`, `y`, `logits` di forma
+(3, N, 10) e `recipes` = `controllo, somma, mista`; `people_bis/base_s{seme}.npz`;
+`manifest.json`.
 
 ## 8. E4. Le coppie già misurate
 
@@ -398,4 +484,8 @@ tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 
 l'esperimento E5 sul nullo (§ 8 bis): è stata scritta a corse della GPU avviate, ma
 prima di ogni analisi dei dati grezzi, e non cambia niente di ciò che c'era. La versione
 1.3 aggiunge E2 bis (§ 6 bis), esplorativo: è scritta dopo aver visto i dati di E2 ed E3
-e prima della sua corsa, e non tocca criteri né risultati delle altre prove.
+e prima della sua corsa, e non tocca criteri né risultati delle altre prove. La versione
+1.4, dell'11 novembre, aggiunge E2 ter (§ 6 ter) ed E3 bis (§ 7 bis), esplorativi:
+nascono da una revisione della bozza dell'articolo, sono scritti dopo aver visto tutti i
+risultati e prima delle loro corse, e non toccano criteri né risultati delle altre prove.
+Sul server le due corse usano una sottocartella propria, che alla fine si cancella.
