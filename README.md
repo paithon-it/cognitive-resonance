@@ -12,9 +12,11 @@ Italian; doi:[10.5281/zenodo.24107649](https://doi.org/10.5281/zenodo.24107649))
 the angle `phi` between the errors of a person and of a machine was measured between 59
 and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go there.
 
-> Status: **private, in progress** (November 2026). The protocol was written before any
-> run ([`PROTOCOL.md`](PROTOCOL.md), Italian original [`PROTOCOL.it.md`](PROTOCOL.it.md));
-> what changed afterwards goes in its "Deviations" section.
+> Status: **all runs done** (November 2026). The results are told in the paithon.it
+> article [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in Italian;
+> doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). The protocol was
+> written before any run ([`PROTOCOL.md`](PROTOCOL.md), Italian original
+> [`PROTOCOL.it.md`](PROTOCOL.it.md)); what changed afterwards is in its "Deviations" section.
 
 ## The identity
 
@@ -111,6 +113,14 @@ uv run python analysis/results_md.py           # results/RESULTS.md
 E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its
 commit in `results/e3_people.json` and `results/e3bis_people.json`. The analyses use at
 most three processes and fit in a few minutes each on four cores.
+
+## How to cite
+
+endjneer (2026). *Risonanza cognitiva*. Version 1. Zenodo. https://doi.org/10.5281/zenodo.24140357
+
+All versions: https://doi.org/10.5281/zenodo.24140355
+
+Code and data: https://github.com/paithon-it/cognitive-resonance
 
 ## License
 

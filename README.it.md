@@ -14,9 +14,11 @@ primo esperimento, `angle-between-errors`, le misure dell'articolo di paithon.it
 `phi` fra gli errori di una persona e di una macchina stava fra 59 e 81 gradi, e la
 regione oltre i 90 gradi era rimasta inesplorata. Qui ci si va.
 
-> Stato: **privato, in lavorazione** (novembre 2026). Il protocollo è stato scritto prima
-> di ogni corsa ([`PROTOCOL.it.md`](PROTOCOL.it.md), traduzione inglese
-> [`PROTOCOL.md`](PROTOCOL.md)); ciò che cambia dopo va nella sua sezione «Deviazioni».
+> Stato: **tutte le corse eseguite** (novembre 2026). I risultati li racconta l'articolo di
+> paithon.it [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/)
+> (doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Il protocollo è
+> stato scritto prima di ogni corsa ([`PROTOCOL.it.md`](PROTOCOL.it.md), traduzione inglese
+> [`PROTOCOL.md`](PROTOCOL.md)); ciò che è cambiato dopo sta nella sua sezione «Deviazioni».
 
 ## L'identità
 
@@ -117,6 +119,14 @@ uv run python analysis/results_md.py           # results/RESULTS.md
 E3 ed E3 bis importano `compare_votes` da un clone locale di turing-meter e ne scrivono il
 commit in `results/e3_people.json` e `results/e3bis_people.json`. Le analisi usano al
 massimo tre processi e girano in pochi minuti ciascuna su quattro core.
+
+## Come citare
+
+endjneer (2026). *Risonanza cognitiva*. Versione 1. Zenodo. https://doi.org/10.5281/zenodo.24140357
+
+Tutte le versioni: https://doi.org/10.5281/zenodo.24140355
+
+Codice e dati: https://github.com/paithon-it/cognitive-resonance
 
 ## Licenza
 
