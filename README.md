@@ -61,9 +61,9 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E1 | the bench: small CNNs on five CIFAR-10 class pairs, a frame whose brightness the "plus" and "minus" networks learn in opposite directions, a knob `mu` that sets the angle | GPU runs |
 | E2 | rephasing: a machine trained to decorrelate from a biased network, without being told the bias | GPU runs |
 | E2 bis | the partner trained on the error of the pair, and one that sees only the frame (exploratory, v1.3, after E2 and E3) | GPU runs |
-| E2 ter | the soloist that learns the person: the best machine alone, fine-tuned on the error of the sum too, and the same machine with a branch that sees only the frame (exploratory, v1.4; not run yet) | GPU runs |
+| E2 ter | the soloist that learns the person: the best machine alone, fine-tuned on the error of the sum too, and the same machine with a branch that sees only the frame (exploratory, v1.4) | GPU runs |
 | E3 | real people: CIFAR-10H votes against a ResNet-18, and versions fine-tuned toward antiphase | GPU runs, CIFAR-10H |
-| E3 bis | the recipe of the sum with real people: the base machine fine-tuned on the people's cue plus its own logits (exploratory, v1.4; not run yet) | GPU runs, CIFAR-10H |
+| E3 bis | the recipe of the sum with real people: the base machine fine-tuned on the people's cue plus its own logits (exploratory, v1.4) | GPU runs, CIFAR-10H |
 | E4 | the pairs already measured, reread on this scale | published angles |
 | E5 | the null, with weights of either sign (added in v1.2, before any analysis) | the files of E1 |
 

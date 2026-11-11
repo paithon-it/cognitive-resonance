@@ -1,0 +1,1608 @@
+{
+ "experiment": "E3 bis",
+ "exploratory": true,
+ "protocol": "PROTOCOL.md § 7 bis (v1.4): written after seeing all the results, before this run",
+ "raw": "people_bis",
+ "manifest": {
+  "protocol": "PROTOCOL.it.md v1.4 (2026-11-11)",
+  "versions": {
+   "python": "3.12.3",
+   "torch": "2.15.0+cu132",
+   "torchvision": "0.29.2+cu132",
+   "cuda": "13.2",
+   "cudnn": 92600,
+   "numpy": "2.5.4",
+   "gpu": "NVIDIA L4"
+  },
+  "stage_time": {
+   "stage": "people_bis",
+   "workers": 1,
+   "start_unix": 1794415965,
+   "end_unix": 1794416612,
+   "wall_seconds": 647
+  },
+  "experiment": "E3 bis, the recipe of the sum with real people (protocol section 7 bis, exploratory)",
+  "files": [
+   "base_s0.npz",
+   "base_s1.npz",
+   "fold0_s0.npz",
+   "fold0_s1.npz",
+   "fold1_s0.npz",
+   "fold1_s1.npz"
+  ],
+  "keys": {
+   "base_s{seed}.npz": "image (0..9999, CIFAR-10 test index), y (0-9), logits (10000, 10) of the base",
+   "fold{f}_s{seed}.npz": "image (the CIFAR-10 test indices of half f), y, logits (3, 5000, 10) measured on half f after fine-tuning on the other half, one row per recipe in the order of `recipes`"
+  },
+  "halves": "as E3: the 10,000 test images split per class 500 + 500 with numpy default_rng(crc32('people/halves'))",
+  "machine": "as E3: ResNet-18 for CIFAR of silicon.py (Machine), trained on the 50,000 training images, same seeds and settings (re-trained, not reloaded)",
+  "people_cue": "u_c = log((v_c + 0.5) / (n + 5)), v_c votes for class c out of n, from cifar10h-counts.npy",
+  "recipes": {
+   "controllo": "cross-entropy of the machine's logits (lambda = 0 of E3)",
+   "somma": "cross-entropy of u + logits",
+   "mista": "cross-entropy of the logits plus cross-entropy of u + logits"
+  },
+  "recipe_order": [
+   "controllo",
+   "somma",
+   "mista"
+  ],
+  "hyperparameters": {
+   "base_epochs": 40,
+   "base_lr": 0.2,
+   "base_batch_size": 256,
+   "ft_epochs": 8,
+   "ft_lr": 0.01,
+   "ft_batch_size": 256,
+   "ft_schedule": "cosine to zero",
+   "weight_decay": 0.0005,
+   "optimiser": "SGD Nesterov momentum 0.9, bf16 autocast; base: one-cycle; fine-tuning: cosine from ft_lr to zero, BatchNorm in training mode",
+   "augmentation": "random 32x32 crop of the image reflect-padded by 4 pixels, random horizontal flip"
+  },
+  "torch_seeds": "as E3: base crc32('people/s<seed>/base'); fine-tuning crc32('people/s<seed>/fold<f>/ft'), shared by the three recipes",
+  "units": {
+   "base_s0": {
+    "unit": "base_s0",
+    "torch_seed": 168691225,
+    "train_seconds": 270.2,
+    "test_acc": 0.9457
+   },
+   "base_s1": {
+    "unit": "base_s1",
+    "torch_seed": 1095947708,
+    "train_seconds": 269.1,
+    "test_acc": 0.9436
+   },
+   "finetune_s0": {
+    "unit": "finetune_s0",
+    "recipes": [
+     "controllo",
+     "somma",
+     "mista"
+    ],
+    "folds": {
+     "fold0": {
+      "torch_seed": 1257116426,
+      "tuned_on": "half 1",
+      "measured_on": "half 0",
+      "controllo": {
+       "train_seconds": 11.6,
+       "acc_measured_half": 0.9394,
+       "acc_sum_measured_half": 0.9786
+      },
+      "somma": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9398,
+       "acc_sum_measured_half": 0.9794
+      },
+      "mista": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9372,
+       "acc_sum_measured_half": 0.9784
+      }
+     },
+     "fold1": {
+      "torch_seed": 1918006383,
+      "tuned_on": "half 0",
+      "measured_on": "half 1",
+      "controllo": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9352,
+       "acc_sum_measured_half": 0.976
+      },
+      "somma": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9362,
+       "acc_sum_measured_half": 0.9766
+      },
+      "mista": {
+       "train_seconds": 5.6,
+       "acc_measured_half": 0.9336,
+       "acc_sum_measured_half": 0.9776
+      }
+     }
+    },
+    "seconds": 40.5,
+    "cifar10h": {
+     "votes_per_image_mean": 51.1,
+     "majority_agrees_with_label": 0.9921
+    }
+   },
+   "finetune_s1": {
+    "unit": "finetune_s1",
+    "recipes": [
+     "controllo",
+     "somma",
+     "mista"
+    ],
+    "folds": {
+     "fold0": {
+      "torch_seed": 623671348,
+      "tuned_on": "half 1",
+      "measured_on": "half 0",
+      "controllo": {
+       "train_seconds": 11.6,
+       "acc_measured_half": 0.9404,
+       "acc_sum_measured_half": 0.978
+      },
+      "somma": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9344,
+       "acc_sum_measured_half": 0.9782
+      },
+      "mista": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9372,
+       "acc_sum_measured_half": 0.9792
+      }
+     },
+     "fold1": {
+      "torch_seed": 495984465,
+      "tuned_on": "half 0",
+      "measured_on": "half 1",
+      "controllo": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9462,
+       "acc_sum_measured_half": 0.977
+      },
+      "somma": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9412,
+       "acc_sum_measured_half": 0.9752
+      },
+      "mista": {
+       "train_seconds": 5.7,
+       "acc_measured_half": 0.9438,
+       "acc_sum_measured_half": 0.9776
+      }
+     }
+    },
+    "seconds": 40.5,
+    "cifar10h": {
+     "votes_per_image_mean": 51.1,
+     "majority_agrees_with_label": 0.9921
+    }
+   }
+  },
+  "cifar10h_licence": "CC BY-NC-SA 4.0; the counts are not included here",
+  "deviations": []
+ },
+ "turing_meter": {
+  "repository": "https://github.com/paithon-it/turing-meter",
+  "commit": "1fc219bd534e3bd5e86937706083a927e722d40d",
+  "function": "experiments/angle-between-errors/angle/measure.py: compare_votes, m = 10"
+ },
+ "cifar10h": {
+  "file": "cifar10h-counts.npy",
+  "license": "CC BY-NC-SA 4.0, not redistributed",
+  "mean_accuracy_of_votes": 0.9523460386492748,
+  "votes_per_image_median": 51.0,
+  "plurality_accuracy": 0.99215,
+  "accuracy_of_argmax_u": 0.9921
+ },
+ "people_cue": "u_c = log((v_c + 0.5) / (n + 5)); accuracy_sum is that of argmax(u + z_M), accuracy_majority that of the plurality vote (ties split) on the same images",
+ "descriptive": "accuracy_where_people_right: the machine's accuracy on the images where at least 98% of the votes are right; accuracy_where_people_split: where fewer than 80% are (as in E3)",
+ "combiner": "as E3: conditional logit on logit((c + 0.5)/(n + 1)) of each class's votes and the machine's log probability of it; 5-fold cross-validation over images; group alone = plurality vote",
+ "paired": "recipe minus controllo, on the resamples of compare_votes (Poisson weights on the images, seed 534), the same for every recipe: the angle and the apparent turings with compare_votes' formulas, the turing of the group with the group's own resamples (same weights)",
+ "criteria": {
+  "P1": {
+   "outcome": "pass",
+   "halves_within": 4,
+   "halves": 4,
+   "worst_mista_minus_controllo": -0.0031999999999999806,
+   "worst_somma_minus_controllo": -0.006000000000000005,
+   "detail": [
+    {
+     "seed": "s0",
+     "fold": "fold0",
+     "mista_minus_controllo": -0.0021999999999999797,
+     "somma_minus_controllo": 0.00039999999999995595,
+     "controllo": 0.9394,
+     "mista": 0.9372,
+     "somma": 0.9398
+    },
+    {
+     "seed": "s0",
+     "fold": "fold1",
+     "mista_minus_controllo": -0.0016000000000000458,
+     "somma_minus_controllo": 0.0010000000000000009,
+     "controllo": 0.9352,
+     "mista": 0.9336,
+     "somma": 0.9362
+    },
+    {
+     "seed": "s1",
+     "fold": "fold0",
+     "mista_minus_controllo": -0.0031999999999999806,
+     "somma_minus_controllo": -0.006000000000000005,
+     "controllo": 0.9404,
+     "mista": 0.9372,
+     "somma": 0.9344
+    },
+    {
+     "seed": "s1",
+     "fold": "fold1",
+     "mista_minus_controllo": -0.0024000000000000687,
+     "somma_minus_controllo": -0.0050000000000000044,
+     "controllo": 0.9462,
+     "mista": 0.9438,
+     "somma": 0.9412
+    }
+   ],
+   "rule": "accuracy of the machine alone with mista not more than 2 points below the control, on the measured half of every fold and seed (point estimates); somma reported, not judged"
+  },
+  "P2": {
+   "outcome": "fail",
+   "recipes_opening_in_every_seed": [],
+   "by_seed": {
+    "s0": {
+     "somma": {
+      "phi": 0.9181053659612814,
+      "phi_ci": [
+       -0.25503308011749365,
+       2.0369772534302286
+      ]
+     },
+     "mista": {
+      "phi": 0.2470327946315507,
+      "phi_ci": [
+       -0.537642596646555,
+       0.9974511554211739
+      ]
+     }
+    },
+    "s1": {
+     "somma": {
+      "phi": 0.3118623276311041,
+      "phi_ci": [
+       -0.9211994125777586,
+       1.4722526403415308
+      ]
+     },
+     "mista": {
+      "phi": 0.7226131256013417,
+      "phi_ci": [
+       -0.13518242157758067,
+       1.637800703038756
+      ]
+     }
+    }
+   },
+   "rule": "for somma or mista, phi(recipe) - phi(controllo) on the unseen half with a paired 95% interval above zero, the same recipe in every seed"
+  },
+  "P3": {
+   "outcome": "fail",
+   "recipes_passing": [],
+   "recipes_opening_P2": [],
+   "recipes_raising_tu_app_in_every_seed": [],
+   "by_seed": {
+    "s0": {
+     "somma": {
+      "tu_app": 0.007611418388689284,
+      "tu_app_ci": [
+       -0.0006625005424633287,
+       0.016521467632357272
+      ]
+     },
+     "mista": {
+      "tu_app": -0.001304910990874708,
+      "tu_app_ci": [
+       -0.007893806125230019,
+       0.004854578023402504
+      ]
+     }
+    },
+    "s1": {
+     "somma": {
+      "tu_app": -0.007170120778619893,
+      "tu_app_ci": [
+       -0.01674137198407018,
+       0.0024399662085591452
+      ]
+     },
+     "mista": {
+      "tu_app": 5.758308095749065e-05,
+      "tu_app_ci": [
+       -0.006784371148912821,
+       0.007094851189396932
+      ]
+     }
+    }
+   },
+   "rule": "for a recipe that passes P2, Tu_app(recipe) - Tu_app(controllo) with a paired 95% interval above zero in every seed; fails if no recipe passes P2"
+  },
+  "P4": {
+   "outcome": "pass",
+   "phi_by_seed": {
+    "s0": {
+     "controllo": 68.31161703156899,
+     "somma": 69.22972239753027,
+     "mista": 68.55864982620054
+    },
+    "s1": {
+     "controllo": 66.47089920410632,
+     "somma": 66.78276153173742,
+     "mista": 67.19351232970766
+    }
+   },
+   "max_phi": 69.22972239753027,
+   "undefined": 0,
+   "rule": "point estimate of phi below 90 degrees for somma and mista in every seed (controllo reported); an angle compare_votes cannot measure (machine at chance) leaves it not evaluable, unless another is at or above 90"
+  },
+  "P5": {
+   "outcome": "fail",
+   "by_seed": {
+    "s0": {
+     "somma": {
+      "turing_group": -0.0016756495184360176,
+      "turing_group_ci": [
+       -0.012744812796864596,
+       0.009279627066289969
+      ]
+     },
+     "mista": {
+      "turing_group": 0.0034291562642752016,
+      "turing_group_ci": [
+       -0.0036169444997750655,
+       0.011013763359528311
+      ]
+     }
+    },
+    "s1": {
+     "somma": {
+      "turing_group": 0.009696151355143012,
+      "turing_group_ci": [
+       -0.0015800300787301767,
+       0.021615628277166083
+      ]
+     },
+     "mista": {
+      "turing_group": 0.0015588160951598429,
+      "turing_group_ci": [
+       -0.007760830145378561,
+       0.011094029039793889
+      ]
+     }
+    }
+   },
+   "rule": "turing of the group with mista minus that with controllo, with a paired 95% interval above zero in every seed (somma reported, not judged)"
+  }
+ },
+ "by_recipe": {
+  "controllo": {
+   "phi": 67.39125811783765,
+   "accuracy": 0.9403,
+   "tu_app": 1.1793871254917636,
+   "k": 0.9615362736439781,
+   "turing_group": 1.0240299135571456,
+   "acc_combined": 0.9938,
+   "accuracy_sum": 0.9774,
+   "accuracy_majority": 0.99215,
+   "accuracy_where_people_right": 0.9740378741600488,
+   "accuracy_where_people_split": 0.722495894909688
+  },
+  "somma": {
+   "phi": 68.00624196463384,
+   "accuracy": 0.9379,
+   "tu_app": 1.1796077742967983,
+   "k": 0.9544222958831355,
+   "turing_group": 1.028040164475499,
+   "acc_combined": 0.99405,
+   "accuracy_sum": 0.9773499999999999,
+   "accuracy_majority": 0.99215,
+   "accuracy_where_people_right": 0.9711362248014661,
+   "accuracy_where_people_split": 0.722495894909688,
+   "difference_from_controllo": {
+    "phi": 0.6149838467961928,
+    "tu_app": 0.00022064880503469553,
+    "turing_group": 0.004010250918353497
+   }
+  },
+  "mista": {
+   "phi": 67.8760810779541,
+   "accuracy": 0.9379500000000001,
+   "tu_app": 1.178763461536805,
+   "k": 0.954682838681981,
+   "turing_group": 1.026523899736863,
+   "acc_combined": 0.99395,
+   "accuracy_sum": 0.9782,
+   "accuracy_majority": 0.99215,
+   "accuracy_where_people_right": 0.9728924862553452,
+   "accuracy_where_people_split": 0.7183908045977012,
+   "difference_from_controllo": {
+    "phi": 0.4848229601164462,
+    "tu_app": -0.0006236639549586087,
+    "turing_group": 0.0024939861797175222
+   }
+  }
+ },
+ "seeds": {
+  "s0": {
+   "base": {
+    "accuracy": 0.9457,
+    "angle": {
+     "n_trials": 511000,
+     "items": 10000,
+     "m": 10,
+     "repetitions": 1000,
+     "acc_h": 0.9523460386492748,
+     "acc_h_ci": [
+      0.9503702574534509,
+      0.9542758282513631
+     ],
+     "acc_m": 0.9457,
+     "acc_m_ci": [
+      0.941141251924629,
+      0.9503838531653789
+     ],
+     "dh": 3.4460879227125716,
+     "dh_ci": [
+      3.422512064037398,
+      3.4698950224931644
+     ],
+     "dm": 3.3696643854825648,
+     "dm_ci": [
+      3.321492078250133,
+      3.422671671198715
+     ],
+     "rho": 0.3826860842174882,
+     "rho_ci": [
+      0.34630162984303475,
+      0.41471286072479235
+     ],
+     "rho_correct": 0.3826860842174882,
+     "rho_correct_ci": [
+      0.34630162984303475,
+      0.41471286072479235
+     ],
+     "ideal_90": 4.819767633595528,
+     "ideal_90_ci": [
+      4.7779818474651785,
+      4.8657927520819815
+     ],
+     "ideal_phi": 4.099190930330985,
+     "ideal_phi_ci": [
+      4.038857798749853,
+      4.17931599191641
+     ],
+     "phi": 67.4998355412851,
+     "phi_ci": [
+      65.49876474016543,
+      69.73872764374839
+     ],
+     "useful_angle": 12.089098407148768,
+     "useful_angle_ci": [
+      6.601295756429665,
+      15.36861353035129
+     ],
+     "k": 0.9778231029085728,
+     "k_ci": [
+      0.9642407294598077,
+      0.9933701654414916
+     ]
+    },
+    "group": {
+     "acc_combined": 0.9938,
+     "acc_group": 0.99215,
+     "acc_machine": 0.9457,
+     "d_combined": 4.459509449457787,
+     "d_group": 4.3553094767757825,
+     "d_machine": 3.3696643854825648,
+     "turing_group": 1.0239248148122744,
+     "yield_on_machine": 1.3234283712854529,
+     "acc_combined_ci": [
+      0.9922434191778202,
+      0.9953033556905252
+     ],
+     "acc_group_ci": [
+      0.990297075455704,
+      0.9938104053102965
+     ],
+     "acc_machine_ci": [
+      0.941141251924629,
+      0.9503838531653789
+     ],
+     "d_combined_ci": [
+      4.360660409087667,
+      4.578906607292784
+     ],
+     "d_group_ci": [
+      4.2593966529145275,
+      4.460241863853377
+     ],
+     "d_machine_ci": [
+      3.321492078250133,
+      3.422671671198715
+     ],
+     "turing_group_ci": [
+      1.0053400503782626,
+      1.0439425104869635
+     ],
+     "yield_on_machine_ci": [
+      1.291407320650377,
+      1.3573917350398552
+     ],
+     "coefficients_by_fold": [
+      [
+       1.224942515621105,
+       0.2322783243157092
+      ],
+      [
+       1.2820847516056944,
+       0.2361694705232519
+      ],
+      [
+       1.2470887119300893,
+       0.23053151411134254
+      ],
+      [
+       1.183239826169099,
+       0.23605324107965545
+      ],
+      [
+       1.3557432985333355,
+       0.22612220059922175
+      ]
+     ]
+    }
+   },
+   "recipes": {
+    "controllo": {
+     "accuracy": 0.9373,
+     "angle": {
+      "n_trials": 511000,
+      "items": 10000,
+      "m": 10,
+      "repetitions": 1000,
+      "acc_h": 0.9523460386492748,
+      "acc_h_ci": [
+       0.9503702574534509,
+       0.9542758282513631
+      ],
+      "acc_m": 0.9373,
+      "acc_m_ci": [
+       0.9324042761093417,
+       0.9421991822988214
+      ],
+      "dh": 3.4460879227125716,
+      "dh_ci": [
+       3.422512064037398,
+       3.4698950224931644
+      ],
+      "dm": 3.2831602621852625,
+      "dm_ci": [
+       3.236912653693584,
+       3.3323981127528555
+      ],
+      "rho": 0.3695583629821928,
+      "rho_ci": [
+       0.33455131454994663,
+       0.4008654755727951
+      ],
+      "rho_correct": 0.3695583629821928,
+      "rho_correct_ci": [
+       0.33455131454994663,
+       0.4008654755727951
+      ],
+      "ideal_90": 4.759691510829021,
+      "ideal_90_ci": [
+       4.720543601711533,
+       4.802009052122715
+      ],
+      "ideal_phi": 4.0685310324004025,
+      "ideal_phi_ci": [
+       4.013372264571318,
+       4.140307162730763
+      ],
+      "phi": 68.31161703156899,
+      "phi_ci": [
+       66.36770530969868,
+       70.45474406109044
+      ],
+      "useful_angle": 17.688783913333822,
+      "useful_angle_ci": [
+       14.932945887927529,
+       20.02671582766855
+      ],
+      "k": 0.9527209797946591,
+      "k_ci": [
+       0.9395330407376316,
+       0.9662280602773383
+      ],
+      "tu_app": 1.1806231076071552
+     },
+     "accuracy_where_people_right": 0.9715943799633476,
+     "accuracy_where_people_split": 0.7257799671592775,
+     "group": {
+      "acc_combined": 0.9941,
+      "acc_group": 0.99215,
+      "acc_machine": 0.9373,
+      "d_combined": 4.481082056959975,
+      "d_group": 4.3553094767757825,
+      "d_machine": 3.2831602621852625,
+      "turing_group": 1.028877989234717,
+      "yield_on_machine": 1.364868510554334,
+      "acc_combined_ci": [
+       0.9926589426646719,
+       0.9956587438442576
+      ],
+      "acc_group_ci": [
+       0.990297075455704,
+       0.9938104053102965
+      ],
+      "acc_machine_ci": [
+       0.9324042761093417,
+       0.9421991822988214
+      ],
+      "d_combined_ci": [
+       4.385179288512607,
+       4.6121404739057
+      ],
+      "d_group_ci": [
+       4.2593966529145275,
+       4.460241863853377
+      ],
+      "d_machine_ci": [
+       3.236912653693584,
+       3.3323981127528555
+      ],
+      "turing_group_ci": [
+       1.0112258520995538,
+       1.0480556059439854
+      ],
+      "yield_on_machine_ci": [
+       1.334111823653647,
+       1.4040493530415024
+      ],
+      "coefficients_by_fold": [
+       [
+        1.226906868176896,
+        0.2533067747216197
+       ],
+       [
+        1.290941925993714,
+        0.24233199484542647
+       ],
+       [
+        1.25785489817997,
+        0.24360972916043042
+       ],
+       [
+        1.1893683860049564,
+        0.24845384156854783
+       ],
+       [
+        1.3634264464583041,
+        0.24377273390270499
+       ]
+      ]
+     },
+     "accuracy_sum": 0.9773,
+     "accuracy_majority": 0.99215
+    },
+    "somma": {
+     "accuracy": 0.938,
+     "angle": {
+      "n_trials": 511000,
+      "items": 10000,
+      "m": 10,
+      "repetitions": 1000,
+      "acc_h": 0.9523460386492748,
+      "acc_h_ci": [
+       0.9503702574534509,
+       0.9542758282513631
+      ],
+      "acc_m": 0.938,
+      "acc_m_ci": [
+       0.9333064135842355,
+       0.9430211374170209
+      ],
+      "dh": 3.4460879227125716,
+      "dh_ci": [
+       3.422512064037398,
+       3.4698950224931644
+      ],
+      "dm": 3.2900039234318577,
+      "dm_ci": [
+       3.2452317492983394,
+       3.3409820785483304
+      ],
+      "rho": 0.3546219703722141,
+      "rho_ci": [
+       0.31767704388380186,
+       0.3893172956313697
+      ],
+      "rho_correct": 0.3546219703722141,
+      "rho_correct_ci": [
+       0.31767704388380186,
+       0.3893172956313697
+      ],
+      "ideal_90": 4.764414737117505,
+      "ideal_90_ci": [
+       4.725892930447804,
+       4.807226050234356
+      ],
+      "ideal_phi": 4.0947606493843764,
+      "ideal_phi_ci": [
+       4.037102305867162,
+       4.170472488717501
+      ],
+      "phi": 69.22972239753027,
+      "phi_ci": [
+       67.08797375200488,
+       71.47749962694085
+      ],
+      "useful_angle": 17.31038158576936,
+      "useful_angle_ci": [
+       14.146397459759816,
+       19.734203171417263
+      ],
+      "k": 0.9547069016283679,
+      "k_ci": [
+       0.9412691426243581,
+       0.9696744194547121
+      ],
+      "tu_app": 1.1882345259958444
+     },
+     "accuracy_where_people_right": 0.9699144777031155,
+     "accuracy_where_people_split": 0.7389162561576355,
+     "group": {
+      "acc_combined": 0.994,
+      "acc_group": 0.99215,
+      "acc_machine": 0.938,
+      "d_combined": 4.473784084732576,
+      "d_group": 4.3553094767757825,
+      "d_machine": 3.2900039234318577,
+      "turing_group": 1.027202339716281,
+      "yield_on_machine": 1.3598111700930429,
+      "acc_combined_ci": [
+       0.992545398494262,
+       0.9955045574136465
+      ],
+      "acc_group_ci": [
+       0.990297075455704,
+       0.9938104053102965
+      ],
+      "acc_machine_ci": [
+       0.9333064135842355,
+       0.9430211374170209
+      ],
+      "d_combined_ci": [
+       4.37835895416693,
+       4.597431198218525
+      ],
+      "d_group_ci": [
+       4.2593966529145275,
+       4.460241863853377
+      ],
+      "d_machine_ci": [
+       3.2452317492983394,
+       3.3409820785483304
+      ],
+      "turing_group_ci": [
+       1.0089180827838924,
+       1.0481483017236792
+      ],
+      "yield_on_machine_ci": [
+       1.3294558231284324,
+       1.3963619486539045
+      ],
+      "coefficients_by_fold": [
+       [
+        1.2265531360391078,
+        0.26312015610483075
+       ],
+       [
+        1.2873264839344958,
+        0.2655118984505392
+       ],
+       [
+        1.256971828789361,
+        0.24943561846484905
+       ],
+       [
+        1.187377454328939,
+        0.26417295718378725
+       ],
+       [
+        1.3629443092983458,
+        0.26205897965589026
+       ]
+      ]
+     },
+     "accuracy_sum": 0.978,
+     "accuracy_majority": 0.99215
+    },
+    "mista": {
+     "accuracy": 0.9354,
+     "angle": {
+      "n_trials": 511000,
+      "items": 10000,
+      "m": 10,
+      "repetitions": 1000,
+      "acc_h": 0.9523460386492748,
+      "acc_h_ci": [
+       0.9503702574534509,
+       0.9542758282513631
+      ],
+      "acc_m": 0.9354,
+      "acc_m_ci": [
+       0.930488054323894,
+       0.9405082838645942
+      ],
+      "dh": 3.4460879227125716,
+      "dh_ci": [
+       3.422512064037398,
+       3.4698950224931644
+      ],
+      "dm": 3.2648846300849863,
+      "dm_ci": [
+       3.219527215286423,
+       3.3150414331845504
+      ],
+      "rho": 0.3655486291473089,
+      "rho_ci": [
+       0.3295959890587854,
+       0.3972606314899135
+      ],
+      "rho_correct": 0.3655486291473089,
+      "rho_correct_ci": [
+       0.3295959890587854,
+       0.3972606314899135
+      ],
+      "ideal_90": 4.747103708455359,
+      "ideal_90_ci": [
+       4.709445098122071,
+       4.789657173176967
+      ],
+      "ideal_phi": 4.064034194394534,
+      "ideal_phi_ci": [
+       4.005997292359978,
+       4.132111154884881
+      ],
+      "phi": 68.55864982620054,
+      "phi_ci": [
+       66.59296131262687,
+       70.75574448588897
+      ],
+      "useful_angle": 18.662900007122218,
+      "useful_angle_ci": [
+       15.930820003809014,
+       20.916896008319718
+      ],
+      "k": 0.9474176815300314,
+      "k_ci": [
+       0.934099234860355,
+       0.9615938012636903
+      ],
+      "tu_app": 1.1793181966162805
+     },
+     "accuracy_where_people_right": 0.9711362248014661,
+     "accuracy_where_people_split": 0.7192118226600985,
+     "group": {
+      "acc_combined": 0.9943,
+      "acc_group": 0.99215,
+      "acc_machine": 0.9354,
+      "d_combined": 4.496017093735118,
+      "d_group": 4.3553094767757825,
+      "d_machine": 3.2648846300849863,
+      "turing_group": 1.0323071454989923,
+      "yield_on_machine": 1.377082991633332,
+      "acc_combined_ci": [
+       0.9928201964194546,
+       0.9957654955250649
+      ],
+      "acc_group_ci": [
+       0.990297075455704,
+       0.9938104053102965
+      ],
+      "acc_machine_ci": [
+       0.930488054323894,
+       0.9405082838645942
+      ],
+      "d_combined_ci": [
+       4.395028714559383,
+       4.622603864778049
+      ],
+      "d_group_ci": [
+       4.2593966529145275,
+       4.460241863853377
+      ],
+      "d_machine_ci": [
+       3.219527215286423,
+       3.3150414331845504
+      ],
+      "turing_group_ci": [
+       1.0130303179027613,
+       1.0518477373088062
+      ],
+      "yield_on_machine_ci": [
+       1.344579095808432,
+       1.4173103952188675
+      ],
+      "coefficients_by_fold": [
+       [
+        1.225571267166753,
+        0.27645513429848956
+       ],
+       [
+        1.290408279729822,
+        0.2588616630894271
+       ],
+       [
+        1.260424673150682,
+        0.25748724879427465
+       ],
+       [
+        1.1907658028115087,
+        0.2631833220811203
+       ],
+       [
+        1.3632685814875465,
+        0.26510518540332273
+       ]
+      ]
+     },
+     "accuracy_sum": 0.978,
+     "accuracy_majority": 0.99215
+    }
+   },
+   "accuracy_by_fold": {
+    "fold0": {
+     "controllo": 0.9394,
+     "somma": 0.9398,
+     "mista": 0.9372
+    },
+    "fold1": {
+     "controllo": 0.9352,
+     "somma": 0.9362,
+     "mista": 0.9336
+    }
+   },
+   "images": 10000,
+   "paired": {
+    "somma": {
+     "phi": 0.9181053659612814,
+     "phi_ci": [
+      -0.25503308011749365,
+      2.0369772534302286
+     ],
+     "tu_app": 0.007611418388689284,
+     "tu_app_ci": [
+      -0.0006625005424633287,
+      0.016521467632357272
+     ],
+     "turing_group": -0.0016756495184360176,
+     "turing_group_ci": [
+      -0.012744812796864596,
+      0.009279627066289969
+     ]
+    },
+    "mista": {
+     "phi": 0.2470327946315507,
+     "phi_ci": [
+      -0.537642596646555,
+      0.9974511554211739
+     ],
+     "tu_app": -0.001304910990874708,
+     "tu_app_ci": [
+      -0.007893806125230019,
+      0.004854578023402504
+     ],
+     "turing_group": 0.0034291562642752016,
+     "turing_group_ci": [
+      -0.0036169444997750655,
+      0.011013763359528311
+     ]
+    }
+   }
+  },
+  "s1": {
+   "base": {
+    "accuracy": 0.9436,
+    "angle": {
+     "n_trials": 511000,
+     "items": 10000,
+     "m": 10,
+     "repetitions": 1000,
+     "acc_h": 0.9523460386492748,
+     "acc_h_ci": [
+      0.9503702574534509,
+      0.9542758282513631
+     ],
+     "acc_m": 0.9436,
+     "acc_m_ci": [
+      0.9393415000638367,
+      0.9480591364601094
+     ],
+     "dh": 3.4460879227125716,
+     "dh_ci": [
+      3.422512064037398,
+      3.4698950224931644
+     ],
+     "dm": 3.3470869378235713,
+     "dm_ci": [
+      3.3032924104555264,
+      3.395880661219923
+     ],
+     "rho": 0.3905348845911904,
+     "rho_ci": [
+      0.3552674908878723,
+      0.4209976967629234
+     ],
+     "rho_correct": 0.3905348845911904,
+     "rho_correct_ci": [
+      0.3552674908878723,
+      0.4209976967629234
+     ],
+     "ideal_90": 4.804010089541301,
+     "ideal_90_ci": [
+      4.765396937692097,
+      4.848704570847024
+     ],
+     "ideal_phi": 4.074478698083571,
+     "ideal_phi_ci": [
+      4.0078495956776825,
+      4.14391553370686
+     ],
+     "phi": 67.01221442608035,
+     "phi_ci": [
+      65.10240760818039,
+      69.19016082864107
+     ],
+     "useful_angle": 13.767004373212163,
+     "useful_angle_ci": [
+      9.661972766314534,
+      16.439832717301623
+     ],
+     "k": 0.9712714860707697,
+     "k_ci": [
+      0.9591174554833477,
+      0.9858150661873929
+     ]
+    },
+    "group": {
+     "acc_combined": 0.9937,
+     "acc_group": 0.99215,
+     "acc_machine": 0.9436,
+     "d_combined": 4.45252617516534,
+     "d_group": 4.3553094767757825,
+     "d_machine": 3.3470869378235713,
+     "turing_group": 1.022321421453046,
+     "yield_on_machine": 1.330269054218405,
+     "acc_combined_ci": [
+      0.9920811928290822,
+      0.9952225624544898
+     ],
+     "acc_group_ci": [
+      0.990297075455704,
+      0.9938104053102965
+     ],
+     "acc_machine_ci": [
+      0.9393415000638367,
+      0.9480591364601094
+     ],
+     "d_combined_ci": [
+      4.351404452915347,
+      4.571668883697521
+     ],
+     "d_group_ci": [
+      4.2593966529145275,
+      4.460241863853377
+     ],
+     "d_machine_ci": [
+      3.3032924104555264,
+      3.395880661219923
+     ],
+     "turing_group_ci": [
+      1.0033844924188422,
+      1.040668584955503
+     ],
+     "yield_on_machine_ci": [
+      1.300264705966952,
+      1.365407228780606
+     ],
+     "coefficients_by_fold": [
+      [
+       1.2020592036977216,
+       0.23883477391279614
+      ],
+      [
+       1.2787585219339177,
+       0.24415403470699779
+      ],
+      [
+       1.2480498641953028,
+       0.21976823353284602
+      ],
+      [
+       1.1757829237844546,
+       0.24023833767200758
+      ],
+      [
+       1.3525475201336983,
+       0.23239934637586082
+      ]
+     ]
+    }
+   },
+   "recipes": {
+    "controllo": {
+     "accuracy": 0.9433,
+     "angle": {
+      "n_trials": 511000,
+      "items": 10000,
+      "m": 10,
+      "repetitions": 1000,
+      "acc_h": 0.9523460386492748,
+      "acc_h_ci": [
+       0.9503702574534509,
+       0.9542758282513631
+      ],
+      "acc_m": 0.9433,
+      "acc_m_ci": [
+       0.9387672674822524,
+       0.9478434337113246
+      ],
+      "dh": 3.4460879227125716,
+      "dh_ci": [
+       3.422512064037398,
+       3.4698950224931644
+      ],
+      "dm": 3.3439168175238634,
+      "dm_ci": [
+       3.2975759688044186,
+       3.3934442401850444
+      ],
+      "rho": 0.39921479659811837,
+      "rho_ci": [
+       0.36447637013930323,
+       0.43028308913040014
+      ],
+      "rho_correct": 0.39921479659811837,
+      "rho_correct_ci": [
+       0.36447637013930323,
+       0.43028308913040014
+      ],
+      "ideal_90": 4.801801917362311,
+      "ideal_90_ci": [
+       4.761357701878547,
+       4.845928106331343
+      ],
+      "ideal_phi": 4.060012426319323,
+      "ideal_phi_ci": [
+       3.998157801785178,
+       4.13007915419663
+      ],
+      "phi": 66.47089920410632,
+      "phi_ci": [
+       64.51447296475939,
+       68.62463877472376
+      ],
+      "useful_angle": 13.986768669817401,
+      "useful_angle_ci": [
+       10.15899213187402,
+       16.855737791943692
+      ],
+      "k": 0.970351567493297,
+      "k_ci": [
+       0.9570378721361481,
+       0.9843220913206068
+      ],
+      "tu_app": 1.178151143376372
+     },
+     "accuracy_where_people_right": 0.9764813683567501,
+     "accuracy_where_people_split": 0.7192118226600985,
+     "group": {
+      "acc_combined": 0.9935,
+      "acc_group": 0.99215,
+      "acc_machine": 0.9433,
+      "d_combined": 4.4388523170746685,
+      "d_group": 4.3553094767757825,
+      "d_machine": 3.3439168175238634,
+      "turing_group": 1.019181837879574,
+      "yield_on_machine": 1.3274410098399498,
+      "acc_combined_ci": [
+       0.9918340197709337,
+       0.995049200999072
+      ],
+      "acc_group_ci": [
+       0.990297075455704,
+       0.9938104053102965
+      ],
+      "acc_machine_ci": [
+       0.9387672674822524,
+       0.9478434337113246
+      ],
+      "d_combined_ci": [
+       4.337621365519918,
+       4.556503711963207
+      ],
+      "d_group_ci": [
+       4.2593966529145275,
+       4.460241863853377
+      ],
+      "d_machine_ci": [
+       3.2975759688044186,
+       3.3934442401850444
+      ],
+      "turing_group_ci": [
+       1.0031211078042408,
+       1.0361143095482117
+      ],
+      "yield_on_machine_ci": [
+       1.2967709590523024,
+       1.3630769079252667
+      ],
+      "coefficients_by_fold": [
+       [
+        1.2050202795890343,
+        0.2518441893775627
+       ],
+       [
+        1.2747960978659343,
+        0.2589422792197401
+       ],
+       [
+        1.247675393141761,
+        0.24068101217981
+       ],
+       [
+        1.1751453557958966,
+        0.2538459765583488
+       ],
+       [
+        1.3581568045032208,
+        0.24134472501312146
+       ]
+      ]
+     },
+     "accuracy_sum": 0.9775,
+     "accuracy_majority": 0.99215
+    },
+    "somma": {
+     "accuracy": 0.9378,
+     "angle": {
+      "n_trials": 511000,
+      "items": 10000,
+      "m": 10,
+      "repetitions": 1000,
+      "acc_h": 0.9523460386492748,
+      "acc_h_ci": [
+       0.9503702574534509,
+       0.9542758282513631
+      ],
+      "acc_m": 0.9378,
+      "acc_m_ci": [
+       0.9333721838249863,
+       0.9429382478198702
+      ],
+      "dh": 3.4460879227125716,
+      "dh_ci": [
+       3.422512064037398,
+       3.4698950224931644
+      ],
+      "dm": 3.288042370589098,
+      "dm_ci": [
+       3.2458417068904764,
+       3.340111954878726
+      ],
+      "rho": 0.3942184301947327,
+      "rho_ci": [
+       0.35862771584766284,
+       0.4247290801578297
+      ],
+      "rho_correct": 0.3942184301947327,
+      "rho_correct_ci": [
+       0.35862771584766284,
+       0.4247290801578297
+      ],
+      "ideal_90": 4.763060423913875,
+      "ideal_90_ci": [
+       4.724040576440227,
+       4.804701084061012
+      ],
+      "ideal_phi": 4.035303559699731,
+      "ideal_phi_ci": [
+       3.9726535511604646,
+       4.106750779564374
+      ],
+      "phi": 66.78276153173742,
+      "phi_ci": [
+       64.8664836648958,
+       68.98405673700637
+      ],
+      "useful_angle": 17.419654606635156,
+      "useful_angle_ci": [
+       14.588431582407697,
+       19.588946060726315
+      ],
+      "k": 0.9541376901379032,
+      "k_ci": [
+       0.942122151634958,
+       0.9677600418450619
+      ],
+      "tu_app": 1.1709810225977522
+     },
+     "accuracy_where_people_right": 0.9723579718998168,
+     "accuracy_where_people_split": 0.7060755336617406,
+     "group": {
+      "acc_combined": 0.9941,
+      "acc_group": 0.99215,
+      "acc_machine": 0.9378,
+      "d_combined": 4.481082056959975,
+      "d_group": 4.3553094767757825,
+      "d_machine": 3.288042370589098,
+      "turing_group": 1.028877989234717,
+      "yield_on_machine": 1.3628419442043649,
+      "acc_combined_ci": [
+       0.9924446649788615,
+       0.9955981739743482
+      ],
+      "acc_group_ci": [
+       0.990297075455704,
+       0.9938104053102965
+      ],
+      "acc_machine_ci": [
+       0.9333721838249863,
+       0.9429382478198702
+      ],
+      "d_combined_ci": [
+       4.372385268275229,
+       4.606306658529186
+      ],
+      "d_group_ci": [
+       4.2593966529145275,
+       4.460241863853377
+      ],
+      "d_machine_ci": [
+       3.2458417068904764,
+       3.340111954878726
+      ],
+      "turing_group_ci": [
+       1.0116561550329877,
+       1.0479497303804368
+      ],
+      "yield_on_machine_ci": [
+       1.3291272898461026,
+       1.4007233664775613
+      ],
+      "coefficients_by_fold": [
+       [
+        1.2132546464326397,
+        0.24676430278827524
+       ],
+       [
+        1.2806338687941616,
+        0.25478003598821314
+       ],
+       [
+        1.2540474462623914,
+        0.23406167620919446
+       ],
+       [
+        1.1778168312388755,
+        0.25799940935748333
+       ],
+       [
+        1.365601122935705,
+        0.24144325756410592
+       ]
+      ]
+     },
+     "accuracy_sum": 0.9767,
+     "accuracy_majority": 0.99215
+    },
+    "mista": {
+     "accuracy": 0.9405,
+     "angle": {
+      "n_trials": 511000,
+      "items": 10000,
+      "m": 10,
+      "repetitions": 1000,
+      "acc_h": 0.9523460386492748,
+      "acc_h_ci": [
+       0.9503702574534509,
+       0.9542758282513631
+      ],
+      "acc_m": 0.9405,
+      "acc_m_ci": [
+       0.9358275128233111,
+       0.9453072884720493
+      ],
+      "dh": 3.4460879227125716,
+      "dh_ci": [
+       3.422512064037398,
+       3.4698950224931644
+      ],
+      "dm": 3.3149573707208715,
+      "dm_ci": [
+       3.2689593664983074,
+       3.3653896642286143
+      ],
+      "rho": 0.38761996764535017,
+      "rho_ci": [
+       0.352930242107386,
+       0.4191835091529199
+      ],
+      "rho_correct": 0.38761996764535017,
+      "rho_correct_ci": [
+       0.352930242107386,
+       0.4191835091529199
+      ],
+      "ideal_90": 4.781680075116076,
+      "ideal_90_ci": [
+       4.739968749295956,
+       4.824480667840925
+      ],
+      "ideal_phi": 4.060210862679163,
+      "ideal_phi_ci": [
+       3.998639272708293,
+       4.132324343397624
+      ],
+      "phi": 67.19351232970766,
+      "phi_ci": [
+       65.21695025737473,
+       69.3333530879042
+      ],
+      "useful_angle": 15.856716270801446,
+      "useful_angle_ci": [
+       12.580241190999361,
+       18.425764374037445
+      ],
+      "k": 0.9619479958339306,
+      "k_ci": [
+       0.9487339763968536,
+       0.9759919307384304
+      ],
+      "tu_app": 1.1782087264573295
+     },
+     "accuracy_where_people_right": 0.9746487477092242,
+     "accuracy_where_people_split": 0.7175697865353038,
+     "group": {
+      "acc_combined": 0.9936,
+      "acc_group": 0.99215,
+      "acc_machine": 0.9405,
+      "d_combined": 4.445641443586468,
+      "d_group": 4.3553094767757825,
+      "d_machine": 3.3149573707208715,
+      "turing_group": 1.020740653974734,
+      "yield_on_machine": 1.3410855544787044,
+      "acc_combined_ci": [
+       0.9918496566665351,
+       0.9950676984318197
+      ],
+      "acc_group_ci": [
+       0.990297075455704,
+       0.9938104053102965
+      ],
+      "acc_machine_ci": [
+       0.9358275128233111,
+       0.9453072884720493
+      ],
+      "d_combined_ci": [
+       4.338481870160593,
+       4.55809903822296
+      ],
+      "d_group_ci": [
+       4.2593966529145275,
+       4.460241863853377
+      ],
+      "d_machine_ci": [
+       3.2689593664983074,
+       3.3653896642286143
+      ],
+      "turing_group_ci": [
+       1.003793612060394,
+       1.0385508059793223
+      ],
+      "yield_on_machine_ci": [
+       1.3090299485717185,
+       1.377319115192862
+      ],
+      "coefficients_by_fold": [
+       [
+        1.2079642598263094,
+        0.26610852146482217
+       ],
+       [
+        1.2766470314028562,
+        0.27410483938357305
+       ],
+       [
+        1.2504794112929267,
+        0.2542449770417822
+       ],
+       [
+        1.1796247722227216,
+        0.2648729654788068
+       ],
+       [
+        1.3629982207662485,
+        0.25524727574843
+       ]
+      ]
+     },
+     "accuracy_sum": 0.9784,
+     "accuracy_majority": 0.99215
+    }
+   },
+   "accuracy_by_fold": {
+    "fold0": {
+     "controllo": 0.9404,
+     "somma": 0.9344,
+     "mista": 0.9372
+    },
+    "fold1": {
+     "controllo": 0.9462,
+     "somma": 0.9412,
+     "mista": 0.9438
+    }
+   },
+   "images": 10000,
+   "paired": {
+    "somma": {
+     "phi": 0.3118623276311041,
+     "phi_ci": [
+      -0.9211994125777586,
+      1.4722526403415308
+     ],
+     "tu_app": -0.007170120778619893,
+     "tu_app_ci": [
+      -0.01674137198407018,
+      0.0024399662085591452
+     ],
+     "turing_group": 0.009696151355143012,
+     "turing_group_ci": [
+      -0.0015800300787301767,
+      0.021615628277166083
+     ]
+    },
+    "mista": {
+     "phi": 0.7226131256013417,
+     "phi_ci": [
+      -0.13518242157758067,
+      1.637800703038756
+     ],
+     "tu_app": 5.758308095749065e-05,
+     "tu_app_ci": [
+      -0.006784371148912821,
+      0.007094851189396932
+     ],
+     "turing_group": 0.0015588160951598429,
+     "turing_group_ci": [
+      -0.007760830145378561,
+      0.011094029039793889
+     ]
+    }
+   }
+  }
+ },
+ "minutes": 0.5,
+ "environment": {
+  "python": "3.13.14",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "code_commit": "df7874aeb587752992c0bb6355ec4f6bf2241801"
+ }
+}

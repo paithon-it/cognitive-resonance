@@ -65,9 +65,9 @@ una pagina, è in [`docs/identity.md`](docs/identity.md).
 | E1 | il banco: piccole reti convoluzionali su cinque coppie di classi di CIFAR-10, una cornice la cui luminosità le reti «più» e «meno» imparano in versi opposti, una manopola `mu` che regola l'angolo | corse su GPU |
 | E2 | il rifasamento: una macchina addestrata a scorrelarsi da una rete con un pregiudizio, senza sapere quale | corse su GPU |
 | E2 bis | il compagno addestrato sull'errore della coppia, e uno che vede solo la cornice (esplorativo, v1.3, dopo E2 ed E3) | corse su GPU |
-| E2 ter | il solista che impara la persona: la macchina migliore da sola, affinata anche sull'errore della somma, e la stessa macchina con un ramo che vede solo la cornice (esplorativo, v1.4; non ancora eseguito) | corse su GPU |
+| E2 ter | il solista che impara la persona: la macchina migliore da sola, affinata anche sull'errore della somma, e la stessa macchina con un ramo che vede solo la cornice (esplorativo, v1.4) | corse su GPU |
 | E3 | persone vere: i voti di CIFAR-10H contro una ResNet-18, e versioni affinate verso la controfase | corse su GPU, CIFAR-10H |
-| E3 bis | la ricetta della somma con le persone vere: la macchina di base affinata sull'indizio delle persone più i suoi logit (esplorativo, v1.4; non ancora eseguito) | corse su GPU, CIFAR-10H |
+| E3 bis | la ricetta della somma con le persone vere: la macchina di base affinata sull'indizio delle persone più i suoi logit (esplorativo, v1.4) | corse su GPU, CIFAR-10H |
 | E4 | le coppie già misurate, rilette su questa scala | angoli pubblicati |
 | E5 | il nullo, con pesi di ogni segno (aggiunto nella v1.2, prima di ogni analisi) | i file di E1 |
 
