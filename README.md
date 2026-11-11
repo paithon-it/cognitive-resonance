@@ -61,7 +61,9 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E1 | the bench: small CNNs on five CIFAR-10 class pairs, a frame whose brightness the "plus" and "minus" networks learn in opposite directions, a knob `mu` that sets the angle | GPU runs |
 | E2 | rephasing: a machine trained to decorrelate from a biased network, without being told the bias | GPU runs |
 | E2 bis | the partner trained on the error of the pair, and one that sees only the frame (exploratory, v1.3, after E2 and E3) | GPU runs |
+| E2 ter | the soloist that learns the person: the best machine alone, fine-tuned on the error of the sum too, and the same machine with a branch that sees only the frame (exploratory, v1.4; not run yet) | GPU runs |
 | E3 | real people: CIFAR-10H votes against a ResNet-18, and versions fine-tuned toward antiphase | GPU runs, CIFAR-10H |
+| E3 bis | the recipe of the sum with real people: the base machine fine-tuned on the people's cue plus its own logits (exploratory, v1.4; not run yet) | GPU runs, CIFAR-10H |
 | E4 | the pairs already measured, reread on this scale | published angles |
 | E5 | the null, with weights of either sign (added in v1.2, before any analysis) | the files of E1 |
 
@@ -98,22 +100,24 @@ uv run python analysis/bench.py                # E1, results/e1_bench.json
 uv run python analysis/null.py                 # E5, results/e5_null.json
 uv run python analysis/rephase.py              # E2, results/e2_rephase.json
 uv run python analysis/rephase_bis.py          # E2 bis, results/e2bis_rephase.json
+uv run python analysis/rephase_ter.py          # E2 ter, results/e2ter_rephase.json
 uv run python analysis/download_cifar10h.py    # CIFAR-10H votes into data/ (not tracked)
 uv run python analysis/people.py --turing-meter PATH_TO_TURING_METER_CLONE   # E3
+uv run python analysis/people_bis.py --turing-meter PATH_TO_TURING_METER_CLONE   # E3 bis
 uv run python analysis/figure_data.py          # results/figure_data.json
 uv run python analysis/results_md.py           # results/RESULTS.md
 ```
 
-E3 imports `compare_votes` from a local clone of turing-meter, and writes its commit in
-`results/e3_people.json`. The analyses use at most three processes and fit in a few
-minutes each on four cores.
+E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its
+commit in `results/e3_people.json` and `results/e3bis_people.json`. The analyses use at
+most three processes and fit in a few minutes each on four cores.
 
 ## License
 
 - Code under the MIT License, © 2026 paithon.it.
 - The protocol (`PROTOCOL*.md`), `docs/` and the derived results (`results/`) under
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); what derives from CIFAR-10H
-  (`results/e3_people.json`) keeps its license,
+  (`results/e3_people.json`, `results/e3bis_people.json`) keeps its license,
   [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 - The data of the sources (CIFAR-10, CIFAR-10H) are not redistributed: the scripts read
   them from their sources, under their authors' licenses.

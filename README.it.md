@@ -65,7 +65,9 @@ una pagina, è in [`docs/identity.md`](docs/identity.md).
 | E1 | il banco: piccole reti convoluzionali su cinque coppie di classi di CIFAR-10, una cornice la cui luminosità le reti «più» e «meno» imparano in versi opposti, una manopola `mu` che regola l'angolo | corse su GPU |
 | E2 | il rifasamento: una macchina addestrata a scorrelarsi da una rete con un pregiudizio, senza sapere quale | corse su GPU |
 | E2 bis | il compagno addestrato sull'errore della coppia, e uno che vede solo la cornice (esplorativo, v1.3, dopo E2 ed E3) | corse su GPU |
+| E2 ter | il solista che impara la persona: la macchina migliore da sola, affinata anche sull'errore della somma, e la stessa macchina con un ramo che vede solo la cornice (esplorativo, v1.4; non ancora eseguito) | corse su GPU |
 | E3 | persone vere: i voti di CIFAR-10H contro una ResNet-18, e versioni affinate verso la controfase | corse su GPU, CIFAR-10H |
+| E3 bis | la ricetta della somma con le persone vere: la macchina di base affinata sull'indizio delle persone più i suoi logit (esplorativo, v1.4; non ancora eseguito) | corse su GPU, CIFAR-10H |
 | E4 | le coppie già misurate, rilette su questa scala | angoli pubblicati |
 | E5 | il nullo, con pesi di ogni segno (aggiunto nella v1.2, prima di ogni analisi) | i file di E1 |
 
@@ -104,22 +106,24 @@ uv run python analysis/bench.py                # E1, results/e1_bench.json
 uv run python analysis/null.py                 # E5, results/e5_null.json
 uv run python analysis/rephase.py              # E2, results/e2_rephase.json
 uv run python analysis/rephase_bis.py          # E2 bis, results/e2bis_rephase.json
+uv run python analysis/rephase_ter.py          # E2 ter, results/e2ter_rephase.json
 uv run python analysis/download_cifar10h.py    # i voti di CIFAR-10H in data/ (fuori da git)
 uv run python analysis/people.py --turing-meter PERCORSO_DEL_CLONE_DI_TURING_METER   # E3
+uv run python analysis/people_bis.py --turing-meter PERCORSO_DEL_CLONE_DI_TURING_METER   # E3 bis
 uv run python analysis/figure_data.py          # results/figure_data.json
 uv run python analysis/results_md.py           # results/RESULTS.md
 ```
 
-E3 importa `compare_votes` da un clone locale di turing-meter e ne scrive il commit in
-`results/e3_people.json`. Le analisi usano al massimo tre processi e girano in pochi
-minuti ciascuna su quattro core.
+E3 ed E3 bis importano `compare_votes` da un clone locale di turing-meter e ne scrivono il
+commit in `results/e3_people.json` e `results/e3bis_people.json`. Le analisi usano al
+massimo tre processi e girano in pochi minuti ciascuna su quattro core.
 
 ## Licenza
 
 - Codice sotto licenza MIT, © 2026 paithon.it.
 - Il protocollo (`PROTOCOL*.md`), `docs/` e i risultati derivati (`results/`) sotto
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.it); ciò che deriva da
-  CIFAR-10H (`results/e3_people.json`) mantiene la sua licenza,
+  CIFAR-10H (`results/e3_people.json`, `results/e3bis_people.json`) mantiene la sua licenza,
   [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.it).
 - I dati delle fonti (CIFAR-10, CIFAR-10H) non si ridistribuiscono: gli script li leggono
   dalle fonti, con le licenze dei loro autori.
