@@ -126,3 +126,80 @@ def test_exploratory_null_positive_weight(tmp_path):
     assert e["crossing_at_positive_weight"] == 4
     assert e["median_ratio_w0_over_predicted"] == pytest.approx(1.0, abs=0.1)
     assert e["max_abs_difference_tu_app_reversed"] < 1e-9
+
+
+# --- E2 ter --------------------------------------------------------------------------------------------
+
+def test_rephase_ter_on_synthetic_files(tmp_path):
+    import rephase_ter
+    synthetic.write_rephase_ter(tmp_path, tasks=("cat_dog", "deer_horse", "bird_frog"), seeds=(0, 1),
+                                n_images=400, n_val=400)
+    units = [rephase_ter.unit((f, 60)) for f in sorted(tmp_path.glob("*.npz"))]
+    c = rephase_ter.criteria(units)
+    assert set(c) == {"T1", "T2 Mdue", "T2 Mramo", "T3 Mdue", "T3 Mramo", "T4", "T5"}
+    assert all(v["outcome"] in ("pass", "fail") for v in c.values())
+    u = units[0]
+    assert set(u["differences"]) == {"M0", "Mdue", "Mramo"}                 # all from the control, M0plus
+    assert set(u["differences_from_M0"]) == {"M0plus", "Mdue", "Mramo"}
+    assert u["differences"]["Mdue"]["phi_ci"] is not None
+    alone = u["pair_against_control_alone"]["Mdue"]
+    assert alone["pair_minus_control_alone"] == pytest.approx(
+        u["pairs"]["Mdue"]["d_pair_tuned"] - u["judges"]["M0plus"]["d_a"])
+    # the toy: both machines learn the frame against H, and the angle opens from the control
+    assert u["judges"]["H"]["slope_on_a"] > 0 > u["judges"]["Mramo"]["slope_on_a"]
+    assert c["T2 Mdue"]["outcome"] == c["T2 Mramo"]["outcome"] == "pass"
+    assert c["T1"]["slope_opposite_to_h"] == len(units)
+    rows = rephase_ter.summary_by_machine(units)
+    assert set(rows) == {"H", "M0", "M0plus", "Mdue", "Mramo"}
+    assert "difference_from_M0plus" in rows["Mdue"] and "difference_from_M0" in rows["M0plus"]
+
+
+def _ter_unit(task, seed, *, phi_lo=(1.0, 1.0), pair_lo=(0.1, 0.1), alone_lo=0.1, ratio=1.0, slope_due=-0.5,
+              tu_ratio=(1.0, 1.0)):
+    """A unit of E2 ter reduced to what the criteria read; the lower ends of the intervals are set."""
+    def diff(lo_phi, lo_pair):
+        return {"phi": lo_phi + 1, "phi_ci": [lo_phi, lo_phi + 2], "pair": lo_pair + 0.1, "pair_ci": [lo_pair, 1.0],
+                "solo": 0.0, "solo_ci": [-1.0, 1.0]}
+    judges = {"H": {"d_a": 1.5, "slope_on_a": 0.7}, "M0plus": {"d_a": 2.0, "slope_on_a": 0.0},
+              "Mdue": {"d_a": 2.0 * ratio, "slope_on_a": slope_due}, "Mramo": {"d_a": 1.0, "slope_on_a": -0.6},
+              "M0": {"d_a": 1.9, "slope_on_a": 0.0}}
+    pairs = {m: {"ratio_tuned_app_nonneg": r, "tu_tuned": 1.5, "tu_app_nonneg": 1.5 / r, "d_pair_tuned": 2.2}
+             for m, r in zip(("Mdue", "Mramo"), tu_ratio)}
+    pairs["M0plus"] = {"d_pair_tuned": 2.1}
+    alone = {m: {"pair_minus_control_alone": alone_lo + 0.1, "pair_minus_control_alone_ci": [alone_lo, 1.0]}
+             for m in ("Mdue", "Mramo")}
+    return {"task": task, "seed": seed, "judges": judges, "pairs": pairs,
+            "differences": {"Mdue": diff(phi_lo[0], pair_lo[0]), "Mramo": diff(phi_lo[1], pair_lo[1])},
+            "pair_against_control_alone": alone}
+
+
+def test_rephase_ter_verdicts_on_constructed_units():
+    import rephase_ter
+    tasks = ("t1", "t2", "t3", "t4", "t5")
+    good = [_ter_unit(t, s) for t in tasks for s in (0, 1)]
+    c = rephase_ter.criteria(good)
+    assert all(v["outcome"] == "pass" for v in c.values())
+    # T2 and T3 are judged per machine; one seed with the interval touching zero takes its task out
+    units = [_ter_unit(t, s, phi_lo=(-0.1 if (t in tasks[:3] and s == 1) else 1.0, 1.0))
+             for t in tasks for s in (0, 1)]
+    c = rephase_ter.criteria(units)
+    assert c["T2 Mdue"]["outcome"] == "fail" and c["T2 Mdue"]["tasks_passing"] == 2
+    assert c["T2 Mramo"]["outcome"] == "pass"
+    units = [_ter_unit(t, s, pair_lo=(0.1, 0.0 if t in tasks[:2] else 0.1)) for t in tasks for s in (0, 1)]
+    c = rephase_ter.criteria(units)
+    assert c["T3 Mdue"]["outcome"] == "pass" and c["T3 Mramo"]["outcome"] == "pass"   # 3 tasks of 5 are enough
+    units = [_ter_unit(t, s, pair_lo=(0.1, 0.0 if t in tasks[:3] else 0.1)) for t in tasks for s in (0, 1)]
+    assert rephase_ter.criteria(units)["T3 Mramo"]["outcome"] == "fail"
+    # T1: the median ratio, and the slope in every unit
+    units = [_ter_unit(t, s, ratio=0.85 if t in tasks[:3] else 1.0) for t in tasks for s in (0, 1)]
+    assert rephase_ter.criteria(units)["T1"]["outcome"] == "fail"
+    units = [_ter_unit(t, s, ratio=0.85 if t in tasks[:2] else 0.95) for t in tasks for s in (0, 1)]
+    assert rephase_ter.criteria(units)["T1"]["outcome"] == "pass"
+    units = good[:-1] + [_ter_unit("t5", 1, slope_due=0.2)]
+    assert rephase_ter.criteria(units)["T1"]["outcome"] == "fail"
+    # T4 needs both machines; T5 looks at Mdue only
+    units = [_ter_unit(t, s, tu_ratio=(1.0, 1.2)) for t in tasks for s in (0, 1)]
+    assert rephase_ter.criteria(units)["T4"]["outcome"] == "fail"
+    units = [_ter_unit(t, s, alone_lo=-0.05 if t in tasks[:3] else 0.1) for t in tasks for s in (0, 1)]
+    assert rephase_ter.criteria(units)["T5"]["outcome"] == "fail"
+

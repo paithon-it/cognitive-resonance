@@ -28,18 +28,18 @@ def tu_app_nonneg(k, rho) -> float | None:
     return model.tu_app_nonneg(k, rho) if abs(rho) < 1 else None
 
 
-def unit(job):
-    path, reps = job
-    d = raw.read_rephase_bis(path)
+def measure(d, machines, reps):
+    """Every pair (H, M) of one unit: point estimates with their intervals, the judges alone, and the
+    bootstrap arrays (the same resamples for every pair), for paired differences."""
     y = d["y"]
     cues = {"H": est.standardize(d["z_H"], y, d["val_z_H"], d["val_y"])}
     for i, name in enumerate(d["machine_names"]):
         cues[name] = est.standardize(d["z_M"][i], y, d["val_z_M"][i], d["val_y"])
-    pairs = {name: ("H", name) for name in MACHINES}
+    pairs = {name: ("H", name) for name in machines}
     design = est.Design(y, d["image"], cues, a=d["a"])
-    point = {name: est.measure_pair(cues["H"], cues[name], y, design.half) for name in MACHINES}
+    point = {name: est.measure_pair(cues["H"], cues[name], y, design.half) for name in machines}
     boot = est.bootstrap(design, pairs, reps=reps, slopes=True)
-    for name in MACHINES:
+    for name in machines:
         p = est.attach_intervals(point[name], boot, name)
         sin_phi = math.sin(math.radians(p["phi"]))
         p["tu_app_signed"] = model.tu_peak_signed(p["k"], p["rho"])
@@ -51,20 +51,43 @@ def unit(job):
                   "d_yesno": float(est.d_yesno(z, y)),
                   "slope_on_a": float(est.slope_within(z, d["a"], y)), "slope_on_a_ci": est.ci(boot[(j, "slope")])}
               for j, z in cues.items()}
+    return design, point, judges, boot
+
+
+def differences(point, judges, boot, names, reference) -> dict:
+    """Paired differences from the reference machine: alone, in the tuned pair, and of the angle."""
     diffs = {}
-    for name in MACHINES[1:]:
-        solo = boot[(name, "d_a")] - boot[("M0", "d_a")]
-        pair = boot[(name, "d_pair_tuned")] - boot[("M0", "d_pair_tuned")]
-        phi = boot[(name, "phi")] - boot[("M0", "phi")]
-        diffs[name] = {"solo": judges[name]["d_a"] - judges["M0"]["d_a"], "solo_ci": est.ci(solo),
-                       "pair": point[name]["d_pair_tuned"] - point["M0"]["d_pair_tuned"], "pair_ci": est.ci(pair),
-                       "phi": point[name]["phi"] - point["M0"]["phi"], "phi_ci": est.ci(phi)}
+    for name in names:
+        solo = boot[(name, "d_a")] - boot[(reference, "d_a")]
+        pair = boot[(name, "d_pair_tuned")] - boot[(reference, "d_pair_tuned")]
+        phi = boot[(name, "phi")] - boot[(reference, "phi")]
+        diffs[name] = {"solo": judges[name]["d_a"] - judges[reference]["d_a"], "solo_ci": est.ci(solo),
+                       "pair": point[name]["d_pair_tuned"] - point[reference]["d_pair_tuned"], "pair_ci": est.ci(pair),
+                       "phi": point[name]["phi"] - point[reference]["phi"], "phi_ci": est.ci(phi)}
+    return diffs
+
+
+def unit(job):
+    path, reps = job
+    d = raw.read_rephase_bis(path)
+    design, point, judges, boot = measure(d, MACHINES, reps)
+    diffs = differences(point, judges, boot, MACHINES[1:], "M0")
     return {"task": d["task"], "seed": d["seed"], "file": d["file"], "machines": list(MACHINES),
-            "n": int(y.size), "n_images": design.n_images, "judges": judges, "pairs": point, "differences": diffs}
+            "n": int(d["y"].size), "n_images": design.n_images, "judges": judges, "pairs": point,
+            "differences": diffs}
 
 
 def _opposite(a, b):
     return bool(np.sign(a) == -np.sign(b) and a != 0 and b != 0)
+
+
+def per_task(units, test) -> dict:
+    """Per task: True when the test holds in every seed (unit) of that task."""
+    res = {}
+    for t in sorted({u["task"] for u in units}):
+        us = [u for u in units if u["task"] == t]
+        res[t] = bool(us) and all(test(u) for u in us)
+    return res
 
 
 def criteria(units) -> dict:
@@ -86,24 +109,18 @@ def criteria(units) -> dict:
                         rule="in every unit: Mpair's d_a interval above zero, Mframe's containing zero, and the slope "
                              "of both machines' cue on a opposite in sign to H's")
 
-    def per_task(test):
-        res = {}
-        for t in tasks:
-            us = [u for u in units if u["task"] == t]
-            res[t] = bool(us) and all(test(u) for u in us)
-        return res
-
-    b2 = per_task(lambda u: u["differences"]["Mpair"]["phi_ci"][0] > 0)
+    b2 = per_task(units, lambda u: u["differences"]["Mpair"]["phi_ci"][0] > 0)
     out["B2"] = verdict(sum(b2.values()) >= need, tasks_passing=sum(b2.values()), tasks_needed=need, by_task=b2,
                         median_phi_difference=med([u["differences"]["Mpair"]["phi"] for u in units]),
                         rule="phi(H, Mpair) - phi(H, M0) with its interval above zero in every seed, in >= 3 tasks of 5")
-    b3 = per_task(lambda u: u["differences"]["Mpair"]["solo_ci"][1] < 0 and u["differences"]["Mpair"]["pair_ci"][0] > 0)
+    b3 = per_task(units, lambda u: u["differences"]["Mpair"]["solo_ci"][1] < 0
+                  and u["differences"]["Mpair"]["pair_ci"][0] > 0)
     out["B3"] = verdict(sum(b3.values()) >= need, tasks_passing=sum(b3.values()), tasks_needed=need, by_task=b3,
                         median_solo_difference=med([u["differences"]["Mpair"]["solo"] for u in units]),
                         median_pair_difference=med([u["differences"]["Mpair"]["pair"] for u in units]),
                         rule="Mpair alone less sensitive than M0 and (H, Mpair) more sensitive than (H, M0), both "
                              "intervals excluding zero in every seed, in >= 3 tasks of 5")
-    b4 = per_task(lambda u: u["pairs"]["Mframe"]["tu_tuned_ci"][0] > 1.0)
+    b4 = per_task(units, lambda u: u["pairs"]["Mframe"]["tu_tuned_ci"][0] > 1.0)
     r4 = med([u["pairs"]["Mframe"]["ratio_tuned_inv_sin_phi"] for u in units])
     out["B4"] = verdict(sum(b4.values()) >= need and r4 is not None and 0.9 <= r4 <= 1.1,
                         tasks_with_interval_above_1=sum(b4.values()), tasks_needed=need, by_task=b4,
@@ -121,19 +138,19 @@ def criteria(units) -> dict:
     return out
 
 
-def by_machine(units) -> dict:
+def by_machine(units, machines=MACHINES, reference="M0") -> dict:
     out = {"H": {"d_a": med([u["judges"]["H"]["d_a"] for u in units]),
                  "slope_on_a": med([u["judges"]["H"]["slope_on_a"] for u in units])}}
-    for m in MACHINES:
+    for m in machines:
         ps = [u["pairs"][m] for u in units]
         out[m] = {"d_a": med([u["judges"][m]["d_a"] for u in units]),
                   "slope_on_a": med([u["judges"][m]["slope_on_a"] for u in units]),
                   **{k: med([p[k] for p in ps]) for k in ("phi", "phi_tetrachoric", "k", "q", "tu_tuned",
                                                           "tu_app_nonneg", "tu_app_signed", "inv_sin_phi",
                                                           "d_pair_tuned")}}
-        if m != "M0":
-            out[m]["difference_from_M0"] = {k: med([u["differences"][m][k] for u in units])
-                                            for k in ("solo", "pair", "phi")}
+        if m != reference:
+            out[m][f"difference_from_{reference}"] = {k: med([u["differences"][m][k] for u in units])
+                                                      for k in ("solo", "pair", "phi")}
     return out
 
 
