@@ -1,0 +1,84 @@
+"""Which weight should a partner be built for? (a design aid on the curves of E6; not a test of the protocol)
+
+E6 builds four partners, each for a weight, and measures the turing of the pair with each of them, and with the
+soloist, at every weight on the grid. Whoever builds a machine for other people does not know the weight they
+will give it. This script takes a belief about that weight, as shares over a few weights, and reports for
+every machine the expected turing of the pair under that belief, the worst case over the same weights, and the
+share of right answers of the machine used alone. Which machine to choose is then a matter of policy, and the
+policy is the function `choose` below.
+
+    python analysis/design.py [--results results] [--belief 0.25:0.5,1:0.3,4:0.2]
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import statistics
+from pathlib import Path
+
+from common import ROOT
+
+GRID = [math.exp(math.log(1 / 64) + i * math.log(64 * 64) / 48) for i in range(49)]
+# Kong et al. (2026) estimate that the participants of ChatBench give the machine about 0.285 of the weight it
+# deserves; the default belief puts most people there and a few at face value and beyond.
+DEFAULT_BELIEF = {0.285: 0.6, 1.0: 0.3, 4.0: 0.1}
+
+
+def at(curve, w: float) -> float:
+    """The curve at weight w, by linear interpolation in ln w."""
+    x = (math.log(w) - math.log(GRID[0])) / (math.log(GRID[-1]) - math.log(GRID[0])) * (len(GRID) - 1)
+    i = min(max(int(math.floor(x)), 0), len(GRID) - 2)
+    return curve[i] + (x - i) * (curve[i + 1] - curve[i])
+
+
+def table(d: dict, belief: dict) -> list:
+    """Per machine: expected and worst turing of the pair under the belief, and right answers alone."""
+    total = sum(belief.values())
+    rows = []
+    for row in d["by_machine"]:
+        name = row["machine"]
+        curve = [statistics.median(u["fixed"][name]["raw_curve"][i] for u in d["units"]) for i in range(len(GRID))]
+        values = {w: at(curve, w) for w in belief}
+        rows.append({"machine": name, "built_for_weight": row.get("built_for_weight"),
+                     "expected_turing": sum(values[w] * share for w, share in belief.items()) / total,
+                     "worst_turing": min(values.values()), "accuracy_alone": row["accuracy_alone"],
+                     "turing_by_weight": values})
+    return rows
+
+
+def choose(rows: list) -> str:
+    """The machine to build, given the table.
+
+    TODO(author): this is the policy, and it is a choice, not a computation. Each row has `expected_turing` (the
+    pair, averaged over the weights people are believed to give), `worst_turing` (the pair with the user who
+    gives the least favourable weight) and `accuracy_alone` (the machine used without its person). Options:
+    the highest expected turing; the highest worst case (nobody is harmed much); either of them among the
+    machines that stay above a floor of accuracy alone, for the day the machine is used by somebody else.
+    Return the name of the chosen machine.
+    """
+    return max(rows, key=lambda r: r["expected_turing"])["machine"]          # a placeholder: expected value only
+
+
+def parse_belief(text: str) -> dict:
+    return {float(w): float(s) for w, s in (pair.split(":") for pair in text.split(","))}
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--results", type=Path, default=ROOT / "results")
+    ap.add_argument("--belief", type=parse_belief, default=DEFAULT_BELIEF)
+    args = ap.parse_args()
+    d = json.loads((args.results / "e6_trust.json").read_text())
+    rows = table(d, args.belief)
+    print("belief (weight: share):", args.belief)
+    print(f"{'machine':14s} {'built for':>9s} {'expected Tu':>12s} {'worst Tu':>9s} {'right alone':>12s}")
+    for r in rows:
+        built = "" if r["built_for_weight"] is None else f"{r['built_for_weight']:g}"
+        print(f"{r['machine']:14s} {built:>9s} {r['expected_turing']:12.3f} {r['worst_turing']:9.3f} "
+              f"{100 * r['accuracy_alone']:11.1f}%")
+    print("chosen:", choose(rows))
+
+
+if __name__ == "__main__":
+    main()

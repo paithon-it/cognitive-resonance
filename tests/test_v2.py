@@ -381,3 +381,19 @@ def test_shape_changes_nothing_when_every_frame_is_gaussian(tmp_path):
     units = [shape.unit(f) for f in sorted(tmp_path.glob("*.npz"))]
     c = shape.criteria(units)
     assert c["S1"]["outcome"] == "pass" and c["S2"]["outcome"] == "fail" and c["S3"]["outcome"] == "fail"
+
+
+# --- the design aid on the curves of E6 -------------------------------------------------------------------------
+
+def test_design_table_reads_the_curves(trust_units):
+    import design
+    d = {"units": trust_units, "by_machine": trust.summary_by_machine(trust_units)}
+    rows = design.table(d, {0.5: 0.5, 2.0: 0.5})
+    by = {r["machine"]: r for r in rows}
+    assert set(by) == set(raw.TRUST_MACHINES)
+    half = by["Mramo_w0.5"]["turing_by_weight"]
+    assert half[0.5] > half[2.0]                                   # the partner built for 0.5 peaks near 0.5
+    assert by["Mramo_w0.5"]["worst_turing"] == pytest.approx(min(half.values()))
+    assert design.choose(rows) in by
+    assert design.at(list(range(49)), design.GRID[10]) == pytest.approx(10.0)
+    assert design.parse_belief("0.25:0.5,1:0.5") == {0.25: 0.5, 1.0: 0.5}
