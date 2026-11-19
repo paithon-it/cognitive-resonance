@@ -125,6 +125,47 @@ def read_rephase_ter(path) -> dict:
     return read_rephase_bis(path, REPHASE_TER_MACHINES)
 
 
+TRUST_WEIGHTS = (0.5, 1.0, 2.0, 4.0)
+TRUST_BRANCHES = tuple(f"Mramo_w{w:g}" for w in TRUST_WEIGHTS)
+TRUST_MACHINES = ("M0", "M0plus", "Mdue") + TRUST_BRANCHES
+VIEWS_MACHINES = ("M0", "Mramo", "Mpair")
+VIEWS_OVERLAPS = (100, 50, 0)
+VIEWS_RE = re.compile(r"^(?P<task>.+)_o(?P<overlap>\d+)_s(?P<seed>\d+)\.npz$")
+
+
+def read_trust(path) -> dict:
+    """trust/{task}_s{seed}.npz (§ 12): as rephase_bis, with M0, M0plus, Mdue and one Mramo_w per weight."""
+    d = read_rephase_bis(path, TRUST_MACHINES)
+    if "built_for_weight" not in d or tuple(float(w) for w in d["built_for_weight"]) != TRUST_WEIGHTS:
+        raise ContractError(f"{Path(path).name}: built_for_weight must be {list(TRUST_WEIGHTS)}")
+    return d
+
+
+def read_views(path) -> dict:
+    """views/{task}_o{overlap}_s{seed}.npz (§ 13): as rephase_bis, with M0, Mramo, Mpair and the overlap."""
+    path = Path(path)
+    m = VIEWS_RE.match(path.name)
+    if not m:
+        raise ContractError(f"{path.name}: name does not match {{task}}_o{{overlap}}_s{{seed}}.npz")
+    d = _load(path)
+    _need(d, REPHASE_BIS_KEYS + ("machines", "overlap") + tuple("val_" + k for k in REPHASE_BIS_KEYS), path)
+    names = [str(x) for x in d["machines"]]
+    if sorted(names) != sorted(VIEWS_MACHINES):
+        raise ContractError(f"{path.name}: machines must be {list(VIEWS_MACHINES)}, got {names}")
+    overlap = int(m["overlap"])
+    if overlap not in VIEWS_OVERLAPS or int(d["overlap"]) != overlap:
+        raise ContractError(f"{path.name}: overlap must be one of {list(VIEWS_OVERLAPS)} and match the name")
+    for prefix in ("", "val_"):
+        keys = tuple(prefix + k for k in REPHASE_BIS_KEYS)
+        if d[prefix + "z_M"].ndim != 2 or d[prefix + "z_M"].shape[0] != len(names):
+            raise ContractError(f"{path.name}: {prefix}z_M must be (number of machines, N)")
+        _same_length(d, keys, path, axis_of={prefix + "z_M": 1})
+        _binary(d[prefix + "y"], path)
+        _finite(d, keys, path)
+    d.update(task=m["task"], seed=int(m["seed"]), overlap=overlap, file=path.name, machine_names=names)
+    return d
+
+
 def read_people_fold(path) -> dict:
     """people/fold{f}_s{seed}.npz: logits (number of lambdas, N, 10) on the unseen half."""
     path = Path(path)

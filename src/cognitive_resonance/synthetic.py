@@ -222,3 +222,85 @@ def write_people_bis(folder, counts_path, seeds=(0, 1), seed=12) -> None:
             np.savez(folder / f"fold{f}_s{sd}.npz", image=img, y=y[img], logits=lg,
                      recipes=np.array(RECIPES_PEOPLE_BIS))
     (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
+# --- E6 and E7 (protocol §§ 12-13) -----------------------------------------------------------
+
+TRUST_WEIGHTS = (0.5, 1.0, 2.0, 4.0)
+MACHINES_TRUST = ("M0", "M0plus", "Mdue") + tuple(f"Mramo_w{w:g}" for w in TRUST_WEIGHTS)
+MACHINES_VIEWS = ("M0", "Mramo", "Mpair")
+OVERLAPS = (100, 50, 0)
+
+
+def _trust_cues(gen, n_images, presentations, d, matched):
+    """H reads the image and the frame; M0 reads the same image better and not the frame. Each branch adds the
+    frame against H: divided by the weight it is built for (matched), or always whole (not matched)."""
+    y_img = (np.arange(n_images) >= n_images // 2).astype(int)
+    image = np.repeat(np.arange(n_images), presentations)
+    y = y_img[image]
+    s = 2.0 * y - 1.0
+    a = gen.normal(0.0, math.sqrt(2.0), image.size)
+    common = gen.standard_normal(n_images)
+    noise = lambda r: (r ** 0.5 * common + (1 - r) ** 0.5 * gen.standard_normal(n_images))[image]  # noqa: E731
+    zh = s * d / 2 + noise(0.8) + 0.3 * gen.standard_normal(image.size) + 1.2 * a
+    m0 = 1.5 * (s * d / 2 + noise(0.8)) + 0.3 * gen.standard_normal(image.size)
+    m0plus = m0 + s * 0.02 * d + 0.05 * gen.standard_normal(image.size)
+    mdue = 0.97 * m0 + 0.2 * gen.standard_normal(image.size) - 0.5 * a
+    branches = [m0 + 0.05 * gen.standard_normal(image.size) - (1.2 / (w if matched else 1.0)) * a
+                for w in TRUST_WEIGHTS]
+    return y, image, a, zh, np.array([m0, m0plus, mdue] + branches)
+
+
+def write_trust(folder, tasks=TASKS, seeds=(2, 3, 4), n_images=2000, presentations=5, n_val=1000, seed=13,
+                matched=True) -> None:
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for ti, task in enumerate(tasks):
+        d = 1.6 + 0.25 * ti
+        for sd in seeds:
+            gen = np.random.default_rng([seed, ti, sd])
+            y, image, a, zh, zm = _trust_cues(gen, n_images, presentations, d, matched)
+            vy, vimage, va, vzh, vzm = _trust_cues(gen, n_val, 1, d, matched)
+            np.savez(folder / f"{task}_s{sd}.npz", y=y, image=image, a=a, z_H=zh, z_M=zm,
+                     machines=np.array(MACHINES_TRUST), built_for_weight=np.array(TRUST_WEIGHTS, dtype=np.float32),
+                     val_y=vy, val_image=vimage, val_a=va, val_z_H=vzh, val_z_M=vzm)
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
+def _views_cues(gen, n_images, presentations, d, overlap, flat):
+    """Four quarters of evidence, independent given the class, each written as a log-likelihood ratio (so that
+    adding the quarters is the best way to use them). H reads the two left quarters and the frame. The machine
+    reads the two left quarters (overlap 100), the two top ones (50) or the two right ones (0). Mramo is M0 with
+    the frame against H; Mpair learns the frame against H and, of the image, only the quarters H does not see.
+    With `flat` the machine always reads the left quarters, whatever the name of the file says."""
+    y_img = (np.arange(n_images) >= n_images // 2).astype(int)
+    image = np.repeat(np.arange(n_images), presentations)
+    y = y_img[image]
+    s = 2.0 * y - 1.0
+    a = gen.normal(0.0, math.sqrt(2.0), image.size)
+    dq = d / math.sqrt(2.0)                                   # two quarters together are worth d
+    q = {name: (s * dq * dq / 2 + dq * gen.standard_normal(n_images)[image]) for name in ("tl", "bl", "tr", "br")}
+    seen = {100: ("tl", "bl"), 50: ("tl", "tr"), 0: ("tr", "br")}[100 if flat else overlap]
+    zh = q["tl"] + q["bl"] + 0.3 * gen.standard_normal(image.size) + 0.9 * a
+    m0 = sum(q[n] for n in seen) + 0.3 * gen.standard_normal(image.size)
+    own = sum((q[n] for n in seen if n not in ("tl", "bl")), np.zeros(image.size))
+    mramo = m0 + 0.05 * gen.standard_normal(image.size) - 0.9 * a
+    mpair = own + 0.3 * gen.standard_normal(image.size) - 0.9 * a
+    return y, image, a, zh, np.array([m0, mramo, mpair])
+
+
+def write_views(folder, tasks=TASKS, seeds=(2, 3, 4), n_images=2000, presentations=5, n_val=1000, seed=14,
+                flat=False) -> None:
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for ti, task in enumerate(tasks):
+        d = 1.6 + 0.25 * ti
+        for sd in seeds:
+            for overlap in OVERLAPS:
+                gen = np.random.default_rng([seed, ti, sd, overlap])
+                y, image, a, zh, zm = _views_cues(gen, n_images, presentations, d, overlap, flat)
+                vy, vimage, va, vzh, vzm = _views_cues(gen, n_val, 1, d, overlap, flat)
+                np.savez(folder / f"{task}_o{overlap}_s{sd}.npz", y=y, image=image, a=a, z_H=zh, z_M=zm,
+                         machines=np.array(MACHINES_VIEWS), overlap=np.array(overlap, dtype=np.int32),
+                         val_y=vy, val_image=vimage, val_a=va, val_z_H=vzh, val_z_M=vzm)
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
