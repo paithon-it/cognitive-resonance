@@ -143,7 +143,10 @@ def summary(units) -> list:
                          "w_star_model": med([u["pairs"][name]["w_star"] for u in us]),
                          "tu_face": med([u["fixed"][name]["tu"]["face"] for u in us]),
                          "tu_std1": med([u["fixed"][name]["tu"][std_key(1.0)] for u in us]),
-                         "pair_minus_soloist_alone": med([u["pair_against_soloist_alone"][name]["diff"] for u in us])})
+                         "pair_minus_soloist_alone": med([u["pair_against_soloist_alone"][name]["diff"] for u in us]),
+                         "accuracy_alone": med([u["fixed"][name]["accuracy"]["alone"] for u in us]),
+                         "accuracy_face": med([u["fixed"][name]["accuracy"]["face"] for u in us]),
+                         "accuracy_person_alone": med([u["fixed"][name]["accuracy"]["person_alone"] for u in us])})
     return rows
 
 

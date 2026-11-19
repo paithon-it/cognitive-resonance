@@ -174,7 +174,10 @@ def summary_by_machine(units) -> list:
                "tu_tuned": med([u["pairs"][name]["tu_tuned"] for u in units]),
                "raw_peak": med([u["fixed"][name]["raw_peak"]["estimate"] for u in units]),
                "sd_ratio_m_over_h": med([u["fixed"][name]["sd_ratio_m_over_h"] for u in units]),
-               "face_minus_control_alone": med([u["fixed"][name]["face_minus_control_alone"]["diff"] for u in units])}
+               "face_minus_control_alone": med([u["fixed"][name]["face_minus_control_alone"]["diff"] for u in units]),
+               "accuracy_alone": med([u["fixed"][name]["accuracy"]["alone"] for u in units]),
+               "accuracy_face": med([u["fixed"][name]["accuracy"]["face"] for u in units]),
+               "accuracy_person_alone": med([u["fixed"][name]["accuracy"]["person_alone"] for u in units])}
         for k in SCORES:
             if k != "alone":
                 row["tu_" + k] = med([u["fixed"][name]["tu"][k] for u in units])

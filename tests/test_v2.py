@@ -101,6 +101,10 @@ def test_face_value_is_the_raw_sum(tmp_path):
     one = design.cues["H"] + design.cues["M0"]
     assert fpoint["M0"]["d_a"]["std1"] == pytest.approx(float(est.d_a(one, y)))
     assert fboot[("M0", "face")].shape == (20,)
+    acc = fpoint["M0"]["accuracy"]
+    assert acc["face"] == pytest.approx(float(np.mean((d["z_H"] + d["z_M"][0] > 0) == (y == 1))))
+    assert acc["alone"] == pytest.approx(float(np.mean((d["z_M"][0] > 0) == (y == 1))))
+    assert acc["person_alone"] == fpoint["Mdue"]["accuracy"]["person_alone"]
 
 
 # --- E6 --------------------------------------------------------------------------------------------
@@ -223,3 +227,31 @@ def test_views_verdicts_on_constructed_units(views_units):
 def test_std_key_names():
     assert [fixed.std_key(w) for w in fixed.STD_WEIGHTS] == ["std0.5", "std1", "std2", "std8"]
     assert math.isclose(fixed.PEAK_LEVEL, 0.9)
+
+
+# --- E1 read again: the identity of the sample moments -------------------------------------------------
+
+def test_the_formula_is_an_identity_for_the_signal_to_noise_ratio(tmp_path):
+    import identity
+    synthetic.write_bench(tmp_path, tasks=("cat_dog",), mus=(0.0, 1.0, 2.0), seeds=(0,), n_images=300, n_val=300)
+    units = [identity.unit(f) for f in sorted(tmp_path.glob("*.npz"))]
+    assert all(u["snr_identity_max_relative_error"] < 1e-10 for u in units)
+    rows = identity.by_mu(units)
+    assert [r["mu"] for r in rows] == [0.0, 1.0, 2.0] and all(r["pairs"] == 1 for r in rows)
+
+
+def test_the_identity_does_not_need_gaussian_cues():
+    import identity
+    gen = np.random.default_rng(3)
+    n = 4000
+    y = (np.arange(n) >= n // 2).astype(int)
+    a = gen.exponential(1.0, n) * np.where(gen.random(n) < 0.5, 1.0, -3.0)        # skewed, heavy-tailed
+    zh = 0.8 * (2 * y - 1) + gen.standard_t(3, n) + a
+    zm = 0.5 * (2 * y - 1) + gen.laplace(0, 1, n) - 0.7 * a
+    rho = float(est.pearson_within(zh, zm, y))
+    sh, sm = est.within_class_sd(zh, y), est.within_class_sd(zm, y)
+    for w in (0.3, 1.0, 5.0):
+        wu = w * sm / sh
+        predicted = (1 + wu * identity.snr(zm, y) / identity.snr(zh, y)) / math.sqrt(1 + wu * wu + 2 * rho * wu)
+        assert identity.snr(zh + w * zm, y) / identity.snr(zh, y) == pytest.approx(predicted, rel=1e-10)
+    assert abs(identity.excess_kurtosis(zh + zm, y)) > 1.0                         # and these cues are far from Gaussian

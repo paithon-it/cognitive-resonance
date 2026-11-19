@@ -83,10 +83,15 @@ def peak_centre(grid, tu_values, level: float = PEAK_LEVEL) -> dict:
     return out
 
 
+def accuracy(z_raw, y) -> float:
+    """Share of right answers when the answer is the sign of the raw log-odds."""
+    return float(np.mean((np.asarray(z_raw, float) > 0) == (np.asarray(y) == 1)))
+
+
 def fixed_measures(d: dict, cues: dict, design: est.Design, machines, reps: int):
     """For every machine: the pair at the fixed weights and at face value, the machine alone, the
-    raw curve with its peak. Returns the point estimates and the bootstrap arrays, keyed
-    (machine, score)."""
+    raw curve with its peak, and the shares of right answers (descriptive: no criterion uses
+    them). Returns the point estimates and the bootstrap arrays, keyed (machine, score)."""
     y = d["y"]
     zh_raw = np.asarray(d["z_H"], float)
     names = d["machine_names"]
@@ -97,6 +102,8 @@ def fixed_measures(d: dict, cues: dict, design: est.Design, machines, reps: int)
         sc = scores_of(zh_raw, zm_raw, cues["H"], cues[name])
         curve = raw_curve(zh_raw, zm_raw, y)
         point[name] = {"d_a": {k: float(est.d_a(s, y)) for k, s in sc.items()},
+                       "accuracy": {"alone": accuracy(zm_raw, y), "face": accuracy(zh_raw + zm_raw, y),
+                                    "person_alone": accuracy(zh_raw, y)},
                        "raw_curve": [float(x) for x in curve], "raw_peak": peak_centre(model.GRID, curve),
                        "sd_ratio_m_over_h": float(est.within_class_sd(d["val_z_M"][names.index(name)], d["val_y"])
                                                   / est.within_class_sd(d["val_z_H"], d["val_y"]))}
