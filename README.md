@@ -12,11 +12,13 @@ Italian; doi:[10.5281/zenodo.24107649](https://doi.org/10.5281/zenodo.24107649))
 the angle `phi` between the errors of a person and of a machine was measured between 59
 and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go there.
 
-> Status: **all runs done** (November 2026). The results are told in the paithon.it
-> article [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in Italian;
-> doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). The protocol was
-> written before any run ([`PROTOCOL.md`](PROTOCOL.md), Italian original
-> [`PROTOCOL.it.md`](PROTOCOL.it.md)); what changed afterwards is in its "Deviations" section.
+> Status: **version 2 in progress** (November 2026). E0 to E5 are done, and are told in the
+> paithon.it article [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in
+> Italian; doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Four new
+> experiments, E6 to E9, are **registered and not run yet**: protocol 2.1 was pushed to this
+> repository before any of their runs, on five seeds that no earlier run used. The protocol
+> is in [`PROTOCOL.md`](PROTOCOL.md) (Italian original [`PROTOCOL.it.md`](PROTOCOL.it.md));
+> what changed after a run is in its "Deviations" section.
 
 ## The identity
 
@@ -68,6 +70,18 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E3 bis | the recipe of the sum with real people: the base machine fine-tuned on the people's cue plus its own logits (exploratory, v1.4) | GPU runs, CIFAR-10H |
 | E4 | the pairs already measured, reread on this scale | published angles |
 | E5 | the null, with weights of either sign (added in v1.2, before any analysis) | the files of E1 |
+| E6 | trust made to measure: four partners, each built for a different weight of the machine in the sum. Does the weight at which the pair pays off follow the weight the partner was built for? (v2.0) | GPU runs, not run yet |
+| E7 | different views: judge and machine see different halves of the image, with everything, a quarter or nothing in common. What does a partner trained from scratch learn? (v2.0) | GPU runs, not run yet |
+| E8 | the bench of the chart: the judge sees the whole image, the machine all, half or a quarter of it. A theorem predicts the pair with the soloist, with the partner and with a blind corrector from measures taken on the judge and the soloist alone (v2.1) | GPU runs, not run yet |
+| E9 | the shape of the noise: the networks of E1 tested with a frame of the same variance and another shape (two values, uniform, heavy tails). Where does the formula stop holding for right answers? (v2.1) | GPU runs, not run yet |
+
+Three readings of data already collected, none of them a test:
+
+| | What | Result file |
+|---|---|---|
+| the identity | with sensitivity as a signal-to-noise ratio, the formula of the pair is an algebraic identity of the sample moments: E1 and E5 test how Gaussian the cues are, not the formula | `results/identity.json` |
+| the peak moves | on the files of E2 ter, the pair at fixed weights: the partner does not raise the maximum, it moves the weight at which the pair reaches it | `results/e6_trust_from_e2ter.json` |
+| the three machines | the theorem of E8 on the files of E2 bis and E2 ter, unit by unit | `results/chart_from_e2.json` |
 
 Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RESULTS.md).
 
@@ -81,7 +95,11 @@ Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RES
   the model, for E0), `synthetic.py` (fake raw files, only for tests and dry runs).
 - `analysis/`: one script per experiment, each reading `results/raw/` and writing a JSON
   file with all the measures and the outcomes; `figure_data.py` gathers the data of the
-  figures.
+  figures. For version 2: `fixed.py` (the pair at fixed weights, with paired bootstrap),
+  `trust.py`, `views.py`, `chart.py`, `shape.py` (E6 to E9), `identity.py`, and
+  `design.py`, a design aid on the curves of E6 that is not a test.
+- `src/cognitive_resonance/chart.py`: the theorem of the three machines (the pair with
+  the soloist, with the partner, and the band in which a blind corrector wins).
 - `gpu/`: the scripts that train the networks and write the raw cues.
 - `tests/`: the identities, the estimators on data simulated from the model, the readers.
 - `results/`: the derived results. The raw cues (`results/raw/**/*.npz`) are not tracked.
@@ -108,6 +126,25 @@ uv run python analysis/people.py --turing-meter PATH_TO_TURING_METER_CLONE   # E
 uv run python analysis/people_bis.py --turing-meter PATH_TO_TURING_METER_CLONE   # E3 bis
 uv run python analysis/figure_data.py          # results/figure_data.json
 uv run python analysis/results_md.py           # results/RESULTS.md
+```
+
+Version 2. The readings of old data need the raw files of E1, E2 bis and E2 ter:
+
+```bash
+uv run python analysis/identity.py             # results/identity.json
+uv run python analysis/trust.py --ter          # results/e6_trust_from_e2ter.json
+uv run python analysis/chart.py --e2           # results/chart_from_e2.json
+```
+
+The new experiments, once their raw files are in `results/raw/{trust,views,chart,shape}`
+(`gpu/run.sh trust|views|chart|shape` writes them):
+
+```bash
+uv run python analysis/trust.py                # E6, results/e6_trust.json
+uv run python analysis/views.py                # E7, results/e7_views.json
+uv run python analysis/chart.py                # E8, results/e8_chart.json
+uv run python analysis/shape.py                # E9, results/e9_shape.json
+uv run python analysis/design.py               # which weight to build a partner for (after E6)
 ```
 
 E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its

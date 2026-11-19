@@ -7,7 +7,7 @@ every machine the expected turing of the pair under that belief, the worst case 
 share of right answers of the machine used alone. Which machine to choose is then a matter of policy, and the
 policy is the function `choose` below.
 
-    python analysis/design.py [--results results] [--belief 0.25:0.5,1:0.3,4:0.2]
+    python analysis/design.py [--results results] [--file e6_trust_from_e2ter.json] [--belief 0.25:0.5,1:0.3,4:0.2]
 """
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def table(d: dict, belief: dict) -> list:
         rows.append({"machine": name, "built_for_weight": row.get("built_for_weight"),
                      "expected_turing": sum(values[w] * share for w, share in belief.items()) / total,
                      "worst_turing": min(values.values()), "accuracy_alone": row["accuracy_alone"],
-                     "turing_by_weight": values})
+                     "accuracy_judge": row["accuracy_person_alone"], "turing_by_weight": values})
     return rows
 
 
@@ -52,9 +52,12 @@ def choose(rows: list) -> str:
 
     TODO(author): this is the policy, and it is a choice, not a computation. Each row has `expected_turing` (the
     pair, averaged over the weights people are believed to give), `worst_turing` (the pair with the user who
-    gives the least favourable weight) and `accuracy_alone` (the machine used without its person). Options:
-    the highest expected turing; the highest worst case (nobody is harmed much); either of them among the
-    machines that stay above a floor of accuracy alone, for the day the machine is used by somebody else.
+    gives the least favourable weight), `accuracy_alone` (the machine used without its person) and
+    `accuracy_judge` (the judge without the machine). Options: the highest expected turing; the highest worst
+    case (nobody is harmed much); either of them among the machines that stay above a floor of accuracy alone.
+    A floor with no free number: the machine alone is worth at least the judge alone. In the model the pair
+    then stays at one turing or above for every positive weight, since the curve of equation (2) has its
+    minimum over positive weights at one of the two ends, 1 at weight zero and k at very large weights.
     Return the name of the chosen machine.
     """
     return max(rows, key=lambda r: r["expected_turing"])["machine"]          # a placeholder: expected value only
@@ -68,10 +71,12 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", type=Path, default=ROOT / "results")
     ap.add_argument("--belief", type=parse_belief, default=DEFAULT_BELIEF)
+    ap.add_argument("--file", default="e6_trust.json", help="e6_trust_from_e2ter.json for the reading of E2 ter")
     args = ap.parse_args()
-    d = json.loads((args.results / "e6_trust.json").read_text())
+    d = json.loads((args.results / args.file).read_text())
     rows = table(d, args.belief)
     print("belief (weight: share):", args.belief)
+    print(f"the judge alone: {100 * rows[0]['accuracy_judge']:.1f}% right")
     print(f"{'machine':14s} {'built for':>9s} {'expected Tu':>12s} {'worst Tu':>9s} {'right alone':>12s}")
     for r in rows:
         built = "" if r["built_for_weight"] is None else f"{r['built_for_weight']:g}"

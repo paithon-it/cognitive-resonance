@@ -395,5 +395,6 @@ def test_design_table_reads_the_curves(trust_units):
     assert half[0.5] > half[2.0]                                   # the partner built for 0.5 peaks near 0.5
     assert by["Mramo_w0.5"]["worst_turing"] == pytest.approx(min(half.values()))
     assert design.choose(rows) in by
+    assert 0.5 < by["M0"]["accuracy_judge"] <= 1.0
     assert design.at(list(range(49)), design.GRID[10]) == pytest.approx(10.0)
     assert design.parse_belief("0.25:0.5,1:0.5") == {0.25: 0.5, 1.0: 0.5}
