@@ -1,0 +1,782 @@
+{
+ "experiment": "E1, read again",
+ "status": "added with protocol v2.0: descriptive, no criterion",
+ "raw": "bench",
+ "pair": "the two opposite networks of E1 (plus as H, minus as M)",
+ "weights": [
+  0.25,
+  0.5,
+  1.0,
+  2.0,
+  4.0
+ ],
+ "pairs": 70,
+ "snr_identity_max_relative_error": 2.886579864025407e-15,
+ "auc_gap_max_abs": 0.04900899750189658,
+ "by_mu": [
+  {
+   "mu": 0.0,
+   "pairs": 10,
+   "phi": 22.93626005685271,
+   "auc_gap_median": 0.0003194890805628958,
+   "auc_gap_max_abs": 0.005294951829931449,
+   "excess_kurtosis_of_the_sum": 0.4391571769335143
+  },
+  {
+   "mu": 0.25,
+   "pairs": 10,
+   "phi": 26.023409102282493,
+   "auc_gap_median": 0.0003780814119060949,
+   "auc_gap_max_abs": 0.010605762371355576,
+   "excess_kurtosis_of_the_sum": 0.3956306553513729
+  },
+  {
+   "mu": 0.5,
+   "pairs": 10,
+   "phi": 35.17947152505613,
+   "auc_gap_median": 0.003903289084004613,
+   "auc_gap_max_abs": 0.023205916326445752,
+   "excess_kurtosis_of_the_sum": 0.44915164174232225
+  },
+  {
+   "mu": 0.75,
+   "pairs": 10,
+   "phi": 52.714840790595275,
+   "auc_gap_median": 0.010005327190382052,
+   "auc_gap_max_abs": 0.04248411585751044,
+   "excess_kurtosis_of_the_sum": 0.43961142628451366
+  },
+  {
+   "mu": 1.0,
+   "pairs": 10,
+   "phi": 75.8897751779341,
+   "auc_gap_median": 0.0190807662187088,
+   "auc_gap_max_abs": 0.04900899750189658,
+   "excess_kurtosis_of_the_sum": 0.3866177488859559
+  },
+  {
+   "mu": 1.5,
+   "pairs": 10,
+   "phi": 122.15963327360984,
+   "auc_gap_median": 0.019228198349590997,
+   "auc_gap_max_abs": 0.04845589247014348,
+   "excess_kurtosis_of_the_sum": 0.20131045167194217
+  },
+  {
+   "mu": 2.0,
+   "pairs": 10,
+   "phi": 149.29036208694487,
+   "auc_gap_median": 0.0048921742715971606,
+   "auc_gap_max_abs": 0.04197927822575109,
+   "excess_kurtosis_of_the_sum": 0.11356022758208151
+  }
+ ],
+ "units": [
+  {
+   "task": "airplane-ship",
+   "mu": 0.25,
+   "seed": 0,
+   "phi": 25.49276200530138,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.0008984917262484515,
+   "snr_over_d_a_minus_1_person": -0.003615792776248794,
+   "excess_kurtosis_of_the_sum": -0.07979591471959502
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 0.25,
+   "seed": 1,
+   "phi": 24.111822753203736,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.000529132501644547,
+   "snr_over_d_a_minus_1_person": 0.009835843622243434,
+   "excess_kurtosis_of_the_sum": -0.021005369500992188
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 0.5,
+   "seed": 0,
+   "phi": 33.16881328822443,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.003948156552643134,
+   "snr_over_d_a_minus_1_person": -0.009834362966152255,
+   "excess_kurtosis_of_the_sum": -0.03628008789143866
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 0.5,
+   "seed": 1,
+   "phi": 34.186479962563176,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.003858421615366092,
+   "snr_over_d_a_minus_1_person": 0.005018989406900154,
+   "excess_kurtosis_of_the_sum": -0.06444854329775795
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 0.75,
+   "seed": 0,
+   "phi": 49.78193750619049,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.011138073980981433,
+   "snr_over_d_a_minus_1_person": -0.0008981407518314777,
+   "excess_kurtosis_of_the_sum": -0.047880672191243256
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 0.75,
+   "seed": 1,
+   "phi": 49.65379780482299,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.00887258039978267,
+   "snr_over_d_a_minus_1_person": 0.017211999236745434,
+   "excess_kurtosis_of_the_sum": -0.058657392032545275
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 0.0,
+   "seed": 0,
+   "phi": 22.62327971577241,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0006999138267109739,
+   "snr_over_d_a_minus_1_person": -0.006803092894027918,
+   "excess_kurtosis_of_the_sum": -0.024818943103120272
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 0.0,
+   "seed": 1,
+   "phi": 21.348662156388244,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.00016773329405306292,
+   "snr_over_d_a_minus_1_person": 0.00761880790897429,
+   "excess_kurtosis_of_the_sum": -0.07943216922618657
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 1.5,
+   "seed": 0,
+   "phi": 120.18399559936917,
+   "snr_identity_max_relative_error": 3.3306690738754696e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.04845589247014348,
+   "snr_over_d_a_minus_1_person": 0.023098717469038244,
+   "excess_kurtosis_of_the_sum": -0.04040124659615696
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 1.5,
+   "seed": 1,
+   "phi": 117.67590968277986,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.048346053905739206,
+   "snr_over_d_a_minus_1_person": 0.022741696942481404,
+   "excess_kurtosis_of_the_sum": -0.020852374445389454
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 1.0,
+   "seed": 0,
+   "phi": 74.02262022998372,
+   "snr_identity_max_relative_error": 3.3306690738754696e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.02882638522214731,
+   "snr_over_d_a_minus_1_person": 0.013135613693143311,
+   "excess_kurtosis_of_the_sum": -0.02578129192744072
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 1.0,
+   "seed": 1,
+   "phi": 72.05341822437256,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.02240944993994254,
+   "snr_over_d_a_minus_1_person": 0.020948023965567497,
+   "excess_kurtosis_of_the_sum": -0.1515832297607722
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 2.0,
+   "seed": 0,
+   "phi": 146.49377723084228,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.02822237418173912,
+   "snr_over_d_a_minus_1_person": 0.006167912395020458,
+   "excess_kurtosis_of_the_sum": -0.03323245279258069
+  },
+  {
+   "task": "airplane-ship",
+   "mu": 2.0,
+   "seed": 1,
+   "phi": 147.60131610535132,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.04197927822575109,
+   "snr_over_d_a_minus_1_person": 0.0054710925834611235,
+   "excess_kurtosis_of_the_sum": 0.03171972569002879
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.25,
+   "seed": 0,
+   "phi": 23.257606427345326,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.002569387579624327,
+   "snr_over_d_a_minus_1_person": 0.05018364367291572,
+   "excess_kurtosis_of_the_sum": 0.4866448541307502
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.25,
+   "seed": 1,
+   "phi": 24.671327353172092,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.0009231984790861736,
+   "snr_over_d_a_minus_1_person": 0.04412830585752214,
+   "excess_kurtosis_of_the_sum": 0.30461645657199554
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.5,
+   "seed": 0,
+   "phi": 31.39286518026418,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.004609850270353322,
+   "snr_over_d_a_minus_1_person": 0.03573843548121203,
+   "excess_kurtosis_of_the_sum": 0.5216810973141621
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.5,
+   "seed": 1,
+   "phi": 32.43340198810921,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.002954684772435434,
+   "snr_over_d_a_minus_1_person": 0.039510235392481,
+   "excess_kurtosis_of_the_sum": 0.3766221861704824
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.75,
+   "seed": 0,
+   "phi": 46.67682415322944,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.004550028176374621,
+   "snr_over_d_a_minus_1_person": 0.036387576054281556,
+   "excess_kurtosis_of_the_sum": 0.4646208491111925
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.75,
+   "seed": 1,
+   "phi": 47.864225004119724,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.006197699138546731,
+   "snr_over_d_a_minus_1_person": 0.03570272289336085,
+   "excess_kurtosis_of_the_sum": 0.4146020034578348
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.0,
+   "seed": 0,
+   "phi": 21.440785810524844,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.002280163816005043,
+   "snr_over_d_a_minus_1_person": 0.05070042680572451,
+   "excess_kurtosis_of_the_sum": 0.5042907327744199
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 0.0,
+   "seed": 1,
+   "phi": 22.751928587989607,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.002442738966437985,
+   "snr_over_d_a_minus_1_person": 0.04016247541694318,
+   "excess_kurtosis_of_the_sum": 0.3849671650917097
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 1.5,
+   "seed": 0,
+   "phi": 113.53497664184258,
+   "snr_identity_max_relative_error": 6.661338147750939e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.023024546854733652,
+   "snr_over_d_a_minus_1_person": 0.0266489071715601,
+   "excess_kurtosis_of_the_sum": 0.2077406858277544
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 1.5,
+   "seed": 1,
+   "phi": 115.28050318707658,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.024097089894015156,
+   "snr_over_d_a_minus_1_person": 0.025475156452535064,
+   "excess_kurtosis_of_the_sum": 0.32524067069026596
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 1.0,
+   "seed": 0,
+   "phi": 69.47220390914576,
+   "snr_identity_max_relative_error": 3.3306690738754696e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.012613577982881763,
+   "snr_over_d_a_minus_1_person": 0.03061499004440571,
+   "excess_kurtosis_of_the_sum": 0.430245013260802
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 1.0,
+   "seed": 1,
+   "phi": 71.00514326807647,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.013125189906604162,
+   "snr_over_d_a_minus_1_person": 0.028165602255931566,
+   "excess_kurtosis_of_the_sum": 0.3429904845111098
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 2.0,
+   "seed": 0,
+   "phi": 144.4711897281941,
+   "snr_identity_max_relative_error": 6.661338147750939e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.00808180602151043,
+   "snr_over_d_a_minus_1_person": 0.029009197452788626,
+   "excess_kurtosis_of_the_sum": 0.0830059119495461
+  },
+  {
+   "task": "automobile-truck",
+   "mu": 2.0,
+   "seed": 1,
+   "phi": 143.54453467980215,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.002371832937039464,
+   "snr_over_d_a_minus_1_person": 0.034881465988540805,
+   "excess_kurtosis_of_the_sum": 0.15868139371811818
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.25,
+   "seed": 0,
+   "phi": 27.978088863395055,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.00020834899482669034,
+   "snr_over_d_a_minus_1_person": 0.005823255008829964,
+   "excess_kurtosis_of_the_sum": 0.8734858841465876
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.25,
+   "seed": 1,
+   "phi": 26.554056199263606,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.00022703032216764285,
+   "snr_over_d_a_minus_1_person": -0.007035909621344594,
+   "excess_kurtosis_of_the_sum": 0.5730082632486542
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.5,
+   "seed": 0,
+   "phi": 38.49398384892124,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0016944317500895423,
+   "snr_over_d_a_minus_1_person": 0.014973851140807737,
+   "excess_kurtosis_of_the_sum": 0.7705711455736757
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.5,
+   "seed": 1,
+   "phi": 37.409288908228454,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.001584461577792684,
+   "snr_over_d_a_minus_1_person": 0.00602909728646539,
+   "excess_kurtosis_of_the_sum": 0.5596223908694209
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.75,
+   "seed": 0,
+   "phi": 58.82289471766903,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0022666876826211713,
+   "snr_over_d_a_minus_1_person": 0.01522427192154674,
+   "excess_kurtosis_of_the_sum": 0.694808292050868
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.75,
+   "seed": 1,
+   "phi": 55.75108352304727,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0019873298145975937,
+   "snr_over_d_a_minus_1_person": 0.003374923193874668,
+   "excess_kurtosis_of_the_sum": 0.5974555478001036
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.0,
+   "seed": 0,
+   "phi": 22.96829170885303,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.002454271238301664,
+   "snr_over_d_a_minus_1_person": -0.001675689934212965,
+   "excess_kurtosis_of_the_sum": 0.7537402162789797
+  },
+  {
+   "task": "bird-frog",
+   "mu": 0.0,
+   "seed": 1,
+   "phi": 22.904228404852386,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -6.0935665585182264e-05,
+   "snr_over_d_a_minus_1_person": -0.004070451485260751,
+   "excess_kurtosis_of_the_sum": 0.4933471887753189
+  },
+  {
+   "task": "bird-frog",
+   "mu": 1.5,
+   "seed": 0,
+   "phi": 128.52448734982343,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.005915865562848399,
+   "snr_over_d_a_minus_1_person": 0.021625134678470825,
+   "excess_kurtosis_of_the_sum": 0.27510593031577546
+  },
+  {
+   "task": "bird-frog",
+   "mu": 1.5,
+   "seed": 1,
+   "phi": 126.43008390317274,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.002314383205849202,
+   "snr_over_d_a_minus_1_person": 0.021171317316671656,
+   "excess_kurtosis_of_the_sum": 0.19488021751612994
+  },
+  {
+   "task": "bird-frog",
+   "mu": 1.0,
+   "seed": 0,
+   "phi": 83.43528560277173,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.0029142873564508287,
+   "snr_over_d_a_minus_1_person": 0.015358328291974255,
+   "excess_kurtosis_of_the_sum": 0.49571581503744433
+  },
+  {
+   "task": "bird-frog",
+   "mu": 1.0,
+   "seed": 1,
+   "phi": 81.09389520764695,
+   "snr_identity_max_relative_error": 0.0,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0026011269256152048,
+   "snr_over_d_a_minus_1_person": 0.007238626425177808,
+   "excess_kurtosis_of_the_sum": 0.4816272380178064
+  },
+  {
+   "task": "bird-frog",
+   "mu": 2.0,
+   "seed": 0,
+   "phi": 149.9446608385952,
+   "snr_identity_max_relative_error": 7.771561172376096e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.0013766791904918918,
+   "snr_over_d_a_minus_1_person": 0.023499689308070337,
+   "excess_kurtosis_of_the_sum": 0.10459213522889543
+  },
+  {
+   "task": "bird-frog",
+   "mu": 2.0,
+   "seed": 1,
+   "phi": 148.63606333529452,
+   "snr_identity_max_relative_error": 3.3306690738754696e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": -0.012192493461868792,
+   "snr_over_d_a_minus_1_person": 0.02331882489083581,
+   "excess_kurtosis_of_the_sum": 0.10613602968638203
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.25,
+   "seed": 0,
+   "phi": 30.474473344370097,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.010605762371355576,
+   "snr_over_d_a_minus_1_person": -0.04579031600061345,
+   "excess_kurtosis_of_the_sum": 0.24781117737693314
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.25,
+   "seed": 1,
+   "phi": 28.456999799440545,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.006993654608349109,
+   "snr_over_d_a_minus_1_person": -0.04069626297297868,
+   "excess_kurtosis_of_the_sum": 0.18069532482083206
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.5,
+   "seed": 0,
+   "phi": 44.69982995018286,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.023205916326445752,
+   "snr_over_d_a_minus_1_person": -0.035458616122824416,
+   "excess_kurtosis_of_the_sum": 0.2125580902704982
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.5,
+   "seed": 1,
+   "phi": 44.00429268323716,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.02251707631144062,
+   "snr_over_d_a_minus_1_person": -0.024586533273291522,
+   "excess_kurtosis_of_the_sum": 0.10417951167766581
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.75,
+   "seed": 0,
+   "phi": 68.18818842343647,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.04248411585751044,
+   "snr_over_d_a_minus_1_person": -0.010488633233507128,
+   "excess_kurtosis_of_the_sum": 0.21457460470350753
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.75,
+   "seed": 1,
+   "phi": 68.45266051574444,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.037836483669007936,
+   "snr_over_d_a_minus_1_person": -0.009696923165760984,
+   "excess_kurtosis_of_the_sum": 0.11537677035259897
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.0,
+   "seed": 0,
+   "phi": 25.520535432566376,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0037127912287067133,
+   "snr_over_d_a_minus_1_person": -0.05098151016727537,
+   "excess_kurtosis_of_the_sum": 0.3178245325598814
+  },
+  {
+   "task": "cat-dog",
+   "mu": 0.0,
+   "seed": 1,
+   "phi": 24.016426294540242,
+   "snr_identity_max_relative_error": 1.1102230246251565e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.005294951829931449,
+   "snr_over_d_a_minus_1_person": -0.04569604824685336,
+   "excess_kurtosis_of_the_sum": 0.16346085720832626
+  },
+  {
+   "task": "cat-dog",
+   "mu": 1.5,
+   "seed": 0,
+   "phi": 137.95091392206595,
+   "snr_identity_max_relative_error": 7.771561172376096e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.03846586685701259,
+   "snr_over_d_a_minus_1_person": 0.020074969810231824,
+   "excess_kurtosis_of_the_sum": 0.0022499753889557716
+  },
+  {
+   "task": "cat-dog",
+   "mu": 1.5,
+   "seed": 1,
+   "phi": 137.7502476804509,
+   "snr_identity_max_relative_error": 5.551115123125783e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.040223928619955496,
+   "snr_over_d_a_minus_1_person": 0.012220059090859214,
+   "excess_kurtosis_of_the_sum": 0.14845214997096567
+  },
+  {
+   "task": "cat-dog",
+   "mu": 1.0,
+   "seed": 0,
+   "phi": 97.22561755746213,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.04900899750189658,
+   "snr_over_d_a_minus_1_person": 0.008487660938711006,
+   "excess_kurtosis_of_the_sum": 0.17663477635112956
+  },
+  {
+   "task": "cat-dog",
+   "mu": 1.0,
+   "seed": 1,
+   "phi": 95.95379286138306,
+   "snr_identity_max_relative_error": 3.3306690738754696e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.044226519008978116,
+   "snr_over_d_a_minus_1_person": -1.9622068687663585e-06,
+   "excess_kurtosis_of_the_sum": 0.16627150793335987
+  },
+  {
+   "task": "cat-dog",
+   "mu": 2.0,
+   "seed": 0,
+   "phi": 164.0011807627497,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.027938771030423304,
+   "snr_over_d_a_minus_1_person": 0.02151781079543258,
+   "excess_kurtosis_of_the_sum": 0.2170216298481642
+  },
+  {
+   "task": "cat-dog",
+   "mu": 2.0,
+   "seed": 1,
+   "phi": 163.92001025151455,
+   "snr_identity_max_relative_error": 2.886579864025407e-15,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.02075114646960441,
+   "snr_over_d_a_minus_1_person": 0.023271425489006514,
+   "excess_kurtosis_of_the_sum": 0.3491263399494686
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.25,
+   "seed": 0,
+   "phi": 25.14455767876471,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.004315060490132305,
+   "snr_over_d_a_minus_1_person": -0.043247385929020554,
+   "excess_kurtosis_of_the_sum": 0.7632754373890429
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.25,
+   "seed": 1,
+   "phi": 27.119574395633986,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.002998618505177353,
+   "snr_over_d_a_minus_1_person": -0.034155009966469696,
+   "excess_kurtosis_of_the_sum": 0.6198156520630795
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.5,
+   "seed": 0,
+   "phi": 33.682558208526906,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.009430072616944063,
+   "snr_over_d_a_minus_1_person": -0.03600427361216951,
+   "excess_kurtosis_of_the_sum": 0.7703671018806659
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.5,
+   "seed": 1,
+   "phi": 36.172463087549076,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.00602737276279508,
+   "snr_over_d_a_minus_1_person": -0.02206886336045011,
+   "excess_kurtosis_of_the_sum": 0.5845784442125166
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.75,
+   "seed": 0,
+   "phi": 52.0922624576892,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.014691747982835679,
+   "snr_over_d_a_minus_1_person": -0.02383830419237809,
+   "excess_kurtosis_of_the_sum": 0.6390459283836076
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.75,
+   "seed": 1,
+   "phi": 53.33741912350134,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.018778669398018533,
+   "snr_over_d_a_minus_1_person": -0.016605382899901877,
+   "excess_kurtosis_of_the_sum": 0.531598105071009
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.0,
+   "seed": 0,
+   "phi": 23.43721299252745,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0034440990611595,
+   "snr_over_d_a_minus_1_person": -0.047423986437882704,
+   "excess_kurtosis_of_the_sum": 0.6674000188723177
+  },
+  {
+   "task": "deer-horse",
+   "mu": 0.0,
+   "seed": 1,
+   "phi": 23.867165682601787,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.0016013301614594688,
+   "snr_over_d_a_minus_1_person": -0.03623741856470808,
+   "excess_kurtosis_of_the_sum": 0.666093114472067
+  },
+  {
+   "task": "deer-horse",
+   "mu": 1.5,
+   "seed": 0,
+   "phi": 121.2421713160219,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.016689543382634175,
+   "snr_over_d_a_minus_1_person": 0.025267811507988736,
+   "excess_kurtosis_of_the_sum": 0.22691453210437196
+  },
+  {
+   "task": "deer-horse",
+   "mu": 1.5,
+   "seed": 1,
+   "phi": 123.07709523119779,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.02176685331654782,
+   "snr_over_d_a_minus_1_person": 0.02419525747098672,
+   "excess_kurtosis_of_the_sum": 0.21101336941710747
+  },
+  {
+   "task": "deer-horse",
+   "mu": 1.0,
+   "seed": 0,
+   "phi": 75.8444569475948,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.019152418273305605,
+   "snr_over_d_a_minus_1_person": -0.004719726708974026,
+   "excess_kurtosis_of_the_sum": 0.5363840833090516
+  },
+  {
+   "task": "deer-horse",
+   "mu": 1.0,
+   "seed": 1,
+   "phi": 75.93509340827342,
+   "snr_identity_max_relative_error": 2.220446049250313e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.019009114164111995,
+   "snr_over_d_a_minus_1_person": 0.001818116579068496,
+   "excess_kurtosis_of_the_sum": 0.5146090279443967
+  },
+  {
+   "task": "deer-horse",
+   "mu": 2.0,
+   "seed": 0,
+   "phi": 150.73148719487543,
+   "snr_identity_max_relative_error": 6.661338147750939e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.00016356316650645297,
+   "snr_over_d_a_minus_1_person": 0.005807737535943325,
+   "excess_kurtosis_of_the_sum": 0.12577128976642094
+  },
+  {
+   "task": "deer-horse",
+   "mu": 2.0,
+   "seed": 1,
+   "phi": 154.02617091740095,
+   "snr_identity_max_relative_error": 4.440892098500626e-16,
+   "auc_measured_over_predicted_minus_1_at_w1": 0.007412515606154857,
+   "snr_over_d_a_minus_1_person": 0.011108556501794098,
+   "excess_kurtosis_of_the_sum": 0.12098442547778099
+  }
+ ],
+ "environment": {
+  "python": "3.13.14",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "code_commit": "2113859da997197d99563b095b427744e1635728"
+ }
+}

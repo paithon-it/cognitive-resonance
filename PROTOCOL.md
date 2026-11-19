@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 1.4, 11 November 2026. Written and recorded in the repository **before any run**:
+Version 2.2, 19 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -17,7 +17,7 @@ turings,
     Tu_app = sqrt(1 + k^2 - 2 k cos(phi)) / sin(phi),      k = dM / dH,
 
 grows without bound as `phi` goes toward 180 degrees: errors in antiphase cancel out. We
-call this condition **cognitive resonance**, and there are six questions.
+call this condition **cognitive resonance**, and there are ten questions.
 
 - **Q1.** Does the promise of the formula beyond 90 degrees come true on real networks,
   with real images, or does it stay in the Gaussian model?
@@ -29,6 +29,18 @@ call this condition **cognitive resonance**, and there are six questions.
 - **Q5.** Where do the pairs already measured sit on this scale?
 - **Q6.** Next to the peak, is there a null, a weight at which the pair is worth nothing? Under
   which conditions does it appear? (Added in version 1.2: see § 8 bis.)
+- **Q7.** At equal value of the pair, does a machine built on the person move the weight at
+  which the pair works? And can that weight be decided by training it? (Added in version
+  2.0: see § 12.)
+- **Q8.** If the person sees something the machine does not see, does the built partner
+  beat the best soloist? (Added in version 2.0: see § 13.)
+- **Q9.** Can the value of the built partner be predicted before building it, from what the
+  judge knows and the machine does not? And when does a machine that knows only the judge
+  beat a machine that knows the task? (Added in version 2.1: see § 14.)
+- **Q10.** How much of the agreement between measure and formula seen in E1 depends on the
+  shape of the noise we injected? (Added in version 2.1: see § 15.)
+- **Q11.** Who is a machine built on the person worth it for, and for which weight should
+  it be built when one does not know who will use it? (Added in version 2.2: see § 12 bis.)
 
 ## 2. The model
 
@@ -396,6 +408,23 @@ Hypotheses and criteria:
 - If H2a does not pass, antiphase cannot be learned from errors: it can only be planted.
 - If H3a does not pass, with real people we do not know how to build it.
 - If H5a or H5b do not pass, the null is a property of the model and not of the networks.
+- If F1 does not pass, the advantage of the partner at equal weight seen in E2 ter was an
+  accident of those ten units.
+- If F5 does not pass, the weight at which the pair works cannot be decided by training
+  the machine: it stays a choice of whoever uses it.
+- If G1 does not pass, the arithmetic of the knob (`w = b / c`) is not enough to say who a
+  partner is worth it for: the break-even has to be measured case by case.
+- If G2 does not pass, for someone who gives the machine a quarter of the weight due, read
+  on this bench, a partner is not worth it.
+- If V1 does not pass, the built partner does not beat the soloist even when the person
+  knows something of its own: as a design goal, at free trust, antiphase is of no use.
+- If V4 does not pass, the reading by which the machine trained on the sum learns what the
+  person lacks is wrong.
+- If K2 does not pass, the explanation given in hindsight in the first version of the
+  article (the judge of the bench had nothing left to give) is wrong or not enough.
+- If K4 does not pass, the additive model of the bias does not describe the networks.
+- If S2 and S3 do not pass, the agreement of E1 does not depend on the shape of the
+  injected noise, and the objection that E1 measures Gaussianity falls.
 
 ## 10. Order, times, cleanup
 
@@ -403,6 +432,10 @@ Order of priority: E0, E1, E2, E3. One L4 GPU with 24 GB; a ceiling of two and a
 hours of computing in all. If the timing pilot says that E1 exceeds 60 minutes we go
 down to two seeds, then to the first three tasks, and we write it in the Deviations. On
 the server we work in a single folder, which is deleted at the end.
+
+E6 to E9 (version 2.1): five seeds (2 to 6) and an estimate of two hours on the same GPU,
+in a sub-folder of their own, deleted at the end. Order: E6, E8, E7, E9. If time is not
+enough we go down to three seeds (2, 3 and 4), and we write it in the Deviations.
 
 ## 11. Raw data: the contract
 
@@ -417,8 +450,343 @@ afterwards, from these files. One `.npz` file per unit, in `results/raw/`:
 - `people/fold{f}_s{seed}.npz`: `image` (index in the CIFAR-10 test set), `y` (0-9),
   `logits` of shape (number of lambdas, N, 10) with `lambdas`; and
   `people/base_s{seed}.npz` with the logits of the base machine on all 10,000.
+- `trust/{task}_s{seed}.npz` (E6): like `rephase_ter/`, with seven machines and
+  `built_for_weight`, the weights the four branches are built for.
+- `views/{task}_o{overlap}_s{seed}.npz` (E7): like `rephase_bis/`, with `machines` =
+  `M0, Mramo, Mpair` and `overlap` (100, 50 or 0).
+- `chart/{task}_v{v}_s{seed}.npz` (E8): like `rephase_bis/`, with `z_H0`, `machines` =
+  `M, Mramo, Mblind` and `v` (100, 50 or 25).
+- `shape/{task}_mu{mu}_s{seed}.npz` (E9): `a`, `z_plus`, `z_minus` of shape (4, N), one row
+  per shape of the test frame, with `shapes`.
 - Each folder has a `manifest.json`: hyperparameters, times, library versions, control
   accuracies.
+
+## 12. E6. Trust made to measure
+
+Added with version 2.0, on 19 November 2026, after the article came out and was reviewed.
+
+**Where it comes from.** In E2 ter the soloist, the fine-tuned soloist and the soloist with
+the branch gave the tuned pair the same value, and T3 did not pass. On 19 November the same
+files were read again at a fixed weight instead of the best one. The three machines differ
+in the weight at which the pair reaches its maximum: about 7 with the soloist, about 1.2
+with the branch. At weight 1 the pair with the branch is worth more in 10 units out of 10
+(median 1.47 turings against 1.38); at weight 8 it is worth less (1.28 against 1.47). And
+multiplying by a factor `c` the part of the cue that comes from the branch moves the
+maximum to a weight close to `1 / c`. That reading is in
+`results/e6_trust_from_e2ter.json` (`analysis/trust.py --ter`). **It is exploratory**: the
+hypotheses below come from it, so it cannot confirm them. The test is made on new
+trainings, with seeds never used before, and with branches *trained* for different
+weights, not rescaled afterwards.
+
+**The idea.** If the person's cue carries a bias `b a` and the machine adds `-c a`, the sum
+`z_H + w z_M` cancels it at the weight `w = b / c`. A branch trained on the sum with weight
+`w0` should then learn `c = b / w0`, and the pair should peak near `w0`. The weight at which
+a pair works, which in § 2 is a choice of whoever uses the machine, would become a property
+of the machine.
+
+- **H, `M_0`, `M_0+`, `M_due`** as in E2 ter, with seeds 2 to 6. E1 to E5 used 0 and 1.
+- **`M_ramo(w)`**, for `w` = 0.5, 1, 2 and 4. `M_0` frozen plus a branch that sees only the
+  frame, trained with the pilot's hyperparameters on the cross-entropy of
+  `z_H + w (z_M0 + z_ramo)`, with the log-odds as the networks give them. The four branches
+  have the same seed, batch order, crops and frames: only `w` changes. The cue of the
+  machine is `z_M0 + z_ramo`. `M_ramo(1)` is the `M_ramo` of E2 ter.
+- **The pair at a fixed weight** (`analysis/fixed.py`). On two scales. Standardized, that
+  of § 3: `d_a(z_H + w z_M)` at the weights 0.5, 1, 2 and 8. And "at face value": the sum of
+  the raw log-odds, `z_H + z_M`, the two opinions taken for what they say.
+- **The weight of the peak.** On the curve `Tu(w) = d_a(z_H + w z_M) / d_a(z_H)` with the
+  raw log-odds, on the 49 weights of § 3: the geometric mean of the two weights at which
+  `Tu^2 - 1` crosses 90% of its maximum, by linear interpolation in `ln w`. The maximum of
+  a flat curve is a noisy place, its centre is not. Where a crossing falls outside the
+  grid, the weight of the maximum is used.
+- **Differences** paired on the same resamples of the images (§ 3), 1,000 resamples. The
+  control is `M_0+`. `M_due` is reported without a criterion.
+
+Hypotheses. The primary ones are F1 and F5.
+
+- **F1, at equal weight the partner wins.** At standardized weight 1 the pair
+  `(H, M_ramo(1))` is more sensitive than the pair `(H, M_0+)`, with the interval of the
+  difference above zero in every seed, in at least 3 tasks out of 5.
+- **F2, at face value too.** The same with the sum of the raw log-odds.
+- **F3, the price.** At standardized weight 8 the pair `(H, M_0+)` is more sensitive than
+  the pair `(H, M_ramo(1))`, with the interval below zero in every seed, in at least 3
+  tasks out of 5: whoever trusts the machine a lot is better off with the soloist.
+- **F4, who has to step aside.** At face value the pair `(H, M_0+)` is less sensitive than
+  `M_0+` alone (interval below zero in every seed, in at least 3 tasks out of 5), and the
+  pair `(H, M_ramo(1))` is not: the median over the units of its difference from `M_0+`
+  alone is at least -0.05.
+- **F5, the knob is in the machine.** The weight of the peak of the pair `(H, M_ramo(w))`
+  is, in median over the units, within a factor 1.5 of `w` for `w` = 0.5, 1 and 2; and the
+  rank correlation between `w` and the weight of the peak, over the four branches, is at
+  least 0.9 in median over the units. At `w = 4` the place of the peak is not judged: there
+  the curve is almost flat, as with the soloist.
+- **F6, the same peak.** The tuned turing of `(H, M_ramo(w))` divided by that of
+  `(H, M_0+)` is, in median over the units, between 0.97 and 1.03 for each of the four
+  weights.
+- **F7, what it costs alone.** The lower the weight it is built for, the less the machine
+  is worth alone: the rank correlation between `w` and `d_a(M_ramo(w))` is at least 0.9 in
+  median, and `M_ramo(0.5)` alone is less sensitive than `M_0+`, with the interval below
+  zero in every seed, in at least 3 tasks out of 5.
+
+Raw data: `trust/{task}_s{seed}.npz`, like `rephase_ter/`, with `machines` =
+`M0, M0plus, Mdue, Mramo_w0.5, Mramo_w1, Mramo_w2, Mramo_w4` and `built_for_weight`;
+`manifest.json`.
+
+## 12 bis. E6, design reading: who a partner is worth it for
+
+Added with version 2.2, on 19 November 2026. The runs of E6 had started at 09:49 UTC,
+while this section was being written; it was recorded in the repository a few minutes
+later (the time is in GitHub's log), before any file of E6 was read or analysed. It asks
+for no new runs: it uses the files of E6. The training code does not change, and the
+manifests of the runs report version 2.1.
+
+**Where it comes from.** E6 says whether the weight at which a pair works can be decided by
+building the machine. Whoever builds it then has to choose that weight, without knowing
+who will use it. Kong et al. (2026) estimate that the people of ChatBench give the machine
+0.285 of the weight it deserves. Here we fix, before reading the data, how that fraction is read
+on the bench and by which rule a machine is chosen.
+
+**The weight due and the person.** The weight due, `ŵ_u`, is the peak weight (§ 12) of the
+pair `(H, M_0+)` in unit `u`, on raw log-odds; `ŵ` is its median over the units. Someone
+who gives the soloist a fraction `f` of the weight due uses the raw weight `f ŵ_u`, and
+uses it with every machine, because they do not see how it is built. This is an
+assumption. The opposite reading, in which the person gives every machine the fraction `f`
+of the weight due to that machine, is reported next to it, without a criterion. The
+fractions are 1/16, 1/8, 0.285, 1/2 and 1.
+
+**What is measured** (`analysis/design.py`).
+
+- *The turing at a fraction*: `Tu_X(f ŵ_u)`, by linear interpolation in `ln w` of the raw
+  curve of the unit on the 49 weights; outside the grid the end value holds.
+- *The partner for `f`*: `M_ramo(w_b)` with `w_b` nearest, in `ln w`, to `f ŵ`. The weight
+  it is built for decides, not the result: choosing the best after measuring them all
+  would give an advantage made of noise.
+- *The break-even* of `M_ramo(w_b)`: unit by unit, on the difference between the raw curve
+  of `(H, M_ramo(w_b))` and that of `(H, M_0+)`. Starting from the grid weight nearest to
+  `w_b` and going up, the break-even is the first weight at which the difference turns
+  negative, by linear interpolation in `ln w`. If at `w_b` the difference is not positive,
+  or if it never turns negative, the break-even stays open.
+- *The floor*: `k_X = d_a(X) / d_a(H)`, the machine alone against the judge alone.
+
+**What the model says.** If the bias of the judge is `b a` and the branch adds
+`-(b / w_b) a` to it, the sum at weight `w` keeps `(1 - w / w_b) b a`. With the soloist it
+keeps `b a`, and everything else in the sum is the same. The two remainders have the same
+size at `w = 2 w_b`: below it the partner wins, above it the soloist. In the reading of
+E2 ter, with `w_b = 1`, the curves crossed near 2. And from the formula of § 2,
+`Tu(w)^2 - 1 = [2 w (k - ρ) + w^2 (k^2 - 1)] / (1 + w^2 + 2 ρ w)`: with `k ≥ 1` it is
+never negative for `w > 0`, with `k < 1` it becomes negative at large weights. A machine
+that alone is worth at least as much as the judge does not take the pair below the judge
+at any positive weight, not even for someone who copies it.
+
+Hypotheses. The primary ones are G1 and G2.
+
+- **G1, the break-even is at twice the weight it is built for.** The break-even of
+  `M_ramo(w_b)` is closed in at least 15 units of 25 and lies, in median over the units in
+  which it is closed, within a factor 1.5 of `2 w_b`, for each of the weights `w_b` = 0.5,
+  1 and 2. For `w_b = 1` the reading of E2 ter had already shown it; for 0.5 and 2 it is a
+  prediction. At `w_b = 4` it is not judged: there the two curves are almost flat.
+- **G2, at a quarter of the weight due the partner is worth it.** At `f = 0.285` the pair
+  with the partner for `f` has a higher turing than the pair with `M_0+` in at least 18
+  units of 25. With a coin, 18 of 25 or more comes out with probability 0.022; the units
+  share the tasks and are not independent, so the count is indicative.
+- **G3, who gives the weight due does not need it.** At `f = 1` the difference between the
+  turing of the pair with the partner for `f` and that of the pair with `M_0+` lies, in
+  median over the units, between -0.03 and 0.03.
+- **G4, the partner of those who trust least does not hold the floor.** `k` is, in median
+  over the units, below 1 for `M_ramo(0.5)` and at least 1 for `M_ramo(1)`, `M_ramo(2)` and
+  `M_ramo(4)`.
+
+**The rule of choice**, fixed here. For the people between `f_1` and `f_2`: among the
+machines with `k` at least 1 in median, take the one with the highest minimum of the
+median curve over the units, on the grid weights between `f_1 ŵ` and `f_2 ŵ` and at the
+two ends; if equal, the one with the highest mean on the same points. The registered
+interval goes from 0.285 to 1. The worst case and not the expected value, because we know
+nothing of how people are spread over those weights, and whoever copies the machine is
+covered by the floor. **Expectation, without a criterion**: the rule chooses `M_ramo(4)`,
+which by the model is not below the soloist up to weight 8, with an advantage over `M_0+`
+in the worst case below 0.05 turing. We also report in how many units the same rule,
+applied to the unit alone, makes the same choice.
+
+None of these readings is about people: the judge is a network, and the fraction of Kong
+et al. comes from another task.
+
+## 13. E7. Different views
+
+Added with version 2.0, on 19 November 2026. No data exist for this test: the expectations
+come from the model and from a toy bench (`synthetic.write_views`), on which the analysis
+was tried.
+
+**Why.** In E1 to E6 the machine sees everything the person sees. Then every way of putting
+the two cues together is a function of what the machine has in front of it, and the best
+possible machine, alone, would do at least as well. That on that bench the best soloist
+remained the best partner (B3 and T3 do not pass) is therefore a consequence of the design,
+not a discovery. For the removal of a bias to free something, the person must know
+something the machine does not see.
+
+- **The views.** Each judge sees half of the inside of the image and the whole frame; the
+  rest is set to zero (normalised units), after the frame has been drawn. H always sees
+  the left half (columns 2 to 15). The machine sees the left half (overlap 100%), the top
+  half (rows 2 to 15: it shares the top-left quarter with H, 50%) or the right half
+  (columns 16 to 29, 0%). Every half goes through the centre of the image: a central strip
+  would be worth more than a lateral one, and the overlap would be confused with skill.
+- **H**: a "plus" network, `mu = 1`, trained on half A of the training images. It is the
+  same network at the three overlaps.
+- **`M_0`**, the soloist: trained on half B on its view, frame independent of the class.
+- **`M_ramo`**: `M_0` frozen plus a branch that sees only the frame, trained on the
+  cross-entropy of `z_H + z_M0 + z_ramo`.
+- **`M_pair`**: a new network on the machine's view, trained from scratch on the
+  cross-entropy of `z_H + z_M` (the recipe of E2 bis), with the same seed as `M_0`.
+- Seeds 2 to 6; `M_0`, the branch and `M_pair` have the same seeds at the three
+  overlaps. The test frames are the same at the three overlaps.
+- **Measures** of § 3 and of E2 bis, plus the pair at face value (§ 12). The differences
+  are from the `M_0` of the same overlap, paired.
+
+Hypotheses. The primary ones are V1 and V4.
+
+- **V1, with something of its own the partner wins.** At overlap 0 the tuned pair
+  `(H, M_ramo)` is more sensitive than the tuned pair `(H, M_0)`, with the interval of the
+  difference above zero in every seed, in at least 3 tasks out of 5.
+- **V2, the dose.** The median over the units of that difference grows as the overlap
+  falls (0% > 50% > 100%), and at 100% it is at most one third of what it is at 0%.
+- **V3, worse alone, better in the pair.** At overlap 0 `M_ramo` alone is less sensitive
+  than `M_0` alone (interval below zero in every seed, in at least 3 tasks out of 5), and
+  V1 passes.
+- **V4, the machine trained on the sum learns what the person lacks.**
+  `d_a(M_pair) / d_a(M_0)`, in median over the units, is at least 0.7 at overlap 0, at
+  most 0.3 at 100% (in E2 bis, with the whole view, it was 0.03), and falls as the overlap
+  grows.
+- **V5, the pair beats the machine.** At overlap 0 the tuned pair `(H, M_ramo)` is more
+  sensitive than `M_0` alone, with the interval above zero in every seed, in at least 3
+  tasks out of 5.
+- **V6.** At overlap 0, at face value, the pair `(H, M_ramo)` is more sensitive than the
+  pair `(H, M_0)`: interval above zero in every seed, in at least 3 tasks out of 5.
+
+A limit written beforehand: at 50% the machine's half is horizontal and H's is vertical, so
+between 0%, 50% and 100% the overlap is not the only thing that changes.
+
+Raw data: `views/{task}_o{overlap}_s{seed}.npz`, like `rephase_bis/`, with `machines` =
+`M0, Mramo, Mpair` and `overlap`; `manifest.json`.
+
+## 14. E8. The bench of the chart
+
+Added with version 2.1, on 19 November 2026, before any run of E6 to E9. The design, the
+theorem and the expectations take up those proposed by a review of the article; here they
+are rewritten on the networks and the estimators of this protocol.
+
+**The theorem.** The judge's cue is `h + beta a`: a clean cue `h`, with sensitivity `d_h`
+and noise of unit variance, plus a bias that does not depend on the class, of variance `B`.
+The machine's cue `m` has sensitivity `d_m`, noise of unit variance and correlation `r` with
+the noise of `h`. For the best linear combination, with weights of any sign:
+
+    D1^2 = (d_h^2 - 2 r d_h d_m + (1 + B) d_m^2) / (1 + B - r^2)      the judge with the soloist m
+    D2^2 = (d_h^2 - 2 r d_h d_m + d_m^2) / (1 - r^2)                  the judge with m and whoever reads a
+    D2^2 - D1^2 = B / (1 - r^2 + B) * P,     P = (d_h - r d_m)^2 / (1 - r^2)
+
+`P = D2^2 - d_m^2` is what the clean judge knows and the machine does not, and it vanishes
+at the useful angle, `r = d_h / d_m`. The judge with a blind corrector, which reads only
+`a`, is worth `d_h`, and beats the pair with the soloist when `d_m / d_h` lies between
+`(r - sqrt(B (1 + B - r^2))) / (1 + B)` and `(r + sqrt(B (1 + B - r^2))) / (1 + B)`. The
+threshold that matters is the second; the first is above zero only if `r^2 > B`. The code is
+in `src/cognitive_resonance/chart.py`, checked against the direct inversion of the matrices.
+
+**On the old data.** Applied unit by unit to the files of E2 bis and E2 ter
+(`analysis/chart.py --e2`, `results/chart_from_e2.json`), the theorem gives back the
+measured pairs: with the soloist 3.05 and 3.07 (measured 3.04 and 3.06), with the blind
+machine 2.86 (measured 2.85), with the soloist plus the branch 3.13 (measured 3.10). It also
+says why T3 did not pass: on that bench the built partner could give 1.4% more. It is a
+reading of old data, not a test.
+
+**The bench.** In E1 to E6 the machine sees everything the judge sees, and `P` is almost
+zero. Here the judge sees the whole image; the machine sees the frame and only a part of the
+inside: all of it (`v = 100`, the bench of E2 ter), the left half (`v = 50`, columns 2 to
+15) or the left quarter (`v = 25`, columns 2 to 8).
+
+- **H**: a "plus" network, `mu = 1`, half A, whole image. **H0**: the same network without
+  the bias (same seed, frame independent of the class).
+- **`M_blind`**: sees only the frame, trained on the cross-entropy of `z_H + z_blind` (the
+  `M_frame` of E2 bis). It is the same at the three values of `v`.
+- For every `v`: **`M`**, the soloist on its part of the image; **`M_ramo`**, `M` frozen plus
+  a branch that sees only the frame, trained on the cross-entropy of `z_H + z_M + z_ramo`.
+- Seeds 2 to 6, five tasks. `M` and the branch have the same seeds at the three values of `v`.
+- **The quantities of the theorem, measured unit by unit.** The slope of H's cue on the
+  frame, within the class, gives the bias; what is left of the cue without the bias is `h`.
+  From `h` and `M`: `d_h`, `d_m` (with `d_a`), `r` and `B`.
+- **The best linear use of the three cues** `(z_H, z_M, a)`: the weights are estimated on
+  half of the images and the sensitivity is read on the other half, then they are swapped.
+  It is `D2` measured without going through a network.
+
+Expectations. Δ is the sensitivity of the tuned pair `(H, M_ramo)` minus that of `(H, M)`,
+paired. The primary ones are K2 and K4.
+
+- **K1, the null result of E2 ter.** At `v = 100`, `|Δ|` over the sensitivity of the pair
+  `(H, M)` is at most 0.03, in median over the units.
+- **K2, with something of its own the partner wins.** At `v = 25`, Δ > 0 with an interval
+  that excludes zero in every seed, in at least 3 tasks out of 5.
+- **K3, the dose.** The median of Δ grows as the machine sees less: `v = 25 > 50 > 100`.
+- **K4, the law.** At `v = 50` and `v = 25`, `D2^2 - D1^2` measured with the best linear use
+  of the three cues, over the gain predicted by the theorem with the quantities of the same
+  unit, is between 0.8 and 1.25 in median.
+- **K5, worse alone, better in the pair.** At `v = 25`, `M_ramo` alone is less sensitive
+  than `M` and the pair with it is more sensitive, with intervals that exclude zero in every
+  seed, in at least 3 tasks out of 5.
+- **K6, who knows the judge against who knows the task.** Which of `(H, M_blind)` and
+  `(H, M)` is the more sensitive pair is what the threshold of the theorem says, computed
+  with the quantities of the unit, in at least 80% of the units (all the `v`).
+- **K7, nothing is created.** The pair `(H, M_ramo)` over the pair `(H0, M)` is at most
+  1.05, in median, at every `v`.
+
+A limit written beforehand: `M_ramo` is built for the weight 1, and a single weight has to
+cancel the bias and to weigh the machine. With a weak machine it can be worth less than the
+best use of the three cues: this is why K4 uses the latter, and K2 the network.
+
+Raw data: `chart/{task}_v{v}_s{seed}.npz`, like `rephase_bis/`, with `z_H0`, `machines` =
+`M, Mramo, Mblind` and `v`; `manifest.json`.
+
+## 15. E9. The shape of the noise
+
+Added with version 2.1, on 19 November 2026, before any run of E6 to E9.
+
+**Why.** With sensitivity measured as a signal-to-noise ratio the formula of § 2 is an
+identity (`analysis/identity.py`): no data can refute it. With `d_a`, which comes from the
+AUC, it holds for Gaussian cues. And in E1, beyond 90 degrees, almost all the noise is the
+frame, which we drew ourselves from a Gaussian. The question is how far the measure moves
+from the formula when that part of the noise has another shape.
+
+**What was known.** A preliminary trial made during a review, on networks with a third of
+the channels, four tasks and one seed, gave for the ratio between the measured and the
+predicted pair 0.29 with a two-valued frame, 0.90 with a uniform one and 0.93 with a
+Student's t, with expectations wrong in direction for two shapes out of three. The
+expectations below come from a model: Gaussian cues plus a frame of the given shape, with
+the median parameters of E1 (§ 5). The model gives, at `mu = 1.5`, 1.09 (two values), 1.04
+(uniform), 0.86 (t); at `mu = 2`, 0.79, 1.05 and 0.80.
+
+- **The networks** are those of E1 (`gpu/bench.py`): "plus" and "minus", 9,000 images,
+  Gaussian training frame. `mu` = 1, 1.5 and 2; seeds 2 to 6; five tasks.
+- **At test** the frame is drawn from four distributions with zero mean and the same
+  variance `1 + mu^2`: `gauss` (it is E1, on new seeds), `two` (two values,
+  `±sqrt(1 + mu^2)`), `uniform`, `t3` (Student's t with 3 degrees of freedom, rescaled).
+  Standardization uses the validation set with the same shape.
+- **Measures** of § 3 for every shape, plus the signal-to-noise ratio next to `d_a`. The
+  ratio is that of H1c: tuned turing over `Tu_app` from `k` and `rho` of the same unit and
+  shape.
+
+Expectations.
+
+- **S1, replication.** With the Gaussian frame, at `mu` = 1.5 and 2: the angle is above 90
+  degrees in every unit and the ratio is between 0.9 and 1.1 in median.
+- **S2, the formula promises too much.** At `mu = 2` the median ratio is below 0.9 both with
+  the two-valued frame and with the t.
+- **S3, the direction depends on the shape.** At `mu = 1.5` the median ratio is above 1 with
+  the two-valued frame and below 0.95 with the t.
+- **S4.** With the uniform frame the median ratio stays between 0.95 and 1.10 at `mu` = 1.5
+  and 2.
+- **S5, the pair is the same.** The sensitivity of the tuned pair with a shape, over that
+  with the Gaussian frame, is between 0.95 and 1.05 in median for every shape at `mu` = 1.5
+  and 2: in the pair the frame cancels, and what changes is what the single judges promise.
+- Without a criterion: the gap of the identity with the signal-to-noise ratio, for every
+  shape.
+
+Raw data: `shape/{task}_mu{mu}_s{seed}.npz`: `a`, `z_plus` and `z_minus` of shape (4, N),
+one row per shape in the order of `shapes`; `manifest.json`.
 
 ## Deviations
 
@@ -509,6 +877,36 @@ written and before the runs.
   `mista` only.
 - **The manifests** of the two runs cite version 1.4.
 
+**E6, E7, E8 and E9.** The runs are from 19 November 2026, on a GPU shared with other
+users. No reduction: five seeds and five tasks in all four experiments.
+
+- **Three sessions.** The program that starts the runs gives the GPU back when another
+  user needs it, and starts again when it is free. It happened twice: the sessions go
+  from 09:49 to 10:15, from 10:19 to 11:27 and from 19:20 to 20:13 (UTC). A unit is
+  written when it ends; the units under way at a stop were run again from the start,
+  with the same seeds. E6: 18 units written in the first session, 7 in the second. E8:
+  all in the second. E7: 51 in the second, 24 in the third. E9: all in the third.
+- **One process of E7 stopped.** In the second session one of the three processes of E7
+  stopped after its first unit. Its log was overwritten by the third session, and the
+  cause is not recorded. Its other 24 units ran in the third session, with one process
+  on the GPU. Seeds belong to the unit, not to the process.
+- **Times in the manifests.** `stage_time` reports the last session only; the seconds of
+  each unit are in `unit_seconds`. The three notes above are written in the manifests
+  too.
+- **The environment** was built again for these runs: numpy 2.5.5 (2.5.4 in E1 to E5);
+  python, torch, torchvision, CUDA and cuDNN are the same.
+- **The times of 19 November, UTC.** The launcher starts at 09:49:19 and sets up the
+  environment; version 2.2 of this protocol reaches the repository at 09:50:31; the
+  first training of E6 starts at 09:55:39; the code of the design reading
+  (`analysis/design.py`) reaches the repository at 09:55:45; the first file of E6 is
+  written at 09:59:05. The GPU code used on the server is the same, file by file (md5),
+  as that of commit `ab216dc`.
+- **The manifests** cite version 2.1: it is the version of the GPU code, which 2.2 does
+  not touch.
+- **The analysis** is the one written before the runs, unchanged. Where the protocol
+  left a margin, the choice is written next to the criterion in the results files
+  (`rule`).
+
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and
@@ -521,3 +919,34 @@ exploratory: they come from a review of the draft of the article, they are writt
 after seeing all the results and before their runs, and they touch neither the criteria
 nor the results of the other tests. On the server the two runs use a sub-folder of their
 own, which is deleted at the end.
+
+Version 2.0, of 19 November 2026, comes after the article was published and from a review
+of it. It adds questions Q7 and Q8 and the tests E6 (§ 12) and E7 (§ 13). It is written
+before the two runs, together with the training code (`gpu/trust.py`, `gpu/views.py`), the
+analysis code (`analysis/fixed.py`, `analysis/trust.py`, `analysis/views.py`) and their
+tests. E6 tests, on new trainings, what was seen by reading the files of E2 ter again:
+that reading is in the repository, declared exploratory. E7 has no earlier data. It
+touches neither the criteria nor the results of the other tests. A note on the bench of
+E1 and E5, added with this version without changing their outcomes: if sensitivity is
+measured as the difference of the means divided by the within-class standard deviation,
+the formula of § 2 is an identity of the sample moments, true for any data. With `d_a`,
+which comes from the area under the ROC curve, the criteria H1c, H1d and H5a to H5e
+therefore measure how far the cues of the networks are from the equal-variance Gaussian
+model, not the formula.
+
+Version 2.1, of the same day, comes before any run of E6 and E7 and from two more reviews
+of the article. It takes the seeds of E6 and E7 from three to five (2 to 6), without
+touching their hypotheses and criteria, and adds questions Q9 and Q10 and the tests E8
+(§ 14, the bench of the chart with its theorem) and E9 (§ 15, the shape of the noise), with
+the training code (`gpu/chart.py`, `gpu/shape.py`), the analysis code
+(`analysis/chart.py`, `analysis/shape.py`) and the tests. "In every seed" now means in all
+five. The theorem applied to the files of E2 bis and E2 ter is a reading of old data,
+declared as such. The shares of right answers were added to `analysis/fixed.py`, without a
+criterion.
+
+Version 2.2, of the same day, was recorded when the runs of E6 had just started (09:49 UTC)
+and before any of their files was read. It adds question Q11 and
+§ 12 bis, a reading of the files of E6 that asks for no new runs: how the fraction of
+weight estimated by Kong et al. is read on the bench, a prediction with no free parameter
+(the partner built for a weight beats the soloist up to twice that weight), and the rule by
+which a machine is chosen, fixed before reading the data. The training code does not change.

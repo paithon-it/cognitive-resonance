@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 1.4, 11 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 2.2, 19 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -16,7 +16,7 @@ la regione oltre i 90 gradi non è stata esplorata. La formula dei turing appare
     Tu_app = sqrt(1 + k^2 - 2 k cos(phi)) / sin(phi),      k = dM / dH,
 
 cresce senza limite quando `phi` va verso i 180 gradi: errori in controfase si
-cancellano. Chiamiamo **risonanza cognitiva** questa condizione, e le domande sono sei.
+cancellano. Chiamiamo **risonanza cognitiva** questa condizione, e le domande sono dieci.
 
 - **D1.** La promessa della formula oltre i 90 gradi si realizza su reti vere, con
   immagini vere, o resta nel modello gaussiano?
@@ -28,6 +28,18 @@ cancellano. Chiamiamo **risonanza cognitiva** questa condizione, e le domande so
 - **D5.** Dove stanno, su questa scala, le coppie già misurate?
 - **D6.** Accanto al picco esiste un nullo, un peso a cui la coppia non vale niente? In
   quali condizioni compare? (Aggiunta della versione 1.2: vedi § 8 bis.)
+- **D7.** A pari valore della coppia, una macchina costruita sulla persona sposta il peso
+  a cui la coppia rende? E quel peso si può decidere addestrandola? (Aggiunta della
+  versione 2.0: vedi § 12.)
+- **D8.** Se la persona vede qualcosa che la macchina non vede, il compagno costruito
+  batte il miglior solista? (Aggiunta della versione 2.0: vedi § 13.)
+- **D9.** Quanto vale il compagno costruito si può prevedere prima di costruirlo, da ciò
+  che il giudice sa e la macchina no? E quando una macchina che conosce solo il giudice
+  batte una macchina che conosce il compito? (Aggiunta della versione 2.1: vedi § 14.)
+- **D10.** Quanto dell'accordo fra misura e formula visto in E1 dipende dalla forma del
+  rumore che abbiamo iniettato? (Aggiunta della versione 2.1: vedi § 15.)
+- **D11.** Per chi conviene una macchina costruita sulla persona, e per quale peso va
+  costruita se non si sa chi la userà? (Aggiunta della versione 2.2: vedi § 12 bis.)
 
 ## 2. Il modello
 
@@ -394,6 +406,24 @@ Ipotesi e criteri:
 - Se H2a non passa, la controfase non si impara dagli errori: si può solo piantare.
 - Se H3a non passa, con persone vere non sappiamo costruirla.
 - Se H5a o H5b non passano, il nullo è una proprietà del modello e non delle reti.
+- Se F1 non passa, il vantaggio del compagno a pari peso visto in E2 ter era un caso di
+  quelle dieci unità.
+- Se F5 non passa, il peso a cui la coppia rende non si decide addestrando la macchina:
+  resta una scelta di chi la usa.
+- Se G1 non passa, il conto della manopola (`w = b / c`) non basta a dire per chi conviene
+  un compagno: il punto di pareggio va misurato caso per caso.
+- Se G2 non passa, a chi dà alla macchina un quarto del dovuto, letto su questo banco, un
+  compagno non conviene.
+- Se V1 non passa, il compagno costruito non batte il solista nemmeno quando la persona
+  sa qualcosa di suo: come obiettivo di progetto, a fiducia libera, la controfase non
+  serve.
+- Se V4 non passa, è sbagliata la lettura per cui la macchina addestrata sulla somma
+  impara ciò che alla persona manca.
+- Se K2 non passa, la spiegazione data «col senno di poi» nella prima versione
+  dell'articolo (al giudice del banco non restava niente da dare) è sbagliata o non basta.
+- Se K4 non passa, il modello additivo del pregiudizio non descrive le reti.
+- Se S2 e S3 non passano, l'accordo di E1 non dipende dalla forma del rumore iniettato, e
+  la critica per cui E1 misura la gaussianità cade.
 
 ## 10. Ordine, tempi, pulizia
 
@@ -401,6 +431,10 @@ Ordine di priorità: E0, E1, E2, E3. Una GPU L4 da 24 GB; tetto di due ore e mez
 calcolo in tutto. Se il pilota dei tempi dice che E1 supera i 60 minuti si scende a due
 semi, poi ai primi tre compiti, e lo si scrive nelle Deviazioni. Sul server si lavora in
 una sola cartella, che alla fine si cancella.
+
+E6-E9 (versione 2.1): cinque semi (2-6) e una stima di due ore sulla stessa GPU, in una
+sottocartella propria che alla fine si cancella. Ordine: E6, E8, E7, E9. Se il tempo non
+basta si scende a tre semi (2, 3 e 4), e lo si scrive nelle Deviazioni.
 
 ## 11. Dati grezzi: il contratto
 
@@ -415,8 +449,344 @@ l'analisi, dopo, a partire da questi file. Un file `.npz` per unità, in `result
 - `people/fold{f}_s{seme}.npz`: `image` (indice in CIFAR-10 test), `y` (0-9), `logits`
   di forma (numero di lambda, N, 10) con `lambdas`; e `people/base_s{seme}.npz` con i
   logit della macchina di base su tutte le 10.000.
+- `trust/{compito}_s{seme}.npz` (E6): come `rephase_ter/`, con sette macchine e
+  `built_for_weight`, i pesi per cui sono costruiti i quattro rami.
+- `views/{compito}_o{sovrapposizione}_s{seme}.npz` (E7): come `rephase_bis/`, con
+  `machines` = `M0, Mramo, Mpair` e `overlap` (100, 50 o 0).
+- `chart/{compito}_v{v}_s{seme}.npz` (E8): come `rephase_bis/`, con `z_H0`, `machines` =
+  `M, Mramo, Mblind` e `v` (100, 50 o 25).
+- `shape/{compito}_mu{mu}_s{seme}.npz` (E9): `a`, `z_plus`, `z_minus` di forma (4, N), una
+  riga per forma della cornice di prova, con `shapes`.
 - Ogni cartella ha un `manifest.json`: iperparametri, tempi, versione delle librerie,
   accuratezze di controllo.
+
+## 12. E6. La fiducia su misura
+
+Aggiunto con la versione 2.0, il 19 novembre 2026, dopo la pubblicazione dell'articolo e
+una sua revisione.
+
+**Da dove viene.** In E2 ter il solista, il solista ritoccato e il solista con il ramo
+davano alla coppia sintonizzata lo stesso valore, e T3 non è passato. Il 19 novembre gli
+stessi file sono stati riletti a un peso fissato invece che al peso migliore. Le tre
+macchine differiscono nel peso a cui la coppia arriva al massimo: circa 7 con il
+solista, circa 1,2 con il ramo. A peso 1 la coppia con il ramo vale di più in 10 unità
+su 10 (in mediana 1,47 turing contro 1,38); a peso 8 vale di meno (1,28 contro 1,47). E
+moltiplicando per un fattore `c` la parte dell'indizio che viene dal ramo, il massimo si
+sposta a un peso vicino a `1 / c`. Quella rilettura sta in
+`results/e6_trust_from_e2ter.json` (`analysis/trust.py --ter`). **È esplorativa**: le
+ipotesi qui sotto nascono da lì, e per questo non può confermarle. La prova si fa su
+addestramenti nuovi, con semi mai usati, e con rami *addestrati* per pesi diversi, non
+riscalati dopo.
+
+**L'idea.** Se la persona ha nell'indizio un pregiudizio `b a` e la macchina vi aggiunge
+`-c a`, la somma `z_H + w z_M` lo cancella al peso `w = b / c`. Un ramo addestrato sulla
+somma con peso `w0` dovrebbe quindi imparare `c = b / w0`, e la coppia dovrebbe avere il
+massimo vicino a `w0`. Il peso a cui una coppia rende, che nel § 2 è una scelta di chi
+usa la macchina, diventerebbe una proprietà della macchina.
+
+- **H, `M_0`, `M_0+`, `M_due`** come in E2 ter, con i semi da 2 a 6. E1-E5 hanno usato 0 e 1.
+- **`M_ramo(w)`**, per `w` = 0,5, 1, 2 e 4. `M_0` congelata più un ramo che vede solo la
+  cornice, addestrato con gli iperparametri del pilota sull'entropia incrociata di
+  `z_H + w (z_M0 + z_ramo)`, con i log-odds così come escono dalle reti. I quattro rami
+  hanno lo stesso seme, lo stesso ordine dei lotti, gli stessi ritagli e le stesse
+  cornici: cambia solo `w`. L'indizio della macchina è `z_M0 + z_ramo`. `M_ramo(1)` è
+  `M_ramo` di E2 ter.
+- **La coppia a un peso fissato** (`analysis/fixed.py`). Su due scale. Standardizzata,
+  quella del § 3: `d_a(z_H + w z_M)` ai pesi 0,5, 1, 2 e 8. E «così com'è»: la somma dei
+  log-odds grezzi, `z_H + z_M`, cioè le due opinioni prese per quello che dicono.
+- **Il peso del picco.** Sulla curva `Tu(w) = d_a(z_H + w z_M) / d_a(z_H)` con i log-odds
+  grezzi, sui 49 pesi del § 3: la media geometrica dei due pesi a cui `Tu^2 - 1`
+  attraversa il 90% del suo massimo, per interpolazione lineare in `ln w`. Il massimo di
+  una curva piatta è un punto rumoroso, il centro no. Dove un attraversamento cade fuori
+  dalla griglia vale il peso del massimo.
+- **Differenze** appaiate sugli stessi ricampionamenti delle immagini (§ 3), 1.000
+  ricampionamenti. Il controllo è `M_0+`. `M_due` si riporta senza criterio.
+
+Ipotesi. Le primarie sono F1 e F5.
+
+- **F1, a pari peso vince il compagno.** A peso standardizzato 1 la coppia `(H, M_ramo(1))`
+  è più sensibile della coppia `(H, M_0+)`, con intervallo della differenza sopra lo zero
+  in ogni seme, in almeno 3 compiti su 5.
+- **F2, anche così com'è.** Lo stesso con la somma dei log-odds grezzi.
+- **F3, il prezzo.** A peso standardizzato 8 la coppia `(H, M_0+)` è più sensibile della
+  coppia `(H, M_ramo(1))`, con intervallo sotto lo zero in ogni seme, in almeno 3 compiti
+  su 5: chi si fida molto della macchina sta meglio con il solista.
+- **F4, chi deve farsi da parte.** Così com'è, la coppia `(H, M_0+)` è meno sensibile di
+  `M_0+` da sola (intervallo sotto lo zero in ogni seme, in almeno 3 compiti su 5), e la
+  coppia `(H, M_ramo(1))` no: la mediana sulle unità della sua differenza da `M_0+` da
+  sola è almeno -0,05.
+- **F5, la manopola sta nella macchina.** Il peso del picco della coppia `(H, M_ramo(w))`
+  sta, in mediana sulle unità, entro un fattore 1,5 da `w` per `w` = 0,5, 1 e 2; e la
+  correlazione per ranghi fra `w` e il peso del picco, sui quattro rami, è in mediana
+  sulle unità almeno 0,9. A `w = 4` il posto del picco non si giudica: lì la curva è
+  quasi piatta, come con il solista.
+- **F6, lo stesso picco.** Il turing sintonizzato di `(H, M_ramo(w))` diviso per quello di
+  `(H, M_0+)` sta, in mediana sulle unità, fra 0,97 e 1,03 per ciascuno dei quattro pesi.
+- **F7, quanto costa da sola.** Più basso è il peso per cui è costruita, meno la macchina
+  vale da sola: la correlazione per ranghi fra `w` e `d_a(M_ramo(w))` è in mediana almeno
+  0,9, e `M_ramo(0,5)` da sola è meno sensibile di `M_0+`, con intervallo sotto lo zero in
+  ogni seme, in almeno 3 compiti su 5.
+
+Dati grezzi: `trust/{compito}_s{seme}.npz`, come `rephase_ter/`, con `machines` =
+`M0, M0plus, Mdue, Mramo_w0.5, Mramo_w1, Mramo_w2, Mramo_w4` e `built_for_weight`;
+`manifest.json`.
+
+## 12 bis. E6, lettura di progetto: per chi conviene un compagno
+
+Aggiunto con la versione 2.2, il 19 novembre 2026. Le corse di E6 erano partite alle
+09:49 UTC, mentre questa sezione veniva scritta; è stata registrata nel repository pochi
+minuti dopo (l'ora la dà il registro di GitHub), prima che un file di E6 fosse letto o
+analizzato. Non chiede corse nuove: usa i file di E6. Il codice dell'addestramento non
+cambia, e i manifesti delle corse riportano la versione 2.1.
+
+**Da dove viene.** E6 dice se il peso a cui una coppia rende si può decidere costruendo
+la macchina. Chi la costruisce deve poi sceglierlo, quel peso, senza conoscere chi la
+userà. Kong e colleghi (2026) stimano che le persone di ChatBench diano alla macchina
+0,285 del peso che le spetta. Qui si fissa, prima di leggere i dati, come quella frazione si
+legge sul banco e con quale regola si sceglie una macchina.
+
+**Il dovuto e la persona.** Il dovuto, `ŵ_u`, è il peso del picco (§ 12) della coppia
+`(H, M_0+)` nell'unità `u`, sui log-odds grezzi; `ŵ` è la sua mediana sulle unità. Chi dà
+al solista una frazione `f` del dovuto usa il peso grezzo `f ŵ_u`, e lo usa con ogni
+macchina, perché non vede come è costruita. È un'assunzione. La lettura opposta, in cui
+la persona dà a ogni macchina la frazione `f` del peso che spetta a quella macchina, si
+riporta accanto, senza criterio. Le frazioni sono 1/16, 1/8, 0,285, 1/2 e 1.
+
+**Che cosa si misura** (`analysis/design.py`).
+
+- *Il turing a una frazione*: `Tu_X(f ŵ_u)`, per interpolazione lineare in `ln w` della
+  curva grezza dell'unità sui 49 pesi; fuori dalla griglia vale l'estremo.
+- *Il compagno per `f`*: `M_ramo(w_b)` con `w_b` più vicino, in `ln w`, a `f ŵ`. Lo
+  decide il peso per cui è costruito, non il risultato: scegliere il migliore dopo
+  averli misurati tutti darebbe un vantaggio fatto di rumore.
+- *Il pareggio* di `M_ramo(w_b)`: unità per unità, sulla differenza fra la curva grezza
+  di `(H, M_ramo(w_b))` e quella di `(H, M_0+)`. Si parte dal peso della griglia più
+  vicino a `w_b` e si sale: il pareggio è il primo peso a cui la differenza diventa
+  negativa, per interpolazione lineare in `ln w`. Se a `w_b` la differenza non è
+  positiva, o se non diventa mai negativa, il pareggio resta aperto.
+- *Il pavimento*: `k_X = d_a(X) / d_a(H)`, la macchina da sola rispetto al giudice da solo.
+
+**Che cosa dice il modello.** Se il pregiudizio del giudice è `b a` e il ramo vi aggiunge
+`-(b / w_b) a`, nella somma a peso `w` resta `(1 - w / w_b) b a`. Con il solista resta
+`b a`, e tutto il resto della somma è uguale. I due resti hanno la stessa ampiezza a
+`w = 2 w_b`: sotto vince il compagno, sopra il solista. Nella rilettura di E2 ter, con
+`w_b = 1`, le curve si incrociavano vicino a 2. E dalla formula del § 2,
+`Tu(w)^2 - 1 = [2 w (k - ρ) + w^2 (k^2 - 1)] / (1 + w^2 + 2 ρ w)`: con `k ≥ 1` non è mai
+negativo per `w > 0`, con `k < 1` lo diventa ai pesi grandi. Una macchina che da sola
+vale almeno quanto il giudice non porta la coppia sotto il giudice a nessun peso
+positivo, neppure in chi la copia.
+
+Ipotesi. Le primarie sono G1 e G2.
+
+- **G1, il pareggio sta a due volte il peso di costruzione.** Il pareggio di
+  `M_ramo(w_b)` è chiuso in almeno 15 unità su 25 e sta, in mediana sulle unità in cui è
+  chiuso, entro un fattore 1,5 da `2 w_b`, per ciascuno dei pesi `w_b` = 0,5, 1 e 2. Per
+  `w_b = 1` la rilettura di E2 ter lo aveva già mostrato; per 0,5 e 2 è una previsione.
+  A `w_b = 4` non si giudica: lì le due curve sono quasi piatte.
+- **G2, a un quarto del dovuto conviene il compagno.** A `f = 0,285` la coppia con il
+  compagno per `f` ha un turing più alto della coppia con `M_0+` in almeno 18 unità su
+  25. Con una moneta, 18 su 25 o più esce con probabilità 0,022; le unità condividono i
+  compiti e non sono indipendenti, quindi il conto è indicativo.
+- **G3, chi dà il dovuto non ne ha bisogno.** A `f = 1` la differenza fra il turing della
+  coppia con il compagno per `f` e quello della coppia con `M_0+` sta, in mediana sulle
+  unità, fra -0,03 e 0,03.
+- **G4, il compagno di chi si fida meno non regge il pavimento.** `k` è, in mediana sulle
+  unità, sotto 1 per `M_ramo(0,5)` e almeno 1 per `M_ramo(1)`, `M_ramo(2)` e `M_ramo(4)`.
+
+**La regola di scelta**, fissata qui. Per le persone fra `f_1` e `f_2`: fra le macchine
+con `k` almeno 1 in mediana si prende quella con il più alto valore minimo della curva
+mediana sulle unità, sui pesi della griglia fra `f_1 ŵ` e `f_2 ŵ` e ai due estremi; a
+parità, quella con la media più alta sugli stessi punti. L'intervallo registrato va da
+0,285 a 1. Il caso peggiore e non il valore atteso, perché di come le persone si
+distribuiscono fra quei pesi non sappiamo niente, e chi copia la macchina è coperto dal
+pavimento. **Attesa, senza criterio**: la regola sceglie `M_ramo(4)`, che per il modello
+non sta sotto il solista fino al peso 8, con un vantaggio su `M_0+` nel caso peggiore
+sotto 0,05 turing. Si riporta anche in quante unità la stessa regola, applicata alla
+sola unità, fa la stessa scelta.
+
+Nessuna di queste letture riguarda persone: il giudice è una rete, e la frazione di Kong
+e colleghi viene da un altro compito.
+
+## 13. E7. Viste diverse
+
+Aggiunto con la versione 2.0, il 19 novembre 2026. Di questa prova non esiste nessun
+dato: le attese vengono dal modello e da un banco giocattolo
+(`synthetic.write_views`), su cui l'analisi è stata provata.
+
+**Perché.** In E1-E6 la macchina vede tutto ciò che vede la persona. Allora ogni modo di
+mettere insieme i due indizi è una funzione di ciò che la macchina ha davanti, e la
+macchina migliore possibile, da sola, farebbe almeno altrettanto. Che su quel banco il
+miglior solista sia rimasto il miglior compagno (B3 e T3 non passano) è quindi una
+conseguenza del disegno, non una scoperta. Perché togliere un pregiudizio liberi
+qualcosa, la persona deve sapere qualcosa che la macchina non vede.
+
+- **Le viste.** Ogni giudice vede metà dell'interno dell'immagine e tutta la cornice; il
+  resto è azzerato (unità normalizzate), dopo che la cornice è stata disegnata. H vede
+  sempre la metà sinistra (colonne 2-15). La macchina vede la metà sinistra
+  (sovrapposizione 100%), la metà alta (righe 2-15: ha in comune con H il quarto in alto
+  a sinistra, 50%) o la metà destra (colonne 16-29, 0%). Ogni metà passa per il centro
+  dell'immagine: una striscia centrale varrebbe più di una laterale, e la sovrapposizione
+  si confonderebbe con la bravura.
+- **H**: rete «più», `mu = 1`, addestrata sulla metà A delle immagini di addestramento.
+  È la stessa rete alle tre sovrapposizioni.
+- **`M_0`**, il solista: addestrata sulla metà B sulla sua vista, cornice indipendente
+  dalla classe.
+- **`M_ramo`**: `M_0` congelata più un ramo che vede solo la cornice, addestrato
+  sull'entropia incrociata di `z_H + z_M0 + z_ramo`.
+- **`M_coppia`**: una rete nuova sulla vista della macchina, addestrata da zero
+  sull'entropia incrociata di `z_H + z_M` (la ricetta di E2 bis), con lo stesso seme di
+  `M_0`.
+- Semi da 2 a 6; `M_0`, il ramo e `M_coppia` hanno gli stessi semi alle tre
+  sovrapposizioni. Cornici di prova uguali alle tre sovrapposizioni.
+- **Misure** del § 3 e di E2 bis, più la coppia così com'è (§ 12). Le differenze sono
+  rispetto a `M_0` della stessa sovrapposizione, appaiate.
+
+Ipotesi. Le primarie sono V1 e V4.
+
+- **V1, con qualcosa di suo il compagno vince.** A sovrapposizione 0 la coppia
+  sintonizzata `(H, M_ramo)` è più sensibile della coppia sintonizzata `(H, M_0)`, con
+  intervallo della differenza sopra lo zero in ogni seme, in almeno 3 compiti su 5.
+- **V2, la dose.** La mediana sulle unità di quella differenza cresce al calare della
+  sovrapposizione (0% > 50% > 100%), e a 100% è al più un terzo di quella a 0%.
+- **V3, meno brava da sola, migliore in coppia.** A sovrapposizione 0 `M_ramo` da sola è
+  meno sensibile di `M_0` da sola (intervallo sotto lo zero in ogni seme, in almeno 3
+  compiti su 5), e V1 passa.
+- **V4, la macchina addestrata sulla somma impara ciò che alla persona manca.**
+  `d_a(M_coppia) / d_a(M_0)`, in mediana sulle unità, è almeno 0,7 a sovrapposizione 0, al
+  più 0,3 a 100% (in E2 bis, a vista intera, era 0,03), e decresce con la sovrapposizione.
+- **V5, la coppia batte la macchina.** A sovrapposizione 0 la coppia sintonizzata
+  `(H, M_ramo)` è più sensibile di `M_0` da sola, con intervallo sopra lo zero in ogni
+  seme, in almeno 3 compiti su 5.
+- **V6.** A sovrapposizione 0, così com'è, la coppia `(H, M_ramo)` è più sensibile della
+  coppia `(H, M_0)`: intervallo sopra lo zero in ogni seme, in almeno 3 compiti su 5.
+
+Un limite scritto prima: a 50% la metà della macchina è orizzontale e quella di H
+verticale, quindi fra 0%, 50% e 100% non cambia soltanto la sovrapposizione.
+
+Dati grezzi: `views/{compito}_o{sovrapposizione}_s{seme}.npz`, come `rephase_bis/`, con
+`machines` = `M0, Mramo, Mpair` e `overlap`; `manifest.json`.
+
+## 14. E8. Il banco della cartella
+
+Aggiunto con la versione 2.1, il 19 novembre 2026, prima di ogni esecuzione di E6-E9. Il
+disegno, il teorema e le attese riprendono quelli proposti da una revisione dell'articolo;
+qui sono riscritti sulle reti e sugli stimatori di questo protocollo.
+
+**Il teorema.** L'indizio del giudice è `h + beta a`: un indizio pulito `h`, con sensibilità
+`d_h` e rumore di varianza uno, più un pregiudizio che non dipende dalla classe, di varianza
+`B`. L'indizio della macchina `m` ha sensibilità `d_m`, rumore di varianza uno e correlazione
+`r` con il rumore di `h`. Per la migliore combinazione lineare, con pesi di ogni segno:
+
+    D1^2 = (d_h^2 - 2 r d_h d_m + (1 + B) d_m^2) / (1 + B - r^2)      il giudice con il solista m
+    D2^2 = (d_h^2 - 2 r d_h d_m + d_m^2) / (1 - r^2)                  il giudice con m e con chi legge a
+    D2^2 - D1^2 = B / (1 - r^2 + B) * P,     P = (d_h - r d_m)^2 / (1 - r^2)
+
+`P = D2^2 - d_m^2` è ciò che il giudice pulito sa e la macchina no, e si annulla all'angolo
+utile, `r = d_h / d_m`. Il giudice con un correttore cieco, che legge solo `a`, vale `d_h`, e
+batte la coppia con il solista quando `d_m / d_h` sta fra
+`(r - sqrt(B (1 + B - r^2))) / (1 + B)` e `(r + sqrt(B (1 + B - r^2))) / (1 + B)`. La soglia
+che conta è la seconda; la prima supera lo zero solo se `r^2 > B`. Il codice è in
+`src/cognitive_resonance/chart.py`, verificato contro l'inversione diretta delle matrici.
+
+**Sui dati vecchi.** Applicato unità per unità ai file di E2 bis ed E2 ter
+(`analysis/chart.py --e2`, `results/chart_from_e2.json`), il teorema ridà le coppie
+misurate: con il solista 3,05 e 3,07 (misurate 3,04 e 3,06), con la macchina bendata 2,86
+(misurata 2,85), con il solista più il ramo 3,13 (misurata 3,10). Dice anche perché T3 non è
+passato: su quel banco il compagno costruito poteva dare l'1,4% in più. È una rilettura,
+non una prova.
+
+**Il banco.** In E1-E6 la macchina vede tutto ciò che vede il giudice, e `P` è quasi zero.
+Qui il giudice vede la fotografia intera; la macchina vede la cornice e solo una parte
+dell'interno: tutto (`v = 100`, il banco di E2 ter), la metà sinistra (`v = 50`, colonne
+2-15) o il quarto sinistro (`v = 25`, colonne 2-8).
+
+- **H**: rete «più», `mu = 1`, metà A, fotografia intera. **H0**: la stessa rete senza
+  pregiudizio (stesso seme, cornice indipendente dalla classe).
+- **`M_cieca`**: vede solo la cornice, addestrata sull'entropia incrociata di
+  `z_H + z_cieca` (la `M_cornice` di E2 bis). È la stessa ai tre valori di `v`.
+- Per ogni `v`: **`M`**, il solista sulla sua parte di fotografia; **`M_ramo`**, `M` congelata
+  più un ramo che vede solo la cornice, addestrato sull'entropia incrociata di
+  `z_H + z_M + z_ramo`.
+- Semi 2-6, cinque compiti. `M` e il ramo hanno gli stessi semi ai tre valori di `v`.
+- **Le grandezze del teorema, misurate unità per unità.** La pendenza dell'indizio di H
+  sulla cornice, a parità di classe, dà il pregiudizio; ciò che resta dell'indizio tolto il
+  pregiudizio è `h`. Da `h` e da `M`: `d_h`, `d_m` (con `d_a`), `r` e `B`.
+- **Il miglior uso lineare dei tre indizi** `(z_H, z_M, a)`: i pesi si stimano su metà delle
+  immagini e la sensibilità si legge sull'altra metà, poi si scambiano. È `D2` misurato senza
+  passare da una rete.
+
+Attese. Δ è la sensibilità della coppia sintonizzata `(H, M_ramo)` meno quella di `(H, M)`,
+appaiate. Le primarie sono K2 e K4.
+
+- **K1, il nullo di E2 ter.** A `v = 100`, `|Δ|` diviso per la sensibilità della coppia
+  `(H, M)` è, in mediana sulle unità, al più 0,03.
+- **K2, con qualcosa di suo il compagno vince.** A `v = 25`, Δ > 0 con intervallo che esclude
+  lo zero in ogni seme, in almeno 3 compiti su 5.
+- **K3, la dose.** La mediana di Δ cresce quando la macchina vede meno: `v = 25 > 50 > 100`.
+- **K4, la legge.** A `v = 50` e `v = 25`, `D2^2 - D1^2` misurato con il miglior uso lineare
+  dei tre indizi, diviso per il guadagno previsto dal teorema con le grandezze della stessa
+  unità, sta in mediana fra 0,8 e 1,25.
+- **K5, meno brava da sola, migliore in coppia.** A `v = 25`, `M_ramo` da sola è meno
+  sensibile di `M` e la coppia con lei è più sensibile, con intervalli che escludono lo zero
+  in ogni seme, in almeno 3 compiti su 5.
+- **K6, chi conosce il giudice contro chi conosce il compito.** Quale fra `(H, M_cieca)` e
+  `(H, M)` sia la coppia più sensibile è ciò che dice la soglia del teorema, calcolata con le
+  grandezze dell'unità, in almeno l'80% delle unità (tutti i `v`).
+- **K7, niente si crea.** La coppia `(H, M_ramo)` divisa per la coppia `(H0, M)` è, in
+  mediana, al più 1,05 a ogni `v`.
+
+Un limite scritto prima: `M_ramo` è costruita per il peso 1, e un peso solo deve cancellare
+il pregiudizio e pesare la macchina. Con una macchina debole può rendere meno del miglior
+uso dei tre indizi: per questo K4 usa quest'ultimo, e K2 la rete.
+
+Dati grezzi: `chart/{compito}_v{v}_s{seme}.npz`, come `rephase_bis/`, con `z_H0`, `machines`
+= `M, Mramo, Mblind` e `v`; `manifest.json`.
+
+## 15. E9. La forma del rumore
+
+Aggiunto con la versione 2.1, il 19 novembre 2026, prima di ogni esecuzione di E6-E9.
+
+**Perché.** Con la sensibilità misurata come rapporto fra segnale e rumore la formula del § 2
+è un'identità (`analysis/identity.py`): nessun dato può smentirla. Con `d_a`, che viene
+dall'AUC, vale per indizi gaussiani. E in E1, oltre i 90 gradi, quasi tutto il rumore è la
+cornice, che abbiamo estratto noi da una gaussiana. La domanda è quanto la misura si
+allontana dalla formula quando quella parte del rumore ha un'altra forma.
+
+**Che cosa si sapeva.** Una prova preliminare fatta durante una revisione, su reti con un
+terzo dei canali, quattro compiti e un seme, ha dato per il rapporto fra coppia misurata e
+prevista 0,29 con una cornice a due valori, 0,90 con una uniforme e 0,93 con una t di
+Student, con attese sbagliate nel verso per due forme su tre. Le attese qui sotto vengono da
+un modello: indizi gaussiani più una cornice della forma data, con i parametri mediani di E1
+(§ 5). Il modello dà, a `mu = 1,5`, 1,09 (due valori), 1,04 (uniforme), 0,86 (t); a
+`mu = 2`, 0,79, 1,05 e 0,80.
+
+- **Le reti** sono quelle di E1 (`gpu/bench.py`): «più» e «meno», 9.000 immagini, cornice di
+  addestramento gaussiana. `mu` = 1, 1,5 e 2; semi 2-6; cinque compiti.
+- **Alla prova** la cornice è estratta da quattro distribuzioni con media zero e la stessa
+  varianza `1 + mu^2`: `gauss` (è E1, su semi nuovi), `two` (due valori, `±sqrt(1 + mu^2)`),
+  `uniform`, `t3` (t di Student con 3 gradi di libertà, riscalata). La standardizzazione usa
+  la validazione con la stessa forma.
+- **Misure** del § 3 per ogni forma, più il rapporto segnale/rumore accanto a `d_a`. Il
+  rapporto è quello di H1c: turing sintonizzato diviso `Tu_app` da `k` e `rho` della stessa
+  unità e forma.
+
+Attese.
+
+- **S1, replica.** Con la cornice gaussiana, a `mu` = 1,5 e 2: l'angolo sta sopra i 90 gradi
+  in ogni unità e il rapporto sta in mediana fra 0,9 e 1,1.
+- **S2, la formula promette troppo.** A `mu = 2` il rapporto mediano è sotto 0,9 sia con la
+  cornice a due valori sia con la t.
+- **S3, il verso dipende dalla forma.** A `mu = 1,5` il rapporto mediano è sopra 1 con la
+  cornice a due valori e sotto 0,95 con la t.
+- **S4.** Con la cornice uniforme il rapporto mediano resta fra 0,95 e 1,10 a `mu` = 1,5 e 2.
+- **S5, la coppia è la stessa.** La sensibilità della coppia sintonizzata con una forma,
+  divisa per quella con la cornice gaussiana, sta in mediana fra 0,95 e 1,05 per ogni forma
+  a `mu` = 1,5 e 2: nella coppia la cornice si cancella, e a cambiare è ciò che promettono i
+  singoli.
+- Senza criterio: lo scarto dell'identità con il rapporto segnale/rumore, per ogni forma.
+
+Dati grezzi: `shape/{compito}_mu{mu}_s{seme}.npz`: `a`, `z_plus` e `z_minus` di forma
+(4, N), una riga per forma nell'ordine di `shapes`; `manifest.json`.
 
 ## Deviazioni
 
@@ -507,6 +877,36 @@ prima delle corse.
   P5: solo `mista`.
 - **I manifest** delle due corse citano la versione 1.4.
 
+**E6, E7, E8 ed E9.** Le corse sono del 19 novembre 2026, su una scheda condivisa con
+altri utenti. Nessuna riduzione: cinque semi e cinque compiti in tutte e quattro le prove.
+
+- **Tre sessioni.** Il programma che lancia le corse cede la scheda quando un altro utente
+  la usa, e riparte quando è libera. È successo due volte: le sessioni vanno dalle 09:49
+  alle 10:15, dalle 10:19 alle 11:27 e dalle 19:20 alle 20:13 (UTC). Un'unità si scrive
+  quando finisce; quelle in corso a un'interruzione sono ripartite da capo, con gli
+  stessi semi. E6: 18 unità scritte nella prima sessione, 7 nella seconda. E8: tutte
+  nella seconda. E7: 51 nella seconda, 24 nella terza. E9: tutte nella terza.
+- **Un processo di E7 fermo.** Nella seconda sessione uno dei tre processi di E7 si è
+  fermato dopo la sua prima unità. Il suo registro è stato sovrascritto dalla terza
+  sessione, e la causa non è documentata. Le altre sue 24 unità sono state eseguite
+  nella terza sessione, con un solo processo sulla scheda. I semi sono dell'unità, non
+  del processo.
+- **I tempi nei manifest.** `stage_time` riporta solo l'ultima sessione; i secondi di ogni
+  unità stanno in `unit_seconds`. Le tre note qui sopra sono scritte anche nei manifest.
+- **L'ambiente** è stato ricostruito per queste corse: numpy 2.5.5 (2.5.4 in E1-E5);
+  python, torch, torchvision, CUDA e cuDNN sono gli stessi.
+- **Le ore del 19 novembre, UTC.** Il programma di lancio parte alle 09:49:19 e prepara
+  l'ambiente; la versione 2.2 di questo protocollo arriva nel repository alle 09:50:31;
+  il primo addestramento di E6 parte alle 09:55:39; il codice della lettura di progetto
+  (`analysis/design.py`) arriva nel repository alle 09:55:45; il primo file di E6 è
+  scritto alle 09:59:05. Il codice della GPU usato sul server coincide, file per file
+  (md5), con quello del commit `ab216dc`.
+- **I manifest** citano la versione 2.1: è quella del codice della GPU, che la 2.2 non
+  tocca.
+- **L'analisi** è quella scritta prima delle corse, senza modifiche. Dove il protocollo
+  lasciava un margine, la scelta è scritta accanto al criterio nei file dei risultati
+  (`rule`).
+
 **Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e
@@ -518,3 +918,35 @@ e prima della sua corsa, e non tocca criteri né risultati delle altre prove. La
 nascono da una revisione della bozza dell'articolo, sono scritti dopo aver visto tutti i
 risultati e prima delle loro corse, e non toccano criteri né risultati delle altre prove.
 Sul server le due corse usano una sottocartella propria, che alla fine si cancella.
+
+La versione 2.0, del 19 novembre 2026, viene dopo la pubblicazione dell'articolo e nasce
+da una sua revisione. Aggiunge le domande D7 e D8 e le prove E6 (§ 12) ed E7 (§ 13). È
+scritta prima delle due esecuzioni, insieme al codice dell'addestramento
+(`gpu/trust.py`, `gpu/views.py`), a quello dell'analisi (`analysis/fixed.py`,
+`analysis/trust.py`, `analysis/views.py`) e ai loro test. E6 mette alla prova, su
+addestramenti nuovi, ciò che si è visto rileggendo i file di E2 ter: quella rilettura è
+nel repository, dichiarata esplorativa. E7 non ha dati precedenti. Non tocca criteri né
+risultati delle altre prove. Una nota sul banco di E1 ed E5, aggiunta con questa
+versione senza cambiare i loro esiti: se la sensibilità si misura come differenza delle
+medie divisa per la deviazione standard entro la classe, la formula del § 2 è
+un'identità dei momenti del campione, vera per qualunque dato. Con `d_a`, che viene
+dall'area sotto la curva ROC, i criteri H1c, H1d e H5a-H5e misurano quindi quanto gli
+indizi delle reti si scostano dal modello gaussiano a varianze uguali, non la formula.
+
+La versione 2.1, dello stesso giorno, viene prima di ogni esecuzione di E6 ed E7 e nasce da
+due altre revisioni dell'articolo. Porta i semi di E6 ed E7 da tre a cinque (2-6), senza
+toccarne ipotesi e criteri, e aggiunge le domande D9 e D10 e le prove E8 (§ 14, il banco
+della cartella con il suo teorema) ed E9 (§ 15, la forma del rumore), con il codice
+dell'addestramento (`gpu/chart.py`, `gpu/shape.py`), dell'analisi (`analysis/chart.py`,
+`analysis/shape.py`) e i test. «In ogni seme» vuol dire ora in tutti e cinque. Il teorema
+applicato ai file di E2 bis ed E2 ter è una rilettura di dati vecchi, dichiarata come
+tale. In `analysis/fixed.py` sono state aggiunte, senza criterio, le quote di risposte
+giuste.
+
+La versione 2.2, dello stesso giorno, è stata registrata a corse di E6 appena partite
+(09:49 UTC) e prima che un loro file fosse letto. Aggiunge la
+domanda D11 e il § 12 bis, una lettura dei file di E6 che non chiede corse nuove: come si
+legge sul banco la frazione di peso stimata da Kong e colleghi, una previsione senza
+parametri (il compagno costruito per un peso batte il solista fino a due volte quel
+peso), e la regola con cui si sceglie una macchina, fissata prima di leggere i dati. Il codice
+dell'addestramento non cambia.

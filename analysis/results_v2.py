@@ -1,0 +1,235 @@
+"""The sections of results/RESULTS.md for protocol v2.1: E6 to E9, and the readings of old data.
+
+Used by `results_md.py`; every number comes from the JSON files.
+"""
+from __future__ import annotations
+
+V2 = (("e6_trust.json", "E6"), ("e8_chart.json", "E8"), ("e7_views.json", "E7"), ("e9_shape.json", "E9"))
+
+
+def f(x, nd=3):
+    if x is None:
+        return "n/a"
+    if isinstance(x, bool):
+        return "yes" if x else "no"
+    if isinstance(x, int):
+        return str(x)
+    if isinstance(x, float):
+        return f"{x:.{nd}f}"
+    return str(x)
+
+
+def table(header, rows):
+    out = ["| " + " | ".join(header) + " |", "|" + "|".join("---" for _ in header) + "|"]
+    out += ["| " + " | ".join(str(c) for c in r) + " |" for r in rows]
+    return "\n".join(out)
+
+
+def outcome(c):
+    o = c["outcome"]
+    return {"pass": "**passes**", "fail": "**does not pass**"}.get(o, f"**{o}**")
+
+
+def criteria(c):
+    """One line per criterion: outcome, the rule as written in the JSON, and its scalar numbers."""
+    out = []
+    for h, v in c.items():
+        shown = []
+        for k, x in v.items():
+            if k in ("outcome", "rule", "by_task", "detail", "spearman_by_unit", "reason") or isinstance(x, list):
+                continue
+            if isinstance(x, dict):
+                if any(isinstance(y, (dict, list)) for y in x.values()):
+                    flat = "; ".join(f"{a} " + ", ".join(f"{b}: {f(z)}" for b, z in y.items()) for a, y in x.items()
+                                     if isinstance(y, dict))
+                    shown.append(f"{k.replace('_', ' ')} ({flat})")
+                else:
+                    shown.append(f"{k.replace('_', ' ')} " + ", ".join(f"{a}: {f(b)}" for a, b in x.items()))
+            else:
+                shown.append(f"{k.replace('_', ' ')} {f(x)}")
+        rule = v.get("rule") or v.get("reason") or ""
+        out.append(f"- **{h}** {outcome(v)}: {rule}." + (f" Numbers: {'; '.join(shown)}." if shown else ""))
+    return "\n\n".join(out)
+
+
+def summary_rows(load, r) -> list:
+    rows = []
+    for name, label in V2:
+        d = load(r / name)
+        if d is None:
+            rows.append([label, "registered, not run yet", ""])
+            continue
+        passed = [h for h, v in d["criteria"].items() if v["outcome"] == "pass"]
+        failed = [h for h, v in d["criteria"].items() if v["outcome"] != "pass"]
+        rows.append([label, ", ".join(passed) or "none", ", ".join(failed) or "none"])
+    return rows
+
+
+def identity(d):
+    rows = [[f(r["mu"], 2), r["pairs"], f(r["phi"], 1), f(r["auc_gap_median"]), f(r["auc_gap_max_abs"]),
+             f(r["excess_kurtosis_of_the_sum"], 2)] for r in d["by_mu"]]
+    return "\n\n".join([
+        "## E1 read again: how much of it is an identity",
+        "Added with protocol v2.0, descriptive, no criterion. With sensitivity as a signal-to-noise ratio (difference "
+        "of the class means over the pooled within-class standard deviation) the formula of § 2 is algebra on the "
+        f"sample moments. On the {d['pairs']} opposite pairs of E1, at five weights, measured and predicted turings "
+        f"differ at most by {d['snr_identity_max_relative_error']:.1e} in relative terms. With d_a from the AUC, as in "
+        f"E1, the largest gap at weight 1 is {f(d['auc_gap_max_abs'])}: that gap is what H1c and H1d measure, that "
+        "is how far the cues are from the Gaussian model.",
+        table(["mu", "pairs", "phi", "AUC gap at w = 1 (median)", "largest |gap|", "excess kurtosis of the sum"], rows)])
+
+
+def _trust_table(d):
+    cols = ["d_a_alone", "accuracy_alone", "phi", "w_star_model", "raw_peak", "tu_tuned", "tu_std0.5", "tu_std1",
+            "tu_std2", "tu_std8", "tu_face", "accuracy_face"]
+    rows = [[r["machine"], f(r["built_for_weight"], 1) if r.get("built_for_weight") is not None else ""]
+            + [f(r.get(c), 3 if c.startswith(("tu", "acc")) else 2) for c in cols] for r in d["by_machine"]]
+    return table(["machine", "built for w", "d_a alone", "right alone", "phi", "w* (model)", "peak at raw w",
+                  "tuned Tu", "Tu at w 0.5", "Tu at w 1", "Tu at w 2", "Tu at w 8", "Tu at face value",
+                  "right at face value"], rows)
+
+
+def e6_old(d):
+    cross = sorted(c[0] for c in d["crossing_weight_partner_vs_soloist"] if c)
+    return "\n\n".join([
+        "## E2 ter read again at a fixed weight (exploratory)",
+        "The files of E2 ter, read with `analysis/trust.py --ter`: the same pairs, at a weight fixed beforehand "
+        "instead of the tuned one. This is where the hypotheses of E6 come from: it is not a test. Weights 0.5 to 8 "
+        "are on the standardized scale of § 3; \"face value\" is the sum of the raw log-odds.",
+        _trust_table(d), criteria({h: d["criteria"][h] for h in ("F1", "F2", "F3", "F4")}),
+        "Standardized weight at which the pair with the branch and the pair with the soloist are worth the same: "
+        f"median {f(cross[len(cross) // 2], 2)} (from {f(cross[0], 2)} to {f(cross[-1], 2)}, {len(cross)} units). "
+        "Below it the built partner wins, above it the soloist."])
+
+
+def e6(d):
+    return "\n\n".join([
+        "## E6. Trust made to measure",
+        f"Protocol § 12 (v2.1), registered before the run. {len(d['units'])} units (task x seed), on seeds never used "
+        "before. M0plus is the control soloist; Mramo_w is the frozen M0 plus a frame-only branch trained on the sum "
+        "with H at weight w. The primary criteria are F1 and F5.",
+        _trust_table(d), criteria(d["criteria"])])
+
+
+def chart_old(d):
+    rows = []
+    for k, s in d["summary"].items():
+        rows.append([k, s["units"], f(s["b"], 2), f(s["r"], 2), f(s["d_h_clean"], 2), f(s["d_m"], 2),
+                     f(s["theorem_d1"], 2), f(s["measured_d1"], 2), f(s["theorem_d2"], 2),
+                     f(s.get("measured_d2_partner"), 2), f(s.get("theorem_d_blind"), 2),
+                     f(s.get("measured_d_blind"), 2), f(s["strength"], 2), f(s["blind_threshold"], 2),
+                     f(s["gain_over_d1_percent"], 1)])
+    return "\n\n".join([
+        "## The theorem of the chart on E2 bis and E2 ter (a reading of old data)",
+        "`analysis/chart.py --e2`: per unit, the slope of H's cue on the frame gives the bias B and what is left is "
+        "the clean cue h; from h and the soloist come d_h, d_m and r, and the theorem (protocol § 14) says what the "
+        "pair is worth with the soloist (D1), with the soloist plus something that reads the frame (D2) and with a "
+        "blind corrector (d_h). Medians over the units. Not a test: these runs came before the theorem.",
+        table(["runs", "units", "B", "r", "d_h clean", "d_m", "D1 theorem", "D1 measured", "D2 theorem",
+               "pair with Mramo", "blind, theorem", "blind, measured", "d_m / d_h", "threshold", "D2 over D1, %"], rows)])
+
+
+def e8(d):
+    cols = ["accuracy_h", "accuracy_m", "accuracy_mramo", "d_h", "d_m", "b", "r", "d1", "theorem_d1", "d2_partner",
+            "d2_three_cues", "theorem_d2", "d_blind", "theorem_d_blind", "d_pair_without_bias", "strength",
+            "blind_threshold"]
+    rows = [[r["v"], r["units"]] + [f(r[c], 3 if c.startswith("acc") else 2) for c in cols] for r in d["by_v"]]
+    return "\n\n".join([
+        "## E8. The bench of the chart",
+        "Protocol § 14 (v2.1), registered before the run. The judge H sees the whole image; the machine sees the "
+        "frame and v per cent of the inside. M is the soloist, Mramo is M plus a frame-only branch trained on the sum "
+        "with H, Mblind sees only the frame; H0 is the judge without the bias. \"Theorem\" columns are computed "
+        "from quantities measured on H and M of the same unit. Medians over the units. The primary criteria are K2 "
+        "and K4.",
+        table(["v", "units", "right, H", "right, M", "right, Mramo", "d_a H", "d_a M", "B", "r", "pair with M (D1)",
+               "D1 theorem", "pair with Mramo", "best linear use of 3 cues", "D2 theorem", "pair with Mblind",
+               "blind, theorem", "pair (H0, M)", "d_m / d_h", "threshold"], rows),
+        criteria(d["criteria"])])
+
+
+def e7(d):
+    cols = ["accuracy_alone", "d_a_alone", "phi", "tu_tuned", "d_pair_tuned", "pair_minus_soloist_alone", "tu_face"]
+    rows = [[r["overlap"], r["machine"]] + [f(r[c], 3 if c.startswith("acc") else 2) for c in cols]
+            for r in d["by_overlap_and_machine"]]
+    return "\n\n".join([
+        "## E7. Different views",
+        "Protocol § 13 (v2.1), registered before the run. Each judge sees half of the image; the overlap is the share "
+        "of the machine's half that the judge H sees too. M0 is the soloist, Mramo is M0 plus a frame-only branch, "
+        "Mpair is trained from scratch on the sum with H. Medians over the units. The primary criteria are V1 and V4.",
+        table(["overlap %", "machine", "right alone", "d_a alone", "phi", "tuned Tu", "d pair", "d pair - d_a(M0)",
+               "Tu at face value"], rows),
+        criteria(d["criteria"])])
+
+
+def e9(d):
+    cols = ["phi", "d_h", "snr_h", "d_a_over_snr_single", "d_pair_tuned", "d_pair_predicted", "ratio_tuned_app",
+            "d_a_over_snr_pair", "pair_over_gauss", "excess_kurtosis_single", "accuracy_single"]
+    rows = [[f(r["mu"], 2), r["shape"], r["units"]] + [f(r[c], 1 if c == "phi" else 3) for c in cols]
+            for r in d["by_mu_and_shape"]]
+    return "\n\n".join([
+        "## E9. The shape of the noise",
+        "Protocol § 15 (v2.1), registered before the run. The two opposite networks of E1 on new seeds; at test the "
+        "frame is drawn from four distributions with the same variance. \"Ratio\" is tuned turing over Tu_app, as in "
+        "H1c. With the signal-to-noise ratio in place of d_a the formula holds for every shape: largest relative "
+        f"gap {d['snr_identity_max_relative_error']:.1e}. Medians over the units.",
+        table(["mu", "frame", "units", "phi", "d_a single", "SNR single", "d_a / SNR single", "pair measured",
+               "pair predicted", "ratio", "d_a / SNR pair", "pair over pair (gauss)", "excess kurtosis single",
+               "right, single"], rows),
+        criteria(d["criteria"])])
+
+
+def _design_tables(d):
+    rows = [[f(r["fraction"], 3), f(r["raw_weight"], 2), r.get("partner", ""), f(r["control_turing"], 3),
+             f(r.get("partner_turing"), 3), f(r.get("gain"), 3), f"{r.get('units_with_gain', '')}/{r.get('units', '')}",
+             f(r.get("gain_if_the_fraction_is_of_its_own_due_weight"), 3)] for r in d["by_fraction"]]
+    by_fraction = table(["share f of the weight due", "raw weight", "partner for f", "Tu with the soloist",
+                         "Tu with the partner", "gain (median of the paired differences)", "units with a gain",
+                         "gain if f is of the partner's own due weight"], rows)
+    rows = [[name, f(c["built_for_weight"], 1), f(c["predicted"], 1), f(c["median"], 2),
+             f"{c['closed_units']}/{c['units']}", f(c["on_median_curves"], 2)] for name, c in d["break_even"].items()]
+    crossing = table(["branch", "built for w", "predicted break-even", "median break-even", "closed in units",
+                      "on the median curves"], rows)
+    ch = d["choice"]
+    rows = [[name, f(r["k"], 2), "yes" if r["holds_floor"] else "no", f(r["worst"], 3), f(r["mean"], 3),
+             f(r["minimum_on_grid"], 3)] for name, r in ch["table"].items()]
+    choice = table(["machine", "k", "holds the floor", "worst Tu in the interval", "mean Tu in the interval",
+                    "lowest Tu on the whole grid"], rows)
+    return by_fraction, crossing, choice
+
+
+def _design_text(d):
+    by_fraction, crossing, choice = _design_tables(d)
+    ch = d["choice"]
+    return [f"Weight due to the control soloist (the peak weight of its pair, median over units): "
+            f"{f(d['due_weight']['median'], 2)}. A person who gives the soloist a share f of it uses the raw weight "
+            "f times that, with every machine.", by_fraction,
+            "Break-even: going up from the weight a branch is built for, the first weight at which its pair falls "
+            "below the pair with the control soloist. The model puts it at twice the built weight.", crossing,
+            f"The rule of choice for the people between {f(ch['interval_of_fractions'][0], 3)} and "
+            f"{f(ch['interval_of_fractions'][1], 0)} of the weight due (raw weights {f(ch['raw_weights'][0], 2)} to "
+            f"{f(ch['raw_weights'][1], 2)}): among the machines with k >= 1, the highest worst case. Chosen: "
+            f"**{ch['chosen']}**; the same rule on each unit alone makes the same choice in "
+            f"{ch['units_with_the_same_choice']} units of {ch['units']}.", choice]
+
+
+def design_old(d):
+    return "\n\n".join(["## E2 ter read as a design problem (exploratory)",
+                        "The files of E2 ter, read with `analysis/design.py --ter` (protocol § 12 bis). They hold one "
+                        "branch, built for weight 1: the criteria G1 to G4 need the four branches of E6 and are not "
+                        "judged here. Not a test.", *_design_text(d)])
+
+
+def design(d):
+    ch = d["choice"]
+    met = {True: "met", False: "not met", None: "not evaluable"}[ch["expectation"]["met"]]
+    return "\n\n".join(["## E6, the design reading: who a partner is worth it for",
+                        "Protocol § 12 bis (v2.2), recorded when the runs of E6 had just started and before any of "
+                        "their files was read. It takes no new measure: it reads `e6_trust.json`. The primary "
+                        "criteria are G1 and G2.", *_design_text(d),
+                        f"Expectation written before, not a criterion ({ch['expectation']['text']}): **{met}**.",
+                        criteria(d["criteria"])])
+
+
+SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
+            ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
+            ("chart_from_e2.json", chart_old), ("e8_chart.json", e8), ("e7_views.json", e7), ("e9_shape.json", e9))
