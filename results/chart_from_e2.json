@@ -1,0 +1,682 @@
+{
+ "experiment": "E2 bis and E2 ter, read with the theorem of the chart",
+ "protocol": "§ 14 (v2.1)",
+ "status": "a look at runs made before the theorem was written: not a test",
+ "how": "per unit: the slope of H's cue on the frame gives the bias B, the cue without it is h; d_h, d_m and r from h and the soloist; D1, D2 and the threshold from cognitive_resonance.chart",
+ "summary": {
+  "E2 bis": {
+   "units": 10,
+   "b": 0.75622155279427,
+   "r": 0.8069070903326233,
+   "d_h_clean": 2.8619412731257343,
+   "d_m": 3.0159944697224743,
+   "theorem_d1": 3.047502762063983,
+   "measured_d1": 3.0363698243676893,
+   "theorem_d2": 3.10593125501155,
+   "measured_d2_three_cues": 3.1021896117833623,
+   "strength": 1.0753493646003225,
+   "blind_threshold": 0.9815827907379222,
+   "gain_over_d1_percent": 1.4200217765914402,
+   "theorem_d_blind": 2.8619412731257343,
+   "measured_d_blind": 2.852328036498528,
+   "median_blind_over_theorem": 0.9997396587853462,
+   "units_where_soloist_wins": 10,
+   "units_where_theorem_says_soloist": 10
+  },
+  "E2 ter": {
+   "units": 10,
+   "b": 0.752503406423735,
+   "r": 0.7962296407080001,
+   "d_h_clean": 2.8630022845656695,
+   "d_m": 3.035291662526294,
+   "theorem_d1": 3.0664322325295177,
+   "measured_d1": 3.0554379114733514,
+   "theorem_d2": 3.125165057056873,
+   "measured_d2_three_cues": 3.111244823603086,
+   "strength": 1.0834246321244962,
+   "blind_threshold": 0.9789609945326487,
+   "gain_over_d1_percent": 1.4053948389901039,
+   "measured_d2_partner": 3.101280321357606,
+   "median_partner_over_theorem": 0.9802332374016425
+  }
+ },
+ "units": [
+  {
+   "task": "airplane-ship",
+   "seed": 0,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.4335102744203564,
+    "b": 0.625956109243368,
+    "d_h_clean": 2.8635445729054103,
+    "d_m": 3.023276824629094,
+    "r": 0.8059914057401116,
+    "d1": 3.053978504754802,
+    "d2": 3.108072810250582,
+    "d_blind": 2.8635445729054103,
+    "private": 0.51991383547957,
+    "gain_squared": 0.3333318863145733,
+    "blind_band": [
+     0.014905418226533561,
+     0.9765006857367233
+    ],
+    "strength": 1.0557813044836302,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.0534399253062237,
+    "pair_with_M0": 3.0534399253062237,
+    "pair_with_Mpair": 2.8776932799460475,
+    "pair_with_Mframe": 2.8592761878568673,
+    "d2_three_cues": 3.102371623161318
+   }
+  },
+  {
+   "task": "airplane-ship",
+   "seed": 1,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.4460828229286307,
+    "b": 0.6981819186111434,
+    "d_h_clean": 2.8719080809597894,
+    "d_m": 3.0087121148158547,
+    "r": 0.8037947681526317,
+    "d1": 3.041027019373164,
+    "d2": 3.103789699772518,
+    "d_blind": 2.8719080809597894,
+    "private": 0.5811619105742895,
+    "gain_squared": 0.3856651678563478,
+    "blind_band": [
+     0.0,
+     0.9780201982367493
+    ],
+    "strength": 1.0476352411008731,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.0192997234291545,
+    "pair_with_M0": 3.0192997234291545,
+    "pair_with_Mpair": 2.830935129403123,
+    "pair_with_Mframe": 2.8653432836503794,
+    "d2_three_cues": 3.1020076004054067
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 0,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.4569455547772073,
+    "b": 0.7347009795967079,
+    "d_h_clean": 2.9156791519211986,
+    "d_m": 3.1293864781411522,
+    "r": 0.8275679551958454,
+    "d1": 3.1455092651191574,
+    "d2": 3.182780977567944,
+    "d_blind": 2.9156791519211986,
+    "private": 0.3370350215956689,
+    "gain_squared": 0.23586621421789397,
+    "blind_band": [
+     0.0,
+     0.9833464824794804
+    ],
+    "strength": 1.0732958995433834,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.1229324663278657,
+    "pair_with_M0": 3.1229324663278657,
+    "pair_with_Mpair": 2.9855957414276615,
+    "pair_with_Mframe": 2.923087558726958,
+    "d2_three_cues": 3.155550099246165
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 1,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.4154745846336071,
+    "b": 0.528083669894424,
+    "d_h_clean": 2.97462990407722,
+    "d_m": 3.1058442633161714,
+    "r": 0.8345629922630167,
+    "d1": 3.1340553854393773,
+    "d2": 3.1825453628603264,
+    "d_blind": 2.97462990407722,
+    "private": 0.48232639868979954,
+    "gain_squared": 0.30629182766220553,
+    "blind_band": [
+     0.11248102658599636,
+     0.9798190989963639
+    ],
+    "strength": 1.044111154486513,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.1127173018864407,
+    "pair_with_M0": 3.1127173018864407,
+    "pair_with_Mpair": 3.055689553656861,
+    "pair_with_Mframe": 2.9790227025544356,
+    "d2_three_cues": 3.164381368738059
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 0,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.4867431971594027,
+    "b": 0.9403748742886755,
+    "d_h_clean": 2.6785235755598245,
+    "d_m": 2.844025472359084,
+    "r": 0.8299896350912297,
+    "d1": 2.8581969298129697,
+    "d2": 2.900610332210898,
+    "d_blind": 2.6785235755598245,
+    "private": 0.32505941190130305,
+    "gain_squared": 0.24425060973632717,
+    "blind_band": [
+     0.0,
+     0.9868334416037883
+    ],
+    "strength": 1.0617884786639105,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.857928214557454,
+    "pair_with_M0": 2.857928214557454,
+    "pair_with_Mpair": 2.750247126012142,
+    "pair_with_Mframe": 2.68883579718398,
+    "d2_three_cues": 2.8813421697150754
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 1,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.4862335530424713,
+    "b": 0.8966866711394063,
+    "d_h_clean": 2.670554837195192,
+    "d_m": 2.891320901186427,
+    "r": 0.8132161725664903,
+    "d1": 2.9055563034885323,
+    "d2": 2.942913429645046,
+    "d_blind": 2.670554837195192,
+    "private": 0.30100290074767877,
+    "gain_squared": 0.21848202164322592,
+    "blind_band": [
+     0.0,
+     0.9836662759621388
+    ],
+    "strength": 1.0826667406025257,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.911682646971662,
+    "pair_with_M0": 2.911682646971662,
+    "pair_with_Mpair": 2.7790418132912196,
+    "pair_with_Mframe": 2.6712016192297887,
+    "d2_three_cues": 2.925049716340198
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 0,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.5723091081632647,
+    "b": 1.8447217674609035,
+    "d_h_clean": 1.7612777117427187,
+    "d_m": 2.1055092977866905,
+    "r": 0.774761627505419,
+    "d1": 2.107296889411905,
+    "d2": 2.115526614395615,
+    "d_blind": 1.7612777117427187,
+    "private": 0.04228345314997179,
+    "gain_squared": 0.034752676091084754,
+    "blind_band": [
+     0.0,
+     0.9876406150994824
+    ],
+    "strength": 1.195444241273778,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.11107543708502,
+    "pair_with_M0": 2.11107543708502,
+    "pair_with_Mpair": 1.7661693615295464,
+    "pair_with_Mframe": 1.759934081299589,
+    "d2_three_cues": 2.116583935174736
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 1,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.5746154793936332,
+    "b": 2.0347515894182333,
+    "d_h_clean": 1.7099112943970307,
+    "d_m": 2.1031648288729285,
+    "r": 0.8030776238857715,
+    "d1": 2.1032083096779455,
+    "d2": 2.1034574644838577,
+    "d_blind": 1.7099112943970307,
+    "private": 0.0012310074847644824,
+    "gain_squared": 0.001048110994500105,
+    "blind_band": [
+     0.0,
+     0.9912598687872779
+    ],
+    "strength": 1.2299847575511638,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.1021508787473016,
+    "pair_with_M0": 2.1021508787473016,
+    "pair_with_Mpair": 1.7647787765603993,
+    "pair_with_Mframe": 1.7066008119779819,
+    "d2_three_cues": 2.09717601493328
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 0,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.47356738582892244,
+    "b": 0.7728882319522364,
+    "d_h_clean": 2.8603379733460588,
+    "d_m": 3.1003853270100685,
+    "r": 0.7961208239369466,
+    "d1": 3.122071433780216,
+    "d2": 3.167355009608909,
+    "d_blind": 2.8603379733460588,
+    "private": 0.4197485809553269,
+    "gain_squared": 0.28480771926820236,
+    "blind_band": [
+     0.0,
+     0.9782947520209742
+    ],
+    "strength": 1.0839227237833016,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.1085911021562653,
+    "pair_with_M0": 3.1085911021562653,
+    "pair_with_Mpair": 2.91962509387524,
+    "pair_with_Mframe": 2.845379885140189,
+    "d2_three_cues": 3.155227042055772
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 1,
+   "experiment": "E2 bis",
+   "soloist": "M0",
+   "theorem": {
+    "slope_of_h_on_a": 0.46736136797530375,
+    "b": 0.7395548736363036,
+    "d_h_clean": 2.8873476662321047,
+    "d_m": 3.1108365458027594,
+    "r": 0.807822774925135,
+    "d1": 3.13148904883178,
+    "d2": 3.1750045295917784,
+    "d_blind": 2.8873476662321047,
+    "private": 0.40334974822626796,
+    "gain_squared": 0.27443009997494505,
+    "blind_band": [
+     0.0,
+     0.9798000462750687
+    ],
+    "strength": 1.0774028296572613,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.128763898324086,
+    "pair_with_M0": 3.128763898324086,
+    "pair_with_Mpair": 2.924129198442725,
+    "pair_with_Mframe": 2.8898633411333403,
+    "d2_three_cues": 3.151052259282146
+   }
+  },
+  {
+   "task": "airplane-ship",
+   "seed": 0,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.43475970245925816,
+    "b": 0.6276953283953917,
+    "d_h_clean": 2.853978318174297,
+    "d_m": 3.0375611969259033,
+    "r": 0.7967963372162964,
+    "d1": 3.0685829614392524,
+    "d2": 3.121194022307602,
+    "d_blind": 2.853978318174297,
+    "private": 0.5150740998187796,
+    "gain_squared": 0.32565073365341474,
+    "blind_band": [
+     0.004532217804870845,
+     0.9745162850888385
+    ],
+    "strength": 1.0643252534830205,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.0677750072497467,
+    "pair_with_M0": 3.0370874362053124,
+    "pair_with_M0plus": 3.0677750072497467,
+    "pair_with_Mdue": 3.07457003397937,
+    "pair_with_Mramo": 3.096710176736167,
+    "d2_three_cues": 3.1058047144426784
+   }
+  },
+  {
+   "task": "airplane-ship",
+   "seed": 1,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.4532037668557757,
+    "b": 0.7458144380605275,
+    "d_h_clean": 2.8957818982224706,
+    "d_m": 3.0330221281266843,
+    "r": 0.8038048403222539,
+    "d1": 3.064281503619783,
+    "d2": 3.129136091806144,
+    "d_blind": 2.8957818982224706,
+    "private": 0.5922694513377091,
+    "gain_squared": 0.4016715476175127,
+    "blind_band": [
+     0.0,
+     0.9791667369285967
+    ],
+    "strength": 1.0473931513932235,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.0431008156969557,
+    "pair_with_M0": 3.010436697154197,
+    "pair_with_M0plus": 3.0431008156969557,
+    "pair_with_Mdue": 3.0528518188983282,
+    "pair_with_Mramo": 3.105850465979045,
+    "d2_three_cues": 3.1295930434525454
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 0,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.4526337895937285,
+    "b": 0.6953670401365151,
+    "d_h_clean": 2.9106550455945297,
+    "d_m": 3.089596329801216,
+    "r": 0.8227781737324756,
+    "d1": 3.1111120460766832,
+    "d2": 3.1569292247052148,
+    "d_blind": 2.9106550455945297,
+    "private": 0.42059664867672364,
+    "gain_squared": 0.2871839665544196,
+    "blind_band": [
+     0.0,
+     0.9816770750826137
+    ],
+    "strength": 1.061478011445405,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.069306441803167,
+    "pair_with_M0": 3.079227901649949,
+    "pair_with_M0plus": 3.069306441803167,
+    "pair_with_Mdue": 3.0586855615962865,
+    "pair_with_Mramo": 3.1180184053239692,
+    "d2_three_cues": 3.1166849327634933
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 1,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.4196672165512724,
+    "b": 0.5324389388054128,
+    "d_h_clean": 2.9571644811057456,
+    "d_m": 3.147211052000381,
+    "r": 0.821972005866074,
+    "d1": 3.172527314779586,
+    "d2": 3.2136515116220514,
+    "d_blind": 2.9571644811057456,
+    "private": 0.4226186323173506,
+    "gain_squared": 0.262626475128126,
+    "blind_band": [
+     0.09563220333631374,
+     0.9771309391962409
+    ],
+    "strength": 1.0642664863956344,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.1475845406628187,
+    "pair_with_M0": 3.1257546729271564,
+    "pair_with_M0plus": 3.1475845406628187,
+    "pair_with_Mdue": 3.161069521549396,
+    "pair_with_Mramo": 3.1654085959526914,
+    "d2_three_cues": 3.192393544858436
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 0,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.48796728864051464,
+    "b": 0.9312666452722572,
+    "d_h_clean": 2.6722188867462093,
+    "d_m": 2.9147012687027436,
+    "r": 0.7796853327200456,
+    "d1": 2.9353344113334794,
+    "d2": 2.983768974345718,
+    "d_blind": 2.6722188867462093,
+    "private": 0.40739380649071866,
+    "gain_squared": 0.2866891859096368,
+    "blind_band": [
+     0.0,
+     0.9785390577716594
+    ],
+    "strength": 1.0907419609820173,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.930764270363425,
+    "pair_with_M0": 2.8891455133518025,
+    "pair_with_M0plus": 2.930764270363425,
+    "pair_with_Mdue": 2.9562349075813774,
+    "pair_with_Mramo": 2.908201455021538,
+    "d2_three_cues": 2.963443060377701
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 1,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.48860098618754394,
+    "b": 0.9033798304746845,
+    "d_h_clean": 2.6760116256275572,
+    "d_m": 2.9697102544865546,
+    "r": 0.7956629441997037,
+    "d1": 2.98267705906111,
+    "d2": 3.014364380980721,
+    "d_blind": 2.6760116256275572,
+    "private": 0.2672136257226906,
+    "gain_squared": 0.19003018267585223,
+    "blind_band": [
+     0.0,
+     0.9808378237092509
+    ],
+    "strength": 1.109752374035416,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.979464893971265,
+    "pair_with_M0": 2.9273544493855503,
+    "pair_with_M0plus": 2.979464893971265,
+    "pair_with_Mdue": 3.0089038323531474,
+    "pair_with_Mramo": 2.930352828111706,
+    "d2_three_cues": 2.996596249502879
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 0,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.5744162299457822,
+    "b": 1.8854556825727438,
+    "d_h_clean": 1.7577958993177998,
+    "d_m": 2.101692465966246,
+    "r": 0.7698252421038186,
+    "d1": 2.1037211172157115,
+    "d2": 2.113085102251855,
+    "d_blind": 1.7577958993177998,
+    "private": 0.04801742785945392,
+    "gain_squared": 0.0394861103394118,
+    "blind_band": [
+     0.0,
+     0.987370030494635
+    ],
+    "strength": 1.1956407833138718,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.1063623255332855,
+    "pair_with_M0": 2.0806860994766128,
+    "pair_with_M0plus": 2.1063623255332855,
+    "pair_with_Mdue": 2.111926860432289,
+    "pair_with_Mramo": 2.0590930788801027,
+    "d2_three_cues": 2.1130366656195654
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 1,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.5724477386597412,
+    "b": 2.003093208506171,
+    "d_h_clean": 1.699936710712538,
+    "d_m": 2.097706823801656,
+    "r": 0.767551811152835,
+    "d1": 2.0985035950633506,
+    "d2": 2.102383782627673,
+    "d_blind": 1.699936710712538,
+    "private": 0.01964365083181085,
+    "gain_squared": 0.016300230962035842,
+    "blind_band": [
+     0.0,
+     0.9878154778232767
+    ],
+    "strength": 1.2339911307182667,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 2.0973884155881297,
+    "pair_with_M0": 2.0576037198701163,
+    "pair_with_M0plus": 2.0973884155881297,
+    "pair_with_Mdue": 2.1047401261244376,
+    "pair_with_Mramo": 2.0216493773380835,
+    "d2_three_cues": 2.098843716039762
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 0,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.47470920958705914,
+    "b": 0.7591923747869426,
+    "d_h_clean": 2.8720262509570422,
+    "d_m": 3.168805510518213,
+    "r": 0.7758002481214743,
+    "d1": 3.1920504577707582,
+    "d2": 3.235912952426183,
+    "d_blind": 2.8720262509570422,
+    "private": 0.42980427218893846,
+    "gain_squared": 0.28194651072502713,
+    "blind_band": [
+     0.0,
+     0.973830212844114
+    ],
+    "strength": 1.1033344522746877,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.188981499884571,
+    "pair_with_M0": 3.160082532500546,
+    "pair_with_M0plus": 3.188981499884571,
+    "pair_with_Mdue": 3.1940922337159567,
+    "pair_with_Mramo": 3.1619804495271815,
+    "d2_three_cues": 3.2169392755343544
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 1,
+   "experiment": "E2 ter",
+   "soloist": "M0plus",
+   "theorem": {
+    "slope_of_h_on_a": 0.46234991726376873,
+    "b": 0.7163405907160983,
+    "d_h_clean": 2.905049703593545,
+    "d_m": 3.1261452023905747,
+    "r": 0.8052224373758893,
+    "d1": 3.1485883135220636,
+    "d2": 3.19382323471635,
+    "d_blind": 2.905049703593545,
+    "private": 0.42772302818440205,
+    "gain_squared": 0.2868984865662982,
+    "blind_band": [
+     0.0,
+     0.9787552521367009
+    ],
+    "strength": 1.076107303266975,
+    "blind_beats_soloist": false
+   },
+   "measured": {
+    "d1": 3.140344298005994,
+    "pair_with_M0": 3.119620125473463,
+    "pair_with_M0plus": 3.140344298005994,
+    "pair_with_Mdue": 3.1573415840741275,
+    "pair_with_Mramo": 3.1405310017042525,
+    "d2_three_cues": 3.163660810834071
+   }
+  }
+ ],
+ "minutes": 0.03,
+ "environment": {
+  "python": "3.13.14",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "code_commit": "70f2b7ccbaa15314efbc3ff2570cc15e58916c5a"
+ }
+}

@@ -241,3 +241,61 @@ def read_manifest(folder) -> dict | None:
     if not p.is_file():
         return None
     return json.loads(p.read_text())
+
+
+SHAPES = ("gauss", "two", "uniform", "t3")
+SHAPE_KEYS = ("y", "image", "a", "z_plus", "z_minus")
+CHART_MACHINES = ("M", "Mramo", "Mblind")
+CHART_VIEWS = (100, 50, 25)
+CHART_KEYS = REPHASE_BIS_KEYS + ("z_H0",)
+CHART_RE = re.compile(r"^(?P<task>.+)_v(?P<v>\d+)_s(?P<seed>\d+)\.npz$")
+
+
+def read_shape(path) -> dict:
+    """shape/{task}_mu{mu}_s{seed}.npz (§ 15): a, z_plus and z_minus have one row per shape of the test frame."""
+    path = Path(path)
+    m = BENCH_RE.match(path.name)
+    if not m:
+        raise ContractError(f"{path.name}: name does not match {{task}}_mu{{mu}}_s{{seed}}.npz")
+    d = _load(path)
+    _need(d, SHAPE_KEYS + ("shapes",) + tuple("val_" + k for k in SHAPE_KEYS), path)
+    names = tuple(str(x) for x in d["shapes"])
+    if names != SHAPES:
+        raise ContractError(f"{path.name}: shapes must be {list(SHAPES)}, got {list(names)}")
+    for prefix in ("", "val_"):
+        keys = tuple(prefix + k for k in SHAPE_KEYS)
+        rows = {prefix + k: 1 for k in ("a", "z_plus", "z_minus")}
+        for k in rows:
+            if d[k].ndim != 2 or d[k].shape[0] != len(SHAPES):
+                raise ContractError(f"{path.name}: {k} must be (number of shapes, N)")
+        _same_length(d, keys, path, axis_of=rows)
+        _binary(d[prefix + "y"], path)
+        _finite(d, keys, path)
+    d.update(task=m["task"], mu=_mu(m["mu"]), seed=int(m["seed"]), file=path.name, shape_names=list(names))
+    return d
+
+
+def read_chart(path) -> dict:
+    """chart/{task}_v{v}_s{seed}.npz (§ 14): as rephase_bis, with z_H0 (the judge without the bias), the machines
+    M, Mramo, Mblind and v, the share of the inside of the image that the machine sees (100, 50 or 25)."""
+    path = Path(path)
+    m = CHART_RE.match(path.name)
+    if not m:
+        raise ContractError(f"{path.name}: name does not match {{task}}_v{{v}}_s{{seed}}.npz")
+    d = _load(path)
+    _need(d, CHART_KEYS + ("machines", "v") + tuple("val_" + k for k in CHART_KEYS), path)
+    names = [str(x) for x in d["machines"]]
+    if sorted(names) != sorted(CHART_MACHINES):
+        raise ContractError(f"{path.name}: machines must be {list(CHART_MACHINES)}, got {names}")
+    v = int(m["v"])
+    if v not in CHART_VIEWS or int(d["v"]) != v:
+        raise ContractError(f"{path.name}: v must be one of {list(CHART_VIEWS)} and match the name")
+    for prefix in ("", "val_"):
+        keys = tuple(prefix + k for k in CHART_KEYS)
+        if d[prefix + "z_M"].ndim != 2 or d[prefix + "z_M"].shape[0] != len(names):
+            raise ContractError(f"{path.name}: {prefix}z_M must be (number of machines, N)")
+        _same_length(d, keys, path, axis_of={prefix + "z_M": 1})
+        _binary(d[prefix + "y"], path)
+        _finite(d, keys, path)
+    d.update(task=m["task"], seed=int(m["seed"]), v=v, file=path.name, machine_names=names)
+    return d

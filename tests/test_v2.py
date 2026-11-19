@@ -255,3 +255,129 @@ def test_the_identity_does_not_need_gaussian_cues():
         predicted = (1 + wu * identity.snr(zm, y) / identity.snr(zh, y)) / math.sqrt(1 + wu * wu + 2 * rho * wu)
         assert identity.snr(zh + w * zm, y) / identity.snr(zh, y) == pytest.approx(predicted, rel=1e-10)
     assert abs(identity.excess_kurtosis(zh + zm, y)) > 1.0                         # and these cues are far from Gaussian
+
+
+# --- E8: the bench of the chart and its theorem -----------------------------------------------------------
+
+def test_the_theorem_of_the_chart_against_the_matrices():
+    from cognitive_resonance import chart as theorem
+    gen = np.random.default_rng(7)
+    for _ in range(2000):
+        dh, dm = gen.uniform(0.2, 4, 2)
+        r, b = gen.uniform(-0.95, 0.95), gen.uniform(0, 5)
+        mean = np.array([dh, dm])
+        d1 = math.sqrt(mean @ np.linalg.solve(np.array([[1 + b, r], [r, 1]]), mean))
+        d2 = math.sqrt(mean @ np.linalg.solve(np.array([[1, r], [r, 1]]), mean))
+        assert theorem.with_soloist(dh, dm, r, b) == pytest.approx(d1, rel=1e-10)
+        assert theorem.with_partner(dh, dm, r) == pytest.approx(d2, rel=1e-10)
+        assert theorem.gain(dh, dm, r, b) == pytest.approx(d2 ** 2 - d1 ** 2, abs=1e-9)
+        assert theorem.private(dh, dm, r) == pytest.approx(d2 ** 2 - dm ** 2, abs=1e-9)
+        lo, hi = theorem.blind_band(r, b)
+        if abs(dh - d1) > 1e-9:                         # the blind corrector wins exactly inside the band
+            assert (dh > d1) == (lo < dm / dh < hi)
+
+
+def test_the_private_part_vanishes_at_the_useful_angle():
+    from cognitive_resonance import chart as theorem
+    assert theorem.private(1.0, 2.0, 0.5) == pytest.approx(0.0)           # r = d_h / d_m
+    assert theorem.gain(1.0, 2.0, 0.5, 3.0) == pytest.approx(0.0)
+    assert theorem.blind_band(0.9, 0.1)[0] > 0                            # r^2 > B: a lower threshold appears
+    assert theorem.blind_band(0.5, 1.0)[0] == 0.0
+
+
+def test_chart_reader(tmp_path):
+    synthetic.write_chart(tmp_path, tasks=("cat_dog",), seeds=(2,), n_images=40, n_val=20)
+    d = raw.read_chart(tmp_path / "cat_dog_v25_s2.npz")
+    assert d["v"] == 25 and d["machine_names"] == list(raw.CHART_MACHINES) and d["z_H0"].shape == (200,)
+    (tmp_path / "cat_dog_v50_s2.npz").rename(tmp_path / "cat_dog_v25_s9.npz")
+    with pytest.raises(raw.ContractError, match="v must"):
+        raw.read_chart(tmp_path / "cat_dog_v25_s9.npz")
+
+
+@pytest.fixture(scope="module")
+def chart_units(tmp_path_factory):
+    import chart
+    folder = tmp_path_factory.mktemp("chart")
+    synthetic.write_chart(folder, tasks=("cat_dog", "deer_horse", "bird_frog"), seeds=(2, 3), n_images=500, n_val=500)
+    return [chart.unit((f, 40)) for f in sorted(folder.glob("*.npz"))]
+
+
+def test_chart_where_the_judge_sees_more_than_the_machine(chart_units):
+    import chart
+    c = chart.criteria(chart_units)
+    assert set(c) == {"K1", "K2", "K3", "K4", "K5", "K6", "K7"}
+    assert all(c[k]["outcome"] == "pass" for k in ("K1", "K2", "K3", "K4", "K5", "K7"))
+    g = c["K3"]["median_gain_by_v"]
+    assert g["25"] > g["50"] > g["100"]
+    u = next(u for u in chart_units if u["v"] == 25 and u["task"] == "cat_dog")
+    d = 1.8                                             # the toy's cat_dog: the clean cue has noise variance d^2 + 0.16
+    assert u["theorem"]["b"] == pytest.approx(1.1 ** 2 * 2 / (d ** 2 + 0.16), rel=0.1)
+    assert u["theorem"]["slope_of_h_on_a"] > 0
+    assert u["measured"]["d2_three_cues"] >= u["measured"]["d1"]
+    rows = chart.summary(chart_units)
+    assert [r["v"] for r in rows] == [100, 50, 25]
+
+
+def test_chart_fails_when_the_machine_sees_everything(tmp_path):
+    import chart
+    synthetic.write_chart(tmp_path, tasks=("cat_dog", "deer_horse", "bird_frog"), seeds=(2, 3), n_images=500, n_val=500,
+                          flat=True)
+    units = [chart.unit((f, 40)) for f in sorted(tmp_path.glob("*.npz"))]
+    c = chart.criteria(units)
+    assert c["K2"]["outcome"] == "fail" and c["K3"]["outcome"] == "fail" and c["K5"]["outcome"] == "fail"
+
+
+def test_chart_reads_the_files_of_e2(tmp_path):
+    import chart
+    synthetic.write_rephase_ter(tmp_path / "rephase_ter", tasks=("cat_dog",), seeds=(0, 1), n_images=300, n_val=300)
+    synthetic.write_rephase_bis(tmp_path / "rephase_bis", tasks=("cat_dog",), seeds=(0, 1), n_images=300, n_val=300)
+    units = [chart.old_unit((f, "bis")) for f in sorted((tmp_path / "rephase_bis").glob("*.npz"))]
+    units += [chart.old_unit((f, "ter")) for f in sorted((tmp_path / "rephase_ter").glob("*.npz"))]
+    s = chart.old_summary(units)
+    assert s["E2 bis"]["units"] == 2 and s["E2 ter"]["units"] == 2
+    assert s["E2 ter"]["theorem_d2"] >= s["E2 ter"]["theorem_d1"]
+
+
+# --- E9: the shape of the noise -----------------------------------------------------------------------------
+
+def test_shape_reader(tmp_path):
+    synthetic.write_shape(tmp_path, tasks=("cat_dog",), mus=(2.0,), seeds=(2,), n_images=40, n_val=20)
+    d = raw.read_shape(tmp_path / "cat_dog_mu2_s2.npz")
+    assert d["shape_names"] == list(raw.SHAPES) and d["z_plus"].shape == (4, 200) and d["mu"] == 2.0
+    with np.load(tmp_path / "cat_dog_mu2_s2.npz") as f:
+        arrays = {k: f[k] for k in f.files}
+    arrays["shapes"] = np.array(["gauss", "two", "t3", "uniform"])
+    np.savez(tmp_path / "cat_dog_mu2_s2.npz", **arrays)
+    with pytest.raises(raw.ContractError, match="shapes"):
+        raw.read_shape(tmp_path / "cat_dog_mu2_s2.npz")
+
+
+def test_the_frames_of_the_four_shapes_have_the_same_variance():
+    gen = np.random.default_rng(5)
+    for shape in synthetic.SHAPES:
+        a = synthetic._unit_noise(gen, shape, 400_000)
+        assert abs(a.mean()) < 0.02
+        assert a.var() == pytest.approx(1.0, rel=0.05 if shape != "t3" else 0.5)     # the t has heavy tails
+    assert set(np.unique(synthetic._unit_noise(gen, "two", 100))) == {-1.0, 1.0}
+
+
+def test_shape_where_the_formula_breaks(tmp_path):
+    import shape
+    synthetic.write_shape(tmp_path, tasks=("cat_dog", "deer_horse", "bird_frog"), seeds=(2, 3), n_images=1500, n_val=1000)
+    units = [shape.unit(f) for f in sorted(tmp_path.glob("*.npz"))]
+    c = shape.criteria(units)
+    assert set(c) == {"S1", "S2", "S3", "S4", "S5"}
+    assert c["S1"]["outcome"] == "pass" and c["S2"]["outcome"] == "pass" and c["S5"]["outcome"] == "pass"
+    assert max(s["snr_identity_relative_error"] for u in units for s in u["shapes"].values()) < 1e-9
+    rows = shape.by_mu(units)
+    two = next(r for r in rows if r["mu"] == 2.0 and r["shape"] == "two")
+    assert two["d_a_over_snr_single"] > 1.1 and two["d_a_over_snr_pair"] == pytest.approx(1.0, abs=0.05)
+
+
+def test_shape_changes_nothing_when_every_frame_is_gaussian(tmp_path):
+    import shape
+    synthetic.write_shape(tmp_path, tasks=("cat_dog", "deer_horse", "bird_frog"), seeds=(2, 3), n_images=1500, n_val=1000,
+                          all_gauss=True)
+    units = [shape.unit(f) for f in sorted(tmp_path.glob("*.npz"))]
+    c = shape.criteria(units)
+    assert c["S1"]["outcome"] == "pass" and c["S2"]["outcome"] == "fail" and c["S3"]["outcome"] == "fail"

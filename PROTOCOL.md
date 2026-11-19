@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 2.0, 19 November 2026. Written and recorded in the repository **before any run**:
+Version 2.1, 19 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -17,7 +17,7 @@ turings,
     Tu_app = sqrt(1 + k^2 - 2 k cos(phi)) / sin(phi),      k = dM / dH,
 
 grows without bound as `phi` goes toward 180 degrees: errors in antiphase cancel out. We
-call this condition **cognitive resonance**, and there are eight questions.
+call this condition **cognitive resonance**, and there are ten questions.
 
 - **Q1.** Does the promise of the formula beyond 90 degrees come true on real networks,
   with real images, or does it stay in the Gaussian model?
@@ -34,6 +34,11 @@ call this condition **cognitive resonance**, and there are eight questions.
   2.0: see § 12.)
 - **Q8.** If the person sees something the machine does not see, does the built partner
   beat the best soloist? (Added in version 2.0: see § 13.)
+- **Q9.** Can the value of the built partner be predicted before building it, from what the
+  judge knows and the machine does not? And when does a machine that knows only the judge
+  beat a machine that knows the task? (Added in version 2.1: see § 14.)
+- **Q10.** How much of the agreement between measure and formula seen in E1 depends on the
+  shape of the noise we injected? (Added in version 2.1: see § 15.)
 
 ## 2. The model
 
@@ -409,6 +414,11 @@ Hypotheses and criteria:
   knows something of its own: as a design goal, at free trust, antiphase is of no use.
 - If V4 does not pass, the reading by which the machine trained on the sum learns what the
   person lacks is wrong.
+- If K2 does not pass, the explanation given in hindsight in the first version of the
+  article (the judge of the bench had nothing left to give) is wrong or not enough.
+- If K4 does not pass, the additive model of the bias does not describe the networks.
+- If S2 and S3 do not pass, the agreement of E1 does not depend on the shape of the
+  injected noise, and the objection that E1 measures Gaussianity falls.
 
 ## 10. Order, times, cleanup
 
@@ -417,9 +427,9 @@ hours of computing in all. If the timing pilot says that E1 exceeds 60 minutes w
 down to two seeds, then to the first three tasks, and we write it in the Deviations. On
 the server we work in a single folder, which is deleted at the end.
 
-E6 and E7 (version 2.0): an estimate of 35 to 45 minutes on the same GPU, in a sub-folder
-of their own, deleted at the end. If time is not enough we go down to two seeds (2 and 3)
-and we write it in the Deviations.
+E6 to E9 (version 2.1): five seeds (2 to 6) and an estimate of two hours on the same GPU,
+in a sub-folder of their own, deleted at the end. Order: E6, E8, E7, E9. If time is not
+enough we go down to three seeds (2, 3 and 4), and we write it in the Deviations.
 
 ## 11. Raw data: the contract
 
@@ -438,6 +448,10 @@ afterwards, from these files. One `.npz` file per unit, in `results/raw/`:
   `built_for_weight`, the weights the four branches are built for.
 - `views/{task}_o{overlap}_s{seed}.npz` (E7): like `rephase_bis/`, with `machines` =
   `M0, Mramo, Mpair` and `overlap` (100, 50 or 0).
+- `chart/{task}_v{v}_s{seed}.npz` (E8): like `rephase_bis/`, with `z_H0`, `machines` =
+  `M, Mramo, Mblind` and `v` (100, 50 or 25).
+- `shape/{task}_mu{mu}_s{seed}.npz` (E9): `a`, `z_plus`, `z_minus` of shape (4, N), one row
+  per shape of the test frame, with `shapes`.
 - Each folder has a `manifest.json`: hyperparameters, times, library versions, control
   accuracies.
 
@@ -464,7 +478,7 @@ weights, not rescaled afterwards.
 a pair works, which in § 2 is a choice of whoever uses the machine, would become a property
 of the machine.
 
-- **H, `M_0`, `M_0+`, `M_due`** as in E2 ter, with seeds 2, 3 and 4. E1 to E5 used 0 and 1.
+- **H, `M_0`, `M_0+`, `M_due`** as in E2 ter, with seeds 2 to 6. E1 to E5 used 0 and 1.
 - **`M_ramo(w)`**, for `w` = 0.5, 1, 2 and 4. `M_0` frozen plus a branch that sees only the
   frame, trained with the pilot's hyperparameters on the cross-entropy of
   `z_H + w (z_M0 + z_ramo)`, with the log-odds as the networks give them. The four branches
@@ -537,7 +551,7 @@ something the machine does not see.
   cross-entropy of `z_H + z_M0 + z_ramo`.
 - **`M_pair`**: a new network on the machine's view, trained from scratch on the
   cross-entropy of `z_H + z_M` (the recipe of E2 bis), with the same seed as `M_0`.
-- Seeds 2, 3 and 4; `M_0`, the branch and `M_pair` have the same seeds at the three
+- Seeds 2 to 6; `M_0`, the branch and `M_pair` have the same seeds at the three
   overlaps. The test frames are the same at the three overlaps.
 - **Measures** of § 3 and of E2 bis, plus the pair at face value (§ 12). The differences
   are from the `M_0` of the same overlap, paired.
@@ -567,6 +581,128 @@ between 0%, 50% and 100% the overlap is not the only thing that changes.
 
 Raw data: `views/{task}_o{overlap}_s{seed}.npz`, like `rephase_bis/`, with `machines` =
 `M0, Mramo, Mpair` and `overlap`; `manifest.json`.
+
+## 14. E8. The bench of the chart
+
+Added with version 2.1, on 19 November 2026, before any run of E6 to E9. The design, the
+theorem and the expectations take up those proposed by a review of the article; here they
+are rewritten on the networks and the estimators of this protocol.
+
+**The theorem.** The judge's cue is `h + beta a`: a clean cue `h`, with sensitivity `d_h`
+and noise of unit variance, plus a bias that does not depend on the class, of variance `B`.
+The machine's cue `m` has sensitivity `d_m`, noise of unit variance and correlation `r` with
+the noise of `h`. For the best linear combination, with weights of any sign:
+
+    D1^2 = (d_h^2 - 2 r d_h d_m + (1 + B) d_m^2) / (1 + B - r^2)      the judge with the soloist m
+    D2^2 = (d_h^2 - 2 r d_h d_m + d_m^2) / (1 - r^2)                  the judge with m and whoever reads a
+    D2^2 - D1^2 = B / (1 - r^2 + B) * P,     P = (d_h - r d_m)^2 / (1 - r^2)
+
+`P = D2^2 - d_m^2` is what the clean judge knows and the machine does not, and it vanishes
+at the useful angle, `r = d_h / d_m`. The judge with a blind corrector, which reads only
+`a`, is worth `d_h`, and beats the pair with the soloist when `d_m / d_h` lies between
+`(r - sqrt(B (1 + B - r^2))) / (1 + B)` and `(r + sqrt(B (1 + B - r^2))) / (1 + B)`. The
+threshold that matters is the second; the first is above zero only if `r^2 > B`. The code is
+in `src/cognitive_resonance/chart.py`, checked against the direct inversion of the matrices.
+
+**On the old data.** Applied unit by unit to the files of E2 bis and E2 ter
+(`analysis/chart.py --e2`, `results/chart_from_e2.json`), the theorem gives back the
+measured pairs: with the soloist 3.05 and 3.07 (measured 3.04 and 3.06), with the blind
+machine 2.86 (measured 2.85), with the soloist plus the branch 3.13 (measured 3.10). It also
+says why T3 did not pass: on that bench the built partner could give 1.4% more. It is a
+reading of old data, not a test.
+
+**The bench.** In E1 to E6 the machine sees everything the judge sees, and `P` is almost
+zero. Here the judge sees the whole image; the machine sees the frame and only a part of the
+inside: all of it (`v = 100`, the bench of E2 ter), the left half (`v = 50`, columns 2 to
+15) or the left quarter (`v = 25`, columns 2 to 8).
+
+- **H**: a "plus" network, `mu = 1`, half A, whole image. **H0**: the same network without
+  the bias (same seed, frame independent of the class).
+- **`M_blind`**: sees only the frame, trained on the cross-entropy of `z_H + z_blind` (the
+  `M_frame` of E2 bis). It is the same at the three values of `v`.
+- For every `v`: **`M`**, the soloist on its part of the image; **`M_ramo`**, `M` frozen plus
+  a branch that sees only the frame, trained on the cross-entropy of `z_H + z_M + z_ramo`.
+- Seeds 2 to 6, five tasks. `M` and the branch have the same seeds at the three values of `v`.
+- **The quantities of the theorem, measured unit by unit.** The slope of H's cue on the
+  frame, within the class, gives the bias; what is left of the cue without the bias is `h`.
+  From `h` and `M`: `d_h`, `d_m` (with `d_a`), `r` and `B`.
+- **The best linear use of the three cues** `(z_H, z_M, a)`: the weights are estimated on
+  half of the images and the sensitivity is read on the other half, then they are swapped.
+  It is `D2` measured without going through a network.
+
+Expectations. Δ is the sensitivity of the tuned pair `(H, M_ramo)` minus that of `(H, M)`,
+paired. The primary ones are K2 and K4.
+
+- **K1, the null result of E2 ter.** At `v = 100`, `|Δ|` over the sensitivity of the pair
+  `(H, M)` is at most 0.03, in median over the units.
+- **K2, with something of its own the partner wins.** At `v = 25`, Δ > 0 with an interval
+  that excludes zero in every seed, in at least 3 tasks out of 5.
+- **K3, the dose.** The median of Δ grows as the machine sees less: `v = 25 > 50 > 100`.
+- **K4, the law.** At `v = 50` and `v = 25`, `D2^2 - D1^2` measured with the best linear use
+  of the three cues, over the gain predicted by the theorem with the quantities of the same
+  unit, is between 0.8 and 1.25 in median.
+- **K5, worse alone, better in the pair.** At `v = 25`, `M_ramo` alone is less sensitive
+  than `M` and the pair with it is more sensitive, with intervals that exclude zero in every
+  seed, in at least 3 tasks out of 5.
+- **K6, who knows the judge against who knows the task.** Which of `(H, M_blind)` and
+  `(H, M)` is the more sensitive pair is what the threshold of the theorem says, computed
+  with the quantities of the unit, in at least 80% of the units (all the `v`).
+- **K7, nothing is created.** The pair `(H, M_ramo)` over the pair `(H0, M)` is at most
+  1.05, in median, at every `v`.
+
+A limit written beforehand: `M_ramo` is built for the weight 1, and a single weight has to
+cancel the bias and to weigh the machine. With a weak machine it can be worth less than the
+best use of the three cues: this is why K4 uses the latter, and K2 the network.
+
+Raw data: `chart/{task}_v{v}_s{seed}.npz`, like `rephase_bis/`, with `z_H0`, `machines` =
+`M, Mramo, Mblind` and `v`; `manifest.json`.
+
+## 15. E9. The shape of the noise
+
+Added with version 2.1, on 19 November 2026, before any run of E6 to E9.
+
+**Why.** With sensitivity measured as a signal-to-noise ratio the formula of § 2 is an
+identity (`analysis/identity.py`): no data can refute it. With `d_a`, which comes from the
+AUC, it holds for Gaussian cues. And in E1, beyond 90 degrees, almost all the noise is the
+frame, which we drew ourselves from a Gaussian. The question is how far the measure moves
+from the formula when that part of the noise has another shape.
+
+**What was known.** A preliminary trial made during a review, on networks with a third of
+the channels, four tasks and one seed, gave for the ratio between the measured and the
+predicted pair 0.29 with a two-valued frame, 0.90 with a uniform one and 0.93 with a
+Student's t, with expectations wrong in direction for two shapes out of three. The
+expectations below come from a model: Gaussian cues plus a frame of the given shape, with
+the median parameters of E1 (§ 5). The model gives, at `mu = 1.5`, 1.09 (two values), 1.04
+(uniform), 0.86 (t); at `mu = 2`, 0.79, 1.05 and 0.80.
+
+- **The networks** are those of E1 (`gpu/bench.py`): "plus" and "minus", 9,000 images,
+  Gaussian training frame. `mu` = 1, 1.5 and 2; seeds 2 to 6; five tasks.
+- **At test** the frame is drawn from four distributions with zero mean and the same
+  variance `1 + mu^2`: `gauss` (it is E1, on new seeds), `two` (two values,
+  `±sqrt(1 + mu^2)`), `uniform`, `t3` (Student's t with 3 degrees of freedom, rescaled).
+  Standardization uses the validation set with the same shape.
+- **Measures** of § 3 for every shape, plus the signal-to-noise ratio next to `d_a`. The
+  ratio is that of H1c: tuned turing over `Tu_app` from `k` and `rho` of the same unit and
+  shape.
+
+Expectations.
+
+- **S1, replication.** With the Gaussian frame, at `mu` = 1.5 and 2: the angle is above 90
+  degrees in every unit and the ratio is between 0.9 and 1.1 in median.
+- **S2, the formula promises too much.** At `mu = 2` the median ratio is below 0.9 both with
+  the two-valued frame and with the t.
+- **S3, the direction depends on the shape.** At `mu = 1.5` the median ratio is above 1 with
+  the two-valued frame and below 0.95 with the t.
+- **S4.** With the uniform frame the median ratio stays between 0.95 and 1.10 at `mu` = 1.5
+  and 2.
+- **S5, the pair is the same.** The sensitivity of the tuned pair with a shape, over that
+  with the Gaussian frame, is between 0.95 and 1.05 in median for every shape at `mu` = 1.5
+  and 2: in the pair the frame cancels, and what changes is what the single judges promise.
+- Without a criterion: the gap of the identity with the signal-to-noise ratio, for every
+  shape.
+
+Raw data: `shape/{task}_mu{mu}_s{seed}.npz`: `a`, `z_plus` and `z_minus` of shape (4, N),
+one row per shape in the order of `shapes`; `manifest.json`.
 
 ## Deviations
 
@@ -683,3 +819,13 @@ the formula of § 2 is an identity of the sample moments, true for any data. Wit
 which comes from the area under the ROC curve, the criteria H1c, H1d and H5a to H5e
 therefore measure how far the cues of the networks are from the equal-variance Gaussian
 model, not the formula.
+
+Version 2.1, of the same day, comes before any run of E6 and E7 and from two more reviews
+of the article. It takes the seeds of E6 and E7 from three to five (2 to 6), without
+touching their hypotheses and criteria, and adds questions Q9 and Q10 and the tests E8
+(§ 14, the bench of the chart with its theorem) and E9 (§ 15, the shape of the noise), with
+the training code (`gpu/chart.py`, `gpu/shape.py`), the analysis code
+(`analysis/chart.py`, `analysis/shape.py`) and the tests. "In every seed" now means in all
+five. The theorem applied to the files of E2 bis and E2 ter is a reading of old data,
+declared as such. The shares of right answers were added to `analysis/fixed.py`, without a
+criterion.

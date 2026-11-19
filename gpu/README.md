@@ -1,6 +1,6 @@
 # GPU runs
 
-The scripts that produce the raw files of E1, E2, E3, E6 and E7 (`PROTOCOL.md`, sections 5, 6, 7, 10, 11, 12 and 13).
+The scripts that produce the raw files of E1, E2, E3 and E6 to E9 (`PROTOCOL.md`, sections 5, 6, 7 and 10 to 15).
 They write only case-by-case cues and logits; every measure is computed afterwards by the analysis,
 from `results/raw/`.
 
@@ -22,6 +22,8 @@ GPU: images normalised once, augmentation and frame applied batch by batch, no D
 | `rephase_ter.py` | E2 ter (section 6 ter, exploratory): `M0`, its fine-tuned control `M0plus`, `Mdue` fine-tuned on its loss plus that of the sum, `Mramo` = frozen `M0` + a frame-only branch |
 | `trust.py` | E6 (section 12): the machines of E2 ter on new seeds, and four branches built for the weights 0.5, 1, 2 and 4 (`Mramo_w`) |
 | `views.py` | E7 (section 13): each judge sees half of the image; `M0`, `Mramo` and `Mpair` at an overlap of 100, 50 and 0 per cent with the person's half |
+| `chart.py` | E8 (section 14): the judge sees the whole image, the machine all of it, a half or a quarter; `M`, `Mramo`, `Mblind`, and the judge without the bias `H0` |
+| `shape.py` | E9 (section 15): the networks of E1 on new seeds, with the test frame drawn from four distributions of the same variance |
 | `people.py` | E3: ResNet-18 base machines, fine-tuning against the CIFAR-10H cue on held-out halves |
 | `people_bis.py` | E3 bis (section 7 bis, exploratory): the same base machines, fine-tuned with three recipes (`controllo`, `somma`, `mista`) |
 | `manifest.py` | `manifest.json` of each folder from the per-unit records |

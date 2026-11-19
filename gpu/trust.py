@@ -30,7 +30,7 @@ from common import (DEV, PRESENTATIONS, TASKS, Clock, Net, cifar, frame_only, lo
 from rephase_ter import FT_EPOCHS, FT_LR_DIVISOR, MU_H, VAR_A, frozen, summed_log_odds
 
 WEIGHTS = (0.5, 1.0, 2.0, 4.0)          # the weight each branch is built for
-SEEDS = (2, 3, 4)                       # E1 to E5 used 0 and 1
+SEEDS = (2, 3, 4, 5, 6)                 # E1 to E5 used 0 and 1
 
 
 def branch_name(w: float) -> str:

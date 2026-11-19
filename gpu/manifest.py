@@ -1,6 +1,6 @@
 """Writes manifest.json for one experiment folder from the per-unit records (protocol section 11).
 
-    python gpu/manifest.py OUT_ROOT bench|rephase|rephase_bis|rephase_ter|people|people_bis|trust|views [DEVIATION ...]
+    python gpu/manifest.py OUT_ROOT bench|rephase|rephase_bis|rephase_ter|people|people_bis|trust|views|chart|shape [DEVIATION ...]
 
 OUT_ROOT is the folder with pilot/ and the experiment folders; the manifest lands in OUT_ROOT/<experiment>/.
 """
@@ -15,7 +15,7 @@ from common import CLASSES, FRAME_WIDTH, MEAN, N_VAL_PER_CLASS, PRESENTATIONS, S
 
 PROTOCOL = "PROTOCOL.it.md v1.1 (2026-11-10)"
 PROTOCOL_V14 = "PROTOCOL.it.md v1.4 (2026-11-11)"          # E2 ter and E3 bis are written in this version
-PROTOCOL_V20 = "PROTOCOL.it.md v2.0 (2026-11-19)"          # E6 and E7 are written in this version
+PROTOCOL_V21 = "PROTOCOL.it.md v2.1 (2026-11-19)"          # E6 to E9 run with this version
 NET = ("Net of turing-meter experiments/angle-between-errors/gpu/silicon.py with a 2-way head: conv3x3 48-96, "
        "maxpool, 96-192, maxpool, 192, global average pool, linear; BatchNorm and ReLU after every convolution")
 OPTIM = "SGD, Nesterov momentum 0.9, weight decay 5e-4, one-cycle schedule (PyTorch OneCycleLR defaults), bf16 autocast"
@@ -249,7 +249,7 @@ def trust(root: Path, deviations) -> dict:
     from trust import MACHINES, SEEDS, WEIGHTS
     m = common_block(root, units)
     m.update({
-        "protocol": PROTOCOL_V20,
+        "protocol": PROTOCOL_V21,
         "experiment": "E6, trust made to measure (protocol section 12)",
         "files": sorted(p.name for p in folder.glob("*.npz")),
         "file_pattern": "{task}_s{seed}.npz", "seeds": list(SEEDS),
@@ -297,7 +297,7 @@ def views(root: Path, deviations) -> dict:
     from views import HALVES, MACHINES, SEEDS, VIEW_H, VIEW_M
     m = common_block(root, units)
     m.update({
-        "protocol": PROTOCOL_V20,
+        "protocol": PROTOCOL_V21,
         "experiment": "E7, different views (protocol section 13)",
         "files": sorted(p.name for p in folder.glob("*.npz")),
         "file_pattern": "{task}_o{overlap}_s{seed}.npz", "seeds": list(SEEDS),
@@ -329,6 +329,93 @@ def views(root: Path, deviations) -> dict:
         "hyperparameters": {"network": NET, "optimiser": OPTIM, "augmentation": AUG, "epochs": cfg["epochs"],
                             "max_lr": cfg["lr"], "batch_size": cfg["batch_size"], "train_images": 4500},
         "control_accuracy": _accuracies(units),
+        "unit_seconds": {k: u["seconds"] for k, u in units.items() if not k.startswith("_")},
+        "deviations": deviations,
+    })
+    return m
+
+
+def chart(root: Path, deviations) -> dict:
+    folder = root / "chart"
+    units = load_units(folder)
+    cfg = json.loads((root / "pilot" / "config.json").read_text())
+    from chart import LAST_COLUMN, MACHINES, SEEDS
+    m = common_block(root, units)
+    m.update({
+        "protocol": PROTOCOL_V21,
+        "experiment": "E8, the bench of the chart (protocol section 14)",
+        "files": sorted(p.name for p in folder.glob("*.npz")),
+        "file_pattern": "{task}_v{v}_s{seed}.npz", "seeds": list(SEEDS),
+        "views": {"judge": "the whole image",
+                  "machine_last_column_by_v": {str(k): v for k, v in LAST_COLUMN.items()},
+                  "machine": "the whole frame and the columns 2 .. last - 1 of the inside of the image; the rest is "
+                             "set to zero in normalised units, after the frame is drawn"},
+        "keys": {"y": "0/1", "image": "index in the CIFAR-10 test set", "a": "frame value shown, a ~ N(0, 2)",
+                 "z_H": "the judge H: plus network, mu = 1, half A, whole image; the same at the three values of v",
+                 "z_H0": "the judge without the bias: same seed and half, frame independent of the class",
+                 "z_M": "log-odds of each machine on its own, shape (3, N), rows in the order of `machines`; for "
+                        "Mramo z_M + z_branch; Mblind is the same at the three values of v",
+                 "machines": str(list(MACHINES)), "v": "100, 50 or 25",
+                 "val_*": "the same on validation (val_image: CIFAR-10 training index)"},
+        "layout": f"each image appears {PRESENTATIONS} times in a row (np.repeat), with independent frames, the same "
+                  "at the three values of v",
+        "halves": "as E2", "machine_training_frame": "a ~ N(0, 2), independent of the class",
+        "machines": {
+            "M": "cross-entropy on half B, on the machine's part of the image",
+            "Mramo": "M frozen (eval mode) plus a branch that sees only the frame, trained from scratch on the binary "
+                     "cross-entropy of z_H + z_M + z_branch; recorded cue z_M + z_branch",
+            "Mblind": "a network that sees only the frame, trained from scratch on half B on the binary cross-entropy "
+                      "of z_H + z_blind (H frozen)"},
+        "frame": FRAME, "delta": cfg["delta"],
+        "torch_seeds": "crc32('chart/<task>/s<seed>/<H|blind|M|ramo>') & 0x7fffffff; H0 has the seed of H; M and the "
+                       "branch have the same seeds at the three values of v",
+        "test_and_validation_frames": "numpy default_rng(crc32('chart/<task>/s<seed>/<test|val>-a')), "
+                                      "a = sqrt(2) * eps",
+        "hyperparameters": {"network": NET, "optimiser": OPTIM, "augmentation": AUG, "epochs": cfg["epochs"],
+                            "max_lr": cfg["lr"], "batch_size": cfg["batch_size"], "train_images": 4500},
+        "control_accuracy": _accuracies(units),
+        "unit_seconds": {k: u["seconds"] for k, u in units.items() if not k.startswith("_")},
+        "deviations": deviations,
+    })
+    return m
+
+
+def shape(root: Path, deviations) -> dict:
+    folder = root / "shape"
+    units = load_units(folder)
+    cfg = json.loads((root / "pilot" / "config.json").read_text())
+    from shape import MUS, SEEDS, SHAPES
+    acc = {}
+    for k, u in units.items():
+        if k.startswith("_"):
+            continue
+        for role, info in u["nets"].items():
+            acc.setdefault(f"{u['task']}|mu{u['mu']:g}|{role}", []).append(
+                {"seed": u["seed"], **{a: b for a, b in info.items() if "acc" in a}})
+    m = common_block(root, units)
+    m.update({
+        "protocol": PROTOCOL_V21,
+        "experiment": "E9, the shape of the noise (protocol section 15)",
+        "files": sorted(p.name for p in folder.glob("*.npz")),
+        "file_pattern": "{task}_mu{mu}_s{seed}.npz", "seeds": list(SEEDS), "mus": list(MUS),
+        "shapes": {"order": list(SHAPES), "variance": "1 + mu^2 for every shape, zero mean, independent of the class",
+                   "gauss": "normal, as in E1", "two": "+-sqrt(1 + mu^2) with probability one half each",
+                   "uniform": "uniform between +-sqrt(3 (1 + mu^2))",
+                   "t3": "Student's t with 3 degrees of freedom divided by sqrt(3), times sqrt(1 + mu^2)"},
+        "keys": {"y": "0/1", "image": "index in the CIFAR-10 test set",
+                 "a": "frame value shown, shape (4, N): one row per shape, in the order of `shapes`",
+                 "z_plus": "log-odds of the plus network, shape (4, N)", "z_minus": "the same for the minus network",
+                 "shapes": str(list(SHAPES)), "val_*": "the same on validation (val_image: CIFAR-10 training index)"},
+        "layout": f"each image appears {PRESENTATIONS} times in a row (np.repeat), with independent frames",
+        "training": "as E1: all the 9,000 training images of the task, frame a ~ N(+-mu, 1) according to the class, "
+                    "with opposite signs for plus and minus",
+        "frame": FRAME, "delta": cfg["delta"],
+        "torch_seeds": "the labels of E1 on new seeds: crc32('bench/<task>/s<seed>/<plus|minus>') & 0x7fffffff",
+        "test_and_validation_frames": "numpy default_rng(crc32('shape/<task>/s<seed>/<test|val>-<shape>')), unit "
+                                      "variance, times sqrt(1 + mu^2)",
+        "hyperparameters": {"network": NET, "optimiser": OPTIM, "augmentation": AUG, "epochs": cfg["epochs"],
+                            "max_lr": cfg["lr"], "batch_size": cfg["batch_size"], "train_images": 9000},
+        "control_accuracy": acc,
         "unit_seconds": {k: u["seconds"] for k, u in units.items() if not k.startswith("_")},
         "deviations": deviations,
     })
@@ -409,7 +496,7 @@ def main() -> None:
     if dev_file.exists():
         deviations += json.loads(dev_file.read_text()).get(exp, [])
     m = {"bench": bench, "rephase": rephase, "rephase_bis": rephase_bis, "rephase_ter": rephase_ter, "people": people,
-         "people_bis": people_bis, "trust": trust, "views": views}[exp](root, deviations)
+         "people_bis": people_bis, "trust": trust, "views": views, "chart": chart, "shape": shape}[exp](root, deviations)
     (root / exp / "manifest.json").write_text(json.dumps(m, indent=1))
     print("manifest", exp, len(m["files"]), "files")
 

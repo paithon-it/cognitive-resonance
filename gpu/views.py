@@ -39,7 +39,7 @@ LO, MID, HI = FRAME_WIDTH, 16, 32 - FRAME_WIDTH       # the interior is rows and
 HALVES = {"left": (LO, HI, LO, MID), "top": (LO, MID, LO, HI), "right": (LO, HI, MID, HI)}   # rows, then columns
 VIEW_H = "left"
 VIEW_M = {100: "left", 50: "top", 0: "right"}         # overlap with H's half, per cent -> the machine's half
-SEEDS = (2, 3, 4)
+SEEDS = (2, 3, 4, 5, 6)
 MACHINES = ("M0", "Mramo", "Mpair")
 
 

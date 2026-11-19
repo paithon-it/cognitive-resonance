@@ -304,3 +304,94 @@ def write_views(folder, tasks=TASKS, seeds=(2, 3, 4), n_images=2000, presentatio
                          machines=np.array(MACHINES_VIEWS), overlap=np.array(overlap, dtype=np.int32),
                          val_y=vy, val_image=vimage, val_a=va, val_z_H=vzh, val_z_M=vzm)
     (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
+# --- E8 and E9 (protocol §§ 14-15) -------------------------------------------------------------
+
+MACHINES_CHART = ("M", "Mramo", "Mblind")
+CHART_VIEWS = (100, 50, 25)
+SHAPES = ("gauss", "two", "uniform", "t3")
+
+
+def _chart_cues(gen, n_images, presentations, d, v, flat):
+    """Four quarters of evidence, each a log-likelihood ratio. The judge reads all four and the frame. The machine
+    reads all four (v = 100), two (50) or one (25); with `flat` it always reads all four. Mramo is the machine with
+    the frame against the judge, Mblind only the frame against the judge, H0 the judge without the frame."""
+    y_img = (np.arange(n_images) >= n_images // 2).astype(int)
+    image = np.repeat(np.arange(n_images), presentations)
+    y = y_img[image]
+    s = 2.0 * y - 1.0
+    a = gen.normal(0.0, math.sqrt(2.0), image.size)
+    dq = d / 2.0                                                # four quarters together are worth d
+    q = [s * dq * dq / 2 + dq * gen.standard_normal(n_images)[image] for _ in range(4)]
+    seen = 4 if flat else {100: 4, 50: 2, 25: 1}[v]
+    own = 0.4 * gen.standard_normal(image.size)
+    h0 = sum(q) + own
+    zh = h0 + 1.1 * a
+    m = sum(q[:seen]) + 0.4 * gen.standard_normal(image.size)
+    return y, image, a, zh, h0, np.array([m, m - 1.1 * a + 0.05 * gen.standard_normal(image.size),
+                                          -1.1 * a + 0.05 * gen.standard_normal(image.size)])
+
+
+def write_chart(folder, tasks=TASKS, seeds=(2, 3, 4), n_images=2000, presentations=5, n_val=1000, seed=15,
+                flat=False) -> None:
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for ti, task in enumerate(tasks):
+        d = 1.8 + 0.25 * ti
+        for sd in seeds:
+            for v in CHART_VIEWS:
+                gen = np.random.default_rng([seed, ti, sd, v])
+                y, image, a, zh, zh0, zm = _chart_cues(gen, n_images, presentations, d, v, flat)
+                vy, vimage, va, vzh, vzh0, vzm = _chart_cues(gen, n_val, 1, d, v, flat)
+                np.savez(folder / f"{task}_v{v}_s{sd}.npz", y=y, image=image, a=a, z_H=zh, z_H0=zh0, z_M=zm,
+                         machines=np.array(MACHINES_CHART), v=np.array(v, dtype=np.int32), val_y=vy,
+                         val_image=vimage, val_a=va, val_z_H=vzh, val_z_H0=vzh0, val_z_M=vzm)
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
+def _unit_noise(gen, shape, n):
+    if shape == "gauss":
+        return gen.standard_normal(n)
+    if shape == "two":
+        return np.where(gen.random(n) < 0.5, 1.0, -1.0)
+    if shape == "uniform":
+        return gen.uniform(-math.sqrt(3.0), math.sqrt(3.0), n)
+    return gen.standard_t(3, n) / math.sqrt(3.0)
+
+
+def _shape_cues(gen, n_images, presentations, d, mu, all_gauss):
+    """The two opposite networks of the bench, with a test frame of four shapes and the same variance. With
+    `all_gauss` every shape is drawn from the normal: the names lie, and nothing should change with the shape."""
+    y_img = (np.arange(n_images) >= n_images // 2).astype(int)
+    image = np.repeat(np.arange(n_images), presentations)
+    y = y_img[image]
+    s = 2.0 * y - 1.0
+    common = gen.standard_normal(n_images)
+    n1 = (0.92 ** 0.5 * common + 0.08 ** 0.5 * gen.standard_normal(n_images))[image]
+    n2 = (0.92 ** 0.5 * common + 0.08 ** 0.5 * gen.standard_normal(n_images))[image]
+    b = 0.5 * mu ** 2                                           # the frame weighs more as the bias grows
+    A, ZP, ZM = [], [], []
+    for shape in SHAPES:
+        a = math.sqrt(1 + mu ** 2) * _unit_noise(gen, "gauss" if all_gauss else shape, image.size)
+        A.append(a)
+        ZP.append(s * d / 2 + n1 + b * a)
+        ZM.append(s * d / 2 + n2 - b * a)
+    return y, image, np.array(A), np.array(ZP), np.array(ZM)
+
+
+def write_shape(folder, tasks=TASKS, mus=(1.0, 1.5, 2.0), seeds=(2, 3, 4), n_images=2000, presentations=5,
+                n_val=1000, seed=16, all_gauss=False) -> None:
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for ti, task in enumerate(tasks):
+        d = 2.2 + 0.2 * ti
+        for mu in mus:
+            for sd in seeds:
+                gen = np.random.default_rng([seed, ti, int(10 * mu), sd])
+                y, image, a, zp, zm = _shape_cues(gen, n_images, presentations, d, mu, all_gauss)
+                vy, vimage, va, vzp, vzm = _shape_cues(gen, n_val, 1, d, mu, all_gauss)
+                np.savez(folder / f"{task}_mu{mu:g}_s{sd}.npz", y=y, image=image, a=a, z_plus=zp, z_minus=zm,
+                         shapes=np.array(SHAPES), val_y=vy, val_image=vimage, val_a=va, val_z_plus=vzp,
+                         val_z_minus=vzm)
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
