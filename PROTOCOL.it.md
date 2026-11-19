@@ -877,6 +877,36 @@ prima delle corse.
   P5: solo `mista`.
 - **I manifest** delle due corse citano la versione 1.4.
 
+**E6, E7, E8 ed E9.** Le corse sono del 19 novembre 2026, su una scheda condivisa con
+altri utenti. Nessuna riduzione: cinque semi e cinque compiti in tutte e quattro le prove.
+
+- **Tre sessioni.** Il programma che lancia le corse cede la scheda quando un altro utente
+  la usa, e riparte quando è libera. È successo due volte: le sessioni vanno dalle 09:49
+  alle 10:15, dalle 10:19 alle 11:27 e dalle 19:20 alle 20:13 (UTC). Un'unità si scrive
+  quando finisce; quelle in corso a un'interruzione sono ripartite da capo, con gli
+  stessi semi. E6: 18 unità scritte nella prima sessione, 7 nella seconda. E8: tutte
+  nella seconda. E7: 51 nella seconda, 24 nella terza. E9: tutte nella terza.
+- **Un processo di E7 fermo.** Nella seconda sessione uno dei tre processi di E7 si è
+  fermato dopo la sua prima unità. Il suo registro è stato sovrascritto dalla terza
+  sessione, e la causa non è documentata. Le altre sue 24 unità sono state eseguite
+  nella terza sessione, con un solo processo sulla scheda. I semi sono dell'unità, non
+  del processo.
+- **I tempi nei manifest.** `stage_time` riporta solo l'ultima sessione; i secondi di ogni
+  unità stanno in `unit_seconds`. Le tre note qui sopra sono scritte anche nei manifest.
+- **L'ambiente** è stato ricostruito per queste corse: numpy 2.5.5 (2.5.4 in E1-E5);
+  python, torch, torchvision, CUDA e cuDNN sono gli stessi.
+- **Le ore del 19 novembre, UTC.** Il programma di lancio parte alle 09:49:19 e prepara
+  l'ambiente; la versione 2.2 di questo protocollo arriva nel repository alle 09:50:31;
+  il primo addestramento di E6 parte alle 09:55:39; il codice della lettura di progetto
+  (`analysis/design.py`) arriva nel repository alle 09:55:45; il primo file di E6 è
+  scritto alle 09:59:05. Il codice della GPU usato sul server coincide, file per file
+  (md5), con quello del commit `ab216dc`.
+- **I manifest** citano la versione 2.1: è quella del codice della GPU, che la 2.2 non
+  tocca.
+- **L'analisi** è quella scritta prima delle corse, senza modifiche. Dove il protocollo
+  lasciava un margine, la scelta è scritta accanto al criterio nei file dei risultati
+  (`rule`).
+
 **Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e

@@ -877,6 +877,36 @@ written and before the runs.
   `mista` only.
 - **The manifests** of the two runs cite version 1.4.
 
+**E6, E7, E8 and E9.** The runs are from 19 November 2026, on a GPU shared with other
+users. No reduction: five seeds and five tasks in all four experiments.
+
+- **Three sessions.** The program that starts the runs gives the GPU back when another
+  user needs it, and starts again when it is free. It happened twice: the sessions go
+  from 09:49 to 10:15, from 10:19 to 11:27 and from 19:20 to 20:13 (UTC). A unit is
+  written when it ends; the units under way at a stop were run again from the start,
+  with the same seeds. E6: 18 units written in the first session, 7 in the second. E8:
+  all in the second. E7: 51 in the second, 24 in the third. E9: all in the third.
+- **One process of E7 stopped.** In the second session one of the three processes of E7
+  stopped after its first unit. Its log was overwritten by the third session, and the
+  cause is not recorded. Its other 24 units ran in the third session, with one process
+  on the GPU. Seeds belong to the unit, not to the process.
+- **Times in the manifests.** `stage_time` reports the last session only; the seconds of
+  each unit are in `unit_seconds`. The three notes above are written in the manifests
+  too.
+- **The environment** was built again for these runs: numpy 2.5.5 (2.5.4 in E1 to E5);
+  python, torch, torchvision, CUDA and cuDNN are the same.
+- **The times of 19 November, UTC.** The launcher starts at 09:49:19 and sets up the
+  environment; version 2.2 of this protocol reaches the repository at 09:50:31; the
+  first training of E6 starts at 09:55:39; the code of the design reading
+  (`analysis/design.py`) reaches the repository at 09:55:45; the first file of E6 is
+  written at 09:59:05. The GPU code used on the server is the same, file by file (md5),
+  as that of commit `ab216dc`.
+- **The manifests** cite version 2.1: it is the version of the GPU code, which 2.2 does
+  not touch.
+- **The analysis** is the one written before the runs, unchanged. Where the protocol
+  left a margin, the choice is written next to the criterion in the results files
+  (`rule`).
+
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and

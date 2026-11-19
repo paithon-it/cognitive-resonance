@@ -1,0 +1,1823 @@
+{
+ "protocol": "PROTOCOL.it.md v2.1 (2026-11-19)",
+ "versions": {
+  "python": "3.12.3",
+  "torch": "2.15.0+cu132",
+  "torchvision": "0.29.2+cu132",
+  "cuda": "13.2",
+  "cudnn": 92600,
+  "numpy": "2.5.5",
+  "gpu": "NVIDIA L4"
+ },
+ "stage_time": {
+  "stage": "trust",
+  "workers": 3,
+  "start_unix": 1795116008,
+  "end_unix": 1795116018,
+  "wall_seconds": 10
+ },
+ "normalisation": {
+  "mean": [
+   0.491,
+   0.482,
+   0.447
+  ],
+  "std": [
+   0.247,
+   0.243,
+   0.262
+  ]
+ },
+ "cifar10_classes": [
+  "airplane",
+  "automobile",
+  "bird",
+  "cat",
+  "deer",
+  "dog",
+  "frog",
+  "horse",
+  "ship",
+  "truck"
+ ],
+ "pilot": {
+  "epochs": 30,
+  "lr": 0.1,
+  "batch_size": 256,
+  "delta": 1.0,
+  "rule": "smallest epochs within 0.5 accuracy points of the best grid cell (mean over the two pilot tasks), then the best learning rate at those epochs",
+  "grid_mean_val_acc": {
+   "e10_lr0.05": 0.8838,
+   "e10_lr0.1": 0.8862,
+   "e15_lr0.05": 0.8941,
+   "e15_lr0.1": 0.905,
+   "e20_lr0.05": 0.9061,
+   "e20_lr0.1": 0.9097,
+   "e30_lr0.05": 0.9166,
+   "e30_lr0.1": 0.9177
+  },
+  "probe": {
+   "ridge_alpha": 1.0,
+   "fit": "9,000 cat-dog training images, a ~ N(0,1)",
+   "test": "1,000 validation images x 5 presentations, a ~ N(0,1)",
+   "r2_by_delta": {
+    "0.25": 1.0,
+    "0.5": 1.0,
+    "1.0": 1.0
+   }
+  },
+  "timing": {
+   "net_1ep_s": 1.59,
+   "net_3ep_s": 1.24,
+   "net_img_per_s": 21774,
+   "resnet_img_per_s": 7566,
+   "resnet_first_epoch_s": 5.58,
+   "versions": {
+    "python": "3.12.3",
+    "torch": "2.15.0+cu132",
+    "torchvision": "0.29.2+cu132",
+    "cuda": "13.2",
+    "cudnn": 92600,
+    "numpy": "2.5.4",
+    "gpu": "NVIDIA L4"
+   }
+  }
+ },
+ "experiment": "E6, trust made to measure (protocol section 12)",
+ "files": [
+  "airplane-ship_s2.npz",
+  "airplane-ship_s3.npz",
+  "airplane-ship_s4.npz",
+  "airplane-ship_s5.npz",
+  "airplane-ship_s6.npz",
+  "automobile-truck_s2.npz",
+  "automobile-truck_s3.npz",
+  "automobile-truck_s4.npz",
+  "automobile-truck_s5.npz",
+  "automobile-truck_s6.npz",
+  "bird-frog_s2.npz",
+  "bird-frog_s3.npz",
+  "bird-frog_s4.npz",
+  "bird-frog_s5.npz",
+  "bird-frog_s6.npz",
+  "cat-dog_s2.npz",
+  "cat-dog_s3.npz",
+  "cat-dog_s4.npz",
+  "cat-dog_s5.npz",
+  "cat-dog_s6.npz",
+  "deer-horse_s2.npz",
+  "deer-horse_s3.npz",
+  "deer-horse_s4.npz",
+  "deer-horse_s5.npz",
+  "deer-horse_s6.npz"
+ ],
+ "file_pattern": "{task}_s{seed}.npz",
+ "seeds": [
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "keys": {
+  "y": "0/1",
+  "image": "index in the CIFAR-10 test set",
+  "a": "frame value shown, a ~ N(0, 2)",
+  "z_H": "person H: plus network, mu = 1, half A",
+  "z_M": "log-odds of each machine on its own (not the sum with H), shape (7, N), rows in the order of `machines`; for a branch machine z_M0 + z_branch",
+  "machines": "['M0', 'M0plus', 'Mdue', 'Mramo_w0.5', 'Mramo_w1', 'Mramo_w2', 'Mramo_w4']",
+  "built_for_weight": "[0.5, 1.0, 2.0, 4.0]",
+  "val_*": "the same on validation (val_image: CIFAR-10 training index)"
+ },
+ "layout": "each image appears 5 times in a row (np.repeat), with independent frames",
+ "halves": "as E2",
+ "machine_training_frame": "a ~ N(0, 2), independent of the class",
+ "machines": {
+  "M0": "cross-entropy on half B, as M_0 of E2, E2 bis and E2 ter",
+  "M0plus": "a copy of M0 fine-tuned on half B with cross-entropy: 10 epochs, learning rate the pilot's divided by 5 (0.02), cosine from it to zero",
+  "Mdue": "a copy of M0 fine-tuned as M0plus (same seed, batch order, crops, flips and frames); loss: its cross-entropy plus the binary cross-entropy of the summed log-odds (out1 - out0) + z_H, as in E2 ter",
+  "Mramo_w": "M0 frozen (eval mode) plus a branch: a new network that sees the framed image with its interior set to zero, trained from scratch with the pilot's epochs, learning rate and one-cycle schedule on the binary cross-entropy of z_H + w * (z_M0 + z_branch), H and M0 frozen, whole framed presentation, no gradient; recorded cue z_M0 + z_branch. One branch per w in [0.5, 1.0, 2.0, 4.0]; the branches share seed, batch order, crops, flips and frames"
+ },
+ "frame": "the outer 2-pixel border of all three channels is set to a * delta, in normalised units (after per-channel normalisation), applied after crop and flip, without clipping",
+ "delta": 1.0,
+ "torch_seeds": "the labels of E2 ter on new seeds: H and M0 crc32('rephase/<task>/s<seed>/<H|M>') & 0x7fffffff; M0plus and Mdue crc32('rephase/<task>/s<seed>/ter'); every branch crc32('rephase/<task>/s<seed>/ramo')",
+ "test_and_validation_frames": "numpy default_rng(crc32('rephase/<task>/s<seed>/<test|val>-a')), a = sqrt(2) * eps",
+ "hyperparameters": {
+  "network": "Net of turing-meter experiments/angle-between-errors/gpu/silicon.py with a 2-way head: conv3x3 48-96, maxpool, 96-192, maxpool, 192, global average pool, linear; BatchNorm and ReLU after every convolution",
+  "optimiser": "SGD, Nesterov momentum 0.9, weight decay 5e-4, one-cycle schedule (PyTorch OneCycleLR defaults), bf16 autocast",
+  "augmentation": "random 32x32 crop of the image reflect-padded by 4 pixels, random horizontal flip",
+  "epochs": 30,
+  "max_lr": 0.1,
+  "batch_size": 256,
+  "train_images": 4500,
+  "fine_tuning": {
+   "epochs": 10,
+   "lr": 0.02,
+   "schedule": "cosine from lr to zero (CosineAnnealingLR)"
+  }
+ },
+ "control_accuracy": {
+  "airplane-ship|H": [
+   {
+    "seed": 2,
+    "val_acc": 0.8368,
+    "test_acc": 0.8553
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.8536,
+    "test_acc": 0.8481
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.8442,
+    "test_acc": 0.852
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.8368,
+    "test_acc": 0.8514
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.856,
+    "test_acc": 0.8654
+   }
+  ],
+  "airplane-ship|M0": [
+   {
+    "seed": 2,
+    "val_acc": 0.9386,
+    "test_acc": 0.9343,
+    "val_acc_sum_raw": 0.9154,
+    "test_acc_sum_raw": 0.9234
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9352,
+    "test_acc": 0.9299,
+    "val_acc_sum_raw": 0.9222,
+    "test_acc_sum_raw": 0.9164
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9366,
+    "test_acc": 0.9304,
+    "val_acc_sum_raw": 0.919,
+    "test_acc_sum_raw": 0.9196
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9432,
+    "test_acc": 0.9379,
+    "val_acc_sum_raw": 0.921,
+    "test_acc_sum_raw": 0.9235
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9392,
+    "test_acc": 0.9298,
+    "val_acc_sum_raw": 0.9224,
+    "test_acc_sum_raw": 0.9259
+   }
+  ],
+  "airplane-ship|M0plus": [
+   {
+    "seed": 2,
+    "val_acc": 0.943,
+    "test_acc": 0.9367,
+    "val_acc_sum_raw": 0.921,
+    "test_acc_sum_raw": 0.9267
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9356,
+    "test_acc": 0.9347,
+    "val_acc_sum_raw": 0.9266,
+    "test_acc_sum_raw": 0.9206
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9394,
+    "test_acc": 0.9331,
+    "val_acc_sum_raw": 0.9244,
+    "test_acc_sum_raw": 0.926
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9446,
+    "test_acc": 0.9405,
+    "val_acc_sum_raw": 0.9218,
+    "test_acc_sum_raw": 0.9282
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9468,
+    "test_acc": 0.9351,
+    "val_acc_sum_raw": 0.9268,
+    "test_acc_sum_raw": 0.9283
+   }
+  ],
+  "airplane-ship|Mdue": [
+   {
+    "seed": 2,
+    "val_acc": 0.9354,
+    "test_acc": 0.9242,
+    "val_acc_sum_raw": 0.9332,
+    "test_acc_sum_raw": 0.9349
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9334,
+    "test_acc": 0.9235,
+    "val_acc_sum_raw": 0.9366,
+    "test_acc_sum_raw": 0.9303
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9314,
+    "test_acc": 0.9238,
+    "val_acc_sum_raw": 0.9354,
+    "test_acc_sum_raw": 0.9339
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9358,
+    "test_acc": 0.9317,
+    "val_acc_sum_raw": 0.935,
+    "test_acc_sum_raw": 0.9381
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9388,
+    "test_acc": 0.9271,
+    "val_acc_sum_raw": 0.9366,
+    "test_acc_sum_raw": 0.9335
+   }
+  ],
+  "airplane-ship|Mramo_w0.5": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.516,
+    "val_acc": 0.8188,
+    "test_acc_branch_alone": 0.5042,
+    "test_acc": 0.8191,
+    "val_acc_sum_raw": 0.9236,
+    "test_acc_sum_raw": 0.9306
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4994,
+    "val_acc": 0.808,
+    "test_acc_branch_alone": 0.501,
+    "test_acc": 0.8212,
+    "val_acc_sum_raw": 0.9208,
+    "test_acc_sum_raw": 0.9188
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.4988,
+    "val_acc": 0.8122,
+    "test_acc_branch_alone": 0.5041,
+    "test_acc": 0.8204,
+    "val_acc_sum_raw": 0.9186,
+    "test_acc_sum_raw": 0.9225
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5046,
+    "val_acc": 0.8222,
+    "test_acc_branch_alone": 0.4972,
+    "test_acc": 0.8217,
+    "val_acc_sum_raw": 0.9262,
+    "test_acc_sum_raw": 0.9279
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5102,
+    "val_acc": 0.8394,
+    "test_acc_branch_alone": 0.4991,
+    "test_acc": 0.841,
+    "val_acc_sum_raw": 0.924,
+    "test_acc_sum_raw": 0.9294
+   }
+  ],
+  "airplane-ship|Mramo_w1": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5162,
+    "val_acc": 0.902,
+    "test_acc_branch_alone": 0.5046,
+    "test_acc": 0.897,
+    "val_acc_sum_raw": 0.9374,
+    "test_acc_sum_raw": 0.9408
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.501,
+    "val_acc": 0.8962,
+    "test_acc_branch_alone": 0.4991,
+    "test_acc": 0.8955,
+    "val_acc_sum_raw": 0.936,
+    "test_acc_sum_raw": 0.9336
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.497,
+    "val_acc": 0.8986,
+    "test_acc_branch_alone": 0.502,
+    "test_acc": 0.8971,
+    "val_acc_sum_raw": 0.9374,
+    "test_acc_sum_raw": 0.9332
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5048,
+    "val_acc": 0.906,
+    "test_acc_branch_alone": 0.4977,
+    "test_acc": 0.9025,
+    "val_acc_sum_raw": 0.9406,
+    "test_acc_sum_raw": 0.9423
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5074,
+    "val_acc": 0.9102,
+    "test_acc_branch_alone": 0.4986,
+    "test_acc": 0.905,
+    "val_acc_sum_raw": 0.9344,
+    "test_acc_sum_raw": 0.9383
+   }
+  ],
+  "airplane-ship|Mramo_w2": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.514,
+    "val_acc": 0.9284,
+    "test_acc_branch_alone": 0.504,
+    "test_acc": 0.9289,
+    "val_acc_sum_raw": 0.9272,
+    "test_acc_sum_raw": 0.9358
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.5036,
+    "val_acc": 0.9238,
+    "test_acc_branch_alone": 0.497,
+    "test_acc": 0.9213,
+    "val_acc_sum_raw": 0.9302,
+    "test_acc_sum_raw": 0.9299
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.497,
+    "val_acc": 0.9244,
+    "test_acc_branch_alone": 0.5021,
+    "test_acc": 0.9231,
+    "val_acc_sum_raw": 0.9304,
+    "test_acc_sum_raw": 0.9308
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5052,
+    "val_acc": 0.9382,
+    "test_acc_branch_alone": 0.4978,
+    "test_acc": 0.9296,
+    "val_acc_sum_raw": 0.9334,
+    "test_acc_sum_raw": 0.9366
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.507,
+    "val_acc": 0.9276,
+    "test_acc_branch_alone": 0.497,
+    "test_acc": 0.9262,
+    "val_acc_sum_raw": 0.9296,
+    "test_acc_sum_raw": 0.9324
+   }
+  ],
+  "airplane-ship|Mramo_w4": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5094,
+    "val_acc": 0.9348,
+    "test_acc_branch_alone": 0.502,
+    "test_acc": 0.933,
+    "val_acc_sum_raw": 0.9206,
+    "test_acc_sum_raw": 0.9295
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.5028,
+    "val_acc": 0.933,
+    "test_acc_branch_alone": 0.4968,
+    "test_acc": 0.9278,
+    "val_acc_sum_raw": 0.927,
+    "test_acc_sum_raw": 0.9248
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.4984,
+    "val_acc": 0.933,
+    "test_acc_branch_alone": 0.504,
+    "test_acc": 0.93,
+    "val_acc_sum_raw": 0.925,
+    "test_acc_sum_raw": 0.9248
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.507,
+    "val_acc": 0.9448,
+    "test_acc_branch_alone": 0.4976,
+    "test_acc": 0.9379,
+    "val_acc_sum_raw": 0.926,
+    "test_acc_sum_raw": 0.931
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.51,
+    "val_acc": 0.9332,
+    "test_acc_branch_alone": 0.4985,
+    "test_acc": 0.9315,
+    "val_acc_sum_raw": 0.9276,
+    "test_acc_sum_raw": 0.9296
+   }
+  ],
+  "automobile-truck|H": [
+   {
+    "seed": 2,
+    "val_acc": 0.894,
+    "test_acc": 0.8874
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.896,
+    "test_acc": 0.8828
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.8774,
+    "test_acc": 0.8722
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.8946,
+    "test_acc": 0.8874
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.8908,
+    "test_acc": 0.881
+   }
+  ],
+  "automobile-truck|M0": [
+   {
+    "seed": 2,
+    "val_acc": 0.958,
+    "test_acc": 0.9478,
+    "val_acc_sum_raw": 0.9446,
+    "test_acc_sum_raw": 0.9389
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9576,
+    "test_acc": 0.9435,
+    "val_acc_sum_raw": 0.9482,
+    "test_acc_sum_raw": 0.9353
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9496,
+    "test_acc": 0.9455,
+    "val_acc_sum_raw": 0.937,
+    "test_acc_sum_raw": 0.9313
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9532,
+    "test_acc": 0.9387,
+    "val_acc_sum_raw": 0.9474,
+    "test_acc_sum_raw": 0.9338
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9564,
+    "test_acc": 0.9418,
+    "val_acc_sum_raw": 0.9442,
+    "test_acc_sum_raw": 0.9346
+   }
+  ],
+  "automobile-truck|M0plus": [
+   {
+    "seed": 2,
+    "val_acc": 0.958,
+    "test_acc": 0.9488,
+    "val_acc_sum_raw": 0.9456,
+    "test_acc_sum_raw": 0.9386
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.957,
+    "test_acc": 0.9409,
+    "val_acc_sum_raw": 0.95,
+    "test_acc_sum_raw": 0.9359
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.945,
+    "test_acc": 0.9478,
+    "val_acc_sum_raw": 0.9364,
+    "test_acc_sum_raw": 0.9336
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9558,
+    "test_acc": 0.9423,
+    "val_acc_sum_raw": 0.9504,
+    "test_acc_sum_raw": 0.9377
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9556,
+    "test_acc": 0.9468,
+    "val_acc_sum_raw": 0.945,
+    "test_acc_sum_raw": 0.9362
+   }
+  ],
+  "automobile-truck|Mdue": [
+   {
+    "seed": 2,
+    "val_acc": 0.955,
+    "test_acc": 0.9479,
+    "val_acc_sum_raw": 0.9518,
+    "test_acc_sum_raw": 0.9457
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9486,
+    "test_acc": 0.9378,
+    "val_acc_sum_raw": 0.9558,
+    "test_acc_sum_raw": 0.9409
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9384,
+    "test_acc": 0.9375,
+    "val_acc_sum_raw": 0.9442,
+    "test_acc_sum_raw": 0.9441
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9504,
+    "test_acc": 0.9355,
+    "val_acc_sum_raw": 0.9544,
+    "test_acc_sum_raw": 0.9428
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.954,
+    "test_acc": 0.9431,
+    "val_acc_sum_raw": 0.952,
+    "test_acc_sum_raw": 0.9427
+   }
+  ],
+  "automobile-truck|Mramo_w0.5": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5006,
+    "val_acc": 0.875,
+    "test_acc_branch_alone": 0.494,
+    "test_acc": 0.8561,
+    "val_acc_sum_raw": 0.9508,
+    "test_acc_sum_raw": 0.9367
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4942,
+    "val_acc": 0.8412,
+    "test_acc_branch_alone": 0.497,
+    "test_acc": 0.8414,
+    "val_acc_sum_raw": 0.9482,
+    "test_acc_sum_raw": 0.9349
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5078,
+    "val_acc": 0.8442,
+    "test_acc_branch_alone": 0.4981,
+    "test_acc": 0.8378,
+    "val_acc_sum_raw": 0.942,
+    "test_acc_sum_raw": 0.9347
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.4962,
+    "val_acc": 0.8522,
+    "test_acc_branch_alone": 0.4921,
+    "test_acc": 0.8499,
+    "val_acc_sum_raw": 0.9452,
+    "test_acc_sum_raw": 0.935
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5042,
+    "val_acc": 0.8588,
+    "test_acc_branch_alone": 0.504,
+    "test_acc": 0.8433,
+    "val_acc_sum_raw": 0.9452,
+    "test_acc_sum_raw": 0.935
+   }
+  ],
+  "automobile-truck|Mramo_w1": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5,
+    "val_acc": 0.9326,
+    "test_acc_branch_alone": 0.4941,
+    "test_acc": 0.9206,
+    "val_acc_sum_raw": 0.953,
+    "test_acc_sum_raw": 0.9469
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.492,
+    "val_acc": 0.9182,
+    "test_acc_branch_alone": 0.4976,
+    "test_acc": 0.9151,
+    "val_acc_sum_raw": 0.9572,
+    "test_acc_sum_raw": 0.9431
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5072,
+    "val_acc": 0.9178,
+    "test_acc_branch_alone": 0.497,
+    "test_acc": 0.9123,
+    "val_acc_sum_raw": 0.9512,
+    "test_acc_sum_raw": 0.9457
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.4968,
+    "val_acc": 0.9254,
+    "test_acc_branch_alone": 0.4921,
+    "test_acc": 0.9161,
+    "val_acc_sum_raw": 0.9568,
+    "test_acc_sum_raw": 0.9454
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5054,
+    "val_acc": 0.9252,
+    "test_acc_branch_alone": 0.5052,
+    "test_acc": 0.9137,
+    "val_acc_sum_raw": 0.9576,
+    "test_acc_sum_raw": 0.9447
+   }
+  ],
+  "automobile-truck|Mramo_w2": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5008,
+    "val_acc": 0.9546,
+    "test_acc_branch_alone": 0.4941,
+    "test_acc": 0.9407,
+    "val_acc_sum_raw": 0.9508,
+    "test_acc_sum_raw": 0.9447
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4942,
+    "val_acc": 0.9488,
+    "test_acc_branch_alone": 0.4985,
+    "test_acc": 0.9385,
+    "val_acc_sum_raw": 0.9524,
+    "test_acc_sum_raw": 0.9394
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.506,
+    "val_acc": 0.9406,
+    "test_acc_branch_alone": 0.492,
+    "test_acc": 0.9385,
+    "val_acc_sum_raw": 0.9466,
+    "test_acc_sum_raw": 0.9421
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.497,
+    "val_acc": 0.9444,
+    "test_acc_branch_alone": 0.4943,
+    "test_acc": 0.932,
+    "val_acc_sum_raw": 0.9544,
+    "test_acc_sum_raw": 0.943
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5036,
+    "val_acc": 0.9478,
+    "test_acc_branch_alone": 0.5086,
+    "test_acc": 0.9348,
+    "val_acc_sum_raw": 0.954,
+    "test_acc_sum_raw": 0.9423
+   }
+  ],
+  "automobile-truck|Mramo_w4": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5012,
+    "val_acc": 0.9578,
+    "test_acc_branch_alone": 0.4937,
+    "test_acc": 0.9467,
+    "val_acc_sum_raw": 0.9474,
+    "test_acc_sum_raw": 0.9408
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4926,
+    "val_acc": 0.9554,
+    "test_acc_branch_alone": 0.4979,
+    "test_acc": 0.9411,
+    "val_acc_sum_raw": 0.951,
+    "test_acc_sum_raw": 0.9369
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5066,
+    "val_acc": 0.9472,
+    "test_acc_branch_alone": 0.4914,
+    "test_acc": 0.945,
+    "val_acc_sum_raw": 0.9428,
+    "test_acc_sum_raw": 0.9375
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5036,
+    "val_acc": 0.9496,
+    "test_acc_branch_alone": 0.493,
+    "test_acc": 0.937,
+    "val_acc_sum_raw": 0.9518,
+    "test_acc_sum_raw": 0.9383
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5014,
+    "val_acc": 0.9534,
+    "test_acc_branch_alone": 0.508,
+    "test_acc": 0.9403,
+    "val_acc_sum_raw": 0.95,
+    "test_acc_sum_raw": 0.9378
+   }
+  ],
+  "bird-frog|H": [
+   {
+    "seed": 2,
+    "val_acc": 0.8214,
+    "test_acc": 0.8249
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.832,
+    "test_acc": 0.8327
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.8146,
+    "test_acc": 0.8184
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.8264,
+    "test_acc": 0.8282
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.8222,
+    "test_acc": 0.8308
+   }
+  ],
+  "bird-frog|M0": [
+   {
+    "seed": 2,
+    "val_acc": 0.928,
+    "test_acc": 0.9321,
+    "val_acc_sum_raw": 0.9116,
+    "test_acc_sum_raw": 0.9107
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9284,
+    "test_acc": 0.9281,
+    "val_acc_sum_raw": 0.9076,
+    "test_acc_sum_raw": 0.9101
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9152,
+    "test_acc": 0.9279,
+    "val_acc_sum_raw": 0.9044,
+    "test_acc_sum_raw": 0.9063
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9322,
+    "test_acc": 0.9336,
+    "val_acc_sum_raw": 0.9068,
+    "test_acc_sum_raw": 0.9061
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9266,
+    "test_acc": 0.9311,
+    "val_acc_sum_raw": 0.9078,
+    "test_acc_sum_raw": 0.9091
+   }
+  ],
+  "bird-frog|M0plus": [
+   {
+    "seed": 2,
+    "val_acc": 0.9338,
+    "test_acc": 0.9352,
+    "val_acc_sum_raw": 0.9152,
+    "test_acc_sum_raw": 0.9168
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9342,
+    "test_acc": 0.9304,
+    "val_acc_sum_raw": 0.9164,
+    "test_acc_sum_raw": 0.9142
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.923,
+    "test_acc": 0.933,
+    "val_acc_sum_raw": 0.9116,
+    "test_acc_sum_raw": 0.9126
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.931,
+    "test_acc": 0.9365,
+    "val_acc_sum_raw": 0.9128,
+    "test_acc_sum_raw": 0.9134
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.936,
+    "test_acc": 0.9356,
+    "val_acc_sum_raw": 0.9118,
+    "test_acc_sum_raw": 0.9167
+   }
+  ],
+  "bird-frog|Mdue": [
+   {
+    "seed": 2,
+    "val_acc": 0.9184,
+    "test_acc": 0.9246,
+    "val_acc_sum_raw": 0.9268,
+    "test_acc_sum_raw": 0.9296
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.92,
+    "test_acc": 0.919,
+    "val_acc_sum_raw": 0.9276,
+    "test_acc_sum_raw": 0.9249
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9142,
+    "test_acc": 0.9158,
+    "val_acc_sum_raw": 0.9242,
+    "test_acc_sum_raw": 0.9253
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9212,
+    "test_acc": 0.924,
+    "val_acc_sum_raw": 0.9278,
+    "test_acc_sum_raw": 0.9253
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9226,
+    "test_acc": 0.9256,
+    "val_acc_sum_raw": 0.9256,
+    "test_acc_sum_raw": 0.9287
+   }
+  ],
+  "bird-frog|Mramo_w0.5": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.4964,
+    "val_acc": 0.7652,
+    "test_acc_branch_alone": 0.4904,
+    "test_acc": 0.7611,
+    "val_acc_sum_raw": 0.9074,
+    "test_acc_sum_raw": 0.9011
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4932,
+    "val_acc": 0.7742,
+    "test_acc_branch_alone": 0.4991,
+    "test_acc": 0.7869,
+    "val_acc_sum_raw": 0.9078,
+    "test_acc_sum_raw": 0.9117
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5046,
+    "val_acc": 0.7496,
+    "test_acc_branch_alone": 0.5031,
+    "test_acc": 0.754,
+    "val_acc_sum_raw": 0.903,
+    "test_acc_sum_raw": 0.9038
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5066,
+    "val_acc": 0.7696,
+    "test_acc_branch_alone": 0.5042,
+    "test_acc": 0.7776,
+    "val_acc_sum_raw": 0.9096,
+    "test_acc_sum_raw": 0.9082
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.4962,
+    "val_acc": 0.7748,
+    "test_acc_branch_alone": 0.4978,
+    "test_acc": 0.7783,
+    "val_acc_sum_raw": 0.9062,
+    "test_acc_sum_raw": 0.9105
+   }
+  ],
+  "bird-frog|Mramo_w1": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.4962,
+    "val_acc": 0.8664,
+    "test_acc_branch_alone": 0.4894,
+    "test_acc": 0.8652,
+    "val_acc_sum_raw": 0.9302,
+    "test_acc_sum_raw": 0.9282
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.493,
+    "val_acc": 0.8762,
+    "test_acc_branch_alone": 0.499,
+    "test_acc": 0.8836,
+    "val_acc_sum_raw": 0.9252,
+    "test_acc_sum_raw": 0.9254
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5048,
+    "val_acc": 0.8582,
+    "test_acc_branch_alone": 0.5018,
+    "test_acc": 0.8563,
+    "val_acc_sum_raw": 0.9286,
+    "test_acc_sum_raw": 0.9266
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5068,
+    "val_acc": 0.8676,
+    "test_acc_branch_alone": 0.5045,
+    "test_acc": 0.8714,
+    "val_acc_sum_raw": 0.9316,
+    "test_acc_sum_raw": 0.9294
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.4956,
+    "val_acc": 0.8676,
+    "test_acc_branch_alone": 0.4969,
+    "test_acc": 0.8777,
+    "val_acc_sum_raw": 0.9274,
+    "test_acc_sum_raw": 0.9272
+   }
+  ],
+  "bird-frog|Mramo_w2": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.4956,
+    "val_acc": 0.9084,
+    "test_acc_branch_alone": 0.489,
+    "test_acc": 0.9076,
+    "val_acc_sum_raw": 0.927,
+    "test_acc_sum_raw": 0.9228
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4938,
+    "val_acc": 0.9152,
+    "test_acc_branch_alone": 0.4979,
+    "test_acc": 0.9149,
+    "val_acc_sum_raw": 0.9216,
+    "test_acc_sum_raw": 0.9223
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5064,
+    "val_acc": 0.903,
+    "test_acc_branch_alone": 0.5021,
+    "test_acc": 0.9078,
+    "val_acc_sum_raw": 0.922,
+    "test_acc_sum_raw": 0.9199
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.507,
+    "val_acc": 0.914,
+    "test_acc_branch_alone": 0.5039,
+    "test_acc": 0.9148,
+    "val_acc_sum_raw": 0.9232,
+    "test_acc_sum_raw": 0.9222
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.4988,
+    "val_acc": 0.9092,
+    "test_acc_branch_alone": 0.4974,
+    "test_acc": 0.9188,
+    "val_acc_sum_raw": 0.9222,
+    "test_acc_sum_raw": 0.9243
+   }
+  ],
+  "bird-frog|Mramo_w4": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.4946,
+    "val_acc": 0.9226,
+    "test_acc_branch_alone": 0.4898,
+    "test_acc": 0.924,
+    "val_acc_sum_raw": 0.9214,
+    "test_acc_sum_raw": 0.9193
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4926,
+    "val_acc": 0.9276,
+    "test_acc_branch_alone": 0.4981,
+    "test_acc": 0.9224,
+    "val_acc_sum_raw": 0.914,
+    "test_acc_sum_raw": 0.9174
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5056,
+    "val_acc": 0.9114,
+    "test_acc_branch_alone": 0.4994,
+    "test_acc": 0.9216,
+    "val_acc_sum_raw": 0.9162,
+    "test_acc_sum_raw": 0.9129
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5074,
+    "val_acc": 0.9268,
+    "test_acc_branch_alone": 0.5055,
+    "test_acc": 0.9272,
+    "val_acc_sum_raw": 0.9172,
+    "test_acc_sum_raw": 0.9159
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.4972,
+    "val_acc": 0.9246,
+    "test_acc_branch_alone": 0.4963,
+    "test_acc": 0.9248,
+    "val_acc_sum_raw": 0.9154,
+    "test_acc_sum_raw": 0.918
+   }
+  ],
+  "cat-dog|H": [
+   {
+    "seed": 2,
+    "val_acc": 0.692,
+    "test_acc": 0.6922
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.7038,
+    "test_acc": 0.7032
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.6908,
+    "test_acc": 0.6948
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.7034,
+    "test_acc": 0.6998
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.701,
+    "test_acc": 0.7028
+   }
+  ],
+  "cat-dog|M0": [
+   {
+    "seed": 2,
+    "val_acc": 0.8398,
+    "test_acc": 0.8506,
+    "val_acc_sum_raw": 0.8006,
+    "test_acc_sum_raw": 0.8041
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.8374,
+    "test_acc": 0.8455,
+    "val_acc_sum_raw": 0.7882,
+    "test_acc_sum_raw": 0.8006
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.8396,
+    "test_acc": 0.8421,
+    "val_acc_sum_raw": 0.7968,
+    "test_acc_sum_raw": 0.7986
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.8376,
+    "test_acc": 0.8508,
+    "val_acc_sum_raw": 0.8002,
+    "test_acc_sum_raw": 0.8058
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.8326,
+    "test_acc": 0.8385,
+    "val_acc_sum_raw": 0.7946,
+    "test_acc_sum_raw": 0.8033
+   }
+  ],
+  "cat-dog|M0plus": [
+   {
+    "seed": 2,
+    "val_acc": 0.8456,
+    "test_acc": 0.8559,
+    "val_acc_sum_raw": 0.8106,
+    "test_acc_sum_raw": 0.8146
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.848,
+    "test_acc": 0.8561,
+    "val_acc_sum_raw": 0.7972,
+    "test_acc_sum_raw": 0.8122
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.845,
+    "test_acc": 0.8525,
+    "val_acc_sum_raw": 0.8068,
+    "test_acc_sum_raw": 0.8108
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.8486,
+    "test_acc": 0.8622,
+    "val_acc_sum_raw": 0.8064,
+    "test_acc_sum_raw": 0.812
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.8318,
+    "test_acc": 0.8467,
+    "val_acc_sum_raw": 0.8054,
+    "test_acc_sum_raw": 0.8103
+   }
+  ],
+  "cat-dog|Mdue": [
+   {
+    "seed": 2,
+    "val_acc": 0.8212,
+    "test_acc": 0.8367,
+    "val_acc_sum_raw": 0.832,
+    "test_acc_sum_raw": 0.8422
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.8182,
+    "test_acc": 0.8314,
+    "val_acc_sum_raw": 0.8244,
+    "test_acc_sum_raw": 0.8404
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.8322,
+    "test_acc": 0.8322,
+    "val_acc_sum_raw": 0.8346,
+    "test_acc_sum_raw": 0.8388
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.8346,
+    "test_acc": 0.8382,
+    "val_acc_sum_raw": 0.8342,
+    "test_acc_sum_raw": 0.8403
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.8114,
+    "test_acc": 0.831,
+    "val_acc_sum_raw": 0.8262,
+    "test_acc_sum_raw": 0.8366
+   }
+  ],
+  "cat-dog|Mramo_w0.5": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5034,
+    "val_acc": 0.6772,
+    "test_acc_branch_alone": 0.5011,
+    "test_acc": 0.68,
+    "val_acc_sum_raw": 0.7892,
+    "test_acc_sum_raw": 0.8049
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4906,
+    "val_acc": 0.6628,
+    "test_acc_branch_alone": 0.511,
+    "test_acc": 0.6789,
+    "val_acc_sum_raw": 0.7812,
+    "test_acc_sum_raw": 0.7944
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.501,
+    "val_acc": 0.6764,
+    "test_acc_branch_alone": 0.4958,
+    "test_acc": 0.6829,
+    "val_acc_sum_raw": 0.7986,
+    "test_acc_sum_raw": 0.8046
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.504,
+    "val_acc": 0.6876,
+    "test_acc_branch_alone": 0.4975,
+    "test_acc": 0.6762,
+    "val_acc_sum_raw": 0.8008,
+    "test_acc_sum_raw": 0.7957
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.497,
+    "val_acc": 0.6808,
+    "test_acc_branch_alone": 0.5029,
+    "test_acc": 0.6749,
+    "val_acc_sum_raw": 0.7876,
+    "test_acc_sum_raw": 0.7946
+   }
+  ],
+  "cat-dog|Mramo_w1": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5026,
+    "val_acc": 0.7568,
+    "test_acc_branch_alone": 0.5011,
+    "test_acc": 0.7716,
+    "val_acc_sum_raw": 0.8386,
+    "test_acc_sum_raw": 0.8498
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4912,
+    "val_acc": 0.743,
+    "test_acc_branch_alone": 0.51,
+    "test_acc": 0.7563,
+    "val_acc_sum_raw": 0.8268,
+    "test_acc_sum_raw": 0.8359
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.4996,
+    "val_acc": 0.7596,
+    "test_acc_branch_alone": 0.4976,
+    "test_acc": 0.768,
+    "val_acc_sum_raw": 0.8312,
+    "test_acc_sum_raw": 0.8409
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5042,
+    "val_acc": 0.7642,
+    "test_acc_branch_alone": 0.4985,
+    "test_acc": 0.7611,
+    "val_acc_sum_raw": 0.8326,
+    "test_acc_sum_raw": 0.8466
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.495,
+    "val_acc": 0.7534,
+    "test_acc_branch_alone": 0.5035,
+    "test_acc": 0.7529,
+    "val_acc_sum_raw": 0.8268,
+    "test_acc_sum_raw": 0.8394
+   }
+  ],
+  "cat-dog|Mramo_w2": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.5016,
+    "val_acc": 0.8078,
+    "test_acc_branch_alone": 0.5008,
+    "test_acc": 0.8244,
+    "val_acc_sum_raw": 0.8248,
+    "test_acc_sum_raw": 0.8336
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4924,
+    "val_acc": 0.8014,
+    "test_acc_branch_alone": 0.5055,
+    "test_acc": 0.8091,
+    "val_acc_sum_raw": 0.814,
+    "test_acc_sum_raw": 0.827
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.4978,
+    "val_acc": 0.8026,
+    "test_acc_branch_alone": 0.4996,
+    "test_acc": 0.8137,
+    "val_acc_sum_raw": 0.8228,
+    "test_acc_sum_raw": 0.828
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5046,
+    "val_acc": 0.8066,
+    "test_acc_branch_alone": 0.499,
+    "test_acc": 0.8158,
+    "val_acc_sum_raw": 0.8226,
+    "test_acc_sum_raw": 0.8311
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.4944,
+    "val_acc": 0.798,
+    "test_acc_branch_alone": 0.5032,
+    "test_acc": 0.8057,
+    "val_acc_sum_raw": 0.8214,
+    "test_acc_sum_raw": 0.8253
+   }
+  ],
+  "cat-dog|Mramo_w4": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.505,
+    "val_acc": 0.8262,
+    "test_acc_branch_alone": 0.5003,
+    "test_acc": 0.8454,
+    "val_acc_sum_raw": 0.8124,
+    "test_acc_sum_raw": 0.8191
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.4976,
+    "val_acc": 0.8198,
+    "test_acc_branch_alone": 0.5009,
+    "test_acc": 0.8334,
+    "val_acc_sum_raw": 0.803,
+    "test_acc_sum_raw": 0.816
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.4962,
+    "val_acc": 0.8252,
+    "test_acc_branch_alone": 0.4995,
+    "test_acc": 0.832,
+    "val_acc_sum_raw": 0.8114,
+    "test_acc_sum_raw": 0.8139
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5092,
+    "val_acc": 0.8246,
+    "test_acc_branch_alone": 0.4977,
+    "test_acc": 0.8374,
+    "val_acc_sum_raw": 0.8112,
+    "test_acc_sum_raw": 0.8166
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.4998,
+    "val_acc": 0.8164,
+    "test_acc_branch_alone": 0.5017,
+    "test_acc": 0.8302,
+    "val_acc_sum_raw": 0.807,
+    "test_acc_sum_raw": 0.816
+   }
+  ],
+  "deer-horse|H": [
+   {
+    "seed": 2,
+    "val_acc": 0.8712,
+    "test_acc": 0.8656
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.8538,
+    "test_acc": 0.852
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.8648,
+    "test_acc": 0.8692
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.8506,
+    "test_acc": 0.8553
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.8574,
+    "test_acc": 0.8542
+   }
+  ],
+  "deer-horse|M0": [
+   {
+    "seed": 2,
+    "val_acc": 0.932,
+    "test_acc": 0.9398,
+    "val_acc_sum_raw": 0.9244,
+    "test_acc_sum_raw": 0.9303
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9454,
+    "test_acc": 0.943,
+    "val_acc_sum_raw": 0.9244,
+    "test_acc_sum_raw": 0.9253
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9334,
+    "test_acc": 0.9424,
+    "val_acc_sum_raw": 0.926,
+    "test_acc_sum_raw": 0.9323
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9356,
+    "test_acc": 0.9431,
+    "val_acc_sum_raw": 0.921,
+    "test_acc_sum_raw": 0.9268
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.938,
+    "test_acc": 0.943,
+    "val_acc_sum_raw": 0.9272,
+    "test_acc_sum_raw": 0.9295
+   }
+  ],
+  "deer-horse|M0plus": [
+   {
+    "seed": 2,
+    "val_acc": 0.9454,
+    "test_acc": 0.9473,
+    "val_acc_sum_raw": 0.9318,
+    "test_acc_sum_raw": 0.9352
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9504,
+    "test_acc": 0.9462,
+    "val_acc_sum_raw": 0.933,
+    "test_acc_sum_raw": 0.9309
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9386,
+    "test_acc": 0.9457,
+    "val_acc_sum_raw": 0.9282,
+    "test_acc_sum_raw": 0.935
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9424,
+    "test_acc": 0.9437,
+    "val_acc_sum_raw": 0.9308,
+    "test_acc_sum_raw": 0.9294
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9466,
+    "test_acc": 0.9474,
+    "val_acc_sum_raw": 0.9286,
+    "test_acc_sum_raw": 0.931
+   }
+  ],
+  "deer-horse|Mdue": [
+   {
+    "seed": 2,
+    "val_acc": 0.9318,
+    "test_acc": 0.9319,
+    "val_acc_sum_raw": 0.9432,
+    "test_acc_sum_raw": 0.9404
+   },
+   {
+    "seed": 3,
+    "val_acc": 0.9362,
+    "test_acc": 0.9321,
+    "val_acc_sum_raw": 0.9466,
+    "test_acc_sum_raw": 0.9424
+   },
+   {
+    "seed": 4,
+    "val_acc": 0.9244,
+    "test_acc": 0.9313,
+    "val_acc_sum_raw": 0.9354,
+    "test_acc_sum_raw": 0.9443
+   },
+   {
+    "seed": 5,
+    "val_acc": 0.9312,
+    "test_acc": 0.9387,
+    "val_acc_sum_raw": 0.9406,
+    "test_acc_sum_raw": 0.942
+   },
+   {
+    "seed": 6,
+    "val_acc": 0.9346,
+    "test_acc": 0.9324,
+    "val_acc_sum_raw": 0.9422,
+    "test_acc_sum_raw": 0.9396
+   }
+  ],
+  "deer-horse|Mramo_w0.5": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.495,
+    "val_acc": 0.797,
+    "test_acc_branch_alone": 0.4937,
+    "test_acc": 0.8091,
+    "val_acc_sum_raw": 0.9224,
+    "test_acc_sum_raw": 0.9313
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.5054,
+    "val_acc": 0.7962,
+    "test_acc_branch_alone": 0.4944,
+    "test_acc": 0.7937,
+    "val_acc_sum_raw": 0.9248,
+    "test_acc_sum_raw": 0.9246
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5078,
+    "val_acc": 0.8172,
+    "test_acc_branch_alone": 0.4956,
+    "test_acc": 0.8231,
+    "val_acc_sum_raw": 0.927,
+    "test_acc_sum_raw": 0.9271
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5072,
+    "val_acc": 0.7994,
+    "test_acc_branch_alone": 0.4984,
+    "test_acc": 0.8007,
+    "val_acc_sum_raw": 0.9252,
+    "test_acc_sum_raw": 0.9317
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5026,
+    "val_acc": 0.8174,
+    "test_acc_branch_alone": 0.5031,
+    "test_acc": 0.8113,
+    "val_acc_sum_raw": 0.9312,
+    "test_acc_sum_raw": 0.9285
+   }
+  ],
+  "deer-horse|Mramo_w1": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.496,
+    "val_acc": 0.8828,
+    "test_acc_branch_alone": 0.4925,
+    "test_acc": 0.9035,
+    "val_acc_sum_raw": 0.9378,
+    "test_acc_sum_raw": 0.9447
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.5064,
+    "val_acc": 0.885,
+    "test_acc_branch_alone": 0.4925,
+    "test_acc": 0.8849,
+    "val_acc_sum_raw": 0.9482,
+    "test_acc_sum_raw": 0.9469
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5042,
+    "val_acc": 0.8908,
+    "test_acc_branch_alone": 0.4972,
+    "test_acc": 0.8973,
+    "val_acc_sum_raw": 0.9392,
+    "test_acc_sum_raw": 0.9438
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.507,
+    "val_acc": 0.8876,
+    "test_acc_branch_alone": 0.4989,
+    "test_acc": 0.8947,
+    "val_acc_sum_raw": 0.9412,
+    "test_acc_sum_raw": 0.947
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5018,
+    "val_acc": 0.8974,
+    "test_acc_branch_alone": 0.5036,
+    "test_acc": 0.8941,
+    "val_acc_sum_raw": 0.9464,
+    "test_acc_sum_raw": 0.9465
+   }
+  ],
+  "deer-horse|Mramo_w2": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.4968,
+    "val_acc": 0.9174,
+    "test_acc_branch_alone": 0.4932,
+    "test_acc": 0.9322,
+    "val_acc_sum_raw": 0.9356,
+    "test_acc_sum_raw": 0.9401
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.505,
+    "val_acc": 0.9236,
+    "test_acc_branch_alone": 0.494,
+    "test_acc": 0.9263,
+    "val_acc_sum_raw": 0.9424,
+    "test_acc_sum_raw": 0.9389
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.5036,
+    "val_acc": 0.9238,
+    "test_acc_branch_alone": 0.4999,
+    "test_acc": 0.9304,
+    "val_acc_sum_raw": 0.9366,
+    "test_acc_sum_raw": 0.942
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5076,
+    "val_acc": 0.9186,
+    "test_acc_branch_alone": 0.4988,
+    "test_acc": 0.9286,
+    "val_acc_sum_raw": 0.9378,
+    "test_acc_sum_raw": 0.9445
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.502,
+    "val_acc": 0.9266,
+    "test_acc_branch_alone": 0.5015,
+    "test_acc": 0.9308,
+    "val_acc_sum_raw": 0.9414,
+    "test_acc_sum_raw": 0.9413
+   }
+  ],
+  "deer-horse|Mramo_w4": [
+   {
+    "seed": 2,
+    "val_acc_branch_alone": 0.4946,
+    "val_acc": 0.9292,
+    "test_acc_branch_alone": 0.4975,
+    "test_acc": 0.9394,
+    "val_acc_sum_raw": 0.9318,
+    "test_acc_sum_raw": 0.9357
+   },
+   {
+    "seed": 3,
+    "val_acc_branch_alone": 0.5058,
+    "val_acc": 0.9364,
+    "test_acc_branch_alone": 0.4933,
+    "test_acc": 0.9378,
+    "val_acc_sum_raw": 0.9362,
+    "test_acc_sum_raw": 0.9322
+   },
+   {
+    "seed": 4,
+    "val_acc_branch_alone": 0.503,
+    "val_acc": 0.933,
+    "test_acc_branch_alone": 0.4969,
+    "test_acc": 0.9396,
+    "val_acc_sum_raw": 0.931,
+    "test_acc_sum_raw": 0.9383
+   },
+   {
+    "seed": 5,
+    "val_acc_branch_alone": 0.5078,
+    "val_acc": 0.9318,
+    "test_acc_branch_alone": 0.4988,
+    "test_acc": 0.9381,
+    "val_acc_sum_raw": 0.9306,
+    "test_acc_sum_raw": 0.9367
+   },
+   {
+    "seed": 6,
+    "val_acc_branch_alone": 0.5022,
+    "val_acc": 0.936,
+    "test_acc_branch_alone": 0.5029,
+    "test_acc": 0.9397,
+    "val_acc_sum_raw": 0.9348,
+    "test_acc_sum_raw": 0.9374
+   }
+  ]
+ },
+ "unit_seconds": {
+  "airplane-ship_s2": 194.8,
+  "airplane-ship_s3": 197.3,
+  "airplane-ship_s4": 195.1,
+  "airplane-ship_s5": 201.5,
+  "airplane-ship_s6": 195.3,
+  "automobile-truck_s2": 202.5,
+  "automobile-truck_s3": 195.0,
+  "automobile-truck_s4": 195.0,
+  "automobile-truck_s5": 197.3,
+  "automobile-truck_s6": 194.6,
+  "bird-frog_s2": 195.0,
+  "bird-frog_s3": 195.0,
+  "bird-frog_s4": 197.4,
+  "bird-frog_s5": 198.6,
+  "bird-frog_s6": 60.1,
+  "cat-dog_s2": 201.0,
+  "cat-dog_s3": 197.4,
+  "cat-dog_s4": 195.3,
+  "cat-dog_s5": 194.9,
+  "cat-dog_s6": 202.9,
+  "deer-horse_s2": 200.3,
+  "deer-horse_s3": 194.9,
+  "deer-horse_s4": 197.5,
+  "deer-horse_s5": 195.1,
+  "deer-horse_s6": 195.1
+ },
+ "deviations": [
+  "shared GPU: the driver stopped twice to give the GPU back to another user and started again when it was free. Three sessions on 2026-11-19, UTC: 09:49 to 10:15, 10:19 to 11:27, 19:20 to 20:13. A unit is written when it ends; the units under way at a stop were run again from the start, with the same seeds. stage_time is the last session only: the seconds of each unit are in unit_seconds",
+  "18 units were written in the first session (the first training started at 09:55:39 UTC), 7 in the second",
+  "environment built again for these runs: numpy 2.5.5 (E1 to E5: 2.5.4); python, torch, torchvision, CUDA and cuDNN as in E1 to E5"
+ ]
+}

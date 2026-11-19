@@ -14,16 +14,16 @@ primo esperimento, `angle-between-errors`, le misure dell'articolo di paithon.it
 `phi` fra gli errori di una persona e di una macchina stava fra 59 e 81 gradi, e la
 regione oltre i 90 gradi era rimasta inesplorata. Qui ci si va.
 
-> Stato: **versione 2 in corso** (novembre 2026). Da E0 a E5 le corse sono fatte, e le
-> racconta l'articolo di paithon.it
-> [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/)
+> Stato: **versione 2, corse fatte** (19 novembre 2026). Da E0 a E5 le racconta l'articolo
+> di paithon.it [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/)
 > (doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Quattro
-> esperimenti nuovi, da E6 a E9, sono **registrati, con le corse in esecuzione**: il protocollo
-> 2.1 è stato pubblicato in questo repository prima di ogni loro corsa, su cinque semi che
-> nessuna corsa precedente ha usato; la versione 2.2 ha aggiunto una lettura di E6 prima che
-> un suo file fosse letto. Il protocollo sta in [`PROTOCOL.it.md`](PROTOCOL.it.md)
-> (traduzione inglese [`PROTOCOL.md`](PROTOCOL.md)); ciò che è cambiato dopo una corsa sta
-> nella sua sezione «Deviazioni».
+> esperimenti nuovi, da E6 a E9, sono stati **registrati prima delle corse**: il protocollo
+> 2.1 è stato pubblicato in questo repository prima di ogni addestramento, su cinque semi
+> che nessuna corsa precedente ha usato; la versione 2.2 ha aggiunto una lettura di E6
+> prima che un suo file esistesse. Dei loro 29 criteri, **25 passano e 4 no** (tabella
+> più sotto). Il protocollo sta in [`PROTOCOL.it.md`](PROTOCOL.it.md) (traduzione inglese
+> [`PROTOCOL.md`](PROTOCOL.md)); ciò che è cambiato dopo una corsa sta nella sua sezione
+> «Deviazioni».
 
 ## L'identità
 
@@ -77,10 +77,21 @@ una pagina, è in [`docs/identity.md`](docs/identity.md).
 | E3 bis | la ricetta della somma con le persone vere: la macchina di base affinata sull'indizio delle persone più i suoi logit (esplorativo, v1.4) | corse su GPU, CIFAR-10H |
 | E4 | le coppie già misurate, rilette su questa scala | angoli pubblicati |
 | E5 | il nullo, con pesi di ogni segno (aggiunto nella v1.2, prima di ogni analisi) | i file di E1 |
-| E6 | la fiducia su misura: quattro compagni, ciascuno costruito per un peso diverso della macchina nella somma. Il peso a cui la coppia rende segue quello per cui il compagno è costruito? (v2.0) | corse su GPU, non ancora eseguite |
-| E7 | viste diverse: giudice e macchina vedono metà diverse dell'immagine, con tutto, un quarto o niente in comune. Che cosa impara un compagno addestrato da zero? (v2.0) | corse su GPU, non ancora eseguite |
-| E8 | il banco della cartella: il giudice vede l'immagine intera, la macchina tutta, metà o un quarto. Un teorema prevede la coppia con il solista, con il compagno e con un correttore cieco a partire da misure fatte solo sul giudice e sul solista (v2.1) | corse su GPU, non ancora eseguite |
-| E9 | la forma del rumore: le reti di E1 provate con una cornice della stessa varianza e di altra forma (due valori, uniforme, code pesanti). Dove la formula smette di valere per le risposte giuste? (v2.1) | corse su GPU, non ancora eseguite |
+| E6 | la fiducia su misura: quattro compagni, ciascuno costruito per un peso diverso della macchina nella somma. Il peso a cui la coppia rende segue quello per cui il compagno è costruito? (v2.0) | corse su GPU |
+| E7 | viste diverse: giudice e macchina vedono metà diverse dell'immagine, con tutto, un quarto o niente in comune. Che cosa impara un compagno addestrato da zero? (v2.0) | corse su GPU |
+| E8 | il banco della cartella: il giudice vede l'immagine intera, la macchina tutta, metà o un quarto. Un teorema prevede la coppia con il solista, con il compagno e con un correttore cieco a partire da misure fatte solo sul giudice e sul solista (v2.1) | corse su GPU |
+| E9 | la forma del rumore: le reti di E1 provate con una cornice della stessa varianza e di altra forma (due valori, uniforme, code pesanti). Dove la formula smette di valere per le risposte giuste? (v2.1) | corse su GPU |
+
+Che cosa è uscito dai quattro esperimenti nuovi (25 unità per E6, 75 per gli altri; mediane
+su cinque compiti e cinque semi):
+
+| | Criteri | In una riga |
+|---|---|---|
+| E6 | 7 su 7 | la coppia ha il massimo al peso per cui il compagno è costruito (0,54, 1,12 e 2,43 per 0,5, 1 e 2) e arriva alla stessa altezza che con il solista; a pari peso il compagno vince in 25 unità su 25, a peso 8 vince il solista |
+| E6, lettura di progetto | 3 su 4 | il compagno batte il solista fino a 0,96, 1,83 e 3,03 per i rami costruiti per 0,5, 1 e 2 (previsti 1, 2 e 4). **Non confermato (G2)**: a 0,285 del peso dovuto il compagno vince in 17 unità su 25, una meno delle 18 richieste, di 0,01 turing |
+| E7 | 5 su 6 | dove le viste non hanno niente in comune la coppia con il compagno vale 2,92 contro 2,70 con il solista, in 5 compiti su 5. **Non confermato (V4)**: un compagno addestrato da zero impara un terzo del compito che il giudice non copre, non i 0,7 richiesti |
+| E8 | 7 su 7 | quando la macchina vede un quarto dell'immagine la coppia con il compagno vale 2,87 contro 2,49 con il solista, in 5 compiti su 5; il guadagno è 1,02 volte quello previsto dal teorema; il correttore cieco batte il solista in 25 unità su 25 |
+| E9 | 3 su 5 | con la cornice gaussiana la formula regge di nuovo su semi nuovi; con una cornice a due valori promette 3,69 dove la coppia dà 2,29, e la coppia non dipende dalla forma. **Non confermati**: le code pesanti portano il rapporto a 0,95, non sotto 0,9 (S2), e la cornice uniforme va a 0,945, appena sotto la sua banda (S4) |
 
 Quattro riletture di dati già raccolti, nessuna delle quali è una prova:
 

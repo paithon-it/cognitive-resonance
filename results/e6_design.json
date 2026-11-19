@@ -1,0 +1,421 @@
+{
+ "experiment": "E6, design reading",
+ "protocol": "§ 12 bis (v2.2)",
+ "status": "reading registered when the runs of E6 had just started, before any of their files was read",
+ "source": "e6_trust.json",
+ "settings": {
+  "control": "M0plus",
+  "fractions": [
+   0.0625,
+   0.125,
+   0.285,
+   0.5,
+   1.0
+  ],
+  "kong": 0.285,
+  "interval_of_the_choice": [
+   0.285,
+   1.0
+  ],
+  "grid": "49 weights, 1/64 to 64",
+  "weight_due": "the peak weight of the pair (H, M0plus), on raw log-odds",
+  "turing_at_a_fraction": "linear interpolation in ln w of the raw curve of the unit"
+ },
+ "due_weight": {
+  "median": 8.000000000000002,
+  "by_unit": [
+   4.756828460010883,
+   4.756828460010883,
+   4.756828460010883,
+   4.756828460010883,
+   4.756828460010883,
+   4.756828460010883,
+   6.727171322029715,
+   9.513656920021766,
+   4.000000000000001,
+   6.727171322029715,
+   8.000000000000002,
+   11.313708498984765,
+   6.727171322029715,
+   11.313708498984765,
+   11.313708498984765,
+   22.62741699796953,
+   19.027313840043536,
+   38.05462768008707,
+   19.027313840043536,
+   13.45434264405943,
+   8.000000000000002,
+   9.513656920021766,
+   6.727171322029715,
+   11.313708498984765,
+   8.000000000000002
+  ]
+ },
+ "median_k": {
+  "M0": 1.4478208156661772,
+  "M0plus": 1.4733886833828898,
+  "Mdue": 1.401766563057755,
+  "Mramo_w0.5": 0.8682686690372112,
+  "Mramo_w1": 1.1964311070874987,
+  "Mramo_w2": 1.3723765058693986,
+  "Mramo_w4": 1.432791956511932
+ },
+ "by_fraction": [
+  {
+   "fraction": 0.0625,
+   "raw_weight": 0.5000000000000001,
+   "control_turing": 1.2759290014599003,
+   "partner": "Mramo_w0.5",
+   "built_for_weight": 0.5,
+   "partner_turing": 1.4238777832022163,
+   "gain": 0.13206273871506546,
+   "units_with_gain": 21,
+   "units": 25,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.22039846596882784,
+   "best_on_median_curves_seen_after": "Mramo_w1"
+  },
+  {
+   "fraction": 0.125,
+   "raw_weight": 1.0000000000000002,
+   "control_turing": 1.3770935088183016,
+   "partner": "Mramo_w1",
+   "built_for_weight": 1.0,
+   "partner_turing": 1.4712845018813778,
+   "gain": 0.07148793494529815,
+   "units_with_gain": 20,
+   "units": 25,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.22177701427709184,
+   "best_on_median_curves_seen_after": "Mramo_w1"
+  },
+  {
+   "fraction": 0.285,
+   "raw_weight": 2.2800000000000002,
+   "control_turing": 1.4513240195762391,
+   "partner": "Mramo_w2",
+   "built_for_weight": 2.0,
+   "partner_turing": 1.471895565253262,
+   "gain": 0.013920794736873798,
+   "units_with_gain": 17,
+   "units": 25,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.060304850649680386,
+   "best_on_median_curves_seen_after": "Mdue"
+  },
+  {
+   "fraction": 0.5,
+   "raw_weight": 4.000000000000001,
+   "control_turing": 1.4739631315507875,
+   "partner": "Mramo_w4",
+   "built_for_weight": 4.0,
+   "partner_turing": 1.466908767741725,
+   "gain": -0.007122368240578769,
+   "units_with_gain": 10,
+   "units": 25,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.01792784797880942,
+   "best_on_median_curves_seen_after": "Mdue"
+  },
+  {
+   "fraction": 1.0,
+   "raw_weight": 8.000000000000002,
+   "control_turing": 1.4772229713394296,
+   "partner": "Mramo_w4",
+   "built_for_weight": 4.0,
+   "partner_turing": 1.4644390762531472,
+   "gain": -0.02090383778446414,
+   "units_with_gain": 6,
+   "units": 25,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.010761565589618272,
+   "best_on_median_curves_seen_after": "M0plus"
+  }
+ ],
+ "break_even": {
+  "Mramo_w0.5": {
+   "built_for_weight": 0.5,
+   "predicted": 1.0,
+   "closed_units": 25,
+   "units": 25,
+   "median": 0.9570201703244385,
+   "median_over_predicted": 0.9570201703244385,
+   "on_median_curves": 0.9540161323380522,
+   "by_unit": [
+    1.0526415306709782,
+    0.9570201703244385,
+    0.9238367132124529,
+    0.9497141622448008,
+    1.0130243037544273,
+    0.9640327203171687,
+    1.05487354226012,
+    1.0441517449996174,
+    0.9473063246585105,
+    0.968964044818116,
+    0.8701700763844408,
+    0.9715544464860602,
+    0.8784542101928976,
+    0.9584153267885682,
+    0.9438985237804696,
+    0.9669518960550316,
+    0.9159556397113887,
+    0.9617934168281463,
+    0.8927869474620576,
+    0.9006312694432509,
+    0.9748403781213536,
+    0.9219077135496808,
+    0.9070114320905892,
+    1.0211474890994576,
+    0.9536956458244378
+   ]
+  },
+  "Mramo_w1": {
+   "built_for_weight": 1.0,
+   "predicted": 2.0,
+   "closed_units": 25,
+   "units": 25,
+   "median": 1.8293653111748027,
+   "median_over_predicted": 0.9146826555874014,
+   "on_median_curves": 1.801872387972919,
+   "by_unit": [
+    2.20533869696118,
+    1.8557745666163132,
+    1.698281847972382,
+    1.8898080703590292,
+    1.9834601178416984,
+    1.8850585333517091,
+    2.1509045008495162,
+    2.0307295551435196,
+    1.7337734772471318,
+    1.7580822898878135,
+    1.577338013289397,
+    1.8950823010546103,
+    1.5807928239187192,
+    1.8293653111748027,
+    1.7917490426269105,
+    1.9348867784412132,
+    1.7123326504798235,
+    1.8292478656827462,
+    1.6642049561206758,
+    1.64661915438356,
+    1.8737189746208573,
+    1.6755403114625307,
+    1.6857539743227052,
+    2.0068340850575246,
+    1.8625863041998632
+   ]
+  },
+  "Mramo_w2": {
+   "built_for_weight": 2.0,
+   "predicted": 4.0,
+   "closed_units": 25,
+   "units": 25,
+   "median": 3.0306300863198916,
+   "median_over_predicted": 0.7576575215799729,
+   "on_median_curves": 3.290750729141324,
+   "by_unit": [
+    5.0110210826250094,
+    3.5287978730116007,
+    2.5983013987433754,
+    3.6888682587754142,
+    3.649554052925145,
+    3.5841826224628917,
+    4.239685712000506,
+    3.423200989564331,
+    2.705334116254284,
+    2.5534705286136026,
+    2.533915024279732,
+    3.2317876425227143,
+    2.4399121107819965,
+    3.2166598404714906,
+    2.9559958308743544,
+    3.642684123751531,
+    2.9157410780297055,
+    3.0306300863198916,
+    2.770945886579819,
+    2.7510174670644942,
+    2.9963615170217843,
+    2.6169965863994733,
+    2.830766116774564,
+    3.5658085475877765,
+    3.4103407138889326
+   ]
+  },
+  "Mramo_w4": {
+   "built_for_weight": 4.0,
+   "predicted": 8.0,
+   "closed_units": 10,
+   "units": 25,
+   "median": 5.505839795304944,
+   "median_over_predicted": 0.688229974413118,
+   "on_median_curves": null,
+   "by_unit": [
+    13.728061163611839,
+    5.739057599217798,
+    null,
+    5.639257870015759,
+    5.318011682326095,
+    5.521329076179935,
+    7.153351858350218,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    4.374960660501421,
+    null,
+    5.490350514429951,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    4.292591623046382,
+    4.600790311079499
+   ]
+  }
+ },
+ "choice": {
+  "interval_of_fractions": [
+   0.285,
+   1.0
+  ],
+  "raw_weights": [
+   2.2800000000000002,
+   8.000000000000002
+  ],
+  "chosen": "Mramo_w4",
+  "table": {
+   "M0": {
+    "k": 1.4478208156661772,
+    "holds_floor": true,
+    "worst": 1.4324467705074537,
+    "mean": 1.446555054775225,
+    "minimum_on_grid": 1.0123955602102632
+   },
+   "M0plus": {
+    "k": 1.4733886833828898,
+    "holds_floor": true,
+    "worst": 1.4608789740251396,
+    "mean": 1.4698956881637513,
+    "minimum_on_grid": 1.0140758393767528
+   },
+   "Mdue": {
+    "k": 1.401766563057755,
+    "holds_floor": true,
+    "worst": 1.4446458912200852,
+    "mean": 1.4723955801581914,
+    "minimum_on_grid": 1.017402394584361
+   },
+   "Mramo_w0.5": {
+    "k": 0.8682686690372112,
+    "holds_floor": false,
+    "worst": 0.9545385881224236,
+    "mean": 1.040616905264867,
+    "minimum_on_grid": 0.8791270746606217
+   },
+   "Mramo_w1": {
+    "k": 1.1964311070874987,
+    "holds_floor": true,
+    "worst": 1.2730999137141328,
+    "mean": 1.3475929573282082,
+    "minimum_on_grid": 1.019278947925919
+   },
+   "Mramo_w2": {
+    "k": 1.3723765058693986,
+    "holds_floor": true,
+    "worst": 1.427480596770709,
+    "mean": 1.4583062966912235,
+    "minimum_on_grid": 1.0158154970817646
+   },
+   "Mramo_w4": {
+    "k": 1.432791956511932,
+    "holds_floor": true,
+    "worst": 1.4614178029506317,
+    "mean": 1.46699152802565,
+    "minimum_on_grid": 1.0140925728746253
+   }
+  },
+  "units_with_the_same_choice": 7,
+  "units": 25,
+  "by_unit": [
+   "Mramo_w2",
+   "Mramo_w4",
+   "Mramo_w4",
+   "Mramo_w2",
+   "Mramo_w2",
+   "Mdue",
+   "Mramo_w4",
+   "Mramo_w4",
+   "Mdue",
+   "Mdue",
+   "M0plus",
+   "M0plus",
+   "Mramo_w4",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "Mramo_w4",
+   "M0plus",
+   "Mramo_w4"
+  ],
+  "worst_minus_control": 0.0005388289254921741,
+  "expectation": {
+   "text": "the rule chooses the branch built for 4, with an advantage over M0plus in the worst case below 0.05 turing; not a criterion",
+   "met": true
+  }
+ },
+ "criteria": {
+  "G1": {
+   "outcome": "pass",
+   "needed_closed_units": 15,
+   "factor": 1.5,
+   "median_over_twice_the_built_weight": {
+    "Mramo_w0.5": 0.9570201703244385,
+    "Mramo_w1": 0.9146826555874014,
+    "Mramo_w2": 0.7576575215799729
+   },
+   "closed_units": {
+    "Mramo_w0.5": 25,
+    "Mramo_w1": 25,
+    "Mramo_w2": 25
+   },
+   "rule": "the break-even of the branch built for w_b is closed in >= 15 units of 25 and its median over the closed units is within a factor 1.5 of 2 w_b, for w_b = 0.5, 1 and 2"
+  },
+  "G2": {
+   "outcome": "fail",
+   "partner": "Mramo_w2",
+   "units_with_gain": 17,
+   "needed_units": 18,
+   "median_gain": 0.013920794736873798,
+   "rule": "at f = 0.285 of the weight due the pair with the partner for f has a higher turing than the pair with M0plus in >= 18 units of 25"
+  },
+  "G3": {
+   "outcome": "pass",
+   "partner": "Mramo_w4",
+   "median_gain": -0.02090383778446414,
+   "band": 0.03,
+   "rule": "at f = 1 the median difference between the pair with the partner for f and the pair with M0plus is within 0.03 turing"
+  },
+  "G4": {
+   "outcome": "pass",
+   "median_k": {
+    "Mramo_w0.5": 0.8682686690372112,
+    "Mramo_w1": 1.1964311070874987,
+    "Mramo_w2": 1.3723765058693986,
+    "Mramo_w4": 1.432791956511932
+   },
+   "rule": "k = d_a(machine) / d_a(H) is, in median, below 1 for the branch built for 0.5 and at least 1 for those built for 1, 2 and 4"
+  }
+ },
+ "environment": {
+  "python": "3.13.14",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "code_commit": "ac4f31da4b4e5246d70ac198e76ae29cfb3e9e70"
+ }
+}

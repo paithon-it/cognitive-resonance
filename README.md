@@ -12,14 +12,15 @@ Italian; doi:[10.5281/zenodo.24107649](https://doi.org/10.5281/zenodo.24107649))
 the angle `phi` between the errors of a person and of a machine was measured between 59
 and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go there.
 
-> Status: **version 2 in progress** (November 2026). E0 to E5 are done, and are told in the
-> paithon.it article [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in
-> Italian; doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Four new
-> experiments, E6 to E9, are **registered, with their runs under way**: protocol 2.1 was pushed to
-> this repository before any of their runs, on five seeds that no earlier run used; version 2.2
-> added a reading of E6 before any of its files was read. The protocol
-> is in [`PROTOCOL.md`](PROTOCOL.md) (Italian original [`PROTOCOL.it.md`](PROTOCOL.it.md));
-> what changed after a run is in its "Deviations" section.
+> Status: **version 2, runs done** (19 November 2026). E0 to E5 are told in the paithon.it
+> article [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in Italian;
+> doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Four new
+> experiments, E6 to E9, were **registered before their runs**: protocol 2.1 was pushed to
+> this repository before any training, on five seeds that no earlier run used; version 2.2
+> added a reading of E6 before any of its files existed. Of their 29 criteria, **25 pass
+> and 4 do not** (table below). The protocol is in [`PROTOCOL.md`](PROTOCOL.md) (Italian
+> original [`PROTOCOL.it.md`](PROTOCOL.it.md)); what changed after a run is in its
+> "Deviations" section.
 
 ## The identity
 
@@ -71,10 +72,21 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E3 bis | the recipe of the sum with real people: the base machine fine-tuned on the people's cue plus its own logits (exploratory, v1.4) | GPU runs, CIFAR-10H |
 | E4 | the pairs already measured, reread on this scale | published angles |
 | E5 | the null, with weights of either sign (added in v1.2, before any analysis) | the files of E1 |
-| E6 | trust made to measure: four partners, each built for a different weight of the machine in the sum. Does the weight at which the pair pays off follow the weight the partner was built for? (v2.0) | GPU runs, not run yet |
-| E7 | different views: judge and machine see different halves of the image, with everything, a quarter or nothing in common. What does a partner trained from scratch learn? (v2.0) | GPU runs, not run yet |
-| E8 | the bench of the chart: the judge sees the whole image, the machine all, half or a quarter of it. A theorem predicts the pair with the soloist, with the partner and with a blind corrector from measures taken on the judge and the soloist alone (v2.1) | GPU runs, not run yet |
-| E9 | the shape of the noise: the networks of E1 tested with a frame of the same variance and another shape (two values, uniform, heavy tails). Where does the formula stop holding for right answers? (v2.1) | GPU runs, not run yet |
+| E6 | trust made to measure: four partners, each built for a different weight of the machine in the sum. Does the weight at which the pair pays off follow the weight the partner was built for? (v2.0) | GPU runs |
+| E7 | different views: judge and machine see different halves of the image, with everything, a quarter or nothing in common. What does a partner trained from scratch learn? (v2.0) | GPU runs |
+| E8 | the bench of the chart: the judge sees the whole image, the machine all, half or a quarter of it. A theorem predicts the pair with the soloist, with the partner and with a blind corrector from measures taken on the judge and the soloist alone (v2.1) | GPU runs |
+| E9 | the shape of the noise: the networks of E1 tested with a frame of the same variance and another shape (two values, uniform, heavy tails). Where does the formula stop holding for right answers? (v2.1) | GPU runs |
+
+What came out of the four new experiments (25 units each for E6, 75 for the others; medians
+over five tasks and five seeds):
+
+| | Criteria | In one line |
+|---|---|---|
+| E6 | 7 of 7 | the pair peaks at the weight the partner is built for (0.54, 1.12, 2.43 for 0.5, 1, 2) and reaches the same height as with the soloist; at equal weights the partner wins in 25 units of 25, at weight 8 the soloist does |
+| E6, design reading | 3 of 4 | the partner beats the soloist up to 0.96, 1.83 and 3.03 for the branches built for 0.5, 1 and 2 (predicted 1, 2, 4). **Not confirmed (G2)**: at 0.285 of the weight due the partner wins in 17 units of 25, one short of the 18 required, by 0.01 turing |
+| E7 | 5 of 6 | where the views share nothing the pair with the partner is worth 2.92 against 2.70 with the soloist, in 5 tasks of 5. **Not confirmed (V4)**: a partner trained from scratch learns a third of the task the judge does not cover, not the 0.7 required |
+| E8 | 7 of 7 | when the machine sees a quarter of the image the pair with the partner is worth 2.87 against 2.49 with the soloist, in 5 tasks of 5; the gain is 1.02 times the one the theorem predicts; the blind corrector beats the soloist in 25 units of 25 |
+| E9 | 3 of 5 | with a Gaussian frame the formula holds again on new seeds; with a two-valued frame it promises 3.69 where the pair gives 2.29, and the pair itself does not depend on the shape. **Not confirmed**: heavy tails move the ratio to 0.95, not below 0.9 (S2), and the uniform frame goes to 0.945, just below its band (S4) |
 
 Four readings of data already collected, none of them a test:
 
