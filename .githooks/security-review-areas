@@ -1,0 +1,7 @@
+# Areas of the security review (.githooks/pre-push makes one patch per area).
+#   <area>: <git pathspec> ...     exclude: <glob> ...   (docs for people, test-only files)
+library: src pyproject.toml uv.lock
+analysis: analysis
+gpu: gpu
+tooling: .githooks .claude :(glob)**/CLAUDE.md
+exclude: README.md README.it.md PROTOCOL.md PROTOCOL.it.md LICENSE gpu/README.md docs/** tests/** tool/test/** results/**
