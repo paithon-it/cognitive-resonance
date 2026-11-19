@@ -15,8 +15,9 @@ and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go
 > Status: **version 2 in progress** (November 2026). E0 to E5 are done, and are told in the
 > paithon.it article [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in
 > Italian; doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Four new
-> experiments, E6 to E9, are **registered and not run yet**: protocol 2.1 was pushed to this
-> repository before any of their runs, on five seeds that no earlier run used. The protocol
+> experiments, E6 to E9, are **registered, with their runs under way**: protocol 2.1 was pushed to
+> this repository before any of their runs, on five seeds that no earlier run used; version 2.2
+> added a reading of E6 before any of its files was read. The protocol
 > is in [`PROTOCOL.md`](PROTOCOL.md) (Italian original [`PROTOCOL.it.md`](PROTOCOL.it.md));
 > what changed after a run is in its "Deviations" section.
 
@@ -75,13 +76,14 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E8 | the bench of the chart: the judge sees the whole image, the machine all, half or a quarter of it. A theorem predicts the pair with the soloist, with the partner and with a blind corrector from measures taken on the judge and the soloist alone (v2.1) | GPU runs, not run yet |
 | E9 | the shape of the noise: the networks of E1 tested with a frame of the same variance and another shape (two values, uniform, heavy tails). Where does the formula stop holding for right answers? (v2.1) | GPU runs, not run yet |
 
-Three readings of data already collected, none of them a test:
+Four readings of data already collected, none of them a test:
 
 | | What | Result file |
 |---|---|---|
 | the identity | with sensitivity as a signal-to-noise ratio, the formula of the pair is an algebraic identity of the sample moments: E1 and E5 test how Gaussian the cues are, not the formula | `results/identity.json` |
 | the peak moves | on the files of E2 ter, the pair at fixed weights: the partner does not raise the maximum, it moves the weight at which the pair reaches it | `results/e6_trust_from_e2ter.json` |
 | the three machines | the theorem of E8 on the files of E2 bis and E2 ter, unit by unit | `results/chart_from_e2.json` |
+| who a partner is worth it for | the design reading of E6 (protocol § 12 bis) on the one branch of E2 ter: it beats the soloist up to about twice the weight it is built for, and not for someone who gives the soloist a quarter of the weight due | `results/e6_design_from_e2ter.json` |
 
 Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RESULTS.md).
 
@@ -97,7 +99,8 @@ Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RES
   file with all the measures and the outcomes; `figure_data.py` gathers the data of the
   figures. For version 2: `fixed.py` (the pair at fixed weights, with paired bootstrap),
   `trust.py`, `views.py`, `chart.py`, `shape.py` (E6 to E9), `identity.py`, and
-  `design.py`, a design aid on the curves of E6 that is not a test.
+  `design.py`, the design reading of E6 (protocol § 12 bis): who a partner is worth it for, and the rule
+  by which a machine is chosen.
 - `src/cognitive_resonance/chart.py`: the theorem of the three machines (the pair with
   the soloist, with the partner, and the band in which a blind corrector wins).
 - `gpu/`: the scripts that train the networks and write the raw cues.
@@ -134,6 +137,7 @@ Version 2. The readings of old data need the raw files of E1, E2 bis and E2 ter:
 uv run python analysis/identity.py             # results/identity.json
 uv run python analysis/trust.py --ter          # results/e6_trust_from_e2ter.json
 uv run python analysis/chart.py --e2           # results/chart_from_e2.json
+uv run python analysis/design.py --ter         # results/e6_design_from_e2ter.json
 ```
 
 The new experiments, once their raw files are in `results/raw/{trust,views,chart,shape}`
@@ -144,7 +148,7 @@ uv run python analysis/trust.py                # E6, results/e6_trust.json
 uv run python analysis/views.py                # E7, results/e7_views.json
 uv run python analysis/chart.py                # E8, results/e8_chart.json
 uv run python analysis/shape.py                # E9, results/e9_shape.json
-uv run python analysis/design.py               # which weight to build a partner for (after E6)
+uv run python analysis/design.py               # E6, design reading (after trust.py), results/e6_design.json
 ```
 
 E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its

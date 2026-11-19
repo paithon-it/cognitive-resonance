@@ -343,6 +343,35 @@ The files of E2 ter, read with `analysis/trust.py --ter`: the same pairs, at a w
 
 Standardized weight at which the pair with the branch and the pair with the soloist are worth the same: median 2.08 (from 1.80 to 2.42, 10 units). Below it the built partner wins, above it the soloist.
 
+## E2 ter read as a design problem (exploratory)
+
+The files of E2 ter, read with `analysis/design.py --ter` (protocol § 12 bis). They hold one branch, built for weight 1: the criteria G1 to G4 need the four branches of E6 and are not judged here. Not a test.
+
+Weight due to the control soloist (the peak weight of its pair, median over units): 8.00. A person who gives the soloist a share f of it uses the raw weight f times that, with every machine.
+
+| share f of the weight due | raw weight | partner for f | Tu with the soloist | Tu with the partner | gain (median of the paired differences) | units with a gain | gain if f is of the partner's own due weight |
+|---|---|---|---|---|---|---|---|
+| 0.062 | 0.50 | Mramo | 1.241 | 1.347 | 0.104 | 9/10 | -0.163 |
+| 0.125 | 1.00 | Mramo | 1.347 | 1.458 | 0.084 | 8/10 | -0.198 |
+| 0.285 | 2.28 | Mramo | 1.436 | 1.438 | -0.018 | 3/10 | -0.144 |
+| 0.500 | 4.00 | Mramo | 1.463 | 1.368 | -0.110 | 0/10 | -0.060 |
+| 1.000 | 8.00 | Mramo | 1.470 | 1.286 | -0.196 | 0/10 | -0.006 |
+
+Break-even: going up from the weight a branch is built for, the first weight at which its pair falls below the pair with the control soloist. The model puts it at twice the built weight.
+
+| branch | built for w | predicted break-even | median break-even | closed in units | on the median curves |
+|---|---|---|---|---|---|
+| Mramo | 1.0 | 2.0 | 1.86 | 10/10 | 1.78 |
+
+The rule of choice for the people between 0.285 and 1 of the weight due (raw weights 2.28 to 8.00): among the machines with k >= 1, the highest worst case. Chosen: **M0plus**; the same rule on each unit alone makes the same choice in 6 units of 10.
+
+| machine | k | holds the floor | worst Tu in the interval | mean Tu in the interval | lowest Tu on the whole grid |
+|---|---|---|---|---|---|
+| M0 | 1.45 | yes | 1.435 | 1.449 | 1.012 |
+| M0plus | 1.46 | yes | 1.455 | 1.465 | 1.014 |
+| Mdue | 1.39 | yes | 1.427 | 1.453 | 1.017 |
+| Mramo | 1.18 | yes | 1.262 | 1.339 | 1.020 |
+
 ## The theorem of the chart on E2 bis and E2 ter (a reading of old data)
 
 `analysis/chart.py --e2`: per unit, the slope of H's cue on the frame gives the bias B and what is left is the clean cue h; from h and the soloist come d_h, d_m and r, and the theorem (protocol § 14) says what the pair is worth with the soloist (D1), with the soloist plus something that reads the frame (D2) and with a blind corrector (d_h). Medians over the units. Not a test: these runs came before the theorem.

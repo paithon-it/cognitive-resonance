@@ -18,9 +18,10 @@ regione oltre i 90 gradi era rimasta inesplorata. Qui ci si va.
 > racconta l'articolo di paithon.it
 > [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/)
 > (doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Quattro
-> esperimenti nuovi, da E6 a E9, sono **registrati e non ancora eseguiti**: il protocollo
+> esperimenti nuovi, da E6 a E9, sono **registrati, con le corse in esecuzione**: il protocollo
 > 2.1 è stato pubblicato in questo repository prima di ogni loro corsa, su cinque semi che
-> nessuna corsa precedente ha usato. Il protocollo sta in [`PROTOCOL.it.md`](PROTOCOL.it.md)
+> nessuna corsa precedente ha usato; la versione 2.2 ha aggiunto una lettura di E6 prima che
+> un suo file fosse letto. Il protocollo sta in [`PROTOCOL.it.md`](PROTOCOL.it.md)
 > (traduzione inglese [`PROTOCOL.md`](PROTOCOL.md)); ciò che è cambiato dopo una corsa sta
 > nella sua sezione «Deviazioni».
 
@@ -81,13 +82,14 @@ una pagina, è in [`docs/identity.md`](docs/identity.md).
 | E8 | il banco della cartella: il giudice vede l'immagine intera, la macchina tutta, metà o un quarto. Un teorema prevede la coppia con il solista, con il compagno e con un correttore cieco a partire da misure fatte solo sul giudice e sul solista (v2.1) | corse su GPU, non ancora eseguite |
 | E9 | la forma del rumore: le reti di E1 provate con una cornice della stessa varianza e di altra forma (due valori, uniforme, code pesanti). Dove la formula smette di valere per le risposte giuste? (v2.1) | corse su GPU, non ancora eseguite |
 
-Tre riletture di dati già raccolti, nessuna delle quali è una prova:
+Quattro riletture di dati già raccolti, nessuna delle quali è una prova:
 
 | | Che cosa | File dei risultati |
 |---|---|---|
 | l'identità | con la sensibilità come rapporto fra segnale e rumore, la formula della coppia è un'identità algebrica dei momenti campionari: E1 ed E5 misurano quanto sono gaussiani gli indizi, non la formula | `results/identity.json` |
 | il picco si sposta | sui file di E2 ter, la coppia a pesi fissati: il compagno non alza il massimo, sposta il peso a cui la coppia lo raggiunge | `results/e6_trust_from_e2ter.json` |
 | le tre macchine | il teorema di E8 sui file di E2 bis ed E2 ter, unità per unità | `results/chart_from_e2.json` |
+| per chi conviene un compagno | la lettura di progetto di E6 (protocollo, § 12 bis) sull'unico ramo di E2 ter: batte il solista fino a circa due volte il peso per cui è costruito, e non per chi dà al solista un quarto del peso dovuto | `results/e6_design_from_e2ter.json` |
 
 I risultati, con l'esito di ogni criterio: [`results/RESULTS.md`](results/RESULTS.md) (in
 inglese).
@@ -105,7 +107,8 @@ inglese).
   JSON con tutte le misure e gli esiti; `figure_data.py` raccoglie i dati delle figure.
   Per la versione 2: `fixed.py` (la coppia a pesi fissati, con bootstrap appaiato),
   `trust.py`, `views.py`, `chart.py`, `shape.py` (da E6 a E9), `identity.py`, e
-  `design.py`, un aiuto al progetto sulle curve di E6 che non è una prova.
+  `design.py`, la lettura di progetto di E6 (protocollo, § 12 bis): per chi conviene un compagno, e la
+  regola con cui si sceglie una macchina.
 - `src/cognitive_resonance/chart.py`: il teorema delle tre macchine (la coppia con il
   solista, con il compagno, e la banda in cui vince un correttore cieco).
 - `gpu/`: gli script che addestrano le reti e scrivono gli indizi grezzi.
@@ -143,6 +146,7 @@ Versione 2. Le riletture dei dati vecchi chiedono i file grezzi di E1, E2 bis ed
 uv run python analysis/identity.py             # results/identity.json
 uv run python analysis/trust.py --ter          # results/e6_trust_from_e2ter.json
 uv run python analysis/chart.py --e2           # results/chart_from_e2.json
+uv run python analysis/design.py --ter         # results/e6_design_from_e2ter.json
 ```
 
 Gli esperimenti nuovi, con i loro file grezzi in `results/raw/{trust,views,chart,shape}`
@@ -153,7 +157,7 @@ uv run python analysis/trust.py                # E6, results/e6_trust.json
 uv run python analysis/views.py                # E7, results/e7_views.json
 uv run python analysis/chart.py                # E8, results/e8_chart.json
 uv run python analysis/shape.py                # E9, results/e9_shape.json
-uv run python analysis/design.py               # per quale peso costruire un compagno (dopo E6)
+uv run python analysis/design.py               # E6, lettura di progetto (dopo trust.py), results/e6_design.json
 ```
 
 E3 ed E3 bis importano `compare_votes` da un clone locale di turing-meter e ne scrivono il

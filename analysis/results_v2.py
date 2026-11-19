@@ -178,5 +178,58 @@ def e9(d):
         criteria(d["criteria"])])
 
 
-SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old), ("e6_trust.json", e6),
+def _design_tables(d):
+    rows = [[f(r["fraction"], 3), f(r["raw_weight"], 2), r.get("partner", ""), f(r["control_turing"], 3),
+             f(r.get("partner_turing"), 3), f(r.get("gain"), 3), f"{r.get('units_with_gain', '')}/{r.get('units', '')}",
+             f(r.get("gain_if_the_fraction_is_of_its_own_due_weight"), 3)] for r in d["by_fraction"]]
+    by_fraction = table(["share f of the weight due", "raw weight", "partner for f", "Tu with the soloist",
+                         "Tu with the partner", "gain (median of the paired differences)", "units with a gain",
+                         "gain if f is of the partner's own due weight"], rows)
+    rows = [[name, f(c["built_for_weight"], 1), f(c["predicted"], 1), f(c["median"], 2),
+             f"{c['closed_units']}/{c['units']}", f(c["on_median_curves"], 2)] for name, c in d["break_even"].items()]
+    crossing = table(["branch", "built for w", "predicted break-even", "median break-even", "closed in units",
+                      "on the median curves"], rows)
+    ch = d["choice"]
+    rows = [[name, f(r["k"], 2), "yes" if r["holds_floor"] else "no", f(r["worst"], 3), f(r["mean"], 3),
+             f(r["minimum_on_grid"], 3)] for name, r in ch["table"].items()]
+    choice = table(["machine", "k", "holds the floor", "worst Tu in the interval", "mean Tu in the interval",
+                    "lowest Tu on the whole grid"], rows)
+    return by_fraction, crossing, choice
+
+
+def _design_text(d):
+    by_fraction, crossing, choice = _design_tables(d)
+    ch = d["choice"]
+    return [f"Weight due to the control soloist (the peak weight of its pair, median over units): "
+            f"{f(d['due_weight']['median'], 2)}. A person who gives the soloist a share f of it uses the raw weight "
+            "f times that, with every machine.", by_fraction,
+            "Break-even: going up from the weight a branch is built for, the first weight at which its pair falls "
+            "below the pair with the control soloist. The model puts it at twice the built weight.", crossing,
+            f"The rule of choice for the people between {f(ch['interval_of_fractions'][0], 3)} and "
+            f"{f(ch['interval_of_fractions'][1], 0)} of the weight due (raw weights {f(ch['raw_weights'][0], 2)} to "
+            f"{f(ch['raw_weights'][1], 2)}): among the machines with k >= 1, the highest worst case. Chosen: "
+            f"**{ch['chosen']}**; the same rule on each unit alone makes the same choice in "
+            f"{ch['units_with_the_same_choice']} units of {ch['units']}.", choice]
+
+
+def design_old(d):
+    return "\n\n".join(["## E2 ter read as a design problem (exploratory)",
+                        "The files of E2 ter, read with `analysis/design.py --ter` (protocol § 12 bis). They hold one "
+                        "branch, built for weight 1: the criteria G1 to G4 need the four branches of E6 and are not "
+                        "judged here. Not a test.", *_design_text(d)])
+
+
+def design(d):
+    ch = d["choice"]
+    met = {True: "met", False: "not met", None: "not evaluable"}[ch["expectation"]["met"]]
+    return "\n\n".join(["## E6, the design reading: who a partner is worth it for",
+                        "Protocol § 12 bis (v2.2), recorded when the runs of E6 had just started and before any of "
+                        "their files was read. It takes no new measure: it reads `e6_trust.json`. The primary "
+                        "criteria are G1 and G2.", *_design_text(d),
+                        f"Expectation written before, not a criterion ({ch['expectation']['text']}): **{met}**.",
+                        criteria(d["criteria"])])
+
+
+SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
+            ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e8_chart.json", e8), ("e7_views.json", e7), ("e9_shape.json", e9))

@@ -1,0 +1,241 @@
+{
+ "experiment": "E6, design reading",
+ "protocol": "§ 12 bis (v2.2)",
+ "status": "a look at the data of E2 ter, with one branch: not a test",
+ "source": "e6_trust_from_e2ter.json",
+ "settings": {
+  "control": "M0plus",
+  "fractions": [
+   0.0625,
+   0.125,
+   0.285,
+   0.5,
+   1.0
+  ],
+  "kong": 0.285,
+  "interval_of_the_choice": [
+   0.285,
+   1.0
+  ],
+  "grid": "49 weights, 1/64 to 64",
+  "weight_due": "the peak weight of the pair (H, M0plus), on raw log-odds",
+  "turing_at_a_fraction": "linear interpolation in ln w of the raw curve of the unit"
+ },
+ "due_weight": {
+  "median": 8.000000000000002,
+  "by_unit": [
+   4.756828460010883,
+   5.6568542494923815,
+   8.000000000000002,
+   8.000000000000002,
+   6.727171322029715,
+   9.513656920021766,
+   16.000000000000007,
+   53.817370576237785,
+   5.6568542494923815,
+   8.000000000000002
+  ]
+ },
+ "median_k": {
+  "M0": 1.4501572018670568,
+  "M0plus": 1.459440754088769,
+  "Mdue": 1.3867211016067493,
+  "Mramo": 1.1755947914864509
+ },
+ "by_fraction": [
+  {
+   "fraction": 0.0625,
+   "raw_weight": 0.5000000000000001,
+   "control_turing": 1.2414211085972764,
+   "partner": "Mramo",
+   "built_for_weight": 1.0,
+   "partner_turing": 1.347484481151009,
+   "gain": 0.10375819086633509,
+   "units_with_gain": 9,
+   "units": 10,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.16262382389507313,
+   "best_on_median_curves_seen_after": "Mramo"
+  },
+  {
+   "fraction": 0.125,
+   "raw_weight": 1.0000000000000002,
+   "control_turing": 1.3471461557800317,
+   "partner": "Mramo",
+   "built_for_weight": 1.0,
+   "partner_turing": 1.457886543823748,
+   "gain": 0.08397912869221469,
+   "units_with_gain": 8,
+   "units": 10,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.19757710416753616,
+   "best_on_median_curves_seen_after": "Mramo"
+  },
+  {
+   "fraction": 0.285,
+   "raw_weight": 2.2800000000000002,
+   "control_turing": 1.4355378626456599,
+   "partner": "Mramo",
+   "built_for_weight": 1.0,
+   "partner_turing": 1.4375836693200004,
+   "gain": -0.018297663259945862,
+   "units_with_gain": 3,
+   "units": 10,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.14382689938279325,
+   "best_on_median_curves_seen_after": "Mdue"
+  },
+  {
+   "fraction": 0.5,
+   "raw_weight": 4.000000000000001,
+   "control_turing": 1.4625380593989414,
+   "partner": "Mramo",
+   "built_for_weight": 1.0,
+   "partner_turing": 1.3684108299059075,
+   "gain": -0.11009176130299148,
+   "units_with_gain": 0,
+   "units": 10,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.05968576140600712,
+   "best_on_median_curves_seen_after": "M0plus"
+  },
+  {
+   "fraction": 1.0,
+   "raw_weight": 8.000000000000002,
+   "control_turing": 1.4698445481427733,
+   "partner": "Mramo",
+   "built_for_weight": 1.0,
+   "partner_turing": 1.2859692264877995,
+   "gain": -0.19628347615221853,
+   "units_with_gain": 0,
+   "units": 10,
+   "gain_if_the_fraction_is_of_its_own_due_weight": -0.006463229098080392,
+   "best_on_median_curves_seen_after": "M0plus"
+  }
+ ],
+ "break_even": {
+  "Mramo": {
+   "built_for_weight": 1.0,
+   "predicted": 2.0,
+   "closed_units": 10,
+   "units": 10,
+   "median": 1.862762818321536,
+   "median_over_predicted": 0.931381409160768,
+   "on_median_curves": 1.7802788277989015,
+   "by_unit": [
+    1.7718663980812497,
+    1.923705678389627,
+    2.1530218315751473,
+    2.0419308543520374,
+    1.6817972477735201,
+    1.64924246710907,
+    1.8685352666008364,
+    1.8569903700422354,
+    1.668642190186322,
+    1.9034088460058272
+   ]
+  }
+ },
+ "choice": {
+  "interval_of_fractions": [
+   0.285,
+   1.0
+  ],
+  "raw_weights": [
+   2.2800000000000002,
+   8.000000000000002
+  ],
+  "chosen": "M0plus",
+  "table": {
+   "M0": {
+    "k": 1.4501572018670568,
+    "holds_floor": true,
+    "worst": 1.43500366265415,
+    "mean": 1.449121097369591,
+    "minimum_on_grid": 1.0122346120309025
+   },
+   "M0plus": {
+    "k": 1.459440754088769,
+    "holds_floor": true,
+    "worst": 1.4551195805133403,
+    "mean": 1.4652860688569778,
+    "minimum_on_grid": 1.0140306405883202
+   },
+   "Mdue": {
+    "k": 1.3867211016067493,
+    "holds_floor": true,
+    "worst": 1.4273735347387317,
+    "mean": 1.4530164108065007,
+    "minimum_on_grid": 1.0170585410817443
+   },
+   "Mramo": {
+    "k": 1.1755947914864509,
+    "holds_floor": true,
+    "worst": 1.2624112670737841,
+    "mean": 1.3391270006885345,
+    "minimum_on_grid": 1.0195444572942245
+   }
+  },
+  "units_with_the_same_choice": 6,
+  "units": 10,
+  "by_unit": [
+   "Mdue",
+   "Mdue",
+   "M0",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "M0plus",
+   "Mdue",
+   "M0plus"
+  ],
+  "worst_minus_control": 0.0,
+  "expectation": {
+   "text": "the rule chooses the branch built for 4, with an advantage over M0plus in the worst case below 0.05 turing; not a criterion",
+   "met": null
+  }
+ },
+ "criteria": {
+  "G1": {
+   "outcome": "not evaluable",
+   "reason": "needs the four branches of E6: these files do not have them",
+   "needed_closed_units": 6,
+   "factor": 1.5,
+   "median_over_twice_the_built_weight": {
+    "Mramo": 0.931381409160768
+   },
+   "closed_units": {
+    "Mramo": 10
+   },
+   "rule": "the break-even of the branch built for w_b is closed in >= 15 units of 25 and its median over the closed units is within a factor 1.5 of 2 w_b, for w_b = 0.5, 1 and 2"
+  },
+  "G2": {
+   "outcome": "not evaluable",
+   "reason": "needs the four branches of E6: these files do not have them",
+   "partner": "Mramo",
+   "units_with_gain": 3,
+   "needed_units": 8,
+   "median_gain": -0.018297663259945862,
+   "rule": "at f = 0.285 of the weight due the pair with the partner for f has a higher turing than the pair with M0plus in >= 18 units of 25"
+  },
+  "G3": {
+   "outcome": "not evaluable",
+   "reason": "needs the four branches of E6: these files do not have them",
+   "partner": "Mramo",
+   "median_gain": -0.19628347615221853,
+   "band": 0.03,
+   "rule": "at f = 1 the median difference between the pair with the partner for f and the pair with M0plus is within 0.03 turing"
+  },
+  "G4": {
+   "outcome": "not evaluable",
+   "reason": "needs the four branches of E6: these files do not have them",
+   "median_k": {
+    "Mramo": 1.1755947914864509
+   },
+   "rule": "k = d_a(machine) / d_a(H) is, in median, below 1 for the branch built for 0.5 and at least 1 for those built for 1, 2 and 4"
+  }
+ },
+ "environment": {
+  "python": "3.13.14",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "code_commit": "96760d6d223c4b94310951f8c8fd874437e05324"
+ }
+}

@@ -383,18 +383,71 @@ def test_shape_changes_nothing_when_every_frame_is_gaussian(tmp_path):
     assert c["S1"]["outcome"] == "pass" and c["S2"]["outcome"] == "fail" and c["S3"]["outcome"] == "fail"
 
 
-# --- the design aid on the curves of E6 -------------------------------------------------------------------------
+# --- E6, the design reading (protocol section 12 bis) ---------------------------------------------------------
 
-def test_design_table_reads_the_curves(trust_units):
+def test_floor_of_the_model():
+    """With k >= 1 the pair is at one turing or above at every positive weight; with k < 1 it is not."""
+    gen = np.random.default_rng(5)
+    for _ in range(200):
+        rho, w = gen.uniform(-0.95, 0.95), math.exp(gen.uniform(-5, 5))
+        assert model.tu(w, 1.0 + gen.exponential(0.5), rho) >= 1.0 - 1e-12
+        k = gen.uniform(0.2, 0.99)
+        assert model.tu(1e4, k, rho) < 1.0
+
+
+def _pair_with_bias(w, rest):
+    """The turing of a pair whose sum keeps `rest` times the bias of the judge: signal 1 + 1.4 w, the noise of the
+    judge 1, of the machine 1 (uncorrelated), the bias of the judge with variance 0.8."""
+    return (1 + 1.4 * w) / np.sqrt(1 + w * w + 0.8 * rest ** 2) * math.sqrt(1.8)
+
+
+def test_break_even_at_twice_the_built_weight():
     import design
-    d = {"units": trust_units, "by_machine": trust.summary_by_machine(trust_units)}
-    rows = design.table(d, {0.5: 0.5, 2.0: 0.5})
-    by = {r["machine"]: r for r in rows}
-    assert set(by) == set(raw.TRUST_MACHINES)
-    half = by["Mramo_w0.5"]["turing_by_weight"]
-    assert half[0.5] > half[2.0]                                   # the partner built for 0.5 peaks near 0.5
-    assert by["Mramo_w0.5"]["worst_turing"] == pytest.approx(min(half.values()))
-    assert design.choose(rows) in by
-    assert 0.5 < by["M0"]["accuracy_judge"] <= 1.0
-    assert design.at(list(range(49)), design.GRID[10]) == pytest.approx(10.0)
-    assert design.parse_belief("0.25:0.5,1:0.5") == {0.25: 0.5, 1.0: 0.5}
+    g = model.GRID
+    soloist = _pair_with_bias(g, 1.0)
+    for w_b in (0.5, 1.0, 2.0, 4.0):
+        partner = _pair_with_bias(g, 1.0 - g / w_b)
+        assert design.break_even(partner, soloist, w_b) == pytest.approx(2 * w_b, rel=0.03)
+    assert design.break_even(soloist - 0.01, soloist, 1.0) is None          # below from the start: open
+    assert design.break_even(soloist + 0.01, soloist, 1.0) is None          # never below: open
+
+
+def test_rule_of_choice():
+    import design
+    g = model.GRID
+    curves = {"flat": np.full(g.size, 1.30), "peaked": 1.2 + 0.3 * np.exp(-np.log(g / 2.0) ** 2),
+              "harmful": np.full(g.size, 1.60)}
+    k = {"flat": 1.4, "peaked": 1.2, "harmful": 0.8}
+    chosen, table = design.choose(curves, k, 1.0, 4.0)
+    assert chosen == "peaked" and not table["harmful"]["holds_floor"]       # the best worst case above the floor
+    assert design.choose(curves, k, 1 / 32, 32.0)[0] == "flat"              # a wide range of people: the flat one
+    assert design.choose(curves, {n: 0.5 for n in curves}, 1.0, 4.0)[0] is None
+    assert design.points(1.0, 2.0)[0] == 1.0 and design.points(1.0, 2.0)[-1] == 2.0
+    assert design.partner_for(0.285, 8.0, {"a": 0.5, "b": 1.0, "c": 2.0, "d": 4.0}) == "c"
+    assert design.at(list(range(49)), g[10]) == pytest.approx(10.0)
+    assert design.at(list(range(49)), 1e6) == 48.0                          # outside the grid: the end value
+
+
+def test_design_reading_on_the_toy(trust_units):
+    import design
+    r = design.reading({"units": trust_units})
+    assert set(r["criteria"]) == {"G1", "G2", "G3", "G4"}
+    assert all(c["outcome"] in ("pass", "fail") for c in r["criteria"].values())
+    assert [row["fraction"] for row in r["by_fraction"]] == list(design.FRACTIONS)
+    one = r["break_even"]["Mramo_w1"]
+    assert one["predicted"] == 2.0 and one["closed_units"] == len(trust_units)
+    assert 1 / 1.5 <= one["median_over_predicted"] <= 1.5                   # the toy is additive: twice the weight
+    assert r["choice"]["chosen"] in raw.TRUST_MACHINES and r["choice"]["table"][r["choice"]["chosen"]]["holds_floor"]
+    assert 0 <= r["choice"]["units_with_the_same_choice"] <= len(trust_units)
+
+
+def test_design_reading_with_one_branch_is_not_judged(trust_units):
+    import copy
+    import design
+    units = copy.deepcopy(trust_units)
+    for u in units:
+        u["machines"] = ["M0", "M0plus", "Mdue", "Mramo_w1"]
+        u["branches"] = {"Mramo_w1": 1.0}
+    r = design.reading({"units": units})
+    assert all(c["outcome"] == "not evaluable" for c in r["criteria"].values())
+    assert r["by_fraction"][2]["partner"] == "Mramo_w1" and r["choice"]["expectation"]["met"] is None
