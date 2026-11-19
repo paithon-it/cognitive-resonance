@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 2.1, 19 November 2026. Written and recorded in the repository **before any run**:
+Version 2.2, 19 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -39,6 +39,8 @@ call this condition **cognitive resonance**, and there are ten questions.
   beat a machine that knows the task? (Added in version 2.1: see § 14.)
 - **Q10.** How much of the agreement between measure and formula seen in E1 depends on the
   shape of the noise we injected? (Added in version 2.1: see § 15.)
+- **Q11.** Who is a machine built on the person worth it for, and for which weight should
+  it be built when one does not know who will use it? (Added in version 2.2: see § 12 bis.)
 
 ## 2. The model
 
@@ -410,6 +412,10 @@ Hypotheses and criteria:
   accident of those ten units.
 - If F5 does not pass, the weight at which the pair works cannot be decided by training
   the machine: it stays a choice of whoever uses it.
+- If G1 does not pass, the arithmetic of the knob (`w = b / c`) is not enough to say who a
+  partner is worth it for: the break-even has to be measured case by case.
+- If G2 does not pass, for someone who gives the machine a quarter of the weight due, read
+  on this bench, a partner is not worth it.
 - If V1 does not pass, the built partner does not beat the soloist even when the person
   knows something of its own: as a design goal, at free trust, antiphase is of no use.
 - If V4 does not pass, the reading by which the machine trained on the sum learns what the
@@ -524,6 +530,84 @@ Hypotheses. The primary ones are F1 and F5.
 Raw data: `trust/{task}_s{seed}.npz`, like `rephase_ter/`, with `machines` =
 `M0, M0plus, Mdue, Mramo_w0.5, Mramo_w1, Mramo_w2, Mramo_w4` and `built_for_weight`;
 `manifest.json`.
+
+## 12 bis. E6, design reading: who a partner is worth it for
+
+Added with version 2.2, on 19 November 2026. The runs of E6 had started at 09:49 UTC,
+while this section was being written; it was recorded in the repository a few minutes
+later (the time is in GitHub's log), before any file of E6 was read or analysed. It asks
+for no new runs: it uses the files of E6. The training code does not change, and the
+manifests of the runs report version 2.1.
+
+**Where it comes from.** E6 says whether the weight at which a pair works can be decided by
+building the machine. Whoever builds it then has to choose that weight, without knowing
+who will use it. Kong et al. (2026) estimate that the people of ChatBench give the machine
+0.285 of the weight it deserves. Here we fix, before reading the data, how that fraction is read
+on the bench and by which rule a machine is chosen.
+
+**The weight due and the person.** The weight due, `ŵ_u`, is the peak weight (§ 12) of the
+pair `(H, M_0+)` in unit `u`, on raw log-odds; `ŵ` is its median over the units. Someone
+who gives the soloist a fraction `f` of the weight due uses the raw weight `f ŵ_u`, and
+uses it with every machine, because they do not see how it is built. This is an
+assumption. The opposite reading, in which the person gives every machine the fraction `f`
+of the weight due to that machine, is reported next to it, without a criterion. The
+fractions are 1/16, 1/8, 0.285, 1/2 and 1.
+
+**What is measured** (`analysis/design.py`).
+
+- *The turing at a fraction*: `Tu_X(f ŵ_u)`, by linear interpolation in `ln w` of the raw
+  curve of the unit on the 49 weights; outside the grid the end value holds.
+- *The partner for `f`*: `M_ramo(w_b)` with `w_b` nearest, in `ln w`, to `f ŵ`. The weight
+  it is built for decides, not the result: choosing the best after measuring them all
+  would give an advantage made of noise.
+- *The break-even* of `M_ramo(w_b)`: unit by unit, on the difference between the raw curve
+  of `(H, M_ramo(w_b))` and that of `(H, M_0+)`. Starting from the grid weight nearest to
+  `w_b` and going up, the break-even is the first weight at which the difference turns
+  negative, by linear interpolation in `ln w`. If at `w_b` the difference is not positive,
+  or if it never turns negative, the break-even stays open.
+- *The floor*: `k_X = d_a(X) / d_a(H)`, the machine alone against the judge alone.
+
+**What the model says.** If the bias of the judge is `b a` and the branch adds
+`-(b / w_b) a` to it, the sum at weight `w` keeps `(1 - w / w_b) b a`. With the soloist it
+keeps `b a`, and everything else in the sum is the same. The two remainders have the same
+size at `w = 2 w_b`: below it the partner wins, above it the soloist. In the reading of
+E2 ter, with `w_b = 1`, the curves crossed near 2. And from the formula of § 2,
+`Tu(w)^2 - 1 = [2 w (k - ρ) + w^2 (k^2 - 1)] / (1 + w^2 + 2 ρ w)`: with `k ≥ 1` it is
+never negative for `w > 0`, with `k < 1` it becomes negative at large weights. A machine
+that alone is worth at least as much as the judge does not take the pair below the judge
+at any positive weight, not even for someone who copies it.
+
+Hypotheses. The primary ones are G1 and G2.
+
+- **G1, the break-even is at twice the weight it is built for.** The break-even of
+  `M_ramo(w_b)` is closed in at least 15 units of 25 and lies, in median over the units in
+  which it is closed, within a factor 1.5 of `2 w_b`, for each of the weights `w_b` = 0.5,
+  1 and 2. For `w_b = 1` the reading of E2 ter had already shown it; for 0.5 and 2 it is a
+  prediction. At `w_b = 4` it is not judged: there the two curves are almost flat.
+- **G2, at a quarter of the weight due the partner is worth it.** At `f = 0.285` the pair
+  with the partner for `f` has a higher turing than the pair with `M_0+` in at least 18
+  units of 25. With a coin, 18 of 25 or more comes out with probability 0.022; the units
+  share the tasks and are not independent, so the count is indicative.
+- **G3, who gives the weight due does not need it.** At `f = 1` the difference between the
+  turing of the pair with the partner for `f` and that of the pair with `M_0+` lies, in
+  median over the units, between -0.03 and 0.03.
+- **G4, the partner of those who trust least does not hold the floor.** `k` is, in median
+  over the units, below 1 for `M_ramo(0.5)` and at least 1 for `M_ramo(1)`, `M_ramo(2)` and
+  `M_ramo(4)`.
+
+**The rule of choice**, fixed here. For the people between `f_1` and `f_2`: among the
+machines with `k` at least 1 in median, take the one with the highest minimum of the
+median curve over the units, on the grid weights between `f_1 ŵ` and `f_2 ŵ` and at the
+two ends; if equal, the one with the highest mean on the same points. The registered
+interval goes from 0.285 to 1. The worst case and not the expected value, because we know
+nothing of how people are spread over those weights, and whoever copies the machine is
+covered by the floor. **Expectation, without a criterion**: the rule chooses `M_ramo(4)`,
+which by the model is not below the soloist up to weight 8, with an advantage over `M_0+`
+in the worst case below 0.05 turing. We also report in how many units the same rule,
+applied to the unit alone, makes the same choice.
+
+None of these readings is about people: the judge is a network, and the fraction of Kong
+et al. comes from another task.
 
 ## 13. E7. Different views
 
@@ -829,3 +913,10 @@ the training code (`gpu/chart.py`, `gpu/shape.py`), the analysis code
 five. The theorem applied to the files of E2 bis and E2 ter is a reading of old data,
 declared as such. The shares of right answers were added to `analysis/fixed.py`, without a
 criterion.
+
+Version 2.2, of the same day, was recorded when the runs of E6 had just started (09:49 UTC)
+and before any of their files was read. It adds question Q11 and
+§ 12 bis, a reading of the files of E6 that asks for no new runs: how the fraction of
+weight estimated by Kong et al. is read on the bench, a prediction with no free parameter
+(the partner built for a weight beats the soloist up to twice that weight), and the rule by
+which a machine is chosen, fixed before reading the data. The training code does not change.

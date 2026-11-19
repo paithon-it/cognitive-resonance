@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 2.1, 19 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 2.2, 19 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -38,6 +38,8 @@ cancellano. Chiamiamo **risonanza cognitiva** questa condizione, e le domande so
   batte una macchina che conosce il compito? (Aggiunta della versione 2.1: vedi § 14.)
 - **D10.** Quanto dell'accordo fra misura e formula visto in E1 dipende dalla forma del
   rumore che abbiamo iniettato? (Aggiunta della versione 2.1: vedi § 15.)
+- **D11.** Per chi conviene una macchina costruita sulla persona, e per quale peso va
+  costruita se non si sa chi la userà? (Aggiunta della versione 2.2: vedi § 12 bis.)
 
 ## 2. Il modello
 
@@ -408,6 +410,10 @@ Ipotesi e criteri:
   quelle dieci unità.
 - Se F5 non passa, il peso a cui la coppia rende non si decide addestrando la macchina:
   resta una scelta di chi la usa.
+- Se G1 non passa, il conto della manopola (`w = b / c`) non basta a dire per chi conviene
+  un compagno: il punto di pareggio va misurato caso per caso.
+- Se G2 non passa, a chi dà alla macchina un quarto del dovuto, letto su questo banco, un
+  compagno non conviene.
 - Se V1 non passa, il compagno costruito non batte il solista nemmeno quando la persona
   sa qualcosa di suo: come obiettivo di progetto, a fiducia libera, la controfase non
   serve.
@@ -524,6 +530,82 @@ Ipotesi. Le primarie sono F1 e F5.
 Dati grezzi: `trust/{compito}_s{seme}.npz`, come `rephase_ter/`, con `machines` =
 `M0, M0plus, Mdue, Mramo_w0.5, Mramo_w1, Mramo_w2, Mramo_w4` e `built_for_weight`;
 `manifest.json`.
+
+## 12 bis. E6, lettura di progetto: per chi conviene un compagno
+
+Aggiunto con la versione 2.2, il 19 novembre 2026. Le corse di E6 erano partite alle
+09:49 UTC, mentre questa sezione veniva scritta; è stata registrata nel repository pochi
+minuti dopo (l'ora la dà il registro di GitHub), prima che un file di E6 fosse letto o
+analizzato. Non chiede corse nuove: usa i file di E6. Il codice dell'addestramento non
+cambia, e i manifesti delle corse riportano la versione 2.1.
+
+**Da dove viene.** E6 dice se il peso a cui una coppia rende si può decidere costruendo
+la macchina. Chi la costruisce deve poi sceglierlo, quel peso, senza conoscere chi la
+userà. Kong e colleghi (2026) stimano che le persone di ChatBench diano alla macchina
+0,285 del peso che le spetta. Qui si fissa, prima di leggere i dati, come quella frazione si
+legge sul banco e con quale regola si sceglie una macchina.
+
+**Il dovuto e la persona.** Il dovuto, `ŵ_u`, è il peso del picco (§ 12) della coppia
+`(H, M_0+)` nell'unità `u`, sui log-odds grezzi; `ŵ` è la sua mediana sulle unità. Chi dà
+al solista una frazione `f` del dovuto usa il peso grezzo `f ŵ_u`, e lo usa con ogni
+macchina, perché non vede come è costruita. È un'assunzione. La lettura opposta, in cui
+la persona dà a ogni macchina la frazione `f` del peso che spetta a quella macchina, si
+riporta accanto, senza criterio. Le frazioni sono 1/16, 1/8, 0,285, 1/2 e 1.
+
+**Che cosa si misura** (`analysis/design.py`).
+
+- *Il turing a una frazione*: `Tu_X(f ŵ_u)`, per interpolazione lineare in `ln w` della
+  curva grezza dell'unità sui 49 pesi; fuori dalla griglia vale l'estremo.
+- *Il compagno per `f`*: `M_ramo(w_b)` con `w_b` più vicino, in `ln w`, a `f ŵ`. Lo
+  decide il peso per cui è costruito, non il risultato: scegliere il migliore dopo
+  averli misurati tutti darebbe un vantaggio fatto di rumore.
+- *Il pareggio* di `M_ramo(w_b)`: unità per unità, sulla differenza fra la curva grezza
+  di `(H, M_ramo(w_b))` e quella di `(H, M_0+)`. Si parte dal peso della griglia più
+  vicino a `w_b` e si sale: il pareggio è il primo peso a cui la differenza diventa
+  negativa, per interpolazione lineare in `ln w`. Se a `w_b` la differenza non è
+  positiva, o se non diventa mai negativa, il pareggio resta aperto.
+- *Il pavimento*: `k_X = d_a(X) / d_a(H)`, la macchina da sola rispetto al giudice da solo.
+
+**Che cosa dice il modello.** Se il pregiudizio del giudice è `b a` e il ramo vi aggiunge
+`-(b / w_b) a`, nella somma a peso `w` resta `(1 - w / w_b) b a`. Con il solista resta
+`b a`, e tutto il resto della somma è uguale. I due resti hanno la stessa ampiezza a
+`w = 2 w_b`: sotto vince il compagno, sopra il solista. Nella rilettura di E2 ter, con
+`w_b = 1`, le curve si incrociavano vicino a 2. E dalla formula del § 2,
+`Tu(w)^2 - 1 = [2 w (k - ρ) + w^2 (k^2 - 1)] / (1 + w^2 + 2 ρ w)`: con `k ≥ 1` non è mai
+negativo per `w > 0`, con `k < 1` lo diventa ai pesi grandi. Una macchina che da sola
+vale almeno quanto il giudice non porta la coppia sotto il giudice a nessun peso
+positivo, neppure in chi la copia.
+
+Ipotesi. Le primarie sono G1 e G2.
+
+- **G1, il pareggio sta a due volte il peso di costruzione.** Il pareggio di
+  `M_ramo(w_b)` è chiuso in almeno 15 unità su 25 e sta, in mediana sulle unità in cui è
+  chiuso, entro un fattore 1,5 da `2 w_b`, per ciascuno dei pesi `w_b` = 0,5, 1 e 2. Per
+  `w_b = 1` la rilettura di E2 ter lo aveva già mostrato; per 0,5 e 2 è una previsione.
+  A `w_b = 4` non si giudica: lì le due curve sono quasi piatte.
+- **G2, a un quarto del dovuto conviene il compagno.** A `f = 0,285` la coppia con il
+  compagno per `f` ha un turing più alto della coppia con `M_0+` in almeno 18 unità su
+  25. Con una moneta, 18 su 25 o più esce con probabilità 0,022; le unità condividono i
+  compiti e non sono indipendenti, quindi il conto è indicativo.
+- **G3, chi dà il dovuto non ne ha bisogno.** A `f = 1` la differenza fra il turing della
+  coppia con il compagno per `f` e quello della coppia con `M_0+` sta, in mediana sulle
+  unità, fra -0,03 e 0,03.
+- **G4, il compagno di chi si fida meno non regge il pavimento.** `k` è, in mediana sulle
+  unità, sotto 1 per `M_ramo(0,5)` e almeno 1 per `M_ramo(1)`, `M_ramo(2)` e `M_ramo(4)`.
+
+**La regola di scelta**, fissata qui. Per le persone fra `f_1` e `f_2`: fra le macchine
+con `k` almeno 1 in mediana si prende quella con il più alto valore minimo della curva
+mediana sulle unità, sui pesi della griglia fra `f_1 ŵ` e `f_2 ŵ` e ai due estremi; a
+parità, quella con la media più alta sugli stessi punti. L'intervallo registrato va da
+0,285 a 1. Il caso peggiore e non il valore atteso, perché di come le persone si
+distribuiscono fra quei pesi non sappiamo niente, e chi copia la macchina è coperto dal
+pavimento. **Attesa, senza criterio**: la regola sceglie `M_ramo(4)`, che per il modello
+non sta sotto il solista fino al peso 8, con un vantaggio su `M_0+` nel caso peggiore
+sotto 0,05 turing. Si riporta anche in quante unità la stessa regola, applicata alla
+sola unità, fa la stessa scelta.
+
+Nessuna di queste letture riguarda persone: il giudice è una rete, e la frazione di Kong
+e colleghi viene da un altro compito.
 
 ## 13. E7. Viste diverse
 
@@ -830,3 +912,11 @@ dell'addestramento (`gpu/chart.py`, `gpu/shape.py`), dell'analisi (`analysis/cha
 applicato ai file di E2 bis ed E2 ter è una rilettura di dati vecchi, dichiarata come
 tale. In `analysis/fixed.py` sono state aggiunte, senza criterio, le quote di risposte
 giuste.
+
+La versione 2.2, dello stesso giorno, è stata registrata a corse di E6 appena partite
+(09:49 UTC) e prima che un loro file fosse letto. Aggiunge la
+domanda D11 e il § 12 bis, una lettura dei file di E6 che non chiede corse nuove: come si
+legge sul banco la frazione di peso stimata da Kong e colleghi, una previsione senza
+parametri (il compagno costruito per un peso batte il solista fino a due volte quel
+peso), e la regola con cui si sceglie una macchina, fissata prima di leggere i dati. Il codice
+dell'addestramento non cambia.
