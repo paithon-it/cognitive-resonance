@@ -1,0 +1,273 @@
+#!/usr/bin/env bash
+# Security review of exactly what is being pushed (skill security-review-range).
+# Installed by the user-level skill `security-review-setup`; the areas and the
+# exclusions of each repo live in .githooks/security-review-areas.
+#
+# Activate once per clone:   git config core.hooksPath .githooks
+# Conscious bypass:          SKIP_SECURITY_REVIEW=1 git push   (or --no-verify)
+#
+# The range is explicit (remote sha..local sha, or merge-base with the
+# remote default branch for a new branch): plain /security-review diffs
+# against origin/HEAD, which says nothing about what this push adds.
+# Fail-safe: if the review cannot run or its verdict is unreadable, the
+# push is blocked.
+set -euo pipefail
+
+if [[ "${SKIP_SECURITY_REVIEW:-}" == "1" ]]; then
+  echo "pre-push: security review saltata (SKIP_SECURITY_REVIEW=1)." >&2
+  exit 0
+fi
+
+remote="${1:-origin}"
+zero="0000000000000000000000000000000000000000"
+report_dir="$(git rev-parse --path-format=absolute --git-common-dir)/security-reviews"
+areas_path=".githooks/security-review-areas"
+skill_path=".claude/skills/security-review-range/SKILL.md"
+# The files that steer the review. A range that touches them is always
+# reviewed, whatever the exclusions say.
+gate_paths=(.githooks .claude/skills/security-review-range)
+# Agent instructions are never «only docs or tests», whatever the exclusions
+# say: `**/tests/**` also covers .claude/skills/tests/SKILL.md, `docs/**` a
+# docs/CLAUDE.md. Same set that prepare_context removes from repo/: CLAUDE.md,
+# CLAUDE.local.md, .claude/ at any depth, in any letter case.
+agent_instructions=(':(icase,glob)**/.claude/**' ':(icase,glob)**/claude.md' ':(icase,glob)**/claude.local.md')
+
+default_ref="$(git symbolic-ref -q --short "refs/remotes/$remote/HEAD" || true)"
+if [[ -z "$default_ref" ]] && git rev-parse -q --verify "refs/remotes/$remote/main" >/dev/null; then
+  default_ref="$remote/main"
+fi
+
+# Areas and exclusions, read from a commit the remote already holds (the
+# base of each range): with a plain `git push` HEAD *is* the pushed commit,
+# so the working tree would hand the review the exclusions of the code under
+# review (`exclude: **` → «only docs, no review»). File format, one per line:
+#   <area>: <pathspec> <pathspec> ...     → <area>.patch for the reviewer
+#   exclude: <glob> <glob> ...            → not reviewed (docs, tests)
+# Parallel indexed arrays, not `declare -A`: macOS still ships bash 3.2.
+# Not **/*.md: CLAUDE.md and .claude/ instruct agents and are reviewed.
+load_areas() {
+  local ref="$1" line name specs g
+  exclude_globs="README.md docs/** **/test/** **/tests/** **/__tests__/**"
+  not_reviewed=()
+  for g in $exclude_globs; do not_reviewed+=(":(exclude,glob)$g"); done
+  area_names=()
+  area_specs=()
+  git cat-file -e "$ref:$areas_path" 2>/dev/null || return 0
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="${line%%#*}"
+    [[ "$line" != *:* ]] && continue
+    name="$(printf '%s' "${line%%:*}" | tr -d '[:space:]')"
+    specs="${line#*:}"
+    if [[ "$name" == "exclude" ]]; then
+      read -ra globs <<<"$specs"
+      exclude_globs="${globs[*]}"
+      not_reviewed=()
+      for g in "${globs[@]}"; do not_reviewed+=(":(exclude,glob)$g"); done
+    elif [[ "$name" =~ ^[a-z0-9_-]+$ ]]; then
+      read -ra pathspecs <<<"$specs"
+      area_names+=("$name")
+      area_specs+=("${pathspecs[*]}")
+    fi
+  done < <(git show "$ref:$areas_path")
+}
+
+# The reviewer's skill: from the base of the range, else from the remote
+# default branch — both already on the remote, already reviewed — never
+# from the pushed commit or the checked-out branch. Prints the ref.
+skill_ref_for() {
+  local base="$1"
+  if git cat-file -e "$base:$skill_path" 2>/dev/null; then
+    printf '%s' "$base"
+  elif [[ -n "$default_ref" ]] && git cat-file -e "$default_ref:$skill_path" 2>/dev/null; then
+    printf '%s' "$default_ref"
+  else
+    return 1
+  fi
+}
+
+ranges=()
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [[ -z "${local_ref:-}" ]] && continue
+  [[ "$local_sha" == "$zero" ]] && continue
+  # Where the push lands decides, not what it comes from: `git push origin
+  # v1:main` has a tag as local ref and updates main.
+  [[ "$remote_ref" == refs/tags/* ]] && continue
+  if [[ "$remote_sha" != "$zero" ]] && git cat-file -e "$remote_sha^{commit}" 2>/dev/null; then
+    base="$remote_sha"
+  elif [[ -n "$default_ref" ]]; then
+    base="$(git merge-base "$default_ref" "$local_sha")"
+  else
+    echo "pre-push: non trovo il ramo di default di '$remote' per calcolare l'intervallo." >&2
+    echo "          git remote set-head $remote main   e riprova." >&2
+    exit 1
+  fi
+  [[ "$base" == "$local_sha" ]] && continue
+  load_areas "$base"
+  if git diff --quiet "$base" "$local_sha" -- "${gate_paths[@]}" &&
+     git diff --quiet "$base" "$local_sha" -- "${agent_instructions[@]}" &&
+     git diff --quiet "$base" "$local_sha" -- . "${not_reviewed[@]}"; then
+    echo "pre-push: $local_ref cambia solo documentazione o test, niente review." >&2
+    continue
+  fi
+  ranges+=("$base..$local_sha")
+done
+
+[[ ${#ranges[@]} -eq 0 ]] && exit 0
+
+if ! command -v claude >/dev/null 2>&1; then
+  echo "pre-push: 'claude' non è nel PATH, la security review non può girare: push bloccato." >&2
+  echo "          Saltarla consapevolmente: SKIP_SECURITY_REVIEW=1 git push" >&2
+  exit 1
+fi
+
+# The reviewer gets no shell: an allowlist like `Bash(git log:*)` also admits
+# `git log --output=<file>`, i.e. writing any file, and the code under review
+# is untrusted input. The hook prepares what it would have asked git.
+#
+# Nor does it start inside the code under review: Claude Code loads the
+# .claude/settings.json of its working directory, and the hooks declared there
+# run whatever --tools says (verified with claude 2.1.310, 2026-10-26). The
+# reviewer starts in the context dir built here; the pushed code is only data
+# in repo/ (no .claude/, no symlinks); the review skill and the exclusions
+# come from the base of the range (see skill_ref_for, load_areas), never from
+# the pushed commit. Agent instructions in the pushed tree (CLAUDE.md,
+# CLAUDE.local.md, .claude/ at any depth, in any letter case: macOS
+# filesystems are case-insensitive) are removed from repo/: Claude Code would
+# attach them as memory when the reviewer reads nearby files. Their changes
+# stay visible in the patches.
+
+# Pathspecs that exclude what the areas cover: what is left is «other», so a
+# path that no area lists (a CI workflow, a tool config) still gets a patch.
+compute_not_in_areas() {
+  local i spec specs
+  not_in_areas=()
+  for i in "${!area_specs[@]}"; do
+    read -ra specs <<<"${area_specs[$i]}"
+    for spec in "${specs[@]}"; do
+      case "$spec" in
+        ':!'* | ':^'* | ':('*exclude*')'*) ;;
+        ':('*) not_in_areas+=(":(exclude,${spec#:(}") ;;
+        *) not_in_areas+=(":(exclude)$spec") ;;
+      esac
+    done
+  done
+}
+
+# A file with a NUL byte is «binary» for git: its diff would be a single
+# «Binary files differ» line and the review would not see the code (browsers
+# still run JS with a NUL inside a comment). Fail closed: only extensions that
+# are really binary may be binary; anything else blocks the push.
+binary_ext='\.(png|jpe?g|gif|webp|avif|ico|bmp|tiff?|heic|ttf|otf|woff2?|eot|pdf|zip|gz|tgz|jar|aar|apk|aab|ipa|keystore|jks|p12|der|mp3|mp4|m4a|aac|wav|ogg|webm|mov|so|dylib|class|bin)$'
+unexpected_binaries() {
+  local rec path lower
+  { git diff --numstat -z --no-renames "$1" -- . "${not_reviewed[@]}"
+    git diff --numstat -z --no-renames "$1" -- "${agent_instructions[@]}"; } |
+    while IFS= read -r -d '' rec; do
+      [[ "$rec" == $'-\t-\t'* ]] || continue
+      path="${rec#$'-\t-\t'}"
+      lower="$(printf '%s' "$path" | tr '[:upper:]' '[:lower:]')"
+      [[ "$lower" =~ $binary_ext ]] || printf '%s\n' "$path"
+    done
+  return 0
+}
+
+prepare_context() {
+  local range="$1" dir="$2" skill_ref="$3" head i specs
+  head="${range##*..}"
+  git log --oneline "$range" >"$dir/log.txt"
+  git diff --stat "$range" >"$dir/stat.txt"
+  git diff "$range" >"$dir/diff.patch"
+  : >"$dir/areas.txt"
+  for i in "${!area_names[@]}"; do
+    read -ra specs <<<"${area_specs[$i]}"
+    git diff "$range" -- "${specs[@]}" >"$dir/${area_names[$i]}.patch"
+    echo "${area_names[$i]}: ${area_specs[$i]}" >>"$dir/areas.txt"
+  done
+  git diff "$range" -- . "${not_reviewed[@]}" "${not_in_areas[@]}" >"$dir/other.patch"
+  if [[ -s "$dir/other.patch" ]]; then
+    echo "other: file che nessuna area elenca (CI, configurazioni di strumenti, …)" >>"$dir/areas.txt"
+  else
+    rm -f "$dir/other.patch"
+  fi
+  # The exclusions of the base: the copy in repo/ is the pushed one.
+  echo "exclude: $exclude_globs" >>"$dir/areas.txt"
+  # read-tree + checkout-index, not `git archive`: archive obeys the pushed
+  # tree's export-ignore and could hide files from the reviewer.
+  GIT_INDEX_FILE="$dir/.index" git read-tree "$head"
+  GIT_INDEX_FILE="$dir/.index" git checkout-index -a -f --prefix="$dir/repo/"
+  rm -f "$dir/.index"
+  find "$dir/repo" \( -iname .claude -o -iname claude.md -o -iname claude.local.md \) -prune -exec rm -rf {} +
+  find "$dir/repo" -type l -delete
+  mkdir -p "$dir/$(dirname "$skill_path")"
+  git show "$skill_ref:$skill_path" >"$dir/$skill_path"
+}
+
+mkdir -p "$report_dir"
+ctx=""
+cleanup() { if [[ -n "$ctx" && -d "$ctx" ]]; then rm -rf "$ctx"; fi; }
+trap cleanup EXIT
+failed=0
+for range in "${ranges[@]}"; do
+  base="${range%%..*}"
+  head="${range##*..}"
+  report="$report_dir/$(date -u +%Y%m%dT%H%M%SZ)_${base:0:10}_${head:0:10}.md"
+  load_areas "$base"
+  compute_not_in_areas
+  if ! skill_ref="$(skill_ref_for "$base")"; then
+    echo "pre-push: né la base del push né il ramo di default di '$remote' hanno $skill_path (security-review-range): la review non può girare, push bloccato." >&2
+    echo "          Porta prima la skill sul ramo remoto di default e ripeti il push." >&2
+    failed=1
+    continue
+  fi
+  suspicious="$(unexpected_binaries "$range" | sort -u)"
+  if [[ -n "$suspicious" ]]; then
+    echo "pre-push: file che git tratta come binari ma non sono immagini, font, video o archivi" >&2
+    echo "          (un byte NUL?): il loro diff sarebbe invisibile alla review, push bloccato:" >&2
+    printf '          %s\n' "$suspicious" >&2
+    failed=1
+    continue
+  fi
+  echo "pre-push: security review di ${base:0:10}..${head:0:10} (qualche minuto)…" >&2
+  ctx="$(mktemp -d)"
+  prepare_context "$range" "$ctx" "$skill_ref"
+  reviewed=0
+  # --tools is the closed list of what exists for the reviewer; the allow and
+  # deny lists stay as a second fence. Only the context dir's own project
+  # settings (the skill copied above), and no hooks from any source.
+  # claude -p stops subagents still running 10 minutes after its last turn,
+  # and the verdict never arrives: wait for them (=0), the timeout is the cap.
+  (cd "$ctx" && env -u CLAUDECODE CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0 timeout "${SECURITY_REVIEW_TIMEOUT:-1800}" \
+      claude -p "/security-review-range $range --context $ctx" \
+        --no-session-persistence \
+        --strict-mcp-config \
+        --setting-sources project \
+        --settings '{"disableAllHooks":true}' \
+        --permission-mode dontAsk \
+        --tools "Read,Grep,Glob,Agent,Skill" \
+        --disallowedTools Bash Edit Write NotebookEdit \
+        --allowedTools Read Grep Glob Agent Skill \
+        </dev/null >"$report" 2>&1) || reviewed=$?
+  rm -rf "$ctx"
+  if [[ $reviewed -ne 0 ]]; then
+    echo "pre-push: la review di $range non è arrivata in fondo: push bloccato. Output: $report" >&2
+    failed=1
+    continue
+  fi
+  verdict="$(grep -Ev '^[[:space:]]*(```)?[[:space:]]*$' "$report" | tail -n 1 | tr -d '[:space:]' || true)"
+  case "$verdict" in
+    SECURITY-REVIEW:PASS)
+      echo "pre-push: security review PASS ($report)." >&2
+      ;;
+    SECURITY-REVIEW:FAIL[0-9]*)
+      cat "$report" >&2
+      echo "pre-push: security review FAIL: push bloccato. Report: $report" >&2
+      failed=1
+      ;;
+    *)
+      echo "pre-push: esito della review illeggibile: push bloccato. Output: $report" >&2
+      failed=1
+      ;;
+  esac
+done
+
+exit "$failed"
