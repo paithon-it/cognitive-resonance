@@ -73,6 +73,35 @@ def gain_informative(d_h: float, d_m: float, r: float, beta: float, d_a: float) 
     return (beta * (d_h - r * d_m) - d_a * (1 - r ** 2)) ** 2 / ((1 - r ** 2) * (1 + beta ** 2 - r ** 2))
 
 
+# --- the turing of the pair, in three factors -------------------------------------------------------------------------
+
+def pair_factors(d_h: float, d_m: float, r: float, b: float) -> dict:
+    """The turing of a pair, measured against the judge alone with its bias in (d_H = d_h / sqrt(1 + B)), as a product.
+
+    With q = d_m / d_h (how many times the machine is worth the judge without its bias) and
+    p = (1 - r q)^2 / (1 - r^2) (the private part, in units of d_h^2):
+
+        with the partner         Tu^2 = (1 + B) (q^2 + p)
+        with the soloist         Tu^2 = (1 + B) (q^2 + p (1 - r^2) / (1 - r^2 + B))
+        with the blind machine   Tu^2 = 1 + B
+
+    1 + B is the factor of resonance: what cancelling the readable bias is worth. q^2 is what the machine knows of
+    the task, p what the judge knows and the machine does not. It is the theorem of the three machines divided by
+    d_H^2: the same algebra, rearranged. Also returned: what the judge adds to the machine alone with the partner
+    (sqrt(1 + p / q^2) - 1), and the angles between the errors of the judge and of a blind machine or of a partner
+    built for weight 1 (noise correlations -sqrt(B / (1 + B)) and (r - B) / (1 + B))."""
+    q = d_m / d_h
+    p = (1.0 - r * q) ** 2 / (1.0 - r * r)
+    seen = p * (1.0 - r * r) / (1.0 - r * r + b)
+    out = {"resonance": 1.0 + b, "strength": q * q, "private": p, "private_with_soloist": seen,
+           "tu_partner": math.sqrt((1.0 + b) * (q * q + p)), "tu_soloist": math.sqrt((1.0 + b) * (q * q + seen)),
+           "tu_blind": math.sqrt(1.0 + b),
+           "angle_blind": math.degrees(math.acos(-math.sqrt(b / (1.0 + b)))),
+           "angle_partner": math.degrees(math.acos(max(-1.0, min(1.0, (r - b) / (1.0 + b)))))}
+    out["judge_adds_to_machine"] = math.sqrt(1.0 + p / (q * q)) - 1.0 if q > 0 else None
+    return out
+
+
 # --- how well the machine has to know the judge ---------------------------------------------------------------------
 
 def bias_left_after(n: float) -> float:

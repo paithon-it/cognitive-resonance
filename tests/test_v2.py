@@ -691,3 +691,23 @@ def test_what_the_branch_leaves_to_the_frame(tmp_path):
     assert len(rows) == 8
     for r in rows:
         assert r["left_to_the_frame"] == pytest.approx(r["frame_own_slope"], abs=0.05)
+
+
+def test_the_turing_of_the_pair_in_three_factors(tmp_path):
+    """The equation is the theorem divided by the judge alone; a blind machine is worth sqrt(1 + B)."""
+    from cognitive_resonance import chart
+    for d_h, d_m, r, b in ((2.9, 1.9, 0.5, 0.7), (2.0, 3.0, 0.8, 0.2), (1.2, 2.5, -0.3, 1.5)):
+        f = chart.pair_factors(d_h, d_m, r, b)
+        alone = d_h / math.sqrt(1 + b)
+        assert f["tu_partner"] == pytest.approx(chart.with_partner(d_h, d_m, r) / alone, rel=1e-12)
+        assert f["tu_soloist"] == pytest.approx(chart.with_soloist(d_h, d_m, r, b) / alone, rel=1e-12)
+        assert f["tu_blind"] == pytest.approx(math.sqrt(1 + b)) and f["tu_partner"] >= f["tu_soloist"]
+        assert f["judge_adds_to_machine"] == pytest.approx(chart.with_partner(d_h, d_m, r) / d_m - 1, rel=1e-12)
+    same = chart.pair_factors(2.0, 2.0, -0.5, 0.0)          # two equal judges, opposite errors: the peak of the curve
+    assert same["tu_partner"] == pytest.approx(1 / math.cos(math.radians(120) / 2), rel=1e-9)
+    assert chart.pair_factors(2.0, 2.0, 0.3, 3.0)["angle_blind"] == pytest.approx(150.0, abs=1e-6)
+    import factors
+    synthetic.write_chart(tmp_path, tasks=("cat_dog",), seeds=(2,), n_images=600, n_val=300)
+    u = factors.chart_unit(tmp_path / "cat_dog_v25_s2.npz")
+    assert u["bench"] == "chart" and u["measured"]["tu_partner"] == pytest.approx(u["factors"]["tu_partner"], rel=0.1)
+    assert u["measured"]["tu_blind"] == pytest.approx(u["factors"]["tu_blind"], rel=0.1)

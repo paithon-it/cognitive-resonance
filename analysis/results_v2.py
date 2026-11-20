@@ -463,9 +463,34 @@ def trace_left(d):
                "left to the frame (min to max)", "the frame's own slope", "old pair below the judge alone"], rows)])
 
 
+def pair_factors(d):
+    name = {"curve": "the curve (E1)", "chart": "the chart (E8)", "trace": "the chart, new seeds (E10, level 0)"}
+    rows = []
+    for s in d["by_bench_and_condition"]:
+        g = lambda k: f(s.get(k), 2) if s.get(k) is not None else "n/a"                      # noqa: E731
+        rows.append([name[s["bench"]], s["condition"], s["units"], g("resonance"), g("strength"), g("private"),
+                     f"{g('tu_partner')} / {g('measured_tu_partner')}", f"{g('tu_blind')} / {g('measured_tu_blind')}",
+                     f"{g('tu_soloist')} / {g('measured_tu_soloist')}",
+                     f"{f(s['angle_partner'], 0)} / {f(s['measured_angle_partner'], 0)}",
+                     g("share_of_log_turing_from_resonance")])
+    return "\n\n".join([
+        "## The turing of the pair in three factors (a reading added after the results)",
+        "`analysis/factors.py`: added on 20 November 2026, not a test. The theorem of the three machines divided by "
+        "what the judge is worth alone: with the partner Tu^2 = (1 + B)(q^2 + p), with q = d_m / d_h and "
+        "p = (1 - r q)^2 / (1 - r^2) (`cognitive_resonance.chart.pair_factors`). 1 + B is what cancelling the readable "
+        "bias is worth, q^2 what the machine knows of the task, p what the judge knows and the machine does not; with "
+        "the soloist p shrinks by (1 - r^2) / (1 - r^2 + B), with the blind machine Tu^2 = 1 + B. Each cell gives the "
+        "turing from the equation and the measured one (tuned pair over the judge alone); medians over the units. On "
+        "the bench of the curve the second network carries the opposite push itself and is read as a partner. Last "
+        "column: the share of ln Tu^2 that comes from 1 + B.",
+        table(["bench", "condition", "units", "1 + B", "q^2", "p", "partner: equation / measured",
+               "blind machine: equation / measured", "soloist: equation / measured", "angle with the partner: equation / measured",
+               "share of the turing from 1 + B"], rows)])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
             ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
-            ("e12_yesno.json", yesno))
+            ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors))

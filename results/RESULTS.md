@@ -713,3 +713,22 @@ Protocol § 18 (v2.3), registered before the run, on the files of E10 with the m
 - **Y4** **passes**: with 5,000 yes-or-no answers the share kept is in the median at least 0.9. Numbers: median share kept 0.997; at least 0.900.
 
 **Added after the results.** The registered prediction was too pessimistic: a factor was missing. The probit slope is in units of the clean noise, and bringing it to the units of the judge's whole cue with the same estimate shrinks its error; the bias left is kappa / (n (1 + B)^2). That gives a factor of 1.80 (median), where the measured one is 1.57 at a target of 0.90 and 1.09 at 0.8, 1.77 at 0.95, 1.78 at 0.975. The criteria above use the registered prediction and are untouched.
+
+## The turing of the pair in three factors (a reading added after the results)
+
+`analysis/factors.py`: added on 20 November 2026, not a test. The theorem of the three machines divided by what the judge is worth alone: with the partner Tu^2 = (1 + B)(q^2 + p), with q = d_m / d_h and p = (1 - r q)^2 / (1 - r^2) (`cognitive_resonance.chart.pair_factors`). 1 + B is what cancelling the readable bias is worth, q^2 what the machine knows of the task, p what the judge knows and the machine does not; with the soloist p shrinks by (1 - r^2) / (1 - r^2 + B), with the blind machine Tu^2 = 1 + B. Each cell gives the turing from the equation and the measured one (tuned pair over the judge alone); medians over the units. On the bench of the curve the second network carries the opposite push itself and is read as a partner. Last column: the share of ln Tu^2 that comes from 1 + B.
+
+| bench | condition | units | 1 + B | q^2 | p | partner: equation / measured | blind machine: equation / measured | soloist: equation / measured | angle with the partner: equation / measured | share of the turing from 1 + B |
+|---|---|---|---|---|---|---|---|---|---|---|
+| the curve (E1) | mu0 | 10 | 1.00 | 1.00 | 0.04 | 1.02 / 1.02 | 1.00 / n/a | 1.02 / n/a | 23 / 23 | 0.00 |
+| the curve (E1) | mu0.25 | 10 | 1.01 | 1.00 | 0.04 | 1.03 / 1.03 | 1.01 / n/a | 1.03 / n/a | 27 / 26 | 0.24 |
+| the curve (E1) | mu0.5 | 10 | 1.06 | 0.99 | 0.05 | 1.05 / 1.05 | 1.03 / n/a | 1.04 / n/a | 36 / 35 | 0.61 |
+| the curve (E1) | mu0.75 | 10 | 1.21 | 1.00 | 0.04 | 1.12 / 1.14 | 1.10 / n/a | 1.10 / n/a | 54 / 53 | 0.82 |
+| the curve (E1) | mu1 | 10 | 1.56 | 0.99 | 0.05 | 1.27 / 1.31 | 1.25 / n/a | 1.25 / n/a | 77 / 76 | 0.94 |
+| the curve (E1) | mu1.5 | 10 | 4.08 | 0.99 | 0.09 | 2.12 / 2.18 | 2.02 / n/a | 2.03 / n/a | 124 / 122 | 0.95 |
+| the curve (E1) | mu2 | 10 | 10.11 | 0.99 | 0.51 | 3.90 / 3.94 | 3.18 / n/a | 3.32 / n/a | 150 / 149 | 0.82 |
+| the chart (E8) | v25 | 25 | 1.73 | 0.48 | 0.55 | 1.34 / 1.33 | 1.32 / 1.33 | 1.15 / 1.16 | 97 / 104 | 0.94 |
+| the chart (E8) | v50 | 25 | 1.73 | 0.83 | 0.28 | 1.40 / 1.39 | 1.32 / 1.33 | 1.30 / 1.30 | 93 / 93 | 0.87 |
+| the chart (E8) | v100 | 25 | 1.73 | 1.17 | 0.04 | 1.47 / 1.45 | 1.32 / 1.33 | 1.45 / 1.45 | 87 / 82 | 0.75 |
+| the chart, new seeds (E10, level 0) | v25 | 25 | 1.71 | 0.50 | 0.54 | 1.33 / 1.35 | 1.31 / 1.33 | 1.17 / 1.19 | 97 / 104 | 0.94 |
+| the chart, new seeds (E10, level 0) | v100 | 25 | 1.71 | 1.21 | 0.04 | 1.44 / 1.45 | 1.31 / 1.33 | 1.43 / 1.44 | 87 / 81 | 0.72 |

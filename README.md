@@ -101,7 +101,7 @@ What came out of the three tests of protocol 2.3 (50 files, seeds 7 to 11; media
 | E11 | 5 of 5 | at face value, with a frame worth 1 the partner that removes only the excess beats the one that removes everything by 0.18, in 25 units of 25; with a frame worth 1.5 the one that removes everything is 0.38 below the soloist with no branch, and gives fewer right answers than the judge alone in 25 units of 25. At the tuned weight the two partners differ by less than 1 per cent |
 | E12 | 1 of 4 | **the prediction was too pessimistic.** With yes-or-no answers 25 judgments keep 90 per cent of the gain, against 15 with the graded cue: 1.6 times as many, where the registered band was 3 to 9 (Y2); Y1 misses by one unit (19 of 25) and Y3 fails with it. A factor was missing in the prediction, found afterwards: the bias left is kappa / (n (1 + B)^2), which gives 1.8 |
 
-Eleven readings of data already collected, none of them a test (the last seven were added after the results of E6 to E9; the last one after those of E10):
+Twelve readings of data already collected, none of them a test (the last eight were added after the results of E6 to E9; the last two after those of E10):
 
 | | What | Result file |
 |---|---|---|
@@ -115,6 +115,7 @@ Eleven readings of data already collected, none of them a test (the last seven w
 | when the trace says something true | the theorem extended to an informative trace that the judge overweights: only the excess is a bias. On the files of E8, resampled, a branch trained on the error of the sum removes 68 per cent of the push where the excess is 68 per cent | `results/e8_informative.json` |
 | the theorem on people | on the 74 pairs of people and machines of turing-meter: with a bias of the size documented on asylum judges (B between 0.002 and 0.01) the best pair would grow by less than 0.1 per cent in the median; if half of a person's noise were a readable bias, by about 14 per cent. The bias of the people is not measured | `results/e4_private.json` |
 | the pairs at face value, on old data | the look at the resampled files of E8 that sized the expectations of E11 | `results/e8_informative_face.json` |
+| the turing in three factors | the theorem divided by what the judge is worth alone: Tu^2 = (1 + B)(q^2 + p), bias cancelled, strength of the machine, private part of the judge. On the three benches it gives the measured turings (1.34 against 1.33 with the partner, 1.32 against 1.33 with the blind machine, where the machine sees a quarter of the image) | `results/pair_factors.json` |
 | what the branch leaves | on the results of E10: at both views the branch leaves the frame about the slope of its own log-likelihood ratio (0.38, 0.89, 1.51 against 0.36, 0.79, 1.33), whatever the machine sees | `results/e10_trace_left.json` |
 
 Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RESULTS.md).
@@ -190,6 +191,7 @@ uv run python analysis/informative_face.py     # the look at old data behind § 
 uv run python analysis/trace.py                # E10 and E11 (raw files in results/raw/trace, from gpu/run.sh trace), results/e10_trace.json
 uv run python analysis/yesno.py                # E12, results/e12_yesno.json
 uv run python analysis/trace_left.py           # what the branch leaves (after trace.py), results/e10_trace_left.json
+uv run python analysis/factors.py              # the turing in three factors, on the files of E1, E8 and E10, results/pair_factors.json
 ```
 
 E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its
