@@ -351,8 +351,11 @@ def private_people(d):
     for s in d["by_source"]:
         g = s["if_bias"]
         rows.append([s["source"], s["comparisons"], f(s["d_h"], 2), f(s["d_m"], 2), f(s["rho"], 2),
-                     f(s["private_observed"], 2), f(100 * (s["pair_now_over_machine"] - 1), 1)]
-                    + [f"{f(100 * g[b]['median_gain_over_pair_now'], 1)} ({g[b]['comparisons']})" for b in g])
+                     f(s["private_observed"], 2), f(100 * (s["pair_now_over_machine"] - 1), 1),
+                     f(100 * (s["pair_now_over_best_alone"] - 1), 1)]
+                    + [f"{f(100 * g[b]['median_gain_over_pair_now'], 2 if float(b) < 0.1 else 1)} ({g[b]['comparisons']})"
+                       for b in g])
+    doc = d["documented_bias"]
     return "\n\n".join([
         "## E4, the theorem on people already measured (a reading, with no measure of the bias)",
         "`analysis/private_people.py`: added on 20 November 2026, not a test. The 74 comparisons of people with a "
@@ -360,9 +363,14 @@ def private_people(d):
         "published: the people's biases are in them. P_obs is what the person adds to the machine today; the last "
         "columns say by how much the best pair would grow if a share B / (1 + B) of the person's noise were a bias a "
         "machine can read (in brackets, the comparisons where such a judge can exist). Nothing here measures B. "
-        "Medians over the comparisons.",
+        f"The two smallest values are the size of a documented bias: {doc['source']}, a shift of "
+        f"{f(100 * doc['shift'], 1)} percentage points around a rate of {f(doc['base_rate'], 2)}, is B = "
+        f"{f(doc['b'], 4)} when the noise is everything that makes the answer vary, and about five times as much "
+        "for a judge whose own noise is a fifth of that. The larger values are scenarios: with B = 0.25 the person "
+        "alone would already improve by 12 percent. Medians over the comparisons.",
         table(["source", "comparisons", "d_H", "d_m", "rho", "P_obs", "best pair over the machine alone, %",
-               "gain if B = 0.25, %", "gain if B = 1, %", "gain if B = 3, %"], rows)])
+               "best pair over the better of the two alone, %"] + [f"gain if B = {b}, %" for b in d["by_source"][0]["if_bias"]],
+              rows)])
 
 
 def informative_face(d):

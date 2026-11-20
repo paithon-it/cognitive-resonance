@@ -668,3 +668,13 @@ def test_yes_or_no_needs_more_judgments_on_synthetic_files(tmp_path):
     assert u["needed_yes_no"] > u["needed_graded"]
     c = yesno.criteria(units)
     assert set(c) == {"Y1", "Y2", "Y3", "Y4"} and c["Y4"]["outcome"] == "pass"
+
+
+def test_the_size_of_a_documented_bias():
+    """3.3 percentage points around a rate of 0.29 are a bias of about two thousandths of the noise."""
+    from cognitive_resonance import chart
+    b = chart.bias_from_shift(0.033, 0.29)
+    assert b == pytest.approx(0.0019, abs=0.0003)
+    assert chart.bias_from_shift(0.066, 0.29) == pytest.approx(4 * b, rel=1e-9)
+    assert chart.bias_from_shift(0.033, 0.5) < b                      # the same shift is a smaller push where phi is largest
+    assert chart._probit(0.5) == pytest.approx(0.0, abs=1e-9) and chart._probit(0.975) == pytest.approx(1.96, abs=1e-3)

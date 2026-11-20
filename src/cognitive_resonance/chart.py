@@ -115,6 +115,32 @@ def yes_no_factor(mean_0: float, mean_1: float, beta: float, var_a: float, point
     return var_a / info
 
 
+def bias_from_shift(shift: float, base_rate: float, trace_rate: float | None = None) -> float:
+    """The size B of a bias, in units of the judge's noise, from a shift measured in probabilities.
+
+    A yes-or-no trace (the previous decision was a yes, with probability `trace_rate`, default `base_rate`) moves
+    the probability of a yes by `shift` around `base_rate`. In a probit model that is a push of
+    shift / phi(Phi^-1(base_rate)) between the two values of the trace, and its variance is that push squared times
+    trace_rate (1 - trace_rate). The noise is all that makes the answer vary at a given trace, differences between
+    cases included: for the judge's own noise alone B is larger, by as much as the cases differ."""
+    q = base_rate if trace_rate is None else trace_rate
+    z = _probit(base_rate)
+    push = shift / (math.exp(-0.5 * z * z) / math.sqrt(2.0 * math.pi))
+    return push ** 2 * q * (1.0 - q)
+
+
+def _probit(p: float) -> float:
+    """Phi^-1 by bisection (no scipy in the library)."""
+    lo, hi = -8.0, 8.0
+    for _ in range(80):
+        mid = 0.5 * (lo + hi)
+        if 0.5 * math.erfc(-mid / math.sqrt(2.0)) < p:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
 # --- the theorem read on a pair measured with its bias still in (people) ---------------------------------------------
 
 def private_observed(d_big_h: float, d_m: float, rho: float) -> float:

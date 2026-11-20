@@ -29,7 +29,13 @@ from pathlib import Path
 from common import ROOT, environment, git_commit, med, write_json
 from cognitive_resonance import chart as theorem
 
-BIASES = (0.25, 1.0, 3.0)            # B: the bias is a fifth, a half, three quarters of the person's noise
+BIASES = (0.002, 0.01, 0.25, 1.0, 3.0)   # B. The first two are the size of a documented bias (see SHIFT); the others
+                                          # are scenarios: a fifth, a half, three quarters of the person's noise
+# Chen, Moskowitz and Shue (2016): asylum judges are up to 3.3 percentage points more likely to reject a case after
+# granting the previous one, around a grant rate of 0.29. `chart.bias_from_shift` turns it into B = 0.002 when the
+# noise is everything that makes the answer vary, differences between cases included; five times as much, 0.01,
+# stands for a judge whose own noise is a fifth of that.
+SHIFT = {"source": "Chen, Moskowitz and Shue (2016), asylum judges", "shift": 0.033, "base_rate": 0.29}
 MAP = Path("experiments") / "angle-between-errors" / "results" / "map.json"
 
 
@@ -60,7 +66,8 @@ def read(row: dict) -> dict:
         g = theorem.gain_if_bias(d_h, d_m, rho, b)
         out["if_bias"][f"{b:g}"] = None if g is None else {
             "gain_squared": g, "pair": math.sqrt(d1 ** 2 + g), "pair_over_pair_now": math.sqrt(d1 ** 2 + g) / d1,
-            "pair_over_machine": math.sqrt(d1 ** 2 + g) / d_m}
+            "pair_over_machine": math.sqrt(d1 ** 2 + g) / d_m,
+            "person_alone_without_the_bias_over_person": math.sqrt(1.0 + b)}
     return out
 
 
@@ -100,6 +107,9 @@ def main() -> None:
            "how": "per comparison, from d_H, d_m and rho as published (the people's biases are in them): P_obs, the "
                   "best pair as it is, and the best pair if a share B / (1 + B) of the person's noise were a bias a "
                   "machine can read, for B = " + ", ".join(f"{b:g}" for b in BIASES),
+           "documented_bias": {**SHIFT, "b": theorem.bias_from_shift(SHIFT["shift"], SHIFT["base_rate"]),
+                               "how": "probit: push = shift / phi(Phi^-1(base rate)), B = push^2 q (1 - q); the noise "
+                                      "is everything that varies at a given trace"},
            "by_source": summary(rows), "comparisons": rows, "environment": environment()}
     write_json(args.out, out)
     for r in out["by_source"]:

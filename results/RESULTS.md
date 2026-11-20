@@ -567,15 +567,15 @@ Protocol § 13 (v2.1), registered before the run. Each judge sees half of the im
 
 ## E4, the theorem on people already measured (a reading, with no measure of the bias)
 
-`analysis/private_people.py`: added on 20 November 2026, not a test. The 74 comparisons of people with a language model of turing-meter (commit `8ac118d`), with d_H, d_m and rho as published: the people's biases are in them. P_obs is what the person adds to the machine today; the last columns say by how much the best pair would grow if a share B / (1 + B) of the person's noise were a bias a machine can read (in brackets, the comparisons where such a judge can exist). Nothing here measures B. Medians over the comparisons.
+`analysis/private_people.py`: added on 20 November 2026, not a test. The 74 comparisons of people with a language model of turing-meter (commit `8ac118d`), with d_H, d_m and rho as published: the people's biases are in them. P_obs is what the person adds to the machine today; the last columns say by how much the best pair would grow if a share B / (1 + B) of the person's noise were a bias a machine can read (in brackets, the comparisons where such a judge can exist). Nothing here measures B. The two smallest values are the size of a documented bias: Chen, Moskowitz and Shue (2016), asylum judges, a shift of 3.3 percentage points around a rate of 0.29, is B = 0.0019 when the noise is everything that makes the answer vary, and about five times as much for a judge whose own noise is a fifth of that. The larger values are scenarios: with B = 0.25 the person alone would already improve by 12 percent. Medians over the comparisons.
 
-| source | comparisons | d_H | d_m | rho | P_obs | best pair over the machine alone, % | gain if B = 0.25, % | gain if B = 1, % | gain if B = 3, % |
-|---|---|---|---|---|---|---|---|---|---|
-| alphanli | 20 | 1.98 | 1.55 | 0.43 | 2.11 | 36.6 | 7.3 (20) | 32.2 (20) | 144.4 (14) |
-| chatbench | 20 | 1.12 | 1.72 | 0.16 | 0.93 | 11.7 | 2.5 (20) | 9.8 (20) | 28.3 (20) |
-| haiid-images | 16 | 0.99 | 2.85 | 0.20 | 0.21 | 1.8 | 0.4 (16) | 1.8 (16) | 5.9 (16) |
-| haiid-text | 18 | 0.96 | 1.35 | 0.43 | 0.21 | 4.6 | 1.6 (18) | 7.8 (16) | 38.2 (13) |
-| all | 74 | 1.12 | 1.72 | 0.31 | 0.68 | 9.2 | 2.5 (74) | 13.6 (72) | 28.6 (63) |
+| source | comparisons | d_H | d_m | rho | P_obs | best pair over the machine alone, % | best pair over the better of the two alone, % | gain if B = 0.002, % | gain if B = 0.01, % | gain if B = 0.25, % | gain if B = 1, % | gain if B = 3, % |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| alphanli | 20 | 1.98 | 1.55 | 0.43 | 2.11 | 36.6 | 6.6 | 0.06 (20) | 0.29 (20) | 7.3 (20) | 32.2 (20) | 144.4 (14) |
+| chatbench | 20 | 1.12 | 1.72 | 0.16 | 0.93 | 11.7 | 10.8 | 0.02 (20) | 0.10 (20) | 2.5 (20) | 9.8 (20) | 28.3 (20) |
+| haiid-images | 16 | 0.99 | 2.85 | 0.20 | 0.21 | 1.8 | 1.8 | 0.00 (16) | 0.02 (16) | 0.4 (16) | 1.8 (16) | 5.9 (16) |
+| haiid-text | 18 | 0.96 | 1.35 | 0.43 | 0.21 | 4.6 | 2.9 | 0.01 (18) | 0.05 (18) | 1.6 (18) | 7.8 (16) | 38.2 (13) |
+| all | 74 | 1.12 | 1.72 | 0.31 | 0.68 | 9.2 | 5.7 | 0.02 (74) | 0.09 (74) | 2.5 (74) | 13.6 (72) | 28.6 (63) |
 
 ## E9. The shape of the noise
 
