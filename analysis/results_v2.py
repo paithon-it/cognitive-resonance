@@ -465,6 +465,7 @@ def trace_left(d):
 
 def pair_factors(d):
     name = {"curve": "the curve (E1)", "chart": "the chart (E8)", "trace": "the chart, new seeds (E10, level 0)"}
+    pct = lambda x, nd: f(100.0 * x, nd) + "%"                                                # noqa: E731
     rows = []
     for s in d["by_bench_and_condition"]:
         g = lambda k: f(s.get(k), 2) if s.get(k) is not None else "n/a"                      # noqa: E731
@@ -485,7 +486,25 @@ def pair_factors(d):
         "column: the share of ln Tu^2 that comes from 1 + B.",
         table(["bench", "condition", "units", "1 + B", "q^2", "p", "partner: equation / measured",
                "blind machine: equation / measured", "soloist: equation / measured", "angle with the partner: equation / measured",
-               "share of the turing from 1 + B"], rows)])
+               "share of the turing from 1 + B"], rows),
+        "The same pairs seen from the two sides, and the judge that never learned the bias (H0 in E8, C_0 in E10: the same "
+        "network trained where the frame says nothing). `q^2 + p` is what the two know together in units of the judge "
+        "without its bias: the turing the equation leaves once the bias is gone. What the judge adds to the machine is the "
+        "pair with the partner over the soloist alone, minus one. The last columns compare two ways of removing the bias: "
+        "in the machine (judge + partner) or in the judge (judge without bias + soloist); right answers of the raw sums, "
+        "and in how many units the second is above the first.",
+        table(["bench", "condition", "q^2 + p", "judge adds to the machine: equation / measured",
+               "judge without bias alone, over the judge", "turing of the judge without bias with the soloist",
+               "that pair over the pair judge + partner", "right answers: judge / judge without bias",
+               "judge + partner / judge without bias + soloist", "units where the second is above"],
+              [[name[s["bench"]], s["condition"], f(s["together"], 2),
+                f"{pct(s['judge_adds_to_machine'], 0)} / {pct(s['measured_judge_adds_to_machine'], 0)}",
+                f(s["measured_judge_without_bias_over_judge"], 2), f(s["measured_tu_without_bias"], 2),
+                f(s["measured_pair_without_bias_over_pair_partner"], 3),
+                f"{pct(s['measured_accuracy_judge'], 1)} / {pct(s['measured_accuracy_judge_without_bias'], 1)}",
+                f"{pct(s['measured_accuracy_judge_plus_partner'], 1)} / {pct(s['measured_accuracy_without_bias_plus_soloist'], 1)}",
+                f"{s['units_without_bias_plus_soloist_above_partner']} of {s['units']}"]
+               for s in d["by_bench_and_condition"] if s["bench"] != "curve"])])
 
 
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),

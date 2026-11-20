@@ -87,13 +87,16 @@ def pair_factors(d_h: float, d_m: float, r: float, b: float) -> dict:
 
     1 + B is the factor of resonance: what cancelling the readable bias is worth. q^2 is what the machine knows of
     the task, p what the judge knows and the machine does not. It is the theorem of the three machines divided by
-    d_H^2: the same algebra, rearranged. Also returned: what the judge adds to the machine alone with the partner
-    (sqrt(1 + p / q^2) - 1), and the angles between the errors of the judge and of a blind machine or of a partner
-    built for weight 1 (noise correlations -sqrt(B / (1 + B)) and (r - B) / (1 + B))."""
+    d_H^2: the same algebra, rearranged. q^2 + p ("together") is what the two know together, in units of the judge
+    without its bias: it is 1 when the machine sees a part of what the judge sees (r = q), q^2 when the judge sees a
+    part of what the machine sees (r = 1 / q), 1 + q^2 when their errors are independent. Also returned: what the
+    judge adds to the machine alone with the partner (sqrt(1 + p / q^2) - 1), and the angles between the errors of
+    the judge and of a blind machine or of a partner built for weight 1 (noise correlations -sqrt(B / (1 + B)) and
+    (r - B) / (1 + B))."""
     q = d_m / d_h
     p = (1.0 - r * q) ** 2 / (1.0 - r * r)
     seen = p * (1.0 - r * r) / (1.0 - r * r + b)
-    out = {"resonance": 1.0 + b, "strength": q * q, "private": p, "private_with_soloist": seen,
+    out = {"resonance": 1.0 + b, "strength": q * q, "private": p, "together": q * q + p, "private_with_soloist": seen,
            "tu_partner": math.sqrt((1.0 + b) * (q * q + p)), "tu_soloist": math.sqrt((1.0 + b) * (q * q + seen)),
            "tu_blind": math.sqrt(1.0 + b),
            "angle_blind": math.degrees(math.acos(-math.sqrt(b / (1.0 + b)))),

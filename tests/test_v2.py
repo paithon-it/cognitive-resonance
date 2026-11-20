@@ -711,3 +711,9 @@ def test_the_turing_of_the_pair_in_three_factors(tmp_path):
     u = factors.chart_unit(tmp_path / "cat_dog_v25_s2.npz")
     assert u["bench"] == "chart" and u["measured"]["tu_partner"] == pytest.approx(u["factors"]["tu_partner"], rel=0.1)
     assert u["measured"]["tu_blind"] == pytest.approx(u["factors"]["tu_blind"], rel=0.1)
+    assert u["factors"]["together"] == pytest.approx(u["factors"]["strength"] + u["factors"]["private"])
+    assert u["measured"]["judge_without_bias_over_judge"] > 1 and 0.5 < u["measured"]["accuracy_without_bias_plus_soloist"] <= 1
+    part = chart.pair_factors(2.0, 1.2, 0.6, 0.5)           # the machine sees a part of what the judge sees: r = q
+    assert part["together"] == pytest.approx(1.0) and part["tu_partner"] == pytest.approx(part["tu_blind"])
+    assert chart.pair_factors(2.0, 3.0, 2.0 / 3.0, 0.5)["private"] == pytest.approx(0.0, abs=1e-12)   # r = 1 / q
+    assert chart.pair_factors(2.0, 3.0, 0.0, 0.5)["together"] == pytest.approx(1 + 1.5 ** 2)
