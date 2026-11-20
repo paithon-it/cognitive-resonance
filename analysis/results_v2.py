@@ -4,6 +4,8 @@ Used by `results_md.py`; every number comes from the JSON files.
 """
 from __future__ import annotations
 
+import statistics
+
 V2 = (("e6_trust.json", "E6"), ("e8_chart.json", "E8"), ("e7_views.json", "E7"), ("e9_shape.json", "E9"))
 
 
@@ -129,6 +131,24 @@ def chart_old(d):
                "pair with Mramo", "blind, theorem", "blind, measured", "d_m / d_h", "threshold", "D2 over D1, %"], rows)])
 
 
+def _e8_right_answers(d):
+    """The pairs of E8 in right answers at face value, with the differences unit by unit. A reading added later."""
+    rows = []
+    for v in sorted({u["v"] for u in d["units"]}, reverse=True):
+        acc = [u["accuracy"] for u in d["units"] if u["v"] == v]
+        med = lambda k: f(statistics.median(a[k] for a in acc), 3)
+        gain = [a["H+Mramo"] - a["H+M"] for a in acc]
+        over_blind = [a["H+Mramo"] - a["H+Mblind"] for a in acc]
+        clean = [a["H0"] - a["H+Mramo"] for a in acc]
+        rows.append([v, len(acc), med("H"), med("H+M"), med("H+Mblind"), med("H+Mramo"), med("H0"),
+                     f"{f(statistics.median(gain), 3)} ({f(min(gain), 3)} to {f(max(gain), 3)})",
+                     f"{sum(x > 0 for x in over_blind)} of {len(acc)} ({f(min(over_blind), 3)} to {f(max(over_blind), 3)})",
+                     f"{sum(x > 0 for x in clean)} of {len(acc)}"])
+    return table(["v", "units", "right, H", "right, H+M", "right, H+Mblind", "right, H+Mramo", "right, H0 alone",
+                  "H+Mramo minus H+M, median (min to max)", "units where H+Mramo beats H+Mblind (min to max of the difference)",
+                  "units where H0 alone beats H+Mramo"], rows)
+
+
 def e8(d):
     cols = ["accuracy_h", "accuracy_m", "accuracy_mramo", "d_h", "d_m", "b", "r", "d1", "theorem_d1", "d2_partner",
             "d2_three_cues", "theorem_d2", "d_blind", "theorem_d_blind", "d_pair_without_bias", "strength",
@@ -144,7 +164,12 @@ def e8(d):
         table(["v", "units", "right, H", "right, M", "right, Mramo", "d_a H", "d_a M", "B", "r", "pair with M (D1)",
                "D1 theorem", "pair with Mramo", "best linear use of 3 cues", "D2 theorem", "pair with Mblind",
                "blind, theorem", "pair (H0, M)", "d_m / d_h", "threshold"], rows),
-        criteria(d["criteria"])])
+        criteria(d["criteria"]),
+        "**Right answers, pair by pair.** A reading added after a third review, with no criterion: the two cues "
+        "summed at face value, medians over the units, and the paired differences unit by unit. With a quarter of "
+        "the image the partner and the blind machine are level; with half or a quarter, the judge without the "
+        "bias, alone, does better than the judge corrected by the partner in every unit.",
+        _e8_right_answers(d)])
 
 
 def e7(d):

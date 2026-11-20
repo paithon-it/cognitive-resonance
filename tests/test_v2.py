@@ -575,3 +575,18 @@ def test_the_three_readings_of_the_third_review(tmp_path):
     assert one["if_bias"]["1"]["pair_over_pair_now"] > one["if_bias"]["0.25"]["pair_over_pair_now"] > 1.0
     assert private_people.summary(kept)[-1]["source"] == "all"
 
+
+
+def test_the_right_answers_of_e8_pair_by_pair():
+    """The table added to the results page reads the units: medians, the paired gain with its range, two counts."""
+    import results_v2
+    acc = lambda h, hm, hb, hr, h0: {"H": h, "H+M": hm, "H+Mblind": hb, "H+Mramo": hr, "H0": h0}
+    d = {"units": [{"v": 25, "accuracy": acc(0.80, 0.85, 0.90, 0.88, 0.93)},
+                   {"v": 25, "accuracy": acc(0.82, 0.86, 0.90, 0.91, 0.90)},
+                   {"v": 25, "accuracy": acc(0.84, 0.87, 0.91, 0.93, 0.95)}]}
+    lines = results_v2._e8_right_answers(d).splitlines()
+    cells = [c.strip() for c in lines[2].strip("|").split("|")]
+    assert len(lines) == 3 and cells[:2] == ["25", "3"]
+    assert cells[2:7] == ["0.820", "0.860", "0.900", "0.910", "0.930"]
+    assert cells[7] == "0.050 (0.030 to 0.060)"
+    assert cells[8] == "2 of 3 (-0.020 to 0.020)" and cells[9] == "2 of 3"

@@ -491,6 +491,14 @@ Protocol § 14 (v2.1), registered before the run. The judge H sees the whole ima
 
 - **K7** **passes**: the tuned pair (H, Mramo) over the tuned pair (H0, M), median over the units, is at most 1.05 at every v. Numbers: median partner pair over pair without bias 100: 0.966, 50: 0.933, 25: 0.903; at most 1.050.
 
+**Right answers, pair by pair.** A reading added after a third review, with no criterion: the two cues summed at face value, medians over the units, and the paired differences unit by unit. With a quarter of the image the partner and the blind machine are level; with half or a quarter, the judge without the bias, alone, does better than the judge corrected by the partner in every unit.
+
+| v | units | right, H | right, H+M | right, H+Mblind | right, H+Mramo | right, H0 alone | H+Mramo minus H+M, median (min to max) | units where H+Mramo beats H+Mblind (min to max of the difference) | units where H0 alone beats H+Mramo |
+|---|---|---|---|---|---|---|---|---|---|
+| 100 | 25 | 0.852 | 0.920 | 0.919 | 0.936 | 0.937 | 0.015 (0.009 to 0.048) | 25 of 25 (0.011 to 0.042) | 11 of 25 |
+| 50 | 25 | 0.852 | 0.908 | 0.919 | 0.930 | 0.937 | 0.022 (0.016 to 0.065) | 24 of 25 (-0.001 to 0.018) | 25 of 25 |
+| 25 | 25 | 0.852 | 0.888 | 0.919 | 0.921 | 0.937 | 0.034 (0.024 to 0.091) | 8 of 25 (-0.016 to 0.010) | 25 of 25 |
+
 ## E8, how many judgments a correction needs (a reading added after the results)
 
 `analysis/judgments.py`: added on 20 November 2026, not a test. The slope of the judge's cue on the frame is estimated from n presentations of the validation set whose answer is known; the judge's test cue is corrected with it and put beside the soloist. Each cell: the share of the gain that is kept, median over the draws and the units, and in brackets the share predicted from a bias left of 1 / n. Units where the gain is below 0.2 are left out.

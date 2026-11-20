@@ -944,6 +944,11 @@ have no criteria, and touch neither the criteria nor the outcomes of the registe
   the person's noise were a readable bias. The people's bias is not measured.
 - **Two calculations without data**: the ceiling `(1 + w k) / |1 - w|` for every `k`, and
   the roots of two systems that adapt to each other (`cognitive_resonance.model`).
+- **The right answers of E8, pair by pair** (`analysis/results_v2.py`, from the units of
+  `results/e8_chart.json`): the medians of the two cues summed at face value, the
+  difference between partner and soloist with its minimum and maximum over the units, in
+  how many units the partner beats the blind machine, and in how many the judge without
+  the bias, alone, beats the judge corrected by the partner.
 
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have

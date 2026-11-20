@@ -945,6 +945,11 @@ hanno criteri, e non toccano criteri né esiti delle prove registrate.
   misurato.
 - **Due conti senza dati**: il tetto `(1 + w k) / |1 - w|` per ogni `k`, e le radici di due
   sistemi che si adattano l'uno all'altro (`cognitive_resonance.model`).
+- **Le risposte giuste di E8, coppia per coppia** (`analysis/results_v2.py`, dalle unità di
+  `results/e8_chart.json`): le mediane dei due indizi sommati così come sono, la
+  differenza fra compagno e solista con minimo e massimo sulle unità, in quante unità il
+  compagno supera la macchina cieca, e in quante il giudice senza pregiudizio, da solo,
+  supera il giudice corretto dal compagno.
 
 **Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
