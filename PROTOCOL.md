@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 2.2, 19 November 2026. Written and recorded in the repository **before any run**:
+Version 2.3, 20 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -788,6 +788,163 @@ Expectations.
 Raw data: `shape/{task}_mu{mu}_s{seed}.npz`: `a`, `z_plus` and `z_minus` of shape (4, N),
 one row per shape in the order of `shapes`; `manifest.json`.
 
+## 16. E10. The chart that tells the truth
+
+Added with version 2.3, on 20 November 2026, after a fourth review of the article and before
+any training of E10, E11 and E12. The three tests share one bench and one run
+(`gpu/trace.py`), on seeds never used before (7-11).
+
+**Why.** In E8 the frame, at test, says nothing about the class. A real trace often says
+something and gets too much weight. The theorem of § 14 extends to that case
+(`cognitive_resonance.chart`): with a trace of sensitivity `d_a` to which the judge gives a
+weight `beta`, the weight it deserves is `beta_0 = d_a (1 - r^2) / (d_h - r d_m)` and the gain
+of a partner is `B / (1 - r^2 + B) * P * (1 - beta_0 / beta)^2`. So far we have looked at it
+only by resampling the files of E8, with a linear branch of two numbers, after seeing the
+results: a reading, not a test.
+
+**What was known** (from the resampled files of E8: `analysis/informative.py`,
+`analysis/informative_face.py`). With the machine seeing a quarter of the image the linear
+branch removes 68 and 31 percent of the push where the excess `1 - beta_0 / beta` of the
+theorem is 68 and 34 (frame of sensitivity 0.5 and 1). With the machine seeing everything it
+removes 61 and 13 where the theorem says 21 and -53: there the agreement is missing, and we
+do not know why. At the best weight the partner of E8, which removes the whole push, is worth
+as much as the new branch or a little more (0.02 in 25 units of 25 at sensitivity 0.5): the
+sentence of the article "it would throw away the good part too" has no support there. At a
+fixed weight it has: with the two cues summed at face value the new branch beats the partner
+of E8 by 0.05, 0.17 and 0.38 (sensitivity 0.5, 1 and 1.5; 25 units of 25), and from
+sensitivity 1 upwards the partner of E8 does worse than the soloist without a branch (-0.18
+and -0.38, 0 units of 25).
+
+**The bench.** The frame at level `d` is `a = mu_d (2y - 1) + sd_d eps`, with
+`mu_d = d sqrt(2 / (4 + d^2))` and `sd_d^2 = 2 - mu_d^2`: total variance 2 as in E8,
+sensitivity `d`. The levels are 0 (the bench of E8), 0.5, 1 and 1.5. On validation and at
+test `eps` is the same at the four levels.
+
+- **H**: the judge of E8 ("plus" network, `mu = 1`, half A, whole image). It was trained
+  where the frame was worth 2: at test it gives it more weight than it deserves.
+- **`C_d`**, one per level: same network and seed, trained with frames of level `d`. It is
+  the judge that gives the frame the weight it has at test (`C_0` is the H0 of E8).
+- For every view of the machine (`v = 25`, the left quarter; `v = 100`, the whole inside):
+  **`M`**, the soloist, on its part of the image. Here it does not see the frame: in E8 it
+  saw it while it said nothing, and a soloist that read it when it tells the truth would be
+  another machine. **`R_t`**, one per level `t`: a branch that sees only the frame, trained
+  from scratch on the cross-entropy of `z_H + z_M + z_branch` with frames of level `t`. The
+  partner built for level `t` is `M + R_t`; **`R_0` is the partner of E8**, trained where
+  the frame said nothing, which removes the whole push.
+- The four branches of a unit have the same seed, the same order and the same noise of the
+  frames: only the level changes. Every branch is read at every level.
+- Seeds 7-11, five tasks, 30 epochs and the hyperparameters of the pilot.
+
+**Measures**, per unit and per level `d` of the test, with the partner built for that level.
+`s`, the share of the push the branch removes: minus the slope of the raw cue of the branch
+on the frame, divided by the slope of the raw cue of H, within class. `e = 1 - beta_0 / beta`,
+the excess according to the theorem, with the quantities of the same unit measured as in
+`analysis/informative.py`. The tuned pairs of § 3 and the pairs at face value (sum of the raw
+cues), with the bootstrap paired by image.
+
+Expectations. The primary ones are T2 (here), X1 and X2 (§ 17), Y1 and Y2 (§ 18).
+
+- **T1, the dose.** At `v = 25` the median of `s` is between 0.9 and 1.1 at level 0 and
+  falls as the level grows: `s(0) > s(0.5) > s(1) > s(1.5)`.
+- **T2, only the excess (primary).** At `v = 25`, at levels 0.5 and 1, the median over the
+  units of `|s - e|` is at most 0.10.
+- **T3, with the whole view the theorem does not describe the branch.** At `v = 100` and
+  level 0.5 the median of `s - e` is above 0.20: it is what was seen on the old data,
+  written as an expectation so that a new test can contradict it.
+- **T4, where there is an excess the partner wins.** At `v = 25` and level 0.5 the tuned
+  pair `(H, M + R_0.5)` is more sensitive than the pair `(H, M)`, with the interval of the
+  difference above zero in every seed, in at least 3 tasks of 5.
+- **T5, where the weight is almost right there is nothing to take.** At `v = 25` and level
+  1.5, at face value, the difference between the pair with `M + R_1.5` and the pair with
+  `M`, divided by the second, is in the median between -0.03 and 0.03.
+- **T6, nothing is created.** At `v = 25` and at every level the tuned pair `(H, M + R_d)`
+  divided by the pair `(C_d, M)` is in the median at most 1.05.
+- With no criterion: the shares of right answers of every pair, the share of the predicted
+  gain the partner takes, and all the measures at `v = 100`.
+
+Raw data: `trace/{task}_v{v}_s{seed}.npz`: `levels`, `y`, `image`, `eps`, `a` (4, N), `z_H`
+(4, N), `z_C` (4, N: `C_d` at its own level), `z_M` (N), `z_R` (4, 4, N: built for, read at),
+and the same with `val_`; `manifest.json`.
+
+## 17. E11. Removing everything or only the excess, at a fixed weight
+
+Added with version 2.3, on the same files as E10.
+
+**Why.** The theorem says that whoever removes the whole push, when the trace tells the
+truth, throws away the good part too. At the best weight the old data do not show it: the
+weight makes up for it. The question has to be asked at a fixed weight, where nobody adjusts
+anything: the two cues summed at face value.
+
+Measures: the sensitivity of the raw sum `z_H + z_M + z_R`, with `R_d` (the branch built for
+the level of the test, "new") and with `R_0` (the partner of E8, "old"), and of the sum
+`z_H + z_M` (the soloist); paired differences.
+
+- **X1, the new beats the old (primary).** At `v = 25` and level 1 the pair with `M + R_1`
+  is more sensitive than the pair with `M + R_0`, with the interval above zero in every
+  seed, in at least 3 tasks of 5.
+- **X2, removing everything is worse than removing nothing (primary).** At `v = 25` and
+  level 1.5 the pair with `M + R_0` is less sensitive than the pair with `M`, with the
+  interval below zero in every seed, in at least 3 tasks of 5.
+- **X3, the dose.** At `v = 25` the median of the difference between new and old is positive
+  at levels 0.5, 1 and 1.5 and grows with the level.
+- **X4, the weight makes up for it.** At `v = 25` and at levels 0.5 and 1 the tuned pairs
+  with `M + R_d` and with `M + R_0` differ in the median, in absolute value, by at most 0.02
+  times the second.
+- **X5, with the whole view too.** At `v = 100` and level 1 what X1 says holds.
+- With no criterion: the shares of right answers of the three sums at every level.
+
+If X1 does not pass, the sentence in the article has to go. If X2 does not pass, all that
+stays true is that the new partner does not lose.
+
+## 18. E12. The push estimated from yes and no
+
+Added with version 2.3, on the same files (`v = 25`, level 0: the case of § 14).
+
+**Why.** `analysis/judgments.py` estimates the push from the graded cue of the judge, and the
+bias left after `n` judgments is `1 / n`. A person does not give a graded cue: they give an
+answer. With a yes or a no there is less information on the slope, and more judgments are
+needed.
+
+**The prediction.** In the model the answer is yes when `h + beta a > 0`: a probit
+regression of the answer on the class (two intercepts) and on the frame gives `beta` in
+units of the clean noise. The Fisher information on the slope, per judgment, is
+`E[lambda a^2] - sum_y p_y E_y[lambda a]^2 / E_y[lambda]`, with
+`lambda = phi(eta)^2 / (Phi(eta) (1 - Phi(eta)))` and `eta = m_y + beta a`, where `m_y` is the
+mean of the clean cue in class `y`; with the graded cue it is the variance of `a`. Their
+ratio `kappa` says how many yes and no are worth one graded judgment: with the median
+quantities of E8 (means `±1.45`, `beta` 0.6, variance of the frame 2) it is about 5, and
+between 4 and 6 for judges a little less or a little more sensitive
+(`cognitive_resonance.chart.yes_no_factor`). The share of the gain kept with `n` yes and no is the one
+predicted for `n / kappa` graded judgments (`cognitive_resonance.chart.share_kept_after`).
+
+**How.** Per unit and per `n` (5, 10, 20, 50, 100, 200, 500, 1,000, 5,000): 40 draws of `n`
+presentations from the validation set, the same for the two estimators (one draw only when
+`n` is the whole validation set). Graded: the slope of the standardized cue on the frame,
+within class. Yes and no: the probit regression of the judge's answer (the sign of the raw
+cue), with a quadratic penalty of 0.05 on the three coefficients so that it stays defined
+when the answers separate the classes; the slope is brought to the units of the standardized
+cue by dividing by `sqrt(1 + beta^2 var(a))`. The correction is applied to the graded cue of
+the judge at test, and the share kept is `(D_n^2 - D_1^2) / (D_all^2 - D_1^2)` as in
+`analysis/judgments.py`, median over the draws. Units with a squared gain below 0.2 are left
+out.
+
+- **Y1, with yes and no more are needed (primary).** With 50 judgments the share kept with
+  yes and no is lower than with the graded cue in at least 20 units of 25.
+- **Y2, how many more (primary).** The number of judgments at which the share kept reaches
+  0.90 (linear interpolation in `ln n` on the grid) is, with yes and no, between 3 and 9
+  times the one with the graded cue, in the median over the units. A unit that with yes and
+  no does not reach 0.90 even with 5,000 judgments counts as outside.
+- **Y3, the prediction.** With 100 and with 200 yes and no the median over the units of the
+  absolute gap between the measured share and the one predicted with the `kappa` of the unit
+  is at most 0.07.
+- **Y4, in the long run it is enough.** With 5,000 yes and no the share kept is, in the
+  median, at least 0.90.
+
+If Y2 passes, "a few dozen judgments" in the article becomes "between fifty and a hundred" for
+whoever answers yes or no. If it does not pass because more than nine times as many are needed, or
+because Y4 does not pass, the estimate from plain answers with this model is not enough, and
+the article says so.
+
 ## Deviations
 
 All dated 10 November 2026. The first come from the runs; the others are choices of the
@@ -950,6 +1107,40 @@ have no criteria, and touch neither the criteria nor the outcomes of the registe
   how many units the partner beats the blind machine, and in how many the judge without
   the bias, alone, beats the judge corrected by the partner.
 
+**E10, E11 and E12.** From 20 November 2026; times are UTC, those of the repository come from
+GitHub's activity log.
+
+- Version 2.3 of this protocol arrives in the repository at 16:34:13 (`f6d9795`).
+- On the server the environment and the data are prepared between 16:33 and 16:36, with no
+  training.
+- At 16:38:18 a technical check: one epoch, one task, a seed outside the plan (99), in a
+  folder of its own deleted at once. It tells that the script runs to the end; its files
+  were read by no analysis.
+- The run starts at 16:38:53 and ends at 17:44:30: 3,936 seconds, three processes, one
+  session only (nobody else asked for the GPU), 50 files.
+- The analyses `analysis/trace.py` and `analysis/yesno.py` arrive in the repository at
+  16:41:43 (`84d27f8`); the first file of the run is from 16:43:56.
+- Environment of our own: torch 2.15.0+cu132, numpy 2.5.5. The folder on the server was
+  deleted after copying the files and comparing their checksums.
+
+**Readings added after the results of E10-E12.** From 20 November 2026. They are not tests,
+and touch neither criteria nor outcomes.
+
+- **What the branch leaves** (`analysis/trace_left.py`, `results/e10_trace_left.json`). T3
+  passed: with the whole view the excess of the theorem does not describe what the branch
+  removes. The branch removes the same shares at the two views, and leaves the frame a
+  coefficient close to the slope of its likelihood ratio (0.38, 0.89 and 1.51 against 0.36,
+  0.79 and 1.33). The excess of the theorem is that of the best use of the three cues and
+  depends on the machine; the branch, trained on the sum at face value, does not. They
+  coincide where the machine sees a quarter.
+- **Why the prediction of E12 was wrong** (`analysis/yesno.py`, fields `kappa_corrected` and
+  `predicted_yes_no_corrected`, added afterwards). The probit slope is in units of the clean
+  noise; bringing it to the units of the whole cue with the same estimate shrinks its error
+  by `(1 + B)^(3/2)`. The bias left with `n` yes and no is `kappa / (n (1 + B)^2)`, not
+  `kappa / n`: with the quantities of the test that is 1.8 times the graded judgments, where
+  the measured factor is 1.6 and the band written beforehand was 3 to 9. With a small bias
+  the factor goes back close to `kappa`.
+
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and
@@ -993,3 +1184,10 @@ and before any of their files was read. It adds question Q11 and
 weight estimated by Kong et al. is read on the bench, a prediction with no free parameter
 (the partner built for a weight beats the soloist up to twice that weight), and the rule by
 which a machine is chosen, fixed before reading the data. The training code does not change.
+
+Version 2.3, of 20 November 2026, comes from a fourth review of the article and before any
+training of the tests it adds: E10, E11 and E12 (§§ 16-18), on the same bench and in the
+same run, with seeds never used before. The three readings made after the results
+(informative trace, how many judgments, new branch against old) become three tests with
+their expectations written beforehand; the thresholds come from the old data, and say so.
+It touches neither the criteria nor the outcomes of the registered tests.

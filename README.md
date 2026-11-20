@@ -18,7 +18,9 @@ and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go
 > experiments, E6 to E9, were **registered before their runs**: protocol 2.1 was pushed to
 > this repository before any training, on five seeds that no earlier run used; version 2.2
 > added a reading of E6 before any of its files existed. Of their 29 criteria, **25 pass
-> and 4 do not** (table below). The protocol is in [`PROTOCOL.md`](PROTOCOL.md) (Italian
+> and 4 do not** (table below). On 20 November three readings made after those results became
+> three more tests, E10 to E12, registered with protocol 2.3 before their run, on seeds 7 to
+> 11: of their 15 criteria, **12 pass and 3 do not**. The protocol is in [`PROTOCOL.md`](PROTOCOL.md) (Italian
 > original [`PROTOCOL.it.md`](PROTOCOL.it.md)); what changed after a run is in its
 > "Deviations" section.
 
@@ -76,6 +78,9 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E7 | different views: judge and machine see different halves of the image, with everything, a quarter or nothing in common. What does a partner trained from scratch learn? (v2.0) | GPU runs |
 | E8 | the bench of the chart: the judge sees the whole image, the machine all, half or a quarter of it. A theorem predicts the pair with the soloist, with the partner and with a blind corrector from measures taken on the judge and the soloist alone (v2.1) | GPU runs |
 | E9 | the shape of the noise: the networks of E1 tested with a frame of the same variance and another shape (two values, uniform, heavy tails). Where does the formula stop holding for right answers? (v2.1) | GPU runs |
+| E10 | the chart that tells the truth: at test the frame has a sensitivity of its own (0, 0.5, 1, 1.5) and the judge, trained where it was worth 2, overweights it. Does a branch trained on the error of the sum remove only the excess the theorem says is there? (v2.3) | GPU runs |
+| E11 | on the same files: at a fixed weight, is a partner that removes the whole push worse than one that removes only the excess, and worse than no correction at all? (v2.3) | GPU runs |
+| E12 | on the same files: how many yes-or-no answers of the judge does a correction need, against judgments with a graded cue? (v2.3) | analysis |
 
 What came out of the four new experiments (25 units each for E6, 75 for the others; medians
 over five tasks and five seeds):
@@ -88,7 +93,15 @@ over five tasks and five seeds):
 | E8 | 7 of 7 | when the machine sees a quarter of the image the pair with the partner is worth 2.87 against 2.49 with the soloist, in 5 tasks of 5; the gain is 1.02 times the one the theorem predicts; the blind corrector beats the soloist in 25 units of 25 |
 | E9 | 3 of 5 | with a Gaussian frame the formula holds again on new seeds; with a two-valued frame it promises 3.69 where the pair gives 2.29, and the pair itself does not depend on the shape. **Not confirmed**: heavy tails move the ratio to 0.95, not below 0.9 (S2), and the uniform frame goes to 0.945, just below its band (S4) |
 
-Nine readings of data already collected, none of them a test (the last five were added after the results of E6 to E9):
+What came out of the three tests of protocol 2.3 (50 files, seeds 7 to 11; medians over the units):
+
+| | Criteria that pass | In short |
+|---|---|---|
+| E10 | 6 of 6 | with the machine seeing a quarter of the image the branch built for the level removes 77 and 46 per cent of the judge's push where the excess of the theorem is 75 and 46 (frame worth 0.5 and 1), and almost nothing where the judge's weight is almost right (1.5). With the whole view it removes the same shares where the theorem says 42 and -23: the mismatch seen on old data, written as an expectation, is confirmed |
+| E11 | 5 of 5 | at face value, with a frame worth 1 the partner that removes only the excess beats the one that removes everything by 0.18, in 25 units of 25; with a frame worth 1.5 the one that removes everything is 0.38 below the soloist with no branch, and gives fewer right answers than the judge alone in 25 units of 25. At the tuned weight the two partners differ by less than 1 per cent |
+| E12 | 1 of 4 | **the prediction was too pessimistic.** With yes-or-no answers 25 judgments keep 90 per cent of the gain, against 15 with the graded cue: 1.6 times as many, where the registered band was 3 to 9 (Y2); Y1 misses by one unit (19 of 25) and Y3 fails with it. A factor was missing in the prediction, found afterwards: the bias left is kappa / (n (1 + B)^2), which gives 1.8 |
+
+Eleven readings of data already collected, none of them a test (the last seven were added after the results of E6 to E9; the last one after those of E10):
 
 | | What | Result file |
 |---|---|---|
@@ -100,7 +113,9 @@ Nine readings of data already collected, none of them a test (the last five were
 | the theorem on the different views | the theorem of E8 on the files of E7: where the views share nothing it predicts 2.91 for the pair with the partner, measured 2.92, and the partner beats both the soloist and an ideal blind corrector in 25 units of 25 | `results/chart_from_e7.json` |
 | how many judgments | on the files of E8: a correction learned from 20 judgments with a known answer keeps about 94 per cent of the gain, from 100 about 99; the bias left is 1 / n | `results/e8_judgments.json` |
 | when the trace says something true | the theorem extended to an informative trace that the judge overweights: only the excess is a bias. On the files of E8, resampled, a branch trained on the error of the sum removes 68 per cent of the push where the excess is 68 per cent | `results/e8_informative.json` |
-| the theorem on people | on the 74 pairs of people and machines of turing-meter: if half of a person's noise were a readable bias, the best pair would grow by about 14 per cent (10 on ChatBench). The bias of the people is not measured | `results/e4_private.json` |
+| the theorem on people | on the 74 pairs of people and machines of turing-meter: with a bias of the size documented on asylum judges (B between 0.002 and 0.01) the best pair would grow by less than 0.1 per cent in the median; if half of a person's noise were a readable bias, by about 14 per cent. The bias of the people is not measured | `results/e4_private.json` |
+| the pairs at face value, on old data | the look at the resampled files of E8 that sized the expectations of E11 | `results/e8_informative_face.json` |
+| what the branch leaves | on the results of E10: at both views the branch leaves the frame about the slope of its own log-likelihood ratio (0.38, 0.89, 1.51 against 0.36, 0.79, 1.33), whatever the machine sees | `results/e10_trace_left.json` |
 
 Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RESULTS.md).
 
@@ -171,6 +186,10 @@ uv run python analysis/chart.py --views        # the theorem on the files of E7,
 uv run python analysis/judgments.py            # how many judgments a correction needs, results/e8_judgments.json
 uv run python analysis/informative.py          # when the trace says something true, results/e8_informative.json
 uv run python analysis/private_people.py --turing-meter PATH_TO_TURING_METER_CLONE   # results/e4_private.json
+uv run python analysis/informative_face.py     # the look at old data behind § 17, results/e8_informative_face.json
+uv run python analysis/trace.py                # E10 and E11 (raw files in results/raw/trace, from gpu/run.sh trace), results/e10_trace.json
+uv run python analysis/yesno.py                # E12, results/e12_yesno.json
+uv run python analysis/trace_left.py           # what the branch leaves (after trace.py), results/e10_trace_left.json
 ```
 
 E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its

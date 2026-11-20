@@ -6,7 +6,8 @@ from __future__ import annotations
 
 import statistics
 
-V2 = (("e6_trust.json", "E6"), ("e8_chart.json", "E8"), ("e7_views.json", "E7"), ("e9_shape.json", "E9"))
+V2 = (("e6_trust.json", "E6"), ("e8_chart.json", "E8"), ("e7_views.json", "E7"), ("e9_shape.json", "E9"),
+      ("e10_trace.json", "E10 and E11"), ("e12_yesno.json", "E12"))
 
 
 def f(x, nd=3):
@@ -350,8 +351,11 @@ def private_people(d):
     for s in d["by_source"]:
         g = s["if_bias"]
         rows.append([s["source"], s["comparisons"], f(s["d_h"], 2), f(s["d_m"], 2), f(s["rho"], 2),
-                     f(s["private_observed"], 2), f(100 * (s["pair_now_over_machine"] - 1), 1)]
-                    + [f"{f(100 * g[b]['median_gain_over_pair_now'], 1)} ({g[b]['comparisons']})" for b in g])
+                     f(s["private_observed"], 2), f(100 * (s["pair_now_over_machine"] - 1), 1),
+                     f(100 * (s["pair_now_over_best_alone"] - 1), 1)]
+                    + [f"{f(100 * g[b]['median_gain_over_pair_now'], 2 if float(b) < 0.1 else 1)} ({g[b]['comparisons']})"
+                       for b in g])
+    doc = d["documented_bias"]
     return "\n\n".join([
         "## E4, the theorem on people already measured (a reading, with no measure of the bias)",
         "`analysis/private_people.py`: added on 20 November 2026, not a test. The 74 comparisons of people with a "
@@ -359,13 +363,109 @@ def private_people(d):
         "published: the people's biases are in them. P_obs is what the person adds to the machine today; the last "
         "columns say by how much the best pair would grow if a share B / (1 + B) of the person's noise were a bias a "
         "machine can read (in brackets, the comparisons where such a judge can exist). Nothing here measures B. "
-        "Medians over the comparisons.",
+        f"The two smallest values are the size of a documented bias: {doc['source']}, a shift of "
+        f"{f(100 * doc['shift'], 1)} percentage points around a rate of {f(doc['base_rate'], 2)}, is B = "
+        f"{f(doc['b'], 4)} when the noise is everything that makes the answer vary, and about five times as much "
+        "for a judge whose own noise is a fifth of that. The larger values are scenarios: with B = 0.25 the person "
+        "alone would already improve by 12 percent. Medians over the comparisons.",
         table(["source", "comparisons", "d_H", "d_m", "rho", "P_obs", "best pair over the machine alone, %",
-               "gain if B = 0.25, %", "gain if B = 1, %", "gain if B = 3, %"], rows)])
+               "best pair over the better of the two alone, %"] + [f"gain if B = {b}, %" for b in d["by_source"][0]["if_bias"]],
+              rows)])
+
+
+def informative_face(d):
+    rows = [[s["v"], f(s["target_d_a"], 1), s["units"], f(s["d_soloist"], 2), f(s["d_old"], 2), f(s["d_new"], 2),
+             f"{f(s['new_minus_old'], 3)} ({s['units_where_new_beats_old']})",
+             f"{f(s['old_minus_soloist'], 3)} ({s['units_where_old_beats_soloist']})",
+             f"{f(s['new_minus_soloist'], 3)} ({s['units_where_new_beats_soloist']})"] for s in d["by_v_and_d_a"]]
+    return "\n\n".join([
+        "## E8 resampled, the pairs at face value (a look at old data for § 17)",
+        "`analysis/informative_face.py`: made on 20 November 2026 to size the expectations of protocol § 17, before "
+        "the run of E10 to E12. Not a test. The files of E8 are resampled as above; the raw log-odds are summed at "
+        "weight 1. \"Old\" is the partner of E8, which removes the whole push; \"new\" is a branch linear in the "
+        "frame trained on the resampled validation set. Medians over the units; in brackets the units, of 25, "
+        "where the first of the two is ahead.",
+        table(["v", "d_a of the frame", "units", "pair with the soloist", "with the old partner", "with the new branch",
+               "new - old", "old - soloist", "new - soloist"], rows)])
+
+
+def trace(d):
+    rows, right = [], []
+    for s in d["by_v_and_level"]:
+        rows.append([s["v"], f(s["level"], 1), s["units"], f(s["theorem_beta"], 2), f(s["theorem_beta_deserved"], 2),
+                     f(s["theorem_excess"], 2), f(s["share_removed_new"], 2), f(s["share_removed_old"], 2),
+                     f(s["tuned_M"], 2), f(s["tuned_new"], 2), f(s["tuned_old"], 2), f(s["theorem_d2"], 2),
+                     f(s["tuned_calibrated_judge_with_soloist"], 2), f(s["share_of_predicted_gain"], 2)])
+        right.append([s["v"], f(s["level"], 1), f(s["face_M"], 2), f(s["face_new"], 2), f(s["face_old"], 2),
+                      f"{f(s['face_new_minus_old'], 3)} ({s['units_where_new_beats_old_at_face_value']})",
+                      f"{f(s['face_old_minus_soloist'], 3)} ({s['units_where_old_beats_soloist_at_face_value']})",
+                      f"{f(s['face_new_minus_soloist'], 3)} ({s['units_where_new_beats_soloist_at_face_value']})",
+                      f(s["right_H"], 3), f(s["right_C"], 3), f(s["right_H+M"], 3), f(s["right_H+new"], 3),
+                      f(s["right_H+old"], 3)])
+    return "\n\n".join([
+        "## E10 and E11. The chart that tells the truth",
+        "Protocol §§ 16-17 (v2.3), registered before the run. At test the frame has a sensitivity of its own (the "
+        "level). The judge H was trained where it was worth 2. M is the soloist and does not see the frame; \"new\" "
+        "is M plus the branch built for the level of the test, \"old\" is M plus the branch built at level 0, the "
+        "partner of E8, which removes the whole push; C is the judge trained with frames of the level. \"Excess\" is "
+        "1 - beta_0 / beta of the theorem with the quantities of the unit; \"removed\" is the slope of the branch on "
+        "the frame over the slope of the judge. Medians over the units. The primary criteria are T2, X1 and X2.",
+        "Tuned pairs (§ 3), and what the branches remove:",
+        table(["v", "level", "units", "weight the judge gives", "weight deserved", "excess", "removed by new",
+               "removed by old", "pair with M", "pair with new", "pair with old", "D2 theorem", "pair (C, M)",
+               "share of the predicted gain taken by new"], rows),
+        "At face value (raw log-odds summed, weight 1): sensitivity of the three sums, paired differences (in "
+        "brackets the units where the first of the two is ahead) and right answers:",
+        table(["v", "level", "H + M", "H + new", "H + old", "new - old", "old - M", "new - M", "right, H", "right, C",
+               "right, H + M", "right, H + new", "right, H + old"], right),
+        criteria(d["criteria"])])
+
+
+def yesno(d):
+    s = d["summary"]
+    rows = [[n, f(x["graded"], 2), f(x["predicted_graded"], 2), f(x["yes_no"], 2), f(x["predicted_yes_no"], 2),
+             f(x["predicted_yes_no_corrected"], 2), f"{f(x['yes_no_range'][0], 2)} to {f(x['yes_no_range'][1], 2)}"]
+            for n, x in s["by_n"].items()]
+    late = s["added_after_the_results"]
+    return "\n\n".join([
+        "## E12. The push estimated from yes and no",
+        "Protocol § 18 (v2.3), registered before the run, on the files of E10 with the machine seeing a quarter of "
+        "the image and the frame saying nothing (level 0). The same draws of n validation presentations feed two "
+        "estimators of the judge's push: the slope of the graded cue, and a probit regression of the yes-or-no "
+        "answer. Share of the gain kept by the corrected judge beside the soloist, median over the draws and over "
+        f"the {s['units']} units with a gain to keep. Predicted: a bias left of 1 / n with the graded cue, and of "
+        f"kappa / n with yes and no, kappa from the Fisher information (median {f(s['median_kappa'], 2)}, from "
+        f"{f(s['kappa_range'][0], 2)} to {f(s['kappa_range'][1], 2)}). The primary criteria are Y1 and Y2.",
+        table(["judgments", "kept, graded cue", "predicted", "kept, yes and no", "predicted (registered)",
+               "predicted (corrected afterwards)", "yes and no, over the units"], rows),
+        criteria(d["criteria"]),
+        "**Added after the results.** The registered prediction was too pessimistic: a factor was missing. The probit "
+        "slope is in units of the clean noise, and bringing it to the units of the judge's whole cue with the same "
+        "estimate shrinks its error; the bias left is kappa / (n (1 + B)^2). That gives a factor of "
+        f"{f(late['median_kappa_corrected'], 2)} (median), where the measured one is {f(late['median_factor_measured'], 2)} "
+        "at a target of 0.90 and " + ", ".join(f"{f(v, 2)} at {k}" for k, v in late["factor_by_target"].items() if k != "0.9")
+        + ". The criteria above use the registered prediction and are untouched."])
+
+
+def trace_left(d):
+    rows = [[r["v"], f(r["level"], 1), r["units"], f(r["push_raw"], 2), f(r["share_removed"], 2), f(r["excess_of_the_theorem"], 2),
+             f"{f(r['left_to_the_frame'], 2)} ({f(r['left_range'][0], 2)} to {f(r['left_range'][1], 2)})", f(r["frame_own_slope"], 2),
+             r["units_where_old_pair_is_below_the_judge_alone"]] for r in d["by_v_and_level"]]
+    return "\n\n".join([
+        "## E10, what the branch leaves to the frame (a reading added after the results)",
+        "`analysis/trace_left.py`: added on 20 November 2026 after the results of E10, not a test. The branch built "
+        "for a level removes the same share of the push at the two views, and what it leaves to the frame, in raw "
+        "log-odds per unit of frame, is close to the slope of the frame's own log-likelihood ratio. The excess of the "
+        "theorem is that of the best linear use of the three cues and depends on the machine: the two coincide where "
+        "the machine sees a quarter of the image, not where it sees everything. Last column: the units, of 25, where "
+        "the pair with the old partner at face value gives fewer right answers than the judge alone.",
+        table(["v", "level", "units", "push of the judge", "share removed", "excess of the theorem",
+               "left to the frame (min to max)", "the frame's own slope", "old pair below the judge alone"], rows)])
 
 
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
-            ("e9_shape.json", e9))
+            ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
+            ("e12_yesno.json", yesno))

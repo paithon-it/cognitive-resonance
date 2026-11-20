@@ -1,0 +1,2577 @@
+{
+ "experiment": "E12, the push estimated from yes-or-no answers",
+ "protocol": "§ 18 (v2.3)",
+ "status": "registered before the run",
+ "settings": {
+  "ns": [
+   5,
+   10,
+   20,
+   50,
+   100,
+   200,
+   500,
+   1000,
+   5000
+  ],
+  "draws": 40,
+  "penalty": 0.05,
+  "target": 0.9,
+  "view": 25,
+  "level": 0
+ },
+ "criteria": {
+  "Y1": {
+   "outcome": "fail",
+   "units_where_yes_no_keeps_less": 19,
+   "units": 25,
+   "needed": 20,
+   "median_graded": 0.9733194699710657,
+   "median_yes_no": 0.962080395044724,
+   "rule": "with 50 judgments the share kept with yes-or-no answers is lower than with the graded cue in at least 80% of the units"
+  },
+  "Y2": {
+   "outcome": "fail",
+   "median_factor": 1.572243139354989,
+   "band": [
+    3.0,
+    9.0
+   ],
+   "units_never_reaching_target": 0,
+   "median_needed_graded": 15.047480602817783,
+   "median_needed_yes_no": 25.26445549422043,
+   "median_kappa": 5.344926801265324,
+   "rule": "judgments needed to keep 90% of the gain, yes-or-no over graded, median over the units, within [3.0, 9.0]; a unit that never reaches it counts as outside"
+  },
+  "Y3": {
+   "outcome": "fail",
+   "median_abs_gap": {
+    "100": 0.10607990622752195,
+    "200": 0.05963079264147564
+   },
+   "at_most": 0.07,
+   "median_measured": {
+    "100": 0.9776191102906324,
+    "200": 0.9909467161342004
+   },
+   "median_predicted": {
+    "100": 0.8648417972317164,
+    "200": 0.9300293149650218
+   },
+   "rule": "with 100 and with 200 yes-or-no answers, |measured - predicted| share kept, median over the units, is at most 0.07"
+  },
+  "Y4": {
+   "outcome": "pass",
+   "median_share_kept": 0.997461745958048,
+   "at_least": 0.9,
+   "rule": "with 5,000 yes-or-no answers the share kept is in the median at least 0.9"
+  }
+ },
+ "summary": {
+  "units": 25,
+  "left_out": 0,
+  "median_b": 0.7078649073410922,
+  "median_r": 0.5043012298310612,
+  "median_kappa": 5.344926801265324,
+  "added_after_the_results": {
+   "median_kappa_corrected": 1.7985641593744606,
+   "median_factor_measured": 1.572243139354989,
+   "factor_by_target": {
+    "0.8": 1.088100484757223,
+    "0.9": 1.572243139354989,
+    "0.95": 1.7657452837251828,
+    "0.975": 1.7823826802083484
+   },
+   "why": "bias left with yes and no = kappa / (n (1 + B)^2): the slope is needed in units of the judge's whole noise, and the same estimate sets the unit"
+  },
+  "kappa_range": [
+   4.768905464193926,
+   7.578665613560265
+  ],
+  "by_n": {
+   "5": {
+    "graded": 0.5442373866512668,
+    "yes_no": 0.6945913173875021,
+    "predicted_graded": 0.5620364518889565,
+    "predicted_yes_no": -0.19340263757758502,
+    "predicted_yes_no_corrected": 0.32529127929841084,
+    "yes_no_range": [
+     0.21671536494009738,
+     0.9227171416485811
+    ]
+   },
+   "10": {
+    "graded": 0.8268463581649526,
+    "yes_no": 0.8187704017786466,
+    "predicted_graded": 0.7560042446448318,
+    "predicted_yes_no": 0.14821901843570173,
+    "predicted_yes_no_corrected": 0.5938876020141668,
+    "yes_no_range": [
+     0.6150190535016142,
+     0.9343495362759877
+    ]
+   },
+   "20": {
+    "graded": 0.946676640108111,
+    "yes_no": 0.8790012291355697,
+    "predicted_graded": 0.8706122304903768,
+    "predicted_yes_no": 0.4702763562855261,
+    "predicted_yes_no_corrected": 0.7739027414579361,
+    "yes_no_range": [
+     0.7565139320175456,
+     0.9748169910951943
+    ]
+   },
+   "50": {
+    "graded": 0.9733194699710657,
+    "yes_no": 0.962080395044724,
+    "predicted_graded": 0.9462929434606562,
+    "predicted_yes_no": 0.7472402496978376,
+    "predicted_yes_no_corrected": 0.9029539277052665,
+    "yes_no_range": [
+     0.8421637491490073,
+     0.987511712063258
+    ]
+   },
+   "100": {
+    "graded": 0.9890000845663179,
+    "yes_no": 0.9776191102906324,
+    "predicted_graded": 0.9728045791155429,
+    "predicted_yes_no": 0.8648417972317164,
+    "predicted_yes_no_corrected": 0.9502658254379313,
+    "yes_no_range": [
+     0.9393011272250236,
+     0.9953056148536169
+    ]
+   },
+   "200": {
+    "graded": 0.9945521916608129,
+    "yes_no": 0.9909467161342004,
+    "predicted_graded": 0.986315173611032,
+    "predicted_yes_no": 0.9300293149650218,
+    "predicted_yes_no_corrected": 0.9748186485623741,
+    "yes_no_range": [
+     0.9615088100888498,
+     0.9981774669186609
+    ]
+   },
+   "500": {
+    "graded": 0.9980142937810336,
+    "yes_no": 0.9960444450643905,
+    "predicted_graded": 0.9945049464711336,
+    "predicted_yes_no": 0.9713620645865708,
+    "predicted_yes_no_corrected": 0.9898504992828959,
+    "yes_no_range": [
+     0.9772605467719446,
+     1.0039532825877204
+    ]
+   },
+   "1000": {
+    "graded": 0.9993603109346867,
+    "yes_no": 0.9962365845135546,
+    "predicted_graded": 0.9972489346033614,
+    "predicted_yes_no": 0.9855693781774305,
+    "predicted_yes_no_corrected": 0.9949122919461629,
+    "yes_no_range": [
+     0.9866694375266813,
+     1.003955023878719
+    ]
+   },
+   "5000": {
+    "graded": 1.0,
+    "yes_no": 0.997461745958048,
+    "predicted_graded": 0.9994492194255988,
+    "predicted_yes_no": 0.997097932243069,
+    "predicted_yes_no_corrected": 0.99898037560979,
+    "yes_no_range": [
+     0.9878786784281245,
+     1.0059496091209783
+    ]
+   }
+  }
+ },
+ "units": [
+  {
+   "task": "airplane-ship",
+   "seed": 10,
+   "v": 25,
+   "b": 0.682227607157258,
+   "r": 0.5297986315817867,
+   "kappa": 5.105983637320332,
+   "kappa_corrected": 1.8043048098718304,
+   "class_means": [
+    -1.4373059158169317,
+    1.4250180980219354
+   ],
+   "beta_clean": 0.5750377815445901,
+   "d1": 2.606268078578916,
+   "d_all_judgments": 3.0164494177532983,
+   "gain_squared": 2.3063337924447787,
+   "right_answers_of_the_judge_on_validation": 0.8668,
+   "needed_graded": 24.046193635800996,
+   "needed_yes_no": 37.806462971489715,
+   "factor": 1.572243139354989,
+   "by_n": {
+    "5": {
+     "graded": 0.37527076329857934,
+     "yes_no": 0.5785019320259963,
+     "draws": 29,
+     "predicted_graded": 0.5530664850691906,
+     "predicted_yes_no": -0.20533947451822887,
+     "predicted_yes_no_corrected": 0.3136864773528296
+    },
+    "10": {
+     "graded": 0.6117939359584583,
+     "yes_no": 0.6581669611418933,
+     "draws": 39,
+     "predicted_graded": 0.7492583615494937,
+     "predicted_yes_no": 0.1471316807823949,
+     "predicted_yes_no_corrected": 0.5880281679417083
+    },
+    "20": {
+     "graded": 0.8856648373956247,
+     "yes_no": 0.8029425606286793,
+     "draws": 40,
+     "predicted_graded": 0.8664809529133944,
+     "predicted_yes_no": 0.4618616689292787,
+     "predicted_yes_no_corrected": 0.7710586654787144
+    },
+    "50": {
+     "graded": 0.9569569562448754,
+     "yes_no": 0.9426098405117787,
+     "draws": 40,
+     "predicted_graded": 0.944425196662245,
+     "predicted_yes_no": 0.7446042022674135,
+     "predicted_yes_no_corrected": 0.9018614293193867
+    },
+    "100": {
+     "graded": 0.9776779296449196,
+     "yes_no": 0.9660199893159571,
+     "draws": 40,
+     "predicted_graded": 0.9718315906423997,
+     "predicted_yes_no": 0.8638383676743342,
+     "predicted_yes_no_corrected": 0.9497299935350979
+    },
+    "200": {
+     "graded": 0.9973886093676648,
+     "yes_no": 0.9749530329641141,
+     "draws": 40,
+     "predicted_graded": 0.9858185708015039,
+     "predicted_yes_no": 0.9295856761033914,
+     "predicted_yes_no_corrected": 0.9745536619330524
+    },
+    "500": {
+     "graded": 0.9959479414685717,
+     "yes_no": 0.9906526210981447,
+     "draws": 40,
+     "predicted_graded": 0.9943038356425744,
+     "predicted_yes_no": 0.9712428705034873,
+     "predicted_yes_no_corrected": 0.9897452524865453
+    },
+    "1000": {
+     "graded": 0.9992331307276494,
+     "yes_no": 0.9885487113120015,
+     "draws": 40,
+     "predicted_graded": 0.9971479638727153,
+     "predicted_yes_no": 0.9855200896541794,
+     "predicted_yes_no_corrected": 0.9948597970685878
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9890603444156285,
+     "draws": 1,
+     "predicted_graded": 0.9994289585601225,
+     "predicted_yes_no": 0.9970875957437894,
+     "predicted_yes_no_corrected": 0.9989698974824807
+    }
+   }
+  },
+  {
+   "task": "airplane-ship",
+   "seed": 11,
+   "v": 25,
+   "b": 0.5731158724632128,
+   "r": 0.5043012298310612,
+   "kappa": 4.768905464193926,
+   "kappa_corrected": 1.9270690981802356,
+   "class_means": [
+    -1.4283278471638465,
+    1.4040876910434343
+   ],
+   "beta_clean": 0.5406226678561181,
+   "d1": 2.618811033516019,
+   "d_all_judgments": 2.979935556160848,
+   "gain_squared": 2.0218446896064233,
+   "right_answers_of_the_judge_on_validation": 0.8622,
+   "needed_graded": 17.707970028967,
+   "needed_yes_no": 45.219300232593234,
+   "factor": 2.553612873673421,
+   "by_n": {
+    "5": {
+     "graded": 0.5442373866512668,
+     "yes_no": 0.5545695251795,
+     "draws": 24,
+     "predicted_graded": 0.513345325698271,
+     "predicted_yes_no": -0.29143527654357104,
+     "predicted_yes_no_corrected": 0.21591385177157096
+    },
+    "10": {
+     "graded": 0.7807649278641486,
+     "yes_no": 0.636844181328617,
+     "draws": 38,
+     "predicted_graded": 0.7278996920349315,
+     "predicted_yes_no": 0.10240604232367534,
+     "predicted_yes_no_corrected": 0.5274470777272697
+    },
+    "20": {
+     "graded": 0.9253976794140053,
+     "yes_no": 0.7568393493592787,
+     "draws": 40,
+     "predicted_graded": 0.8554005480656335,
+     "predicted_yes_no": 0.44246331918213067,
+     "predicted_yes_no_corrected": 0.7366865536672461
+    },
+    "50": {
+     "graded": 0.9732356053440052,
+     "yes_no": 0.91763624688288,
+     "draws": 40,
+     "predicted_graded": 0.9398940077380828,
+     "predicted_yes_no": 0.739049700984991,
+     "predicted_yes_no_corrected": 0.8869101349155663
+    },
+    "100": {
+     "graded": 0.9823710543731432,
+     "yes_no": 0.9756441372736757,
+     "draws": 40,
+     "predicted_graded": 0.9695493092706734,
+     "predicted_yes_no": 0.8616820509989614,
+     "predicted_yes_no_corrected": 0.9420305840885589
+    },
+    "200": {
+     "graded": 0.9924885794444978,
+     "yes_no": 0.9750280218156149,
+     "draws": 40,
+     "predicted_graded": 0.9846732443147154,
+     "predicted_yes_no": 0.9286980626429416,
+     "predicted_yes_no_corrected": 0.9706455424064727
+    },
+    "500": {
+     "graded": 0.9980142937810336,
+     "yes_no": 0.988026260825542,
+     "draws": 40,
+     "predicted_graded": 0.9938446988330567,
+     "predicted_yes_no": 0.9709389325920875,
+     "predicted_yes_no_corrected": 0.9881676518317004
+    },
+    "1000": {
+     "graded": 0.9988129415411807,
+     "yes_no": 0.9947652144253059,
+     "draws": 40,
+     "predicted_graded": 0.9969182276381597,
+     "predicted_yes_no": 0.9853771286083205,
+     "predicted_yes_no_corrected": 0.9940685760973065
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9936390263757806,
+     "draws": 1,
+     "predicted_graded": 0.999382984451588,
+     "predicted_yes_no": 0.9970604818350373,
+     "predicted_yes_no_corrected": 0.9988112639042025
+    }
+   }
+  },
+  {
+   "task": "airplane-ship",
+   "seed": 7,
+   "v": 25,
+   "b": 0.6483325071031052,
+   "r": 0.5332556313566941,
+   "kappa": 4.942690094157913,
+   "kappa_corrected": 1.8191718792683467,
+   "class_means": [
+    -1.4122777845038785,
+    1.41082709341618
+   ],
+   "beta_clean": 0.5702217353614385,
+   "d1": 2.5878860941513055,
+   "d_all_judgments": 2.987040303165208,
+   "gain_squared": 2.225255336431598,
+   "right_answers_of_the_judge_on_validation": 0.8524,
+   "needed_graded": 18.120933122514685,
+   "needed_yes_no": 42.7026249514083,
+   "factor": 2.3565356520383403,
+   "by_n": {
+    "5": {
+     "graded": 0.23748107821863912,
+     "yes_no": 0.6867992302068843,
+     "draws": 22,
+     "predicted_graded": 0.5404705995369385,
+     "predicted_yes_no": -0.22035486512893399,
+     "predicted_yes_no_corrected": 0.29091329484831774
+    },
+    "10": {
+     "graded": 0.7076176146772638,
+     "yes_no": 0.7137843051493098,
+     "draws": 40,
+     "predicted_graded": 0.742065378965034,
+     "predicted_yes_no": 0.14055408215228593,
+     "predicted_yes_no_corrected": 0.5735975578104642
+    },
+    "20": {
+     "graded": 0.9319291165518566,
+     "yes_no": 0.7565139320175456,
+     "draws": 40,
+     "predicted_graded": 0.8626104822636651,
+     "predicted_yes_no": 0.4599713120642641,
+     "predicted_yes_no_corrected": 0.7627564347273772
+    },
+    "50": {
+     "graded": 0.9219596265136807,
+     "yes_no": 0.9298429767045122,
+     "draws": 40,
+     "predicted_graded": 0.9428030454314399,
+     "predicted_yes_no": 0.7446630014636982,
+     "predicted_yes_no_corrected": 0.8982157504064099
+    },
+    "100": {
+     "graded": 0.9823216987574837,
+     "yes_no": 0.9393011272250236,
+     "draws": 40,
+     "predicted_graded": 0.9710074080156457,
+     "predicted_yes_no": 0.8640835015113035,
+     "predicted_yes_no_corrected": 0.9478462546190183
+    },
+    "200": {
+     "graded": 0.9915050880507634,
+     "yes_no": 0.9894040507149391,
+     "draws": 40,
+     "predicted_graded": 0.985403124470596,
+     "predicted_yes_no": 0.9297732580734634,
+     "predicted_yes_no_corrected": 0.9735958465799686
+    },
+    "500": {
+     "graded": 0.9956019374094336,
+     "yes_no": 0.9868311429627832,
+     "draws": 40,
+     "predicted_graded": 0.9941368416045858,
+     "predicted_yes_no": 0.9713351927464275,
+     "predicted_yes_no_corrected": 0.989358201980771
+    },
+    "1000": {
+     "graded": 0.9986335750952458,
+     "yes_no": 0.988022583069073,
+     "draws": 40,
+     "predicted_graded": 0.9970643300655024,
+     "predicted_yes_no": 0.9855692859577779,
+     "predicted_yes_no_corrected": 0.9946656094198684
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9897005102590569,
+     "draws": 1,
+     "predicted_graded": 0.9994122098494066,
+     "predicted_yes_no": 0.997097932243069,
+     "predicted_yes_no_corrected": 0.9989309533604821
+    }
+   }
+  },
+  {
+   "task": "airplane-ship",
+   "seed": 8,
+   "v": 25,
+   "b": 0.6292652938292094,
+   "r": 0.48689190650143604,
+   "kappa": 4.803533891661774,
+   "kappa_corrected": 1.809577745016659,
+   "class_means": [
+    -1.3783577582942177,
+    1.3965635730766206
+   ],
+   "beta_clean": 0.5652590235567472,
+   "d1": 2.604317717492484,
+   "d_all_judgments": 2.995473836502921,
+   "gain_squared": 2.1903927315282674,
+   "right_answers_of_the_judge_on_validation": 0.8416,
+   "needed_graded": 19.841330144641837,
+   "needed_yes_no": 67.45551609949872,
+   "factor": 3.3997476785957885,
+   "by_n": {
+    "5": {
+     "graded": 0.6413118846171264,
+     "yes_no": 0.5620697524010125,
+     "draws": 23,
+     "predicted_graded": 0.540483841062475,
+     "predicted_yes_no": -0.23313850968535332,
+     "predicted_yes_no_corrected": 0.2881634807686394
+    },
+    "10": {
+     "graded": 0.8182814414949153,
+     "yes_no": 0.6150190535016142,
+     "draws": 40,
+     "predicted_graded": 0.7436167702057759,
+     "predicted_yes_no": 0.14521503355201093,
+     "predicted_yes_no_corrected": 0.5758472002414503
+    },
+    "20": {
+     "graded": 0.9009499650077704,
+     "yes_no": 0.8596261340446645,
+     "draws": 40,
+     "predicted_graded": 0.8639239039073962,
+     "predicted_yes_no": 0.4702763562855261,
+     "predicted_yes_no_corrected": 0.7654393068912168
+    },
+    "50": {
+     "graded": 0.9586051949135819,
+     "yes_no": 0.8421637491490073,
+     "draws": 40,
+     "predicted_graded": 0.9434839344017261,
+     "predicted_yes_no": 0.7525642110934805,
+     "predicted_yes_no_corrected": 0.8998019367941699
+    },
+    "100": {
+     "graded": 0.9750845310156433,
+     "yes_no": 0.9760413786243932,
+     "draws": 40,
+     "predicted_graded": 0.9713763738932989,
+     "predicted_yes_no": 0.8689540672841997,
+     "predicted_yes_no_corrected": 0.9487402209889483
+    },
+    "200": {
+     "graded": 0.986906306606248,
+     "yes_no": 0.9615088100888498,
+     "draws": 40,
+     "predicted_graded": 0.9855950033480445,
+     "predicted_yes_no": 0.9324772864316992,
+     "predicted_yes_no_corrected": 0.9740697204084268
+    },
+    "500": {
+     "graded": 0.9962977999933087,
+     "yes_no": 0.9906262243025437,
+     "draws": 40,
+     "predicted_graded": 0.994215403383507,
+     "predicted_yes_no": 0.9724871018388613,
+     "predicted_yes_no_corrected": 0.9895544330337465
+    },
+    "1000": {
+     "graded": 0.9984264699968926,
+     "yes_no": 0.9946048074457177,
+     "draws": 40,
+     "predicted_graded": 0.9971039156451726,
+     "predicted_yes_no": 0.9861574806532631,
+     "predicted_yes_no_corrected": 0.994764858119938
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9914604018799373,
+     "draws": 1,
+     "predicted_graded": 0.9994201759327654,
+     "predicted_yes_no": 0.9972175690147762,
+     "predicted_yes_no_corrected": 0.9989509858425144
+    }
+   }
+  },
+  {
+   "task": "airplane-ship",
+   "seed": 9,
+   "v": 25,
+   "b": 0.6517250435525862,
+   "r": 0.4917732515053562,
+   "kappa": 5.05244995169631,
+   "kappa_corrected": 1.851938297820636,
+   "class_means": [
+    -1.4317886914055264,
+    1.4432346482740224
+   ],
+   "beta_clean": 0.5783662748098632,
+   "d1": 2.590434486758291,
+   "d_all_judgments": 3.014157737883025,
+   "gain_squared": 2.3747960386534235,
+   "right_answers_of_the_judge_on_validation": 0.843,
+   "needed_graded": 17.226611396977336,
+   "needed_yes_no": 25.390778477721977,
+   "factor": 1.4739276281681934,
+   "by_n": {
+    "5": {
+     "graded": 0.46105032655265826,
+     "yes_no": 0.6823242751199243,
+     "draws": 23,
+     "predicted_graded": 0.5484442384150963,
+     "predicted_yes_no": -0.2359740578206737,
+     "predicted_yes_no_corrected": 0.2900038899138274
+    },
+    "10": {
+     "graded": 0.7023620866944882,
+     "yes_no": 0.7188558177664515,
+     "draws": 40,
+     "predicted_graded": 0.747912558553691,
+     "predicted_yes_no": 0.1348752087014694,
+     "predicted_yes_no_corrected": 0.5753106878926113
+    },
+    "20": {
+     "graded": 0.9542459826900057,
+     "yes_no": 0.878136196514063,
+     "draws": 40,
+     "predicted_graded": 0.8661580792972968,
+     "predicted_yes_no": 0.45932820034945787,
+     "predicted_yes_no_corrected": 0.7645435934396085
+    },
+    "50": {
+     "graded": 0.9847059867533547,
+     "yes_no": 0.962080395044724,
+     "draws": 40,
+     "predicted_graded": 0.9443992539125788,
+     "predicted_yes_no": 0.745579163426793,
+     "predicted_yes_no_corrected": 0.899237176954334
+    },
+    "100": {
+     "graded": 0.983090764861603,
+     "yes_no": 0.972700761057544,
+     "draws": 40,
+     "predicted_graded": 0.9718377178913331,
+     "predicted_yes_no": 0.8648417972317164,
+     "predicted_yes_no_corrected": 0.9484172771076128
+    },
+    "200": {
+     "graded": 0.9951545170077882,
+     "yes_no": 0.9834718456114769,
+     "draws": 40,
+     "predicted_graded": 0.9858266033358966,
+     "predicted_yes_no": 0.930241738952321,
+     "predicted_yes_no_corrected": 0.9738974394245445
+    },
+    "500": {
+     "graded": 0.9973573082497542,
+     "yes_no": 0.9894815540487992,
+     "draws": 40,
+     "predicted_graded": 0.9943082669699812,
+     "predicted_yes_no": 0.9715461814812766,
+     "predicted_yes_no_corrected": 0.9894828355686852
+    },
+    "1000": {
+     "graded": 0.9990839606228212,
+     "yes_no": 0.9942449460385125,
+     "draws": 40,
+     "predicted_graded": 0.9971503847758849,
+     "predicted_yes_no": 0.985678908793425,
+     "predicted_yes_no_corrected": 0.994728604062301
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9947849808838676,
+     "draws": 1,
+     "predicted_graded": 0.9994294757380828,
+     "predicted_yes_no": 0.9971205321279362,
+     "predicted_yes_no_corrected": 0.9989436616069945
+    }
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 10,
+   "v": 25,
+   "b": 0.6825851987640049,
+   "r": 0.4738802527450024,
+   "kappa": 5.6679885343581615,
+   "kappa_corrected": 2.0020496084936017,
+   "class_means": [
+    -1.6673655830261918,
+    1.4560155671152801
+   ],
+   "beta_clean": 0.586013306095279,
+   "d1": 2.603065860456492,
+   "d_all_judgments": 3.039738534507568,
+   "gain_squared": 2.464058484296121,
+   "right_answers_of_the_judge_on_validation": 0.8904,
+   "needed_graded": 12.20377528215094,
+   "needed_yes_no": 26.829045401529783,
+   "factor": 2.1984217818865894,
+   "by_n": {
+    "5": {
+     "graded": 0.6272960949193928,
+     "yes_no": 0.5710893702969754,
+     "draws": 27,
+     "predicted_graded": 0.5620364518889565,
+     "predicted_yes_no": -0.26838892047748986,
+     "predicted_yes_no_corrected": 0.2726201314645579
+    },
+    "10": {
+     "graded": 0.8810060054857765,
+     "yes_no": 0.7980380147156931,
+     "draws": 38,
+     "predicted_graded": 0.7560042446448318,
+     "predicted_yes_no": 0.09799824160838921,
+     "predicted_yes_no_corrected": 0.561679725703974
+    },
+    "20": {
+     "graded": 0.9471117322495088,
+     "yes_no": 0.8717016029277411,
+     "draws": 40,
+     "predicted_graded": 0.8706122304903768,
+     "predicted_yes_no": 0.4282880021636304,
+     "predicted_yes_no_corrected": 0.7557827853027883
+    },
+    "50": {
+     "graded": 0.9901197059797876,
+     "yes_no": 0.9599715973477045,
+     "draws": 40,
+     "predicted_graded": 0.9462929434606562,
+     "predicted_yes_no": 0.7275645216029265,
+     "predicted_yes_no_corrected": 0.8951182956659247
+    },
+    "100": {
+     "graded": 0.9981004442169372,
+     "yes_no": 0.9936750772394396,
+     "draws": 40,
+     "predicted_graded": 0.9728045791155429,
+     "predicted_yes_no": 0.8545037552452612,
+     "predicted_yes_no_corrected": 0.9462392894964166
+    },
+    "200": {
+     "graded": 1.003702096382442,
+     "yes_no": 0.9981774669186609,
+     "draws": 40,
+     "predicted_graded": 0.986315173611032,
+     "predicted_yes_no": 0.9246868919777704,
+     "predicted_yes_no_corrected": 0.9727770643255955
+    },
+    "500": {
+     "graded": 0.9989160240742296,
+     "yes_no": 1.0039532825877204,
+     "draws": 40,
+     "predicted_graded": 0.9945049464711336,
+     "predicted_yes_no": 0.9692236817227514,
+     "predicted_yes_no_corrected": 0.9890269169411665
+    },
+    "1000": {
+     "graded": 0.9987414263186186,
+     "yes_no": 1.003955023878719,
+     "draws": 40,
+     "predicted_graded": 0.9972489346033614,
+     "predicted_yes_no": 0.9845001787233336,
+     "predicted_yes_no_corrected": 0.9944993296187119
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 1.005805948350507,
+     "draws": 1,
+     "predicted_graded": 0.9994492194255988,
+     "predicted_yes_no": 0.9968819350847056,
+     "predicted_yes_no_corrected": 0.998897594807107
+    }
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 11,
+   "v": 25,
+   "b": 0.6229831747321135,
+   "r": 0.4669180302747865,
+   "kappa": 5.344926801265324,
+   "kappa_corrected": 2.0291480114464395,
+   "class_means": [
+    -1.6493352804649368,
+    1.401276233355261
+   ],
+   "beta_clean": 0.5555846247189786,
+   "d1": 2.633138917123741,
+   "d_all_judgments": 3.00980928538028,
+   "gain_squared": 2.1255313774897635,
+   "right_answers_of_the_judge_on_validation": 0.8942,
+   "needed_graded": 17.97379875485738,
+   "needed_yes_no": 40.75716400558424,
+   "factor": 2.267587645854202,
+   "by_n": {
+    "5": {
+     "graded": 0.583842685321875,
+     "yes_no": 0.21671536494009738,
+     "draws": 26,
+     "predicted_graded": 0.5406804073598435,
+     "predicted_yes_no": -0.30245477565866996,
+     "predicted_yes_no_corrected": 0.22947792164863945
+    },
+    "10": {
+     "graded": 0.8085660946385446,
+     "yes_no": 0.8883021593022781,
+     "draws": 39,
+     "predicted_graded": 0.7443013105529396,
+     "predicted_yes_no": 0.08437344905910904,
+     "predicted_yes_no_corrected": 0.5353654403694292
+    },
+    "20": {
+     "graded": 0.9166573673021481,
+     "yes_no": 0.7988096402906019,
+     "draws": 40,
+     "predicted_graded": 0.8644672864410908,
+     "predicted_yes_no": 0.4255788612969357,
+     "predicted_yes_no_corrected": 0.7410027247614944
+    },
+    "50": {
+     "graded": 0.9648796839215494,
+     "yes_no": 0.9290524733129139,
+     "draws": 40,
+     "predicted_graded": 0.9437589622015967,
+     "predicted_yes_no": 0.7287831882802049,
+     "predicted_yes_no_corrected": 0.8887342387705177
+    },
+    "100": {
+     "graded": 0.987633676750159,
+     "yes_no": 0.9641465628239281,
+     "draws": 40,
+     "predicted_graded": 0.9715244184638601,
+     "predicted_yes_no": 0.8557156896943885,
+     "predicted_yes_no_corrected": 0.9429600360088979
+    },
+    "200": {
+     "graded": 0.9920008798713307,
+     "yes_no": 0.9846241069875556,
+     "draws": 40,
+     "predicted_graded": 0.9856717516972859,
+     "predicted_yes_no": 0.925473841336609,
+     "predicted_yes_no_corrected": 0.9711147305884316
+    },
+    "500": {
+     "graded": 0.9989644475778574,
+     "yes_no": 0.9961259947258738,
+     "draws": 40,
+     "predicted_graded": 0.9942467693384264,
+     "predicted_yes_no": 0.969586511607456,
+     "predicted_yes_no_corrected": 0.9883564127419424
+    },
+    "1000": {
+     "graded": 0.9985556857575651,
+     "yes_no": 0.9960861916248516,
+     "draws": 40,
+     "predicted_graded": 0.9971197107725852,
+     "predicted_yes_no": 0.984690022497978,
+     "predicted_yes_no_corrected": 0.9941631387315317
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9999643756702546,
+     "draws": 1,
+     "predicted_graded": 0.9994233529783346,
+     "predicted_yes_no": 0.9969212842338027,
+     "predicted_yes_no_corrected": 0.9988302056694945
+    }
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 7,
+   "v": 25,
+   "b": 0.5419654987845028,
+   "r": 0.45847628286581843,
+   "kappa": 5.105552230767232,
+   "kappa_corrected": 2.1473033930394285,
+   "class_means": [
+    -1.6540318317194482,
+    1.382258080539844
+   ],
+   "beta_clean": 0.5201520972674484,
+   "d1": 2.6155754391595085,
+   "d_all_judgments": 2.9838295329556024,
+   "gain_squared": 2.0620038038035933,
+   "right_answers_of_the_judge_on_validation": 0.8966,
+   "needed_graded": 21.738171545691202,
+   "needed_yes_no": 25.26445549422043,
+   "factor": 1.1622162168109391,
+   "by_n": {
+    "5": {
+     "graded": 0.35651028245083505,
+     "yes_no": 0.6396412443675716,
+     "draws": 26,
+     "predicted_graded": 0.5034777417299761,
+     "predicted_yes_no": -0.38558068644754595,
+     "predicted_yes_no_corrected": 0.1344683121371163
+    },
+    "10": {
+     "graded": 0.8085785704781696,
+     "yes_no": 0.7305391409103279,
+     "draws": 40,
+     "predicted_graded": 0.7238380763962111,
+     "predicted_yes_no": 0.03520100984052077,
+     "predicted_yes_no_corrected": 0.47472524986087217
+    },
+    "20": {
+     "graded": 0.8914767509113841,
+     "yes_no": 0.877408019232274,
+     "draws": 40,
+     "predicted_graded": 0.8536979710194164,
+     "predicted_yes_no": 0.39976633767892955,
+     "predicted_yes_no_corrected": 0.7059323787934206
+    },
+    "50": {
+     "graded": 0.9851893560734277,
+     "yes_no": 0.9659994433446348,
+     "draws": 40,
+     "predicted_graded": 0.9393112142956616,
+     "predicted_yes_no": 0.7186756155963256,
+     "predicted_yes_no_corrected": 0.8732736189963771
+    },
+    "100": {
+     "graded": 0.9897939146343337,
+     "yes_no": 0.9899090959099168,
+     "draws": 40,
+     "predicted_graded": 0.969276207149129,
+     "predicted_yes_no": 0.8507969993140129,
+     "predicted_yes_no_corrected": 0.9349596912845806
+    },
+    "200": {
+     "graded": 1.0017690769011933,
+     "yes_no": 0.9915295883738743,
+     "draws": 40,
+     "predicted_graded": 0.9845414635007903,
+     "predicted_yes_no": 0.9230627390639723,
+     "predicted_yes_no_corrected": 0.9670436963842635
+    },
+    "500": {
+     "graded": 1.0033125291427365,
+     "yes_no": 1.0023944424122049,
+     "draws": 40,
+     "predicted_graded": 0.9937931574443187,
+     "predicted_yes_no": 0.9686358926280765,
+     "predicted_yes_no_corrected": 0.9867105383074875
+    },
+    "1000": {
+     "graded": 1.0013477363883472,
+     "yes_no": 1.0034282551514262,
+     "draws": 40,
+     "predicted_graded": 0.9968926543123874,
+     "predicted_yes_no": 0.984217222907952,
+     "predicted_yes_no_corrected": 0.9933372524724894
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 1.0059496091209783,
+     "draws": 1,
+     "predicted_graded": 0.9993779015262422,
+     "predicted_yes_no": 0.9968271415582398,
+     "predicted_yes_no_corrected": 0.998664553725866
+    }
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 8,
+   "v": 25,
+   "b": 0.5905720173531177,
+   "r": 0.45213053243979157,
+   "kappa": 5.18680837818777,
+   "kappa_corrected": 2.0501872495644275,
+   "class_means": [
+    -1.6335466192964896,
+    1.3831223975380817
+   ],
+   "beta_clean": 0.5476077253742981,
+   "d1": 2.6084936918821766,
+   "d_all_judgments": 2.961262055898602,
+   "gain_squared": 1.9648336231157053,
+   "right_answers_of_the_judge_on_validation": 0.8886,
+   "needed_graded": 15.047480602817783,
+   "needed_yes_no": 27.567889542291116,
+   "factor": 1.8320601481372747,
+   "by_n": {
+    "5": {
+     "graded": 0.5055527191129937,
+     "yes_no": 0.6945913173875021,
+     "draws": 24,
+     "predicted_graded": 0.5284887314876365,
+     "predicted_yes_no": -0.3283710292784685,
+     "predicted_yes_no_corrected": 0.20172580694203968
+    },
+    "10": {
+     "graded": 0.8277214127782699,
+     "yes_no": 0.7595180179304316,
+     "draws": 40,
+     "predicted_graded": 0.737919954124677,
+     "predicted_yes_no": 0.07368932850378829,
+     "predicted_yes_no_corrected": 0.5190811245844114
+    },
+    "20": {
+     "graded": 0.9503268329190251,
+     "yes_no": 0.8790012291355697,
+     "draws": 40,
+     "predicted_graded": 0.8612114295727165,
+     "predicted_yes_no": 0.42298287292190473,
+     "predicted_yes_no_corrected": 0.7320940741272745
+    },
+    "50": {
+     "graded": 0.9581355593269034,
+     "yes_no": 0.9389570284876005,
+     "draws": 40,
+     "predicted_graded": 0.9424425073268213,
+     "predicted_yes_no": 0.7292576858370577,
+     "predicted_yes_no_corrected": 0.8849590356655275
+    },
+    "100": {
+     "graded": 0.9870592322799486,
+     "yes_no": 0.9573295464641872,
+     "draws": 40,
+     "predicted_graded": 0.9708640102060094,
+     "predicted_yes_no": 0.8563434277119675,
+     "predicted_yes_no_corrected": 0.9410344661196126
+    },
+    "200": {
+     "graded": 0.9945521916608129,
+     "yes_no": 0.9791176148280655,
+     "draws": 40,
+     "predicted_graded": 0.9853410208689191,
+     "predicted_yes_no": 0.9259041904011029,
+     "predicted_yes_no_corrected": 0.9701421832724307
+    },
+    "500": {
+     "graded": 0.9998865406382897,
+     "yes_no": 0.993095035151359,
+     "draws": 40,
+     "predicted_graded": 0.9941143531061212,
+     "predicted_yes_no": 0.9697894520713775,
+     "predicted_yes_no_corrected": 0.9879650152042454
+    },
+    "1000": {
+     "graded": 1.000111773389418,
+     "yes_no": 0.9960355278876857,
+     "draws": 40,
+     "predicted_graded": 0.9970534822211624,
+     "predicted_yes_no": 0.9847968843691595,
+     "predicted_yes_no_corrected": 0.9939670405127323
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9960619809313747,
+     "draws": 1,
+     "predicted_graded": 0.9994101040141131,
+     "predicted_yes_no": 0.9969435387360023,
+     "predicted_yes_no_corrected": 0.9987909218949511
+    }
+   }
+  },
+  {
+   "task": "automobile-truck",
+   "seed": 9,
+   "v": 25,
+   "b": 0.5301580931224829,
+   "r": 0.46930257659151886,
+   "kappa": 5.0518408036103075,
+   "kappa_corrected": 2.157630383065906,
+   "class_means": [
+    -1.668634906560842,
+    1.357987115565832
+   ],
+   "beta_clean": 0.515229109659135,
+   "d1": 2.627903203933517,
+   "d_all_judgments": 3.0213885841353276,
+   "gain_squared": 2.222913727099236,
+   "right_answers_of_the_judge_on_validation": 0.8986,
+   "needed_graded": 18.82185596247953,
+   "needed_yes_no": 31.823363548417124,
+   "factor": 1.6907665010217632,
+   "by_n": {
+    "5": {
+     "graded": -0.2842298972337109,
+     "yes_no": 0.3275309621322696,
+     "draws": 19,
+     "predicted_graded": 0.49562960773693665,
+     "predicted_yes_no": -0.3945491851684302,
+     "predicted_yes_no_corrected": 0.11976385608876361
+    },
+    "10": {
+     "graded": 0.8028295436969548,
+     "yes_no": 0.6605218881771411,
+     "draws": 38,
+     "predicted_graded": 0.7191494174969524,
+     "predicted_yes_no": 0.028586341926075343,
+     "predicted_yes_no_corrected": 0.4644931957193783
+    },
+    "20": {
+     "graded": 0.9093283479939307,
+     "yes_no": 0.8340654147674632,
+     "draws": 40,
+     "predicted_graded": 0.8511128570122023,
+     "predicted_yes_no": 0.39545167366172385,
+     "predicted_yes_no_corrected": 0.6997044027414665
+    },
+    "50": {
+     "graded": 0.9626831816823085,
+     "yes_no": 0.9641393723334057,
+     "draws": 40,
+     "predicted_graded": 0.93821115175611,
+     "predicted_yes_no": 0.7165715419130207,
+     "predicted_yes_no_corrected": 0.870433407579555
+    },
+    "100": {
+     "graded": 0.9890000845663179,
+     "yes_no": 0.9530659186443529,
+     "draws": 40,
+     "predicted_graded": 0.9687143859452472,
+     "predicted_yes_no": 0.8496630975236728,
+     "predicted_yes_no_corrected": 0.9334723766734985
+    },
+    "200": {
+     "graded": 0.9915433406594207,
+     "yes_no": 0.989347417468707,
+     "draws": 40,
+     "predicted_graded": 0.9842575261645026,
+     "predicted_yes_no": 0.9224729630126512,
+     "predicted_yes_no_corrected": 0.9662822535818227
+    },
+    "500": {
+     "graded": 0.9975841396719212,
+     "yes_no": 0.9952562663823515,
+     "draws": 40,
+     "predicted_graded": 0.9936788456489607,
+     "predicted_yes_no": 0.9683941609873871,
+     "predicted_yes_no_corrected": 0.9864015587187998
+    },
+    "1000": {
+     "graded": 0.9994463704738576,
+     "yes_no": 0.9962365845135546,
+     "draws": 40,
+     "predicted_graded": 0.9968353747212921,
+     "predicted_yes_no": 0.9840953563239884,
+     "predicted_yes_no_corrected": 0.9931820174124169
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9998483020703599,
+     "draws": 1,
+     "predicted_graded": 0.999366425752978,
+     "predicted_yes_no": 0.9968026058380789,
+     "predicted_yes_no_corrected": 0.9986333866275825
+    }
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 10,
+   "v": 25,
+   "b": 0.9182780080507549,
+   "r": 0.5777951590723168,
+   "kappa": 5.314819856198958,
+   "kappa_corrected": 1.444326744373763,
+   "class_means": [
+    -1.2149992816309778,
+    1.4178105341625202
+   ],
+   "beta_clean": 0.6809665251726156,
+   "d1": 2.2632466616634845,
+   "d_all_judgments": 2.6251804354370547,
+   "gain_squared": 1.7692868670705764,
+   "right_answers_of_the_judge_on_validation": 0.832,
+   "needed_graded": 11.201270193593153,
+   "needed_yes_no": 9.732241737336338,
+   "factor": 0.8688516185336674,
+   "by_n": {
+    "5": {
+     "graded": 0.8137489135196452,
+     "yes_no": 0.7912391979780263,
+     "draws": 15,
+     "predicted_graded": 0.6015860032498843,
+     "predicted_yes_no": -0.060701822778177705,
+     "predicted_yes_no_corrected": 0.47810525126715797
+    },
+    "10": {
+     "graded": 0.8850716865691731,
+     "yes_no": 0.9044321774366101,
+     "draws": 39,
+     "predicted_graded": 0.774792051123186,
+     "predicted_yes_no": 0.2342918915460197,
+     "predicted_yes_no_corrected": 0.6925561974499208
+    },
+    "20": {
+     "graded": 0.9762857893293715,
+     "yes_no": 0.9180488039853398,
+     "draws": 40,
+     "predicted_graded": 0.8795342967763949,
+     "predicted_yes_no": 0.5079703913675747,
+     "predicted_yes_no_corrected": 0.8312432973091005
+    },
+    "50": {
+     "graded": 0.9717849315507561,
+     "yes_no": 0.9694080291861833,
+     "draws": 40,
+     "predicted_graded": 0.9497069160635752,
+     "predicted_yes_no": 0.7625633662243162,
+     "predicted_yes_no_corrected": 0.9282890995121805
+    },
+    "100": {
+     "graded": 0.992939752952427,
+     "yes_no": 0.9763465437754943,
+     "draws": 40,
+     "predicted_graded": 0.9744815518047734,
+     "predicted_yes_no": 0.8725097432793412,
+     "predicted_yes_no_corrected": 0.9633836433729266
+    },
+    "200": {
+     "graded": 0.9910819200442058,
+     "yes_no": 0.988379609509641,
+     "draws": 40,
+     "predicted_graded": 0.98714572135617,
+     "predicted_yes_no": 0.933809507552324,
+     "predicted_yes_no_corrected": 0.9814954748097839
+    },
+    "500": {
+     "graded": 0.9991075751130702,
+     "yes_no": 0.9983583674407148,
+     "draws": 40,
+     "predicted_graded": 0.9948352023031661,
+     "predicted_yes_no": 0.9729000446961124,
+     "predicted_yes_no_corrected": 0.9925502528360403
+    },
+    "1000": {
+     "graded": 0.9993603109346867,
+     "yes_no": 0.9987545807645365,
+     "draws": 40,
+     "predicted_graded": 0.9974137303756141,
+     "predicted_yes_no": 0.9863427711671159,
+     "predicted_yes_no_corrected": 0.9962670677630502
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9998743802113563,
+     "draws": 1,
+     "predicted_graded": 0.9994821250780048,
+     "predicted_yes_no": 0.9972511479981658,
+     "predicted_yes_no_corrected": 0.999252119137926
+    }
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 11,
+   "v": 25,
+   "b": 1.0645633842441489,
+   "r": 0.5927142415754536,
+   "kappa": 5.73951370080314,
+   "kappa_corrected": 1.3465381289047893,
+   "class_means": [
+    -1.2273705899582688,
+    1.4195310067984894
+   ],
+   "beta_clean": 0.7303664126731666,
+   "d1": 2.2358069307098836,
+   "d_all_judgments": 2.6248986998558053,
+   "gain_squared": 1.8912605530943472,
+   "right_answers_of_the_judge_on_validation": 0.8246,
+   "needed_graded": 15.739993809835045,
+   "needed_yes_no": 15.398443656074448,
+   "factor": 0.9783004899565347,
+   "by_n": {
+    "5": {
+     "graded": 0.4834995287375479,
+     "yes_no": 0.7098084367532773,
+     "draws": 21,
+     "predicted_graded": 0.6207452498434305,
+     "predicted_yes_no": -0.028266113871103116,
+     "predicted_yes_no_corrected": 0.5278747749338817
+    },
+    "10": {
+     "graded": 0.8268463581649526,
+     "yes_no": 0.856239301216899,
+     "draws": 40,
+     "predicted_graded": 0.7850447297068197,
+     "predicted_yes_no": 0.24451455535232713,
+     "predicted_yes_no_corrected": 0.7233591160596682
+    },
+    "20": {
+     "graded": 0.9386277341623297,
+     "yes_no": 0.9265054940443366,
+     "draws": 40,
+     "predicted_graded": 0.8848309951736884,
+     "predicted_yes_no": 0.50640072956543,
+     "predicted_yes_no_corrected": 0.8486733152841688
+    },
+    "50": {
+     "graded": 0.9538337586384622,
+     "yes_no": 0.9487053276846185,
+     "draws": 40,
+     "predicted_graded": 0.9518656280957296,
+     "predicted_yes_no": 0.7580322979439156,
+     "predicted_yes_no_corrected": 0.9358501264542887
+    },
+    "100": {
+     "graded": 0.9901307114201526,
+     "yes_no": 0.9743854108314416,
+     "draws": 40,
+     "predicted_graded": 0.9755674343966975,
+     "predicted_yes_no": 0.8691818017598332,
+     "predicted_yes_no_corrected": 0.9672727973421703
+    },
+    "200": {
+     "graded": 0.9964763122168588,
+     "yes_no": 0.9927521013893279,
+     "draws": 40,
+     "predicted_graded": 0.9876902762246522,
+     "predicted_yes_no": 0.9318198394268498,
+     "predicted_yes_no_corrected": 0.983468307001251
+    },
+    "500": {
+     "graded": 0.9989720665409116,
+     "yes_no": 0.9772605467719446,
+     "draws": 40,
+     "predicted_graded": 0.9950534089385248,
+     "predicted_yes_no": 0.9720166250883968,
+     "predicted_yes_no_corrected": 0.9933463136401709
+    },
+    "1000": {
+     "graded": 0.9963259267549482,
+     "yes_no": 0.9866694375266813,
+     "draws": 40,
+     "predicted_graded": 0.9975228975826147,
+     "predicted_yes_no": 0.9858856018453449,
+     "predicted_yes_no_corrected": 0.9966662653268934
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9878786784281245,
+     "draws": 1,
+     "predicted_graded": 0.9995039687250299,
+     "predicted_yes_no": 0.9971571745203683,
+     "predicted_yes_no_corrected": 0.9993321463082708
+    }
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 7,
+   "v": 25,
+   "b": 0.9374082715427259,
+   "r": 0.6021780940090806,
+   "kappa": 5.497187145396615,
+   "kappa_corrected": 1.4645298339403947,
+   "class_means": [
+    -1.246228776982407,
+    1.4622771052843233
+   ],
+   "beta_clean": 0.6861286012976912,
+   "d1": 2.2636273880590236,
+   "d_all_judgments": 2.6873738657873165,
+   "gain_squared": 2.097969342545748,
+   "right_answers_of_the_judge_on_validation": 0.8328,
+   "needed_graded": 14.141281785526244,
+   "needed_yes_no": 20.27136103703825,
+   "factor": 1.4334882328549743,
+   "by_n": {
+    "5": {
+     "graded": 0.7757721138716712,
+     "yes_no": 0.3801136657587283,
+     "draws": 23,
+     "predicted_graded": 0.5987635056745166,
+     "predicted_yes_no": -0.06343213386356483,
+     "predicted_yes_no_corrected": 0.47106190770936973
+    },
+    "10": {
+     "graded": 0.8747085976474666,
+     "yes_no": 0.8597820418658348,
+     "draws": 39,
+     "predicted_graded": 0.772174908695143,
+     "predicted_yes_no": 0.22205850186825704,
+     "predicted_yes_no_corrected": 0.6861171049944947
+    },
+    "20": {
+     "graded": 0.9253002160228853,
+     "yes_no": 0.8988964862732846,
+     "draws": 40,
+     "predicted_graded": 0.8778014778912189,
+     "predicted_yes_no": 0.49383186366264853,
+     "predicted_yes_no_corrected": 0.8268861043404621
+    },
+    "50": {
+     "graded": 0.9733194699710657,
+     "yes_no": 0.9739244711120476,
+     "draws": 40,
+     "predicted_graded": 0.9488899500916347,
+     "predicted_yes_no": 0.7528533905775021,
+     "predicted_yes_no_corrected": 0.9261909308335303
+    },
+    "100": {
+     "graded": 0.9954658210871813,
+     "yes_no": 0.9896154988525897,
+     "draws": 40,
+     "predicted_graded": 0.9740502306292251,
+     "predicted_yes_no": 0.8666151515323761,
+     "predicted_yes_no_corrected": 0.9622665456780335
+    },
+    "200": {
+     "graded": 0.9996400600267864,
+     "yes_no": 0.9931456415848458,
+     "draws": 40,
+     "predicted_graded": 0.9869241248298699,
+     "predicted_yes_no": 0.9305504794359336,
+     "predicted_yes_no_corrected": 0.9809189816561179
+    },
+    "500": {
+     "graded": 0.9994191284543014,
+     "yes_no": 0.9977467089003316,
+     "draws": 40,
+     "predicted_graded": 0.9947451089510992,
+     "predicted_yes_no": 0.9715136072116938,
+     "predicted_yes_no_corrected": 0.9923152217277678
+    },
+    "1000": {
+     "graded": 0.9981859301003273,
+     "yes_no": 0.9953800627007312,
+     "draws": 40,
+     "predicted_graded": 0.9973684386837431,
+     "predicted_yes_no": 0.9856350115594714,
+     "predicted_yes_no_corrected": 0.9961488023358801
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9962741224048246,
+     "draws": 1,
+     "predicted_graded": 0.9994730273509279,
+     "predicted_yes_no": 0.9971072135865395,
+     "predicted_yes_no_corrected": 0.9992283452763661
+    }
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 8,
+   "v": 25,
+   "b": 1.1259908943996169,
+   "r": 0.5959634697779991,
+   "kappa": 5.862104389576532,
+   "kappa_corrected": 1.2969724400332217,
+   "class_means": [
+    -1.198136793234269,
+    1.4191564454085033
+   ],
+   "beta_clean": 0.7507388854590076,
+   "d1": 2.220016711689486,
+   "d_all_judgments": 2.6423268386887075,
+   "gain_squared": 2.0534169222740593,
+   "right_answers_of_the_judge_on_validation": 0.8202,
+   "needed_graded": 15.157081856620312,
+   "needed_yes_no": 15.249049078701546,
+   "factor": 1.0060676074030084,
+   "by_n": {
+    "5": {
+     "graded": 0.7037314229257626,
+     "yes_no": 0.8474402846915509,
+     "draws": 27,
+     "predicted_graded": 0.6276930974346342,
+     "predicted_yes_no": -0.014631637409191933,
+     "predicted_yes_no_corrected": 0.5488459963331059
+    },
+    "10": {
+     "graded": 0.7977329022154149,
+     "yes_no": 0.8647018971269592,
+     "draws": 40,
+     "predicted_graded": 0.7888537227793377,
+     "predicted_yes_no": 0.25110444678964805,
+     "predicted_yes_no_corrected": 0.7366492355304599
+    },
+    "20": {
+     "graded": 0.9681803313202965,
+     "yes_no": 0.9226893866614085,
+     "draws": 40,
+     "predicted_graded": 0.8868297864232979,
+     "predicted_yes_no": 0.5085368016374979,
+     "predicted_yes_no_corrected": 0.8562924155942936
+    },
+    "50": {
+     "graded": 0.9822359691989336,
+     "yes_no": 0.9276359171691231,
+     "draws": 40,
+     "predicted_graded": 0.9526892155598509,
+     "predicted_yes_no": 0.7580486524029669,
+     "predicted_yes_no_corrected": 0.9391825485559464
+    },
+    "100": {
+     "graded": 0.9899807056098345,
+     "yes_no": 0.9829953646700662,
+     "draws": 40,
+     "predicted_graded": 0.9759833616398671,
+     "predicted_yes_no": 0.8689429635840944,
+     "predicted_yes_no_corrected": 0.968991708406068
+    },
+    "200": {
+     "graded": 0.9938383714330052,
+     "yes_no": 0.9932279855142017,
+     "draws": 40,
+     "predicted_graded": 0.9878992846194712,
+     "predicted_yes_no": 0.9316223991309491,
+     "predicted_yes_no_corrected": 0.9843414855033598
+    },
+    "500": {
+     "graded": 0.997194689513365,
+     "yes_no": 0.9922690959263207,
+     "draws": 40,
+     "predicted_graded": 0.995137264496921,
+     "predicted_yes_no": 0.9719163381035568,
+     "predicted_yes_no_corrected": 0.9936989519627517
+    },
+    "1000": {
+     "graded": 0.9997260478894603,
+     "yes_no": 0.9988126587516446,
+     "draws": 40,
+     "predicted_graded": 0.9975648675162513,
+     "predicted_yes_no": 0.9858316653042412,
+     "predicted_yes_no_corrected": 0.9968431519018399
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9983281350450401,
+     "draws": 1,
+     "predicted_graded": 0.9995123694651719,
+     "predicted_yes_no": 0.9971457618505208,
+     "predicted_yes_no_corrected": 0.9993676148657774
+    }
+   }
+  },
+  {
+   "task": "bird-frog",
+   "seed": 9,
+   "v": 25,
+   "b": 0.9856589857278134,
+   "r": 0.6099889923012978,
+   "kappa": 5.519043088142348,
+   "kappa_corrected": 1.399762820170584,
+   "class_means": [
+    -1.2142995316385965,
+    1.4306911046183117
+   ],
+   "beta_clean": 0.6952903218480287,
+   "d1": 2.233684138125107,
+   "d_all_judgments": 2.6396017888968686,
+   "gain_squared": 1.9781527750358459,
+   "right_answers_of_the_judge_on_validation": 0.8208,
+   "needed_graded": 14.225128950953742,
+   "needed_yes_no": 17.795757641533314,
+   "factor": 1.251008528842909,
+   "by_n": {
+    "5": {
+     "graded": 0.24413689108480358,
+     "yes_no": 0.7701021046624708,
+     "draws": 24,
+     "predicted_graded": 0.6045361011420866,
+     "predicted_yes_no": -0.04346375788717638,
+     "predicted_yes_no_corrected": 0.49519403735710743
+    },
+    "10": {
+     "graded": 0.842249207695706,
+     "yes_no": 0.8220712709559179,
+     "draws": 40,
+     "predicted_graded": 0.7751038382516034,
+     "predicted_yes_no": 0.23420832881937514,
+     "predicted_yes_no_corrected": 0.701587246212502
+    },
+    "20": {
+     "graded": 0.9558331030062668,
+     "yes_no": 0.9157881717818086,
+     "draws": 40,
+     "predicted_graded": 0.8792582288093937,
+     "predicted_yes_no": 0.5002052220750728,
+     "predicted_yes_no_corrected": 0.8358306578542525
+    },
+    "50": {
+     "graded": 0.9755148570245601,
+     "yes_no": 0.9746050136320185,
+     "draws": 40,
+     "predicted_graded": 0.9494670340411537,
+     "predicted_yes_no": 0.7552481149294699,
+     "predicted_yes_no_corrected": 0.9301280533844642
+    },
+    "100": {
+     "graded": 0.9907783007675328,
+     "yes_no": 0.9925872531540011,
+     "draws": 40,
+     "predicted_graded": 0.9743374368971612,
+     "predicted_yes_no": 0.8677368625709275,
+     "predicted_yes_no_corrected": 0.9643022065622721
+    },
+    "200": {
+     "graded": 0.9950933504630128,
+     "yes_no": 0.9909467161342004,
+     "draws": 40,
+     "predicted_graded": 0.9870673516505479,
+     "predicted_yes_no": 0.9310844635974225,
+     "predicted_yes_no_corrected": 0.9819543499323942
+    },
+    "500": {
+     "graded": 0.997777339998595,
+     "yes_no": 0.9958939137139492,
+     "draws": 40,
+     "predicted_graded": 0.9948023036588501,
+     "predicted_yes_no": 0.9717194630423811,
+     "predicted_yes_no_corrected": 0.9927336807793095
+    },
+    "1000": {
+     "graded": 0.9991768070591258,
+     "yes_no": 0.9968120066971866,
+     "draws": 40,
+     "predicted_graded": 0.9973970195465868,
+     "predicted_yes_no": 0.9857365285683616,
+     "predicted_yes_no_corrected": 0.9963587592596129
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.996767636691763,
+     "draws": 1,
+     "predicted_graded": 0.9994787408493457,
+     "predicted_yes_no": 0.9971272819156137,
+     "predicted_yes_no_corrected": 0.9992704536851975
+    }
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 10,
+   "v": 25,
+   "b": 1.649897740070866,
+   "r": 0.47975439906371703,
+   "kappa": 6.188689359729129,
+   "kappa_corrected": 0.8813338574216156,
+   "class_means": [
+    -0.7255638318217613,
+    0.9593945025784681
+   ],
+   "beta_clean": 0.9131816097660478,
+   "d1": 1.2582882457898639,
+   "d_all_judgments": 1.7303174054984605,
+   "gain_squared": 1.410709014277991,
+   "right_answers_of_the_judge_on_validation": 0.6798,
+   "needed_graded": 14.906587415050048,
+   "needed_yes_no": 10.814729756864116,
+   "factor": 0.7255000393950198,
+   "by_n": {
+    "5": {
+     "graded": 0.4897083606067554,
+     "yes_no": 0.8859353437553384,
+     "draws": 23,
+     "predicted_graded": 0.6975578454149068,
+     "predicted_yes_no": 0.09579332712100697,
+     "predicted_yes_no_corrected": 0.7267609497615876
+    },
+    "10": {
+     "graded": 0.8247198891579348,
+     "yes_no": 0.8904688626506727,
+     "draws": 40,
+     "predicted_graded": 0.8313939068463796,
+     "predicted_yes_no": 0.34641918578439046,
+     "predicted_yes_no_corrected": 0.8493464714712694
+    },
+    "20": {
+     "graded": 0.9554258681113623,
+     "yes_no": 0.9748169910951943,
+     "draws": 40,
+     "predicted_graded": 0.9105554936848542,
+     "predicted_yes_no": 0.5795164498659253,
+     "predicted_yes_no_corrected": 0.9205948580981329
+    },
+    "50": {
+     "graded": 0.9756534678254798,
+     "yes_no": 0.9785230869148873,
+     "draws": 40,
+     "predicted_graded": 0.9628632641498946,
+     "predicted_yes_no": 0.7968618924290558,
+     "predicted_yes_no_corrected": 0.9671714932261133
+    },
+    "100": {
+     "graded": 0.9918136814819876,
+     "yes_no": 0.9796585926331152,
+     "draws": 40,
+     "predicted_graded": 0.9811935259260458,
+     "predicted_yes_no": 0.8908733865816755,
+     "predicted_yes_no_corrected": 0.9833999576859596
+    },
+    "200": {
+     "graded": 0.9941739195160546,
+     "yes_no": 0.9914061350139418,
+     "draws": 40,
+     "predicted_graded": 0.9905360840549926,
+     "predicted_yes_no": 0.9433282758200439,
+     "predicted_yes_no_corrected": 0.9916527385355739
+    },
+    "500": {
+     "graded": 0.9957059190898909,
+     "yes_no": 0.996642319585642,
+     "draws": 40,
+     "predicted_graded": 0.9961997197406748,
+     "predicted_yes_no": 0.9767932620158049,
+     "predicted_yes_no_corrected": 0.996649654139657
+    },
+    "1000": {
+     "graded": 0.9992392705990878,
+     "yes_no": 0.9983716650457859,
+     "draws": 40,
+     "predicted_graded": 0.9980973948313041,
+     "predicted_yes_no": 0.9883040957143359,
+     "predicted_yes_no_corrected": 0.998322911468481
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.997461745958048,
+     "draws": 1,
+     "predicted_graded": 0.9996190836380696,
+     "predicted_yes_no": 0.9976457995998159,
+     "predicted_yes_no_corrected": 0.9996642751660282
+    }
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 11,
+   "v": 25,
+   "b": 1.6764126421258647,
+   "r": 0.4213668996206211,
+   "kappa": 6.339455629316277,
+   "kappa_corrected": 0.8850051975404972,
+   "class_means": [
+    -0.7240519988662713,
+    1.0279077664259442
+   ],
+   "beta_clean": 0.9242407699631562,
+   "d1": 1.2693792978728722,
+   "d_all_judgments": 1.8006916440928142,
+   "gain_squared": 1.6311665952374563,
+   "right_answers_of_the_judge_on_validation": 0.7024,
+   "needed_graded": 15.606412420313749,
+   "needed_yes_no": 5.0,
+   "factor": 0.3203811270226243,
+   "by_n": {
+    "5": {
+     "graded": 0.7510902040193713,
+     "yes_no": 0.9123019927723702,
+     "draws": 23,
+     "predicted_graded": 0.7084256006563712,
+     "predicted_yes_no": 0.09587962510540593,
+     "predicted_yes_no_corrected": 0.7360171174754382
+    },
+    "10": {
+     "graded": 0.8256991525048774,
+     "yes_no": 0.9230661826202973,
+     "draws": 39,
+     "predicted_graded": 0.8384084521465224,
+     "predicted_yes_no": 0.3511652755266329,
+     "predicted_yes_no_corrected": 0.8551853463640469
+    },
+    "20": {
+     "graded": 0.9414075201734551,
+     "yes_no": 0.9642269162484305,
+     "draws": 40,
+     "predicted_graded": 0.914573830069907,
+     "predicted_yes_no": 0.5853338897821232,
+     "predicted_yes_no_corrected": 0.9238958434774813
+    },
+    "50": {
+     "graded": 0.9821826668029491,
+     "yes_no": 0.9780037254334044,
+     "draws": 40,
+     "predicted_graded": 0.9646127071515256,
+     "predicted_yes_no": 0.8009015803312982,
+     "predicted_yes_no_corrected": 0.9685963295940734
+    },
+    "100": {
+     "graded": 0.9888447164936083,
+     "yes_no": 0.9953056148536169,
+     "draws": 40,
+     "predicted_graded": 0.9820938045003037,
+     "predicted_yes_no": 0.8933266526422221,
+     "predicted_yes_no_corrected": 0.9841310024492903
+    },
+    "200": {
+     "graded": 0.9945452266736257,
+     "yes_no": 0.9963327247861803,
+     "draws": 40,
+     "predicted_graded": 0.9909928017096759,
+     "predicted_yes_no": 0.9446840101643614,
+     "predicted_yes_no_corrected": 0.9920230397100287
+    },
+    "500": {
+     "graded": 0.9996471829293103,
+     "yes_no": 1.0015319798468134,
+     "draws": 40,
+     "predicted_graded": 0.9963840105634402,
+     "predicted_yes_no": 0.9773697202432479,
+     "predicted_yes_no_corrected": 0.9967989375819409
+    },
+    "1000": {
+     "graded": 1.001004537999433,
+     "yes_no": 1.0024384419008032,
+     "draws": 40,
+     "predicted_graded": 0.9981898096476695,
+     "predicted_yes_no": 0.9885983099944972,
+     "predicted_yes_no_corrected": 0.9983977483751736
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 1.0026767284482427,
+     "draws": 1,
+     "predicted_graded": 0.9996376098594203,
+     "predicted_yes_no": 0.9977056221409739,
+     "predicted_yes_no_corrected": 0.9996792738754562
+    }
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 7,
+   "v": 25,
+   "b": 2.0887164940358782,
+   "r": 0.4514913193666511,
+   "kappa": 7.578665613560265,
+   "kappa_corrected": 0.7943952724936574,
+   "class_means": [
+    -0.7232508635612592,
+    1.0013219723712905
+   ],
+   "beta_clean": 1.0119234197069669,
+   "d1": 1.2284327558891155,
+   "d_all_judgments": 1.7530396644582327,
+   "gain_squared": 1.564101029422506,
+   "right_answers_of_the_judge_on_validation": 0.6804,
+   "needed_graded": 12.115033536937508,
+   "needed_yes_no": 5.0,
+   "factor": 0.41271037217978035,
+   "by_n": {
+    "5": {
+     "graded": 0.41565096879800567,
+     "yes_no": 0.9227171416485811,
+     "draws": 21,
+     "predicted_graded": 0.7226999903856155,
+     "predicted_yes_no": 0.09446991959295858,
+     "predicted_yes_no_corrected": 0.7702293325363185
+    },
+    "10": {
+     "graded": 0.8715308226485987,
+     "yes_no": 0.9343495362759877,
+     "draws": 38,
+     "predicted_graded": 0.8458783509179993,
+     "predicted_yes_no": 0.32643020219055807,
+     "predicted_yes_no_corrected": 0.874691542115221
+    },
+    "20": {
+     "graded": 0.9743824919798469,
+     "yes_no": 0.9539600125603991,
+     "draws": 40,
+     "predicted_graded": 0.9183855906582257,
+     "predicted_yes_no": 0.5546113946283127,
+     "predicted_yes_no_corrected": 0.9343685195365028
+    },
+    "50": {
+     "graded": 0.9901296773519228,
+     "yes_no": 0.9619261595445316,
+     "draws": 40,
+     "predicted_graded": 0.9661542531646542,
+     "predicted_yes_no": 0.7791051039168717,
+     "predicted_yes_no_corrected": 0.9729769465544387
+    },
+    "100": {
+     "graded": 0.9910731200401159,
+     "yes_no": 0.9844251347890404,
+     "draws": 40,
+     "predicted_graded": 0.9828672058963167,
+     "predicted_yes_no": 0.8799527845232338,
+     "predicted_yes_no_corrected": 0.9863549886474942
+    },
+    "200": {
+     "graded": 0.9955262416408968,
+     "yes_no": 0.9955325379895998,
+     "draws": 40,
+     "predicted_graded": 0.9913801401927684,
+     "predicted_yes_no": 0.9372493408686319,
+     "predicted_yes_no_corrected": 0.9931436261851305
+    },
+    "500": {
+     "graded": 0.9992096036747886,
+     "yes_no": 0.9963689536571123,
+     "draws": 40,
+     "predicted_graded": 0.9965390964086953,
+     "predicted_yes_no": 0.9741963338732621,
+     "predicted_yes_no_corrected": 0.997249257366955
+    },
+    "1000": {
+     "graded": 0.9994298932458165,
+     "yes_no": 0.9957092779376593,
+     "draws": 40,
+     "predicted_graded": 0.9982673774213531,
+     "predicted_yes_no": 0.9869765114540081,
+     "predicted_yes_no_corrected": 0.9986232577210659
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9967835363376981,
+     "draws": 1,
+     "predicted_graded": 0.9996531273739332,
+     "predicted_yes_no": 0.997375504529567,
+     "predicted_yes_no_corrected": 0.9997244317963417
+    }
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 8,
+   "v": 25,
+   "b": 1.5308253127258171,
+   "r": 0.4719776129816088,
+   "kappa": 5.821672779009462,
+   "kappa_corrected": 0.9089153797740905,
+   "class_means": [
+    -0.7273467363958128,
+    0.9397871550892443
+   ],
+   "beta_clean": 0.8888993942713707,
+   "d1": 1.275571258739999,
+   "d_all_judgments": 1.719036052519789,
+   "gain_squared": 1.328002913739273,
+   "right_answers_of_the_judge_on_validation": 0.6828,
+   "needed_graded": 14.236074265702417,
+   "needed_yes_no": 11.065592979641284,
+   "factor": 0.7772924454532059,
+   "by_n": {
+    "5": {
+     "graded": 0.4598944546755601,
+     "yes_no": 0.8838298747947408,
+     "draws": 23,
+     "predicted_graded": 0.6914312404405951,
+     "predicted_yes_no": 0.09583794693448333,
+     "predicted_yes_no_corrected": 0.7142096180765403
+    },
+    "10": {
+     "graded": 0.8311136874595664,
+     "yes_no": 0.8911673296374762,
+     "draws": 38,
+     "predicted_graded": 0.8281280861313698,
+     "predicted_yes_no": 0.35431449600127474,
+     "predicted_yes_no_corrected": 0.8421439350196809
+    },
+    "20": {
+     "graded": 0.9663038123230645,
+     "yes_no": 0.9516316243592132,
+     "draws": 40,
+     "predicted_graded": 0.9088698881177045,
+     "predicted_yes_no": 0.5891928036672246,
+     "predicted_yes_no_corrected": 0.9167119095539874
+    },
+    "50": {
+     "graded": 0.97743105913209,
+     "yes_no": 0.9624491316880996,
+     "draws": 40,
+     "predicted_graded": 0.9621762663260124,
+     "predicted_yes_no": 0.8035634755223146,
+     "predicted_yes_no_corrected": 0.9655426915532987
+    },
+    "100": {
+     "graded": 0.9905527809844059,
+     "yes_no": 0.9881945654554842,
+     "draws": 40,
+     "predicted_graded": 0.9808479022840502,
+     "predicted_yes_no": 0.8949376185270517,
+     "predicted_yes_no_corrected": 0.9825721995817118
+    },
+    "200": {
+     "graded": 0.9974451248776492,
+     "yes_no": 0.992253525253017,
+     "draws": 40,
+     "predicted_graded": 0.9903627417692153,
+     "predicted_yes_no": 0.9455724794371909,
+     "predicted_yes_no_corrected": 0.9912354449992484
+    },
+    "500": {
+     "graded": 0.9978669846011986,
+     "yes_no": 0.9941789442715019,
+     "draws": 40,
+     "predicted_graded": 0.9961302556414824,
+     "predicted_yes_no": 0.977747003605214,
+     "predicted_yes_no_corrected": 0.9964819073807429
+    },
+    "1000": {
+     "graded": 0.9990985920415956,
+     "yes_no": 0.992987696689102,
+     "draws": 40,
+     "predicted_graded": 0.9980626415963019,
+     "predicted_yes_no": 0.9887907815379011,
+     "predicted_yes_no_corrected": 0.9982388990320613
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9935929392952476,
+     "draws": 1,
+     "predicted_graded": 0.9996121296023334,
+     "predicted_yes_no": 0.9977447428894965,
+     "predicted_yes_no_corrected": 0.999647450369251
+    }
+   }
+  },
+  {
+   "task": "cat-dog",
+   "seed": 9,
+   "v": 25,
+   "b": 1.910274826752445,
+   "r": 0.4508397565579343,
+   "kappa": 7.012575101784109,
+   "kappa_corrected": 0.8279603126558607,
+   "class_means": [
+    -0.7578179208151696,
+    0.9671223873524403
+   ],
+   "beta_clean": 0.9686814264264192,
+   "d1": 1.263457334016624,
+   "d_all_judgments": 1.7734641597106682,
+   "gain_squared": 1.5488506908978716,
+   "right_answers_of_the_judge_on_validation": 0.7072,
+   "needed_graded": 10.412660569380936,
+   "needed_yes_no": 7.476978596470651,
+   "factor": 0.7180661029571216,
+   "by_n": {
+    "5": {
+     "graded": 0.6590249431473298,
+     "yes_no": 0.880172242037305,
+     "draws": 25,
+     "predicted_graded": 0.7156574047757871,
+     "predicted_yes_no": 0.09629521735621493,
+     "predicted_yes_no_corrected": 0.7561581078825402
+    },
+    "10": {
+     "graded": 0.8978535160204051,
+     "yes_no": 0.9143269797708697,
+     "draws": 39,
+     "predicted_graded": 0.8419745260925202,
+     "predicted_yes_no": 0.33662246429440734,
+     "predicted_yes_no_corrected": 0.8666019458143921
+    },
+    "20": {
+     "graded": 0.934646972139275,
+     "yes_no": 0.9266718728510865,
+     "draws": 40,
+     "predicted_graded": 0.9163215800114304,
+     "predicted_yes_no": 0.5669495181752712,
+     "predicted_yes_no_corrected": 0.9300065324470069
+    },
+    "50": {
+     "graded": 0.9710657510965096,
+     "yes_no": 0.987511712063258,
+     "draws": 40,
+     "predicted_graded": 0.9652991872367042,
+     "predicted_yes_no": 0.7878878305787894,
+     "predicted_yes_no_corrected": 0.9711475540418157
+    },
+    "100": {
+     "graded": 0.9817809098228023,
+     "yes_no": 0.9914443702763773,
+     "draws": 40,
+     "predicted_graded": 0.9824345264243486,
+     "predicted_yes_no": 0.8853644640488554,
+     "predicted_yes_no_corrected": 0.9854254043861912
+    },
+    "200": {
+     "graded": 0.9924369817745144,
+     "yes_no": 0.9881984306517866,
+     "draws": 40,
+     "predicted_graded": 0.9911624904785289,
+     "predicted_yes_no": 0.940266134013461,
+     "predicted_yes_no_corrected": 0.9926750338258437
+    },
+    "500": {
+     "graded": 0.9967455417586988,
+     "yes_no": 0.9985398362668072,
+     "draws": 40,
+     "predicted_graded": 0.9964517190739876,
+     "predicted_yes_no": 0.975486466810295,
+     "predicted_yes_no_corrected": 0.9970608981211504
+    },
+    "1000": {
+     "graded": 0.9993989554912857,
+     "yes_no": 0.999049820950898,
+     "draws": 40,
+     "predicted_graded": 0.9982236355885291,
+     "predicted_yes_no": 0.9876362961172976,
+     "predicted_yes_no_corrected": 0.9985289235172294
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.9994324695173495,
+     "draws": 1,
+     "predicted_graded": 0.9996443704822594,
+     "predicted_yes_no": 0.9975098786642392,
+     "predicted_yes_no_corrected": 0.9997055401600348
+    }
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 10,
+   "v": 25,
+   "b": 0.7078649073410922,
+   "r": 0.5453522662266268,
+   "kappa": 5.246056511522868,
+   "kappa_corrected": 1.7985641593744606,
+   "class_means": [
+    -1.2397390948210345,
+    1.662774605655342
+   ],
+   "beta_clean": 0.5893201672657091,
+   "d1": 2.5443265791523624,
+   "d_all_judgments": 2.953721733858596,
+   "gain_squared": 2.250874339687467,
+   "right_answers_of_the_judge_on_validation": 0.854,
+   "needed_graded": 14.083564128641106,
+   "needed_yes_no": 33.76970412267802,
+   "factor": 2.3978095185438257,
+   "by_n": {
+    "5": {
+     "graded": 0.5822647689601911,
+     "yes_no": 0.7908738678418992,
+     "draws": 23,
+     "predicted_graded": 0.5584822734411552,
+     "predicted_yes_no": -0.19340263757758502,
+     "predicted_yes_no_corrected": 0.32529127929841084
+    },
+    "10": {
+     "graded": 0.8357326912429424,
+     "yes_no": 0.8187704017786466,
+     "draws": 40,
+     "predicted_graded": 0.7517353599038102,
+     "predicted_yes_no": 0.14821901843570173,
+     "predicted_yes_no_corrected": 0.5938876020141668
+    },
+    "20": {
+     "graded": 0.9658251705879322,
+     "yes_no": 0.8600017808068434,
+     "draws": 40,
+     "predicted_graded": 0.8676206815425174,
+     "predicted_yes_no": 0.4583327397202055,
+     "predicted_yes_no_corrected": 0.7739027414579361
+    },
+    "50": {
+     "graded": 0.9718930045415853,
+     "yes_no": 0.9299669825945514,
+     "draws": 40,
+     "predicted_graded": 0.9448498615812305,
+     "predicted_yes_no": 0.7411053603544111,
+     "predicted_yes_no_corrected": 0.9029539277052665
+    },
+    "100": {
+     "graded": 0.9836880625892874,
+     "yes_no": 0.9839742151240278,
+     "draws": 40,
+     "predicted_graded": 0.9720379616476191,
+     "predicted_yes_no": 0.8615587508719222,
+     "predicted_yes_no_corrected": 0.9502658254379313
+    },
+    "200": {
+     "graded": 0.9935310727651779,
+     "yes_no": 0.9915731378832117,
+     "draws": 40,
+     "predicted_graded": 0.9859201877283702,
+     "predicted_yes_no": 0.9282881243989043,
+     "predicted_yes_no_corrected": 0.9748186485623741
+    },
+    "500": {
+     "graded": 0.998034334065615,
+     "yes_no": 0.9915616274828634,
+     "draws": 40,
+     "predicted_graded": 0.9943440955386903,
+     "predicted_yes_no": 0.9706821601325845,
+     "predicted_yes_no_corrected": 0.9898504992828959
+    },
+    "1000": {
+     "graded": 0.9999378911887102,
+     "yes_no": 0.9946434636042301,
+     "draws": 40,
+     "predicted_graded": 0.9971680284561225,
+     "predicted_yes_no": 0.9852324370786083,
+     "predicted_yes_no_corrected": 0.9949122919461629
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 0.993255699664332,
+     "draws": 1,
+     "predicted_graded": 0.9994329609540156,
+     "predicted_yes_no": 0.9970288712582005,
+     "predicted_yes_no_corrected": 0.99898037560979
+    }
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 11,
+   "v": 25,
+   "b": 0.6288559970993272,
+   "r": 0.525495927921591,
+   "kappa": 4.907221222876808,
+   "kappa_corrected": 1.849567793997551,
+   "class_means": [
+    -1.244027735545398,
+    1.5885813262746595
+   ],
+   "beta_clean": 0.5533205320608371,
+   "d1": 2.5283164006648757,
+   "d_all_judgments": 2.897998395419764,
+   "gain_squared": 2.006010877984534,
+   "right_answers_of_the_judge_on_validation": 0.868,
+   "needed_graded": 13.078949384211464,
+   "needed_yes_no": 36.183591168790244,
+   "factor": 2.766551815887448,
+   "by_n": {
+    "5": {
+     "graded": 0.25398554990556355,
+     "yes_no": 0.6519199992462632,
+     "draws": 26,
+     "predicted_graded": 0.5343279838534394,
+     "predicted_yes_no": -0.23799469097673454,
+     "predicted_yes_no_corrected": 0.27250719465457984
+    },
+    "10": {
+     "graded": 0.8565016742063334,
+     "yes_no": 0.7940152342540886,
+     "draws": 39,
+     "predicted_graded": 0.7389021882978202,
+     "predicted_yes_no": 0.13091072691867822,
+     "predicted_yes_no_corrected": 0.5622256891200428
+    },
+    "20": {
+     "graded": 0.9688288568072885,
+     "yes_no": 0.8129080605332866,
+     "draws": 40,
+     "predicted_graded": 0.8610161115272315,
+     "predicted_yes_no": 0.45544847836328506,
+     "predicted_yes_no_corrected": 0.7563161671537522
+    },
+    "50": {
+     "graded": 0.9875035595689963,
+     "yes_no": 0.9475093580342873,
+     "draws": 40,
+     "predicted_graded": 0.9421643290949478,
+     "predicted_yes_no": 0.7431685912112722,
+     "predicted_yes_no_corrected": 0.8954179040285777
+    },
+    "100": {
+     "graded": 0.9905107404301007,
+     "yes_no": 0.9862715510922588,
+     "draws": 40,
+     "predicted_graded": 0.9706881102222172,
+     "predicted_yes_no": 0.8634313278871208,
+     "predicted_yes_no_corrected": 0.9464061180902169
+    },
+    "200": {
+     "graded": 0.9968618357512464,
+     "yes_no": 0.9942616965623103,
+     "draws": 40,
+     "predicted_graded": 0.9852435140954119,
+     "predicted_yes_no": 0.9294769496217539,
+     "predicted_yes_no_corrected": 0.972865024447985
+    },
+    "500": {
+     "graded": 0.9980065731205141,
+     "yes_no": 1.0000190347610152,
+     "draws": 40,
+     "predicted_graded": 0.9940730098473307,
+     "predicted_yes_no": 0.9712247385546198,
+     "predicted_yes_no_corrected": 0.9890632315368378
+    },
+    "1000": {
+     "graded": 0.9994056149932423,
+     "yes_no": 1.000635323798506,
+     "draws": 40,
+     "predicted_graded": 0.9970324165210978,
+     "predicted_yes_no": 0.9855154880466789,
+     "predicted_yes_no_corrected": 0.9945176787459289
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 1.0022033941981003,
+     "draws": 1,
+     "predicted_graded": 0.9994058275336042,
+     "predicted_yes_no": 0.9970874077140122,
+     "predicted_yes_no_corrected": 0.9989012955747377
+    }
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 7,
+   "v": 25,
+   "b": 0.8077653336013081,
+   "r": 0.5409138418462651,
+   "kappa": 5.508466114165922,
+   "kappa_corrected": 1.6855691510201216,
+   "class_means": [
+    -1.2809028422197133,
+    1.619456174983756
+   ],
+   "beta_clean": 0.6398417327245157,
+   "d1": 2.499964962084908,
+   "d_all_judgments": 2.9216034193956713,
+   "gain_squared": 2.2859417285722836,
+   "right_answers_of_the_judge_on_validation": 0.8534,
+   "needed_graded": 9.83168245723655,
+   "needed_yes_no": 19.256567690864458,
+   "factor": 1.9586238443544095,
+   "by_n": {
+    "5": {
+     "graded": 0.5759377434300996,
+     "yes_no": 0.7744029151667802,
+     "draws": 25,
+     "predicted_graded": 0.5865683792544601,
+     "predicted_yes_no": -0.1422866848476836,
+     "predicted_yes_no_corrected": 0.3946094855866146
+    },
+    "10": {
+     "graded": 0.9081354468305001,
+     "yes_no": 0.7847877203101542,
+     "draws": 40,
+     "predicted_graded": 0.76768192521341,
+     "predicted_yes_no": 0.1788187734561616,
+     "predicted_yes_no_corrected": 0.6390591072146788
+    },
+    "20": {
+     "graded": 0.897915488924069,
+     "yes_no": 0.9066602639783579,
+     "draws": 40,
+     "predicted_graded": 0.8761728107743454,
+     "predicted_yes_no": 0.4743481974069924,
+     "predicted_yes_no_corrected": 0.8003177940534792
+    },
+    "50": {
+     "graded": 0.9805478985811138,
+     "yes_no": 0.9748165601366482,
+     "draws": 40,
+     "predicted_graded": 0.9484263674813012,
+     "predicted_yes_no": 0.7472402496978376,
+     "predicted_yes_no_corrected": 0.9146773680746338
+    },
+    "100": {
+     "graded": 0.991232532338372,
+     "yes_no": 0.9776191102906324,
+     "draws": 40,
+     "predicted_graded": 0.973853741627803,
+     "predicted_yes_no": 0.8644901299476069,
+     "predicted_yes_no_corrected": 0.9563458387460532
+    },
+    "200": {
+     "graded": 0.9962091951166641,
+     "yes_no": 0.9922810563783102,
+     "draws": 40,
+     "predicted_graded": 0.9868351182519858,
+     "predicted_yes_no": 0.92970595717759,
+     "predicted_yes_no_corrected": 0.9779159412033017
+    },
+    "500": {
+     "graded": 0.9965501507795592,
+     "yes_no": 0.9973344316132257,
+     "draws": 40,
+     "predicted_graded": 0.9947117783607506,
+     "predicted_yes_no": 0.9712356178771067,
+     "predicted_yes_no_corrected": 0.9911035316642143
+    },
+    "1000": {
+     "graded": 0.9994039004219777,
+     "yes_no": 0.9990178356913656,
+     "draws": 40,
+     "predicted_graded": 0.9973521567336995,
+     "predicted_yes_no": 0.9855066832353293,
+     "predicted_yes_no_corrected": 0.9955411921052529
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 1.0003304065509975,
+     "draws": 1,
+     "predicted_graded": 0.9994698326361563,
+     "predicted_yes_no": 0.9970833077122433,
+     "predicted_yes_no_corrected": 0.9991065393722548
+    }
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 8,
+   "v": 25,
+   "b": 0.5926653179400428,
+   "r": 0.5209191852765387,
+   "kappa": 4.882228411868916,
+   "kappa_corrected": 1.924726597948063,
+   "class_means": [
+    -1.253789887871807,
+    1.6146195645891834
+   ],
+   "beta_clean": 0.5448256460085426,
+   "d1": 2.539666141354034,
+   "d_all_judgments": 2.9310533295721575,
+   "gain_squared": 2.141169511255944,
+   "right_answers_of_the_judge_on_validation": 0.876,
+   "needed_graded": 17.22083307026484,
+   "needed_yes_no": 32.656589675947856,
+   "factor": 1.8963420377342775,
+   "by_n": {
+    "5": {
+     "graded": 0.6849079014783541,
+     "yes_no": 0.651832433284336,
+     "draws": 23,
+     "predicted_graded": 0.5198512158105904,
+     "predicted_yes_no": -0.2767203712737558,
+     "predicted_yes_no_corrected": 0.22932899542951268
+    },
+    "10": {
+     "graded": 0.7304259684065495,
+     "yes_no": 0.6859212640835461,
+     "draws": 40,
+     "predicted_graded": 0.7309536219653585,
+     "predicted_yes_no": 0.10552121760222843,
+     "predicted_yes_no_corrected": 0.5341463435049103
+    },
+    "20": {
+     "graded": 0.946676640108111,
+     "yes_no": 0.8149519173424025,
+     "draws": 40,
+     "predicted_graded": 0.8568385034368862,
+     "predicted_yes_no": 0.44052650520597947,
+     "predicted_yes_no_corrected": 0.7398982665605897
+    },
+    "50": {
+     "graded": 0.990293930907981,
+     "yes_no": 0.9738882479162421,
+     "draws": 40,
+     "predicted_graded": 0.9404406661080411,
+     "predicted_yes_no": 0.7365419420005197,
+     "predicted_yes_no_corrected": 0.8881282530531142
+    },
+    "100": {
+     "graded": 0.9882722804159636,
+     "yes_no": 0.9576560653168056,
+     "draws": 40,
+     "predicted_graded": 0.969817165911227,
+     "predicted_yes_no": 0.8599988197704828,
+     "predicted_yes_no_corrected": 0.942624594028095
+    },
+    "200": {
+     "graded": 0.99644353655795,
+     "yes_no": 0.9891054915597715,
+     "draws": 40,
+     "predicted_graded": 0.9848057303905329,
+     "predicted_yes_no": 0.9277302584460693,
+     "predicted_yes_no_corrected": 0.970938340184867
+    },
+    "500": {
+     "graded": 0.9990600623069277,
+     "yes_no": 0.9977222067527358,
+     "draws": 40,
+     "predicted_graded": 0.9938973372624001,
+     "predicted_yes_no": 0.9705187007906505,
+     "predicted_yes_no_corrected": 0.9882836997974077
+    },
+    "1000": {
+     "graded": 1.000062767078227,
+     "yes_no": 1.0018274867983727,
+     "draws": 40,
+     "predicted_graded": 0.9969444866812296,
+     "predicted_yes_no": 0.9851612389798442,
+     "predicted_yes_no_corrected": 0.9941264162383048
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 1.0027464374363517,
+     "draws": 1,
+     "predicted_graded": 0.9993882265717668,
+     "predicted_yes_no": 0.9970163608947126,
+     "predicted_yes_no_corrected": 0.9988228021269138
+    }
+   }
+  },
+  {
+   "task": "deer-horse",
+   "seed": 9,
+   "v": 25,
+   "b": 0.8401514542055105,
+   "r": 0.5341659895484849,
+   "kappa": 5.616507126341907,
+   "kappa_corrected": 1.6586668914975633,
+   "class_means": [
+    -1.2449822662224885,
+    1.6664541147489484
+   ],
+   "beta_clean": 0.6417400408867151,
+   "d1": 2.507326098178953,
+   "d_all_judgments": 2.9748215995571052,
+   "gain_squared": 2.5628793865822015,
+   "right_answers_of_the_judge_on_validation": 0.8534,
+   "needed_graded": 9.668642741342488,
+   "needed_yes_no": 15.614510807114215,
+   "factor": 1.6149640880149165,
+   "by_n": {
+    "5": {
+     "graded": 0.6820083018753365,
+     "yes_no": 0.726977648283797,
+     "draws": 29,
+     "predicted_graded": 0.5953410523307079,
+     "predicted_yes_no": -0.13104622281121125,
+     "predicted_yes_no_corrected": 0.4133035937087842
+    },
+    "10": {
+     "graded": 0.91113912935074,
+     "yes_no": 0.8610435250541516,
+     "draws": 39,
+     "predicted_graded": 0.7728346669207061,
+     "predicted_yes_no": 0.18561523671965052,
+     "predicted_yes_no_corrected": 0.6513935907875265
+    },
+    "20": {
+     "graded": 0.9560070203404187,
+     "yes_no": 0.9216396367264345,
+     "draws": 40,
+     "predicted_graded": 0.8789903939067032,
+     "predicted_yes_no": 0.4779398547826239,
+     "predicted_yes_no_corrected": 0.8075729902284958
+    },
+    "50": {
+     "graded": 0.967074009058351,
+     "yes_no": 0.9712167188130878,
+     "draws": 40,
+     "predicted_graded": 0.9496195942016398,
+     "predicted_yes_no": 0.7486294016007624,
+     "predicted_yes_no_corrected": 0.9179076894183223
+    },
+    "100": {
+     "graded": 0.983241192679223,
+     "yes_no": 0.9623044217349714,
+     "draws": 40,
+     "predicted_graded": 0.9744621862191305,
+     "predicted_yes_no": 0.8651568999809545,
+     "predicted_yes_no_corrected": 0.958022814479325
+    },
+    "200": {
+     "graded": 0.9929464534814836,
+     "yes_no": 0.9897663460566324,
+     "draws": 40,
+     "predicted_graded": 0.9871423790773033,
+     "predicted_yes_no": 0.9300293149650218,
+     "predicted_yes_no_corrected": 0.9787706395453029
+    },
+    "500": {
+     "graded": 0.9980382431605251,
+     "yes_no": 0.9960444450643905,
+     "draws": 40,
+     "predicted_graded": 0.9948354225921062,
+     "predicted_yes_no": 0.9713620645865708,
+     "predicted_yes_no_corrected": 0.9914494036388988
+    },
+    "1000": {
+     "graded": 0.9998599211682488,
+     "yes_no": 0.9988785437100656,
+     "draws": 40,
+     "predicted_graded": 0.9974141030679216,
+     "predicted_yes_no": 0.9855693781774305,
+     "predicted_yes_no_corrected": 0.9957148022739152
+    },
+    "5000": {
+     "graded": 1.0,
+     "yes_no": 1.000341360220978,
+     "draws": 1,
+     "predicted_graded": 0.999482241843428,
+     "predicted_yes_no": 0.997095758659135,
+     "predicted_yes_no_corrected": 0.9991413699135334
+    }
+   }
+  }
+ ],
+ "minutes": 0.41,
+ "environment": {
+  "python": "3.13.14",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "code_commit": "e65d38cdf7599b561e38bafbd51af494e2af9dcd"
+ }
+}

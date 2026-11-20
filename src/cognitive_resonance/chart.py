@@ -87,6 +87,60 @@ def share_kept_after(n: float, r: float, b: float) -> float:
     return 1.0 - (left / (1 - r ** 2 + left)) / (b / (1 - r ** 2 + b))
 
 
+def yes_no_factor(mean_0: float, mean_1: float, beta: float, var_a: float, points: int = 20001) -> float:
+    """How many yes-or-no answers are worth one graded judgment when the slope of the judge on the trace is estimated.
+
+    The answer is yes when h + beta a > 0, with h of unit noise and class means `mean_0` and `mean_1`, and the trace
+    a normal within class with variance `var_a` (classes equally frequent). A probit regression on the class (two
+    intercepts) and on a has, per answer, the Fisher information on the slope
+    E[lambda a^2] - sum_y p_y E_y[lambda a]^2 / E_y[lambda], lambda = phi(eta)^2 / (Phi(eta) (1 - Phi(eta))),
+    eta = mean_y + beta a. A graded cue has `var_a`. The factor is their ratio, always above pi / 2.
+    """
+    sd = math.sqrt(var_a)
+    grid = [sd * (-8.0 + 16.0 * i / (points - 1)) for i in range(points)]
+    dens = [math.exp(-0.5 * (x / sd) ** 2) for x in grid]
+    total = sum(dens)
+    info = 0.0
+    for mean in (mean_0, mean_1):
+        e_l = e_la = e_laa = 0.0
+        for x, w in zip(grid, dens):
+            eta = mean + beta * x
+            p = 0.5 * math.erfc(-eta / math.sqrt(2.0))
+            q = 0.5 * math.erfc(eta / math.sqrt(2.0))
+            if p <= 0.0 or q <= 0.0:
+                continue
+            lam = math.exp(-eta * eta) / (2.0 * math.pi) / (p * q) * (w / total)
+            e_l, e_la, e_laa = e_l + lam, e_la + lam * x, e_laa + lam * x * x
+        info += 0.5 * (e_laa - e_la ** 2 / e_l)
+    return var_a / info
+
+
+def bias_from_shift(shift: float, base_rate: float, trace_rate: float | None = None) -> float:
+    """The size B of a bias, in units of the judge's noise, from a shift measured in probabilities.
+
+    A yes-or-no trace (the previous decision was a yes, with probability `trace_rate`, default `base_rate`) moves
+    the probability of a yes by `shift` around `base_rate`. In a probit model that is a push of
+    shift / phi(Phi^-1(base_rate)) between the two values of the trace, and its variance is that push squared times
+    trace_rate (1 - trace_rate). The noise is all that makes the answer vary at a given trace, differences between
+    cases included: for the judge's own noise alone B is larger, by as much as the cases differ."""
+    q = base_rate if trace_rate is None else trace_rate
+    z = _probit(base_rate)
+    push = shift / (math.exp(-0.5 * z * z) / math.sqrt(2.0 * math.pi))
+    return push ** 2 * q * (1.0 - q)
+
+
+def _probit(p: float) -> float:
+    """Phi^-1 by bisection (no scipy in the library)."""
+    lo, hi = -8.0, 8.0
+    for _ in range(80):
+        mid = 0.5 * (lo + hi)
+        if 0.5 * math.erfc(-mid / math.sqrt(2.0)) < p:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
 # --- the theorem read on a pair measured with its bias still in (people) ---------------------------------------------
 
 def private_observed(d_big_h: float, d_m: float, rho: float) -> float:

@@ -299,3 +299,41 @@ def read_chart(path) -> dict:
         _finite(d, keys, path)
     d.update(task=m["task"], seed=int(m["seed"]), v=v, file=path.name, machine_names=names)
     return d
+
+
+# --- E10 to E12: the bench of the informative chart (protocol §§ 16-18) -------------------------------------------------
+
+TRACE_VIEWS = (25, 100)
+TRACE_LEVELS = (0.0, 0.5, 1.0, 1.5)
+TRACE_KEYS = ("y", "image", "eps", "a", "z_H", "z_C", "z_M", "z_R")
+TRACE_RE = CHART_RE
+
+
+def read_trace(path) -> dict:
+    """trace/{task}_v{v}_s{seed}.npz (§ 16). The frame has four levels of sensitivity: `a`, `z_H` (the judge) and
+    `z_C` (the judge trained at that level) have one row per level; `z_M` is the soloist, which does not see the
+    frame; `z_R[t][d]` is the branch built for level t read at level d. v is 25 or 100."""
+    path = Path(path)
+    m = TRACE_RE.match(path.name)
+    if not m:
+        raise ContractError(f"{path.name}: name does not match {{task}}_v{{v}}_s{{seed}}.npz")
+    d = _load(path)
+    _need(d, TRACE_KEYS + ("levels", "v") + tuple("val_" + k for k in TRACE_KEYS), path)
+    levels = [float(x) for x in d["levels"]]
+    if levels != list(TRACE_LEVELS):
+        raise ContractError(f"{path.name}: levels must be {list(TRACE_LEVELS)}, got {levels}")
+    v = int(m["v"])
+    if v not in TRACE_VIEWS or int(d["v"]) != v:
+        raise ContractError(f"{path.name}: v must be one of {list(TRACE_VIEWS)} and match the name")
+    n_levels = len(levels)
+    for prefix in ("", "val_"):
+        n = d[prefix + "y"].shape[0]
+        want = {"image": (n,), "eps": (n,), "z_M": (n,), "a": (n_levels, n), "z_H": (n_levels, n),
+                "z_C": (n_levels, n), "z_R": (n_levels, n_levels, n)}
+        for k, shape in want.items():
+            if d[prefix + k].shape != shape:
+                raise ContractError(f"{path.name}: {prefix}{k} must have shape {shape}, got {d[prefix + k].shape}")
+        _binary(d[prefix + "y"], path)
+        _finite(d, tuple(prefix + k for k in ("eps", "a", "z_H", "z_C", "z_M", "z_R")), path)
+    d.update(task=m["task"], seed=int(m["seed"]), v=v, file=path.name)
+    return d

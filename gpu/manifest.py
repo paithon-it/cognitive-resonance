@@ -1,6 +1,6 @@
 """Writes manifest.json for one experiment folder from the per-unit records (protocol section 11).
 
-    python gpu/manifest.py OUT_ROOT bench|rephase|rephase_bis|rephase_ter|people|people_bis|trust|views|chart|shape [DEVIATION ...]
+    python gpu/manifest.py OUT_ROOT bench|rephase|rephase_bis|rephase_ter|people|people_bis|trust|views|chart|shape|trace [DEVIATION ...]
 
 OUT_ROOT is the folder with pilot/ and the experiment folders; the manifest lands in OUT_ROOT/<experiment>/.
 """
@@ -16,6 +16,7 @@ from common import CLASSES, FRAME_WIDTH, MEAN, N_VAL_PER_CLASS, PRESENTATIONS, S
 PROTOCOL = "PROTOCOL.it.md v1.1 (2026-11-10)"
 PROTOCOL_V14 = "PROTOCOL.it.md v1.4 (2026-11-11)"          # E2 ter and E3 bis are written in this version
 PROTOCOL_V21 = "PROTOCOL.it.md v2.1 (2026-11-19)"          # E6 to E9 run with this version
+PROTOCOL_V23 = "PROTOCOL.it.md v2.3 (2026-11-20)"          # E10 to E12 run with this version
 NET = ("Net of turing-meter experiments/angle-between-errors/gpu/silicon.py with a 2-way head: conv3x3 48-96, "
        "maxpool, 96-192, maxpool, 192, global average pool, linear; BatchNorm and ReLU after every convolution")
 OPTIM = "SGD, Nesterov momentum 0.9, weight decay 5e-4, one-cycle schedule (PyTorch OneCycleLR defaults), bf16 autocast"
@@ -422,6 +423,52 @@ def shape(root: Path, deviations) -> dict:
     return m
 
 
+def trace(root: Path, deviations) -> dict:
+    folder = root / "trace"
+    units = load_units(folder)
+    cfg = json.loads((root / "pilot" / "config.json").read_text())
+    from trace import LAST_COLUMN, LEVELS, SEEDS, level_frame
+    m = common_block(root, units)
+    m.update({
+        "protocol": PROTOCOL_V23,
+        "experiment": "E10 to E12, the bench of the informative chart (protocol sections 16 to 18)",
+        "files": sorted(p.name for p in folder.glob("*.npz")),
+        "file_pattern": "{task}_v{v}_s{seed}.npz", "seeds": list(SEEDS), "levels": list(LEVELS),
+        "frame_by_level": {f"{d:g}": dict(zip(("mean_shift", "sd_within_class"), level_frame(d))) for d in LEVELS},
+        "views": {"judge": "the whole image, with the frame",
+                  "machine_last_column_by_v": {str(k): v for k, v in LAST_COLUMN.items()},
+                  "soloist": "the columns 2 .. last - 1 of the inside of the image and no frame; the rest is set to "
+                             "zero in normalised units", "branch": "only the frame"},
+        "keys": {"y": "0/1", "image": "index in the CIFAR-10 test set", "eps": "the unit noise of the frame, the same "
+                 "at the four levels", "a": "frame value shown, shape (4, N): a = mu_d (2y - 1) + sd_d eps, one row "
+                 "per level", "levels": str(list(LEVELS)),
+                 "z_H": "the judge H (plus network, mu = 1, half A, whole image), shape (4, N): one row per level",
+                 "z_C": "the judge trained with frames of level d, read at level d, shape (4, N)",
+                 "z_M": "the soloist on its own, shape (N): it does not see the frame",
+                 "z_R": "the branch on its own, shape (4, 4, N): built for level t (first index), read at level d "
+                        "(second index). The partner built for t is z_M + z_R[t]",
+                 "v": "25 or 100", "val_*": "the same on validation (val_image: CIFAR-10 training index)"},
+        "layout": f"each image appears {PRESENTATIONS} times in a row (np.repeat), with independent eps, the same at "
+                  "the four levels and at the two views",
+        "halves": "as E2",
+        "machines": {
+            "M": "cross-entropy on half B, on the machine's part of the inside, no frame",
+            "R_t": "a branch that sees only the frame, trained from scratch on half B on the binary cross-entropy of "
+                   "z_H + z_M + z_branch (H and M frozen, eval mode), with training frames of level t",
+            "C_d": "the network and seed of H, trained on half A with frames of level d"},
+        "frame": FRAME, "delta": cfg["delta"],
+        "torch_seeds": "crc32('trace/<task>/s<seed>/<H|M|ramo>') & 0x7fffffff; every C_d has the seed of H; the four "
+                       "branches of a unit have the same seed; M and the branches have the same seeds at the two views",
+        "test_and_validation_frames": "numpy default_rng(crc32('trace/<task>/s<seed>/<test|val>-eps'))",
+        "hyperparameters": {"network": NET, "optimiser": OPTIM, "augmentation": AUG, "epochs": cfg["epochs"],
+                            "max_lr": cfg["lr"], "batch_size": cfg["batch_size"], "train_images": 4500},
+        "control_accuracy": _accuracies(units),
+        "unit_seconds": {k: u["seconds"] for k, u in units.items() if not k.startswith("_")},
+        "deviations": deviations,
+    })
+    return m
+
+
 def people(root: Path, deviations) -> dict:
     folder = root / "people"
     units = load_units(folder)
@@ -496,7 +543,8 @@ def main() -> None:
     if dev_file.exists():
         deviations += json.loads(dev_file.read_text()).get(exp, [])
     m = {"bench": bench, "rephase": rephase, "rephase_bis": rephase_bis, "rephase_ter": rephase_ter, "people": people,
-         "people_bis": people_bis, "trust": trust, "views": views, "chart": chart, "shape": shape}[exp](root, deviations)
+         "people_bis": people_bis, "trust": trust, "views": views, "chart": chart, "shape": shape,
+         "trace": trace}[exp](root, deviations)
     (root / exp / "manifest.json").write_text(json.dumps(m, indent=1))
     print("manifest", exp, len(m["files"]), "files")
 
