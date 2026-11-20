@@ -506,7 +506,17 @@ def pair_factors(d):
                 f"{pct(s['measured_accuracy_judge'], 1)} / {pct(s['measured_accuracy_judge_without_bias'], 1)}",
                 f"{pct(s['measured_accuracy_judge_plus_partner'], 1)} / {pct(s['measured_accuracy_without_bias_plus_soloist'], 1)}",
                 f"{s['units_without_bias_plus_soloist_above_partner']} of {s['units']}"]
-               for s in d["by_bench_and_condition"] if s["bench"] != "curve"])])
+               for s in d["by_bench_and_condition"] if s["bench"] != "curve"])]
+        + ([] if not d.get("people") else [
+            "The same two sides on the pairs of people and language models already measured (`results/e4_private.json`: "
+            "sensitivities and correlation of the errors from the earlier article, with the people's biases still inside). "
+            "Ideal pairs, the best use of the two cues: the turing is the best pair over the people alone, the yield over "
+            "the machine alone. Medians over the comparisons; the product is (Tu^2 - 1)(yield^2 - 1), 1 for independent errors.",
+            table(["data", "comparisons", "machine over people (k)", "angle between the errors", "turing", "yield on the machine",
+                   "product", "people add less than 5%", "both add more than 10%", "angles (min-max)"],
+                  [[s["source"], s["comparisons"], f(s["k"], 2), f(s["angle"], 0), f(s["tu"], 2), f(s["yield_on_machine"], 2),
+                    f(s["exchange"], 2), s["people_add_under_5_percent"], s["both_add_over_10_percent"],
+                    f"{f(s['angle_min'], 0)}-{f(s['angle_max'], 0)}"] for s in d["people"]["by_source"]])]))
 
 
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),

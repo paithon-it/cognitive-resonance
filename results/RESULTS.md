@@ -742,3 +742,13 @@ The same pairs seen from the two sides, and the judge that never learned the bia
 | the chart (E8) | v100 | 1.21 | 2% / 1% | 1.46 | 1.04 | 1.04 | 1.036 | 85.2% / 93.7% | 93.6% / 94.3% | 25 of 25 |
 | the chart, new seeds (E10, level 0) | v25 | 1.04 | 44% / 42% | 1.46 | 1.02 | 1.55 | 1.102 | 85.9% / 93.8% | 92.6% / 93.8% | 25 of 25 |
 | the chart, new seeds (E10, level 0) | v100 | 1.25 | 2% / 1% | 1.46 | 1.05 | 1.04 | 1.038 | 85.9% / 93.8% | 93.8% / 94.3% | 24 of 25 |
+
+The same two sides on the pairs of people and language models already measured (`results/e4_private.json`: sensitivities and correlation of the errors from the earlier article, with the people's biases still inside). Ideal pairs, the best use of the two cues: the turing is the best pair over the people alone, the yield over the machine alone. Medians over the comparisons; the product is (Tu^2 - 1)(yield^2 - 1), 1 for independent errors.
+
+| data | comparisons | machine over people (k) | angle between the errors | turing | yield on the machine | product | people add less than 5% | both add more than 10% | angles (min-max) |
+|---|---|---|---|---|---|---|---|---|---|
+| alphanli | 20 | 0.78 | 64 | 1.07 | 1.37 | 0.12 | 0 | 3 | 52-76 |
+| chatbench | 20 | 1.53 | 81 | 1.68 | 1.12 | 0.48 | 4 | 12 | 69-88 |
+| haiid-images | 16 | 2.62 | 78 | 2.79 | 1.02 | 0.30 | 11 | 1 | 68-103 |
+| haiid-text | 18 | 1.36 | 65 | 1.42 | 1.05 | 0.10 | 10 | 1 | 32-82 |
+| all | 74 | 1.36 | 72 | 1.46 | 1.09 | 0.15 | 25 | 17 | 32-103 |

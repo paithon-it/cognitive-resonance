@@ -1,5 +1,6 @@
 """E6 and E7 (protocol §§ 12-13): the readers, the measures at a fixed weight, and the two analyses on
 synthetic files whose answer is known."""
+import json
 import math
 import sys
 from pathlib import Path
@@ -726,3 +727,11 @@ def test_the_turing_of_the_pair_in_three_factors(tmp_path):
         assert g["exchange"] == pytest.approx(((1 + r * r - r * (q + 1 / q)) / (1 - r * r)) ** 2)
         assert g["tu_partner"] == pytest.approx(g["tu_without_bias"])
     assert chart.pair_factors(1.0, 1.0, -0.5, 0.0)["yield_on_machine"] == pytest.approx(2.0)
+    people = tmp_path / "people.json"
+    people.write_text(json.dumps({"comparisons": [
+        {"source": "x", "task": "t", "machine": "m", "mode": "letter", "d_h": 1.0, "d_m": 2.0, "rho": 0.0, "k": 2.0},
+        {"source": "x", "task": "t", "machine": "n", "mode": "letter", "d_h": 2.0, "d_m": 1.0, "rho": 0.5, "k": 0.5}]}))
+    read = factors.people(people)
+    assert read["comparisons"][0]["exchange"] == pytest.approx(1.0) and read["comparisons"][0]["tu"] == pytest.approx(math.sqrt(5))
+    assert read["comparisons"][1]["tu"] == pytest.approx(1.0) and read["by_source"][-1]["comparisons"] == 2   # r = q: nothing to add
+    assert factors.people(tmp_path / "missing.json") is None

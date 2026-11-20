@@ -13,15 +13,22 @@ turings they give beside the measured ones:
   second network carries the opposite push itself, so the pair is read with the factors of the
   first network and compared with the tuned pair of the two.
 
+The same two sides are read on the pairs of people and language models of results/e4_private.json
+(sensitivities and correlation of the errors measured in the earlier article, with the people's
+biases still inside): the best pair over the people alone and over the machine alone, and the
+product (Tu^2 - 1)(yield^2 - 1). They are ideal pairs, the best use of the two cues, not measured ones.
+
 Measured turings are tuned pairs (§ 3) over the sensitivity of the judge alone. What the judge adds
 to the machine is the tuned pair with the partner over the soloist alone, minus one.
 
     python analysis/factors.py [--chart results/raw/chart] [--trace results/raw/trace]
-                               [--bench results/raw/bench] [--out results/pair_factors.json]
+                               [--bench results/raw/bench] [--people results/e4_private.json]
+                               [--out results/pair_factors.json]
 """
 from __future__ import annotations
 
 import argparse
+import json
 import math
 from pathlib import Path
 
@@ -142,11 +149,41 @@ def summary(units) -> list:
     return rows
 
 
+def people(path: Path) -> dict | None:
+    """The pairs of people and language models already measured, seen from the two sides (no bias assumed)."""
+    if not path.exists():
+        return None
+    rows = []
+    for c in json.loads(path.read_text())["comparisons"]:
+        f = theorem.pair_factors(c["d_h"], c["d_m"], c["rho"], 0.0)
+        rows.append({"source": c["source"], "task": c["task"], "machine": c["machine"], "mode": c["mode"], "k": c["k"],
+                     "rho": c["rho"], "angle": math.degrees(math.acos(c["rho"])), "tu": f["tu_partner"],
+                     "yield_on_machine": f["yield_on_machine"], "exchange": f["exchange"],
+                     "over_the_better": min(f["tu_partner"], f["yield_on_machine"])})
+
+    def summary(sel, name):
+        return {"source": name, "comparisons": len(sel), **{k: med([r[k] for r in sel]) for k in
+                ("k", "angle", "tu", "yield_on_machine", "exchange", "over_the_better")},
+                "machine_stronger": sum(r["k"] > 1 for r in sel),
+                "people_add_under_5_percent": sum(r["yield_on_machine"] < 1.05 for r in sel),
+                "machine_adds_under_5_percent": sum(r["tu"] < 1.05 for r in sel),
+                "both_add_over_10_percent": sum(r["over_the_better"] > 1.10 for r in sel),
+                "angle_min": min(r["angle"] for r in sel), "angle_max": max(r["angle"] for r in sel),
+                "exchange_min": min(r["exchange"] for r in sel), "exchange_max": max(r["exchange"] for r in sel)}
+
+    sources = sorted({r["source"] for r in rows})
+    return {"how": "per comparison: pair_factors(d_h, d_m, rho, 0); tu is the best pair over the people alone, "
+                   "yield_on_machine over the machine alone, exchange their product (Tu^2 - 1)(yield^2 - 1)",
+            "by_source": [summary([r for r in rows if r["source"] == s], s) for s in sources] + [summary(rows, "all")],
+            "comparisons": rows}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--chart", type=Path, default=ROOT / "results" / "raw" / "chart")
     ap.add_argument("--trace", type=Path, default=ROOT / "results" / "raw" / "trace")
     ap.add_argument("--bench", type=Path, default=ROOT / "results" / "raw" / "bench")
+    ap.add_argument("--people", type=Path, default=ROOT / "results" / "e4_private.json")
     ap.add_argument("--out", type=Path, default=ROOT / "results" / "pair_factors.json")
     ap.add_argument("--workers", type=int, default=3)
     args = ap.parse_args()
@@ -166,7 +203,8 @@ def main() -> None:
                   "the opposite push itself and is read as a partner. On the bench of the chart there is also the same network trained "
                   "without the bias (H0 in E8, C_0 in E10): its sensitivity alone, its tuned pair with the soloist, and the right "
                   "answers of the raw sums",
-           "by_bench_and_condition": summary(units), "units": units, "minutes": timer.minutes(), "environment": environment()}
+           "by_bench_and_condition": summary(units), "people": people(args.people), "units": units,
+           "minutes": timer.minutes(), "environment": environment()}
     write_json(args.out, out)
     for r in out["by_bench_and_condition"]:
         print(r["bench"], r["condition"], "units", r["units"], "| 1+B", round(r["resonance"], 2), "q^2", round(r["strength"], 2), "p", round(r["private"], 2),
@@ -182,6 +220,12 @@ def main() -> None:
               "H0+M", round(100 * (r.get("measured_accuracy_without_bias_plus_soloist") or float("nan")), 1),
               "H+partner", round(100 * (r.get("measured_accuracy_judge_plus_partner") or float("nan")), 1),
               "H0+M above H+partner in", r.get("units_without_bias_plus_soloist_above_partner"))
+    for s in (out["people"] or {}).get("by_source", []):
+        print("people", s["source"], s["comparisons"], "| k", round(s["k"], 2), "angle", round(s["angle"]), "| tu", round(s["tu"], 2),
+              "yield", round(s["yield_on_machine"], 2), "exchange", round(s["exchange"], 2), "| over the better", round(s["over_the_better"], 3),
+              "| machine stronger", s["machine_stronger"], "people add < 5%", s["people_add_under_5_percent"],
+              "machine adds < 5%", s["machine_adds_under_5_percent"], "both > 10%", s["both_add_over_10_percent"],
+              "| exchange", round(s["exchange_min"], 2), round(s["exchange_max"], 2), "angle", round(s["angle_min"]), round(s["angle_max"]))
     print("written", args.out)
 
 
