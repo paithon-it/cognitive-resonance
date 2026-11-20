@@ -1234,7 +1234,7 @@ and touch neither criteria nor outcomes.
   0.79 and 1.33). The excess of the theorem is that of the best use of the three cues and
   depends on the machine; the branch, trained on the sum at face value, does not. They
   coincide where the machine sees a quarter.
-- **The turing in three factors** (`analysis/factors.py`, `results/pair_factors.json`). The theorem of § 14
+- **The turing of the pair, one factor and two addends** (`analysis/factors.py`, `results/pair_factors.json`). The theorem of § 14
   divided by what the judge is worth alone: with the partner `Tu^2 = (1 + B)(q^2 + p)`, with
   `q = d_m / d_h` and `p = (1 - r q)^2 / (1 - r^2)`; with the soloist `p` shrinks by
   `(1 - r^2) / (1 - r^2 + B)`, with the blind machine `1 + B` is left. It is the same algebra

@@ -73,7 +73,7 @@ def gain_informative(d_h: float, d_m: float, r: float, beta: float, d_a: float) 
     return (beta * (d_h - r * d_m) - d_a * (1 - r ** 2)) ** 2 / ((1 - r ** 2) * (1 + beta ** 2 - r ** 2))
 
 
-# --- the turing of the pair, in three factors -------------------------------------------------------------------------
+# --- the turing of the pair: one factor and two addends -------------------------------------------------------------------------
 
 def pair_factors(d_h: float, d_m: float, r: float, b: float) -> dict:
     """The turing of a pair, measured against the judge alone with its bias in (d_H = d_h / sqrt(1 + B)), as a product.

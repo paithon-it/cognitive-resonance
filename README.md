@@ -25,6 +25,22 @@ and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go
 > original [`PROTOCOL.it.md`](PROTOCOL.it.md)); what changed after a run is in its
 > "Deviations" section.
 
+## In short
+
+- **What a machine built on its user can give.** It gives back the part of what the person knows, and the machine does
+  not, that the person's readable bias was covering, and nothing more: in squared sensitivity the pair is worth
+  `d_m^2 + P` with a machine that also reads the bias and `d_m^2 + P (1 - r^2) / (1 - r^2 + B)` with one that does not
+  (`cognitive_resonance.chart.pair_information`). It is the algebra of suppressor variables; the bench of small networks
+  checks that training gets where the algebra says, on five tasks, with a planted bias of about 0.7.
+- **How much there is to give back, on people.** On 1,968 people of the Confidence Database the bias readable from the
+  history of their own trials is worth 0.015 of the rest of the noise in the median, and removing it gives 1.1 per
+  cent of sensitivity (E13, plan registered before the data were opened).
+- **What no correction gives back.** A network trained with a shortcut learns less from the image: with the shortcut
+  removed at test it keeps from 0.94 to 0.53 of the sensitivity of its twin trained without it, the less the stronger
+  the shortcut (`results/shortcut.json`, a reading added afterwards).
+- **Opposite errors.** Errors in antiphase are a hidden common cause entering with opposite signs: a machine can build
+  them only on the part of the person's error it can read, and there building them is correcting.
+
 ## The identity
 
 Two judges decide between two classes, each with a Gaussian cue; their noises correlate

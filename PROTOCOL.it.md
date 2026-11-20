@@ -1228,7 +1228,7 @@ non toccano criteri né esiti.
   pendenza del suo rapporto di verosimiglianza (0,38, 0,89 e 1,51 contro 0,36, 0,79 e 1,33).
   L'eccesso del teorema è quello del miglior uso dei tre indizi e dipende dalla macchina; il
   ramo, addestrato sulla somma così com'è, no. Coincidono dove la macchina vede un quarto.
-- **Il turing in tre fattori** (`analysis/factors.py`, `results/pair_factors.json`). Il teorema del § 14
+- **Il turing della coppia, un fattore e due addendi** (`analysis/factors.py`, `results/pair_factors.json`). Il teorema del § 14
   diviso per ciò che il giudice vale da solo: con il compagno `Tu^2 = (1 + B)(q^2 + p)`, con
   `q = d_m / d_h` e `p = (1 - r q)^2 / (1 - r^2)`; con il solista `p` si riduce di
   `(1 - r^2) / (1 - r^2 + B)`, con la macchina cieca resta `1 + B`. È la stessa algebra

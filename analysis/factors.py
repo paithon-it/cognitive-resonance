@@ -1,9 +1,9 @@
-"""The turing of the pair in three factors (a reading added after the results: not a test).
+"""The turing of the pair, one factor and two addends (a reading added after the results: not a test).
 
 `cognitive_resonance.chart.pair_factors` rearranges the theorem of the three machines:
 with the partner Tu^2 = (1 + B) (q^2 + p). 1 + B is what cancelling the readable bias is worth
 (the factor of resonance), q^2 what the machine knows of the task, p what the judge knows and the
-machine does not. This script reads the three factors on the files already collected and puts the
+machine does not. This script reads the three parts on the files already collected and puts the
 turings they give beside the measured ones:
 
 - the bench of the chart (E8, results/raw/chart) and the same bench on new seeds (the files of
@@ -195,7 +195,7 @@ def main() -> None:
         units += run_pool(fn, files, args.workers) if files else []
     if not units:
         raise SystemExit("no raw files found")
-    out = {"experiment": "the turing of the pair in three factors", "protocol": "§ 14, on files already collected",
+    out = {"experiment": "the turing of the pair, one factor and two addends", "protocol": "§ 14, on files already collected",
            "status": "a reading added on 20 November 2026: the algebra of the theorem rearranged, not a test",
            "how": "per unit: B, r, d_h and d_m measured as in analysis/chart.py; Tu^2 = (1 + B)(q^2 + p) with the partner, "
                   "(1 + B)(q^2 + p (1 - r^2) / (1 - r^2 + B)) with the soloist, 1 + B with the blind machine; beside them the "
