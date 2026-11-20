@@ -606,3 +606,65 @@ def test_yes_and_no_are_worth_less_than_a_graded_judgment():
     lam = norm.pdf(eta) ** 2 / (norm.cdf(eta) * norm.sf(eta))
     by_hand = 2.0 / (np.mean(lam * a * a) - np.mean(lam * a) ** 2 / np.mean(lam))
     assert chart.yes_no_factor(0.0, 0.0, 0.6, 2.0) == pytest.approx(by_hand, rel=0.02)
+
+
+# --- E10 to E12: the bench of the informative chart ----------------------------------------------------------
+
+def test_trace_reader_and_contract(tmp_path):
+    synthetic.write_trace(tmp_path, tasks=("cat_dog",), seeds=(7,), n_images=60, n_val=40)
+    d = raw.read_trace(tmp_path / "cat_dog_v25_s7.npz")
+    assert d["z_R"].shape == (4, 4, 300) and d["z_H"].shape == (4, 300) and d["z_M"].shape == (300,)
+    assert d["val_a"].shape == (4, 200) and d["v"] == 25 and d["seed"] == 7
+    bad = dict(np.load(tmp_path / "cat_dog_v25_s7.npz"))
+    bad["z_R"] = bad["z_R"][:, :3]
+    np.savez(tmp_path / "cat_dog_v25_s9.npz", **bad)
+    with pytest.raises(raw.ContractError):
+        raw.read_trace(tmp_path / "cat_dog_v25_s9.npz")
+
+
+def test_trace_analysis_on_synthetic_files(tmp_path):
+    """Where the branch built for the level leaves what the frame is worth, new beats old and old hurts."""
+    import trace
+    synthetic.write_trace(tmp_path, tasks=("cat_dog", "deer_horse", "bird_frog"), seeds=(7, 8), n_images=1200, n_val=400)
+    units = [trace.unit((f, 60)) for f in raw.list_units(tmp_path, raw.TRACE_RE)]
+    assert len(units) == 12 and set(units[0]["levels"]) == {"0", "0.5", "1", "1.5"}
+    u = next(x for x in units if x["v"] == 25)
+    zero = u["levels"]["0"]
+    assert zero["share_removed"]["new"] == pytest.approx(1.0, abs=0.05)
+    assert zero["share_removed"]["old"] == pytest.approx(zero["share_removed"]["new"], abs=1e-9)   # the same branch
+    assert zero["face_new_minus_old"]["diff"] == pytest.approx(0.0, abs=1e-9)
+    assert u["levels"]["1"]["share_removed"]["new"] < u["levels"]["0.5"]["share_removed"]["new"] < 1.0
+    c = trace.criteria(units)
+    assert set(c) == {"T1", "T2", "T3", "T4", "T5", "T6", "X1", "X2", "X3", "X4", "X5"}
+    assert c["X1"]["outcome"] == "pass" and c["X3"]["outcome"] == "pass" and c["X5"]["outcome"] == "pass"
+    assert c["X2"]["outcome"] == "pass"
+    rows = trace.summary(units)
+    assert len(rows) == 8 and rows[0]["units"] == 6
+
+
+def test_probit_slope_and_judgments_needed():
+    import yesno
+    gen = np.random.default_rng(3)
+    n = 60000
+    y = (np.arange(n) % 2).astype(int)
+    a = gen.normal(0.0, math.sqrt(2.0), n)
+    answer = (1.2 * (2 * y - 1) + 0.5 * a + gen.standard_normal(n)) > 0
+    assert yesno.probit_slope(answer, y, a) == pytest.approx(0.5, abs=0.03)
+    assert yesno.probit_slope(answer[:6], y[:6], a[:6]) == pytest.approx(yesno.probit_slope(answer[:6], y[:6], a[:6]))
+    assert abs(yesno.probit_slope(np.array([True, True, False, False]), np.array([1, 1, 0, 0]), np.array([1.0, 2.0, -1.0, -2.0]))) < 5
+    assert yesno.needed((10, 100, 1000), (0.5, 0.9, 1.0)) == pytest.approx(100.0)
+    assert yesno.needed((10, 100, 1000), (0.8, 1.0, 1.0)) == pytest.approx(math.sqrt(1000.0), rel=1e-6)
+    assert yesno.needed((10, 100), (0.5, 0.6)) == math.inf and yesno.needed((10, 100), (0.95, 0.99)) == 10.0
+
+
+def test_yes_or_no_needs_more_judgments_on_synthetic_files(tmp_path):
+    import yesno
+    synthetic.write_trace(tmp_path, tasks=("cat_dog", "deer_horse"), seeds=(7,), n_images=1500, n_val=1000)
+    units = [u for u in (yesno.unit(f) for f in raw.list_units(tmp_path, raw.TRACE_RE)) if u is not None]
+    assert len(units) == 2 and all(u["v"] == 25 for u in units)
+    u = units[0]
+    assert u["kappa"] > math.pi / 2 and u["by_n"]["5000"]["draws"] == 1
+    assert u["by_n"]["5000"]["yes_no"] > 0.8 and u["by_n"]["20"]["yes_no"] < u["by_n"]["20"]["graded"] + 0.05
+    assert u["needed_yes_no"] > u["needed_graded"]
+    c = yesno.criteria(units)
+    assert set(c) == {"Y1", "Y2", "Y3", "Y4"} and c["Y4"]["outcome"] == "pass"

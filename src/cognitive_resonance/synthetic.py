@@ -395,3 +395,54 @@ def write_shape(folder, tasks=TASKS, mus=(1.0, 1.5, 2.0), seeds=(2, 3, 4), n_ima
                          shapes=np.array(SHAPES), val_y=vy, val_image=vimage, val_a=va, val_z_plus=vzp,
                          val_z_minus=vzm)
     (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
+
+
+# --- E10 to E12: the bench of the informative chart (protocol §§ 16-18) -------------------------------------------------
+
+TRACE_VIEWS = (25, 100)
+TRACE_LEVELS = (0.0, 0.5, 1.0, 1.5)
+
+
+def _trace_frame(level: float) -> tuple[float, float]:
+    """Mean shift and within-class sd of a frame of sensitivity `level` and total variance 2 (as gpu/trace.py)."""
+    mu = level * math.sqrt(2.0 / (4.0 + level ** 2))
+    return mu, math.sqrt(2.0 - mu ** 2)
+
+
+def _trace_cues(gen, n_images, presentations, d, v, push):
+    """Four quarters of evidence, each a log-likelihood ratio, and a frame that at level k has a log-likelihood ratio
+    of its own. The judge reads the four quarters and gives the frame `push` per unit, whatever it is worth; the
+    judge C gives it what it is worth. The soloist reads four quarters (v = 100) or one (25) and no frame. The branch
+    built for level t takes away the push and leaves what the frame is worth at level t."""
+    y_img = (np.arange(n_images) >= n_images // 2).astype(int)
+    image = np.repeat(np.arange(n_images), presentations)
+    y = y_img[image]
+    s = 2.0 * y - 1.0
+    eps = gen.standard_normal(image.size)
+    dq = d / 2.0
+    q = [s * dq * dq / 2 + dq * gen.standard_normal(n_images)[image] for _ in range(4)]
+    h = sum(q) + 0.4 * gen.standard_normal(image.size)
+    m = sum(q[:{100: 4, 25: 1}[v]]) + 0.4 * gen.standard_normal(image.size)
+    frames = [_trace_frame(level) for level in TRACE_LEVELS]
+    a = np.array([mu * s + sd * eps for mu, sd in frames])
+    worth = [2.0 * mu / sd ** 2 for mu, sd in frames]            # the slope of the frame's own log-likelihood ratio
+    zr = np.array([[-(push - worth[t]) * a[k] + 0.05 * gen.standard_normal(image.size) for k in range(len(frames))]
+                   for t in range(len(frames))])
+    return {"y": y, "image": image, "eps": eps, "a": a, "z_H": h + push * a,
+            "z_C": np.array([h + worth[k] * a[k] for k in range(len(frames))]), "z_M": m, "z_R": zr}
+
+
+def write_trace(folder, tasks=TASKS, seeds=(7, 8), n_images=2000, presentations=5, n_val=1000, seed=16,
+                push=1.1) -> None:
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for ti, task in enumerate(tasks):
+        d = 1.8 + 0.25 * ti
+        for sd in seeds:
+            for v in TRACE_VIEWS:
+                gen = np.random.default_rng([seed, ti, sd, v])
+                arrays = dict(_trace_cues(gen, n_images, presentations, d, v, push))
+                arrays.update({"val_" + k: x for k, x in _trace_cues(gen, n_val, presentations, d, v, push).items()})
+                np.savez(folder / f"{task}_v{v}_s{sd}.npz", levels=np.array(TRACE_LEVELS, dtype=np.float32),
+                         v=np.array(v, dtype=np.int32), **arrays)
+    (folder / "manifest.json").write_text(json.dumps({"synthetic": True}))
