@@ -483,3 +483,110 @@ def test_the_push_of_the_branch_on_the_toy(tmp_path, trust_units):
         assert abs(s["median_push_left_at_the_built_weight"]) < 0.1
     one = r["by_branch"]["Mramo_w1"]["break_even_against_same_machine"]
     assert one["closed_units"] == len(trust_units) and 1 / 1.5 <= one["median_over_predicted"] <= 1.5
+
+
+# --- third review: the informative trace, the judgments needed, the theorem on pairs with the bias in -----------------
+
+def _d2(delta, sigma):
+    return float(np.asarray(delta) @ np.linalg.solve(np.asarray(sigma), np.asarray(delta)))
+
+
+def test_the_theorem_with_an_informative_trace_against_the_matrices():
+    from cognitive_resonance import chart as th
+    gen = np.random.default_rng(7)
+    for _ in range(200):
+        d_h, d_m, d_a = gen.uniform(0.3, 3.0, 3)
+        r, beta = gen.uniform(-0.9, 0.9), gen.uniform(-2.0, 2.0)
+        d1 = _d2([d_h + beta * d_a, d_m], [[1 + beta ** 2, r], [r, 1]])
+        d2 = _d2([d_h, d_m, d_a], [[1, r, 0], [r, 1, 0], [0, 0, 1]])
+        assert th.with_soloist_informative(d_h, d_m, r, beta, d_a) ** 2 == pytest.approx(d1)
+        assert th.with_partner_informative(d_h, d_m, r, d_a) ** 2 == pytest.approx(d2)
+        assert th.gain_informative(d_h, d_m, r, beta, d_a) == pytest.approx(d2 - d1, abs=1e-9)
+        if abs(beta) > 1e-3 and abs(d_h - r * d_m) > 1e-3:               # the form of the article
+            b, b0 = beta ** 2, th.deserved_weight(d_h, d_m, r, d_a)
+            form = b / (1 - r ** 2 + b) * th.private(d_h, d_m, r) * (1 - b0 / beta) ** 2
+            assert th.gain_informative(d_h, d_m, r, beta, d_a) == pytest.approx(form, rel=1e-9, abs=1e-9)
+    assert th.gain_informative(2.0, 1.5, 0.4, 0.8, 0.0) == pytest.approx(th.gain(2.0, 1.5, 0.4, 0.64))    # d_a = 0
+    b0 = th.deserved_weight(2.0, 1.5, 0.4, 0.7)
+    assert th.gain_informative(2.0, 1.5, 0.4, b0, 0.7) == pytest.approx(0.0, abs=1e-12)                    # deserved
+
+
+def test_the_judgments_needed_and_the_pair_with_its_bias_in():
+    from cognitive_resonance import chart as th
+    d_h, d_m, r, b = 2.9, 1.9, 0.5, 0.7
+    assert th.share_kept_after(1e9, r, b) == pytest.approx(1.0, abs=1e-6)
+    assert 0 < th.share_kept_after(20, r, b) < th.share_kept_after(200, r, b) < 1
+    # the same pair, as it would be measured with the bias in: d_H, rho; the gain from B must be the gain of the theorem
+    d_big, rho = d_h / math.sqrt(1 + b), r / math.sqrt(1 + b)
+    assert th.private_observed(d_big, d_m, rho) == pytest.approx(th.private(d_h, d_m, r) * (1 - r ** 2) / (1 - r ** 2 + b))
+    assert th.gain_if_bias(d_big, d_m, rho, b) == pytest.approx(th.gain(d_h, d_m, r, b))
+    assert th.gain_if_bias(1.0, 1.0, 0.8, 1.0) is None
+
+
+def test_the_ceiling_at_any_k_and_two_systems_that_adapt():
+    for k in (0.5, 1.0, 2.0):
+        for w in (0.25, 0.5, 2.0, 4.0):
+            assert all(model.tu(w, k, rho) <= model.ceiling_at_weight(w, k) + 1e-9 for rho in np.linspace(-0.999, 0.999, 41))
+    assert model.ceiling_at_weight(2.0) == pytest.approx(3.0) and model.ceiling_at_weight(0.5) == pytest.approx(3.0)
+    for gamma, eta in ((0.2, 0.3), (0.5, 0.9), (0.1, 1.2), (0.9, 0.05)):
+        r = [1.0, 1.0 - gamma]
+        for _ in range(60):
+            r.append((1 - gamma) * r[-1] - eta * r[-2])
+        modulus = max(abs(x) for x in model.adaptation_roots(gamma, eta))
+        assert (abs(r[-1]) < 1e-3) == (modulus < 0.89) or 0.89 <= modulus <= 1.0      # it dies out iff the roots are inside
+        if (1 - gamma) ** 2 < 4 * eta:
+            assert modulus == pytest.approx(math.sqrt(eta))                              # complex roots: modulus sqrt(eta)
+
+
+def test_the_three_readings_of_the_third_review(tmp_path):
+    import json as _json
+    import informative
+    import judgments
+    import private_people
+    synthetic.write_chart(tmp_path / "chart", tasks=("cat_dog", "deer_horse"), seeds=(2, 3), n_images=600, n_val=600)
+    files = sorted((tmp_path / "chart").glob("*_v25_*.npz"))
+    us = [judgments.unit(f) for f in files]
+    for u in us:
+        few, many = u["by_n"]["10"], u["by_n"]["1000"]
+        assert 0.0 <= many["predicted"] <= 1.0 and many["predicted"] > few["predicted"]
+        assert many["share_kept"] > 0.9                                   # with a thousand judgments the bias is known
+    rows = judgments.summary(us)
+    assert rows and rows[0]["v"] == 25 and set(rows[0]["by_n"]) == {str(n) for n in judgments.NS}
+    ui = [informative.unit(f) for f in files]
+    for u in ui:
+        for target, x in u["by_d_a"].items():
+            assert x["d_a_frame"] == pytest.approx(float(target), abs=0.25)   # the resampling gives the frame that sensitivity
+            assert x["theorem_d2"] >= x["theorem_d1"] - 1e-9
+        removed = [u["by_d_a"][k]["share_of_the_push_removed_by_new_branch"] for k in ("0", "0.5", "1")]
+        assert removed[0] > removed[1] > removed[2]                       # the more the frame says, the less is taken away
+    assert informative.summary(ui)[0]["units"] == len(files)
+    clone = tmp_path / "tm" / private_people.MAP.parent
+    clone.mkdir(parents=True)
+    rows = [{"source": "chatbench", "task": "all", "mode": "letter", "machine": "m", "dh": 1.1, "dm": 1.7, "rho": 0.2},
+            {"source": "chatbench", "task": "math", "mode": "letter", "machine": "m", "dh": 1.0, "dm": 1.5, "rho": 0.2},
+            {"source": "haiid", "task": "art", "mode": "given", "machine": "advice", "dh": 1.0, "dm": 1.5, "rho": 0.2},
+            {"source": "haiid", "task": "art", "mode": "letter", "machine": "m", "dh": 0.9, "dm": 2.5, "rho": 0.3},
+            {"source": "alphanli", "task": "alphanli", "mode": "reason", "machine": "m", "excluded": "at chance"}]
+    (clone / private_people.MAP.name).write_text(_json.dumps({"comparisons": rows}))
+    kept = [private_people.read(r) for r in rows if private_people.group(r)]
+    assert [k["source"] for k in kept] == ["chatbench", "haiid-images"]
+    one = kept[0]
+    assert one["pair_now"] ** 2 == pytest.approx(one["d_m"] ** 2 + one["private_observed"])
+    assert one["if_bias"]["1"]["pair_over_pair_now"] > one["if_bias"]["0.25"]["pair_over_pair_now"] > 1.0
+    assert private_people.summary(kept)[-1]["source"] == "all"
+
+
+
+def test_the_right_answers_of_e8_pair_by_pair():
+    """The table added to the results page reads the units: medians, the paired gain with its range, two counts."""
+    import results_v2
+    acc = lambda h, hm, hb, hr, h0: {"H": h, "H+M": hm, "H+Mblind": hb, "H+Mramo": hr, "H0": h0}
+    d = {"units": [{"v": 25, "accuracy": acc(0.80, 0.85, 0.90, 0.88, 0.93)},
+                   {"v": 25, "accuracy": acc(0.82, 0.86, 0.90, 0.91, 0.90)},
+                   {"v": 25, "accuracy": acc(0.84, 0.87, 0.91, 0.93, 0.95)}]}
+    lines = results_v2._e8_right_answers(d).splitlines()
+    cells = [c.strip() for c in lines[2].strip("|").split("|")]
+    assert len(lines) == 3 and cells[:2] == ["25", "3"]
+    assert cells[2:7] == ["0.820", "0.860", "0.900", "0.910", "0.930"]
+    assert cells[7] == "0.050 (0.030 to 0.060)"
+    assert cells[8] == "2 of 3 (-0.020 to 0.020)" and cells[9] == "2 of 3"

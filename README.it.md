@@ -93,7 +93,7 @@ su cinque compiti e cinque semi):
 | E8 | 7 su 7 | quando la macchina vede un quarto dell'immagine la coppia con il compagno vale 2,87 contro 2,49 con il solista, in 5 compiti su 5; il guadagno è 1,02 volte quello previsto dal teorema; il correttore cieco batte il solista in 25 unità su 25 |
 | E9 | 3 su 5 | con la cornice gaussiana la formula regge di nuovo su semi nuovi; con una cornice a due valori promette 3,69 dove la coppia dà 2,29, e la coppia non dipende dalla forma. **Non confermati**: le code pesanti portano il rapporto a 0,95, non sotto 0,9 (S2), e la cornice uniforme va a 0,945, appena sotto la sua banda (S4) |
 
-Sei riletture di dati già raccolti, nessuna delle quali è una prova (le ultime due sono state aggiunte dopo i risultati di E6 ed E7):
+Nove riletture di dati già raccolti, nessuna delle quali è una prova (le ultime cinque sono state aggiunte dopo i risultati di E6-E9):
 
 | | Che cosa | File dei risultati |
 |---|---|---|
@@ -103,6 +103,9 @@ Sei riletture di dati già raccolti, nessuna delle quali è una prova (le ultime
 | per chi conviene un compagno | la lettura di progetto di E6 (protocollo, § 12 bis) sull'unico ramo di E2 ter: batte il solista fino a circa due volte il peso per cui è costruito, e non per chi dà al solista un quarto del peso dovuto | `results/e6_design_from_e2ter.json` |
 | la spinta del ramo | sui file di E6: il ramo cancella la spinta del giudice senza errore sistematico, e contro la stessa macchina senza il ramo il pareggio cade a 1,02, 2,05, 4,25 e 8,96 per i pesi 0,5, 1, 2 e 4 (previsti 1, 2, 4 e 8); l'anticipo contro il solista di controllo viene dal controllo | `results/e6_push.json` |
 | il teorema sulle viste diverse | il teorema di E8 sui file di E7: dove le viste non hanno niente in comune prevede 2,91 per la coppia con il compagno, misurato 2,92, e il compagno batte sia il solista sia un correttore cieco ideale in 25 unità su 25 | `results/chart_from_e7.json` |
+| quanti giudizi servono | sui file di E8: una correzione imparata da 20 giudizi con la risposta nota tiene circa il 94 per cento del guadagno, da 100 circa il 99; il pregiudizio che resta è 1 / n | `results/e8_judgments.json` |
+| quando la traccia dice qualcosa di vero | il teorema esteso a una traccia informativa a cui il giudice dà troppo peso: solo l'eccesso è un pregiudizio. Sui file di E8 ricampionati, un ramo addestrato sull'errore della somma toglie il 68 per cento della spinta dove l'eccesso è il 68 per cento | `results/e8_informative.json` |
+| il teorema sulle persone | sulle 74 coppie di persone e macchine di turing-meter: se metà del rumore di una persona fosse un pregiudizio leggibile, la coppia migliore crescerebbe di circa il 14 per cento (10 su ChatBench). Il pregiudizio delle persone non è misurato | `results/e4_private.json` |
 
 I risultati, con l'esito di ogni criterio: [`results/RESULTS.md`](results/RESULTS.md) (in
 inglese).
@@ -173,6 +176,9 @@ uv run python analysis/shape.py                # E9, results/e9_shape.json
 uv run python analysis/design.py               # E6, lettura di progetto (dopo trust.py), results/e6_design.json
 uv run python analysis/push.py                 # E6, la spinta del ramo (dopo trust.py), results/e6_push.json
 uv run python analysis/chart.py --views        # il teorema sui file di E7, results/chart_from_e7.json
+uv run python analysis/judgments.py            # quanti giudizi servono a una correzione, results/e8_judgments.json
+uv run python analysis/informative.py          # quando la traccia dice qualcosa di vero, results/e8_informative.json
+uv run python analysis/private_people.py --turing-meter PATH_TO_TURING_METER_CLONE   # results/e4_private.json
 ```
 
 E3 ed E3 bis importano `compare_votes` da un clone locale di turing-meter e ne scrivono il

@@ -926,6 +926,30 @@ and touch neither the criteria nor the outcomes of the registered tests.
   break-even of the registered comparison comes from the control, which alone is a
   slightly better machine than `M_0`.
 
+**Readings added after a third review.** From 20 November 2026. They are not tests: they
+have no criteria, and touch neither the criteria nor the outcomes of the registered tests.
+
+- **How many judgments are needed** (`analysis/judgments.py`, `results/e8_judgments.json`).
+  On the files of E8, the slope of the judge's cue on the frame is estimated from `n`
+  judgments with a known answer; the bias left is `1 / n` in units of the clean noise.
+- **When the trace says something true** (`analysis/informative.py`,
+  `results/e8_informative.json`). The theorem of § 14 extends to an informative trace to
+  which the judge gives a weight `beta` different from the one it deserves, `beta_0`: the
+  gain is `B / (1 - r^2 + B) · P · (1 - beta_0 / beta)^2` (`cognitive_resonance.chart`,
+  checked against matrix inversion). No run has an informative frame at test: it is
+  obtained by resampling the presentations of E8, and the new branch is linear.
+- **The theorem on people already measured** (`analysis/private_people.py`,
+  `results/e4_private.json`). On the 74 pairs of people and machines of turing-meter, with
+  `d_H`, `d_m` and `rho` as published: by how much the best pair would grow if a share of
+  the person's noise were a readable bias. The people's bias is not measured.
+- **Two calculations without data**: the ceiling `(1 + w k) / |1 - w|` for every `k`, and
+  the roots of two systems that adapt to each other (`cognitive_resonance.model`).
+- **The right answers of E8, pair by pair** (`analysis/results_v2.py`, from the units of
+  `results/e8_chart.json`): the medians of the two cues summed at face value, the
+  difference between partner and soloist with its minimum and maximum over the units, in
+  how many units the partner beats the blind machine, and in how many the judge without
+  the bias, alone, beats the judge corrected by the partner.
+
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and

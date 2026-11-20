@@ -290,3 +290,17 @@ def tu_app_nonneg(k, rho) -> float:
     if den > 0 and (k - rho) / den > 0:
         return tu_peak_signed(k, rho)
     return 1.0
+
+
+def ceiling_at_weight(w: float, k: float = 1.0) -> float:
+    """The turing of a pair at the weight w never exceeds (1 + w k) / |1 - w|, whatever the angle: the limit of
+    formula (2) for rho -> -1. For k = 1 and a weight f times too large or too small it is (f + 1) / (f - 1)."""
+    return (1 + w * k) / abs(1 - w)
+
+
+def adaptation_roots(gamma: float, eta: float) -> tuple[complex, complex]:
+    """Two systems that adapt to each other. The push left in the sum is r_t; the judge takes away a share gamma of
+    it at every step, the machine a share eta, but on the push of the step before (it learns from past judgments):
+    r_{t+1} = (1 - gamma) r_t - eta r_{t-1}. The two roots of lambda^2 - (1 - gamma) lambda + eta = 0."""
+    disc = complex((1 - gamma) ** 2 - 4 * eta) ** 0.5
+    return ((1 - gamma) + disc) / 2, ((1 - gamma) - disc) / 2

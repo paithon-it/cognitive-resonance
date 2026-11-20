@@ -491,6 +491,40 @@ Protocol § 14 (v2.1), registered before the run. The judge H sees the whole ima
 
 - **K7** **passes**: the tuned pair (H, Mramo) over the tuned pair (H0, M), median over the units, is at most 1.05 at every v. Numbers: median partner pair over pair without bias 100: 0.966, 50: 0.933, 25: 0.903; at most 1.050.
 
+**Right answers, pair by pair.** A reading added after a third review, with no criterion: the two cues summed at face value, medians over the units, and the paired differences unit by unit. With a quarter of the image the partner and the blind machine are level; with half or a quarter, the judge without the bias, alone, does better than the judge corrected by the partner in every unit.
+
+| v | units | right, H | right, H+M | right, H+Mblind | right, H+Mramo | right, H0 alone | H+Mramo minus H+M, median (min to max) | units where H+Mramo beats H+Mblind (min to max of the difference) | units where H0 alone beats H+Mramo |
+|---|---|---|---|---|---|---|---|---|---|
+| 100 | 25 | 0.852 | 0.920 | 0.919 | 0.936 | 0.937 | 0.015 (0.009 to 0.048) | 25 of 25 (0.011 to 0.042) | 11 of 25 |
+| 50 | 25 | 0.852 | 0.908 | 0.919 | 0.930 | 0.937 | 0.022 (0.016 to 0.065) | 24 of 25 (-0.001 to 0.018) | 25 of 25 |
+| 25 | 25 | 0.852 | 0.888 | 0.919 | 0.921 | 0.937 | 0.034 (0.024 to 0.091) | 8 of 25 (-0.016 to 0.010) | 25 of 25 |
+
+## E8, how many judgments a correction needs (a reading added after the results)
+
+`analysis/judgments.py`: added on 20 November 2026, not a test. The slope of the judge's cue on the frame is estimated from n presentations of the validation set whose answer is known; the judge's test cue is corrected with it and put beside the soloist. Each cell: the share of the gain that is kept, median over the draws and the units, and in brackets the share predicted from a bias left of 1 / n. Units where the gain is below 0.2 are left out.
+
+| v | units | B | r | n = 5 | n = 10 | n = 20 | n = 50 | n = 100 | n = 200 | n = 500 | n = 1000 | n = 5000 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 100 | 10 | 0.65 | 0.80 | 0.39 (0.43) | 0.82 (0.65) | 0.93 (0.80) | 0.97 (0.91) | 1.00 (0.96) | 1.00 (0.98) | 1.00 (0.99) | 1.00 (1.00) | 1.00 (1.00) |
+| 50 | 25 | 0.73 | 0.67 | 0.58 (0.53) | 0.83 (0.73) | 0.94 (0.85) | 0.97 (0.94) | 0.99 (0.97) | 1.00 (0.98) | 1.00 (0.99) | 1.00 (1.00) | 1.00 (1.00) |
+| 25 | 25 | 0.73 | 0.51 | 0.57 (0.57) | 0.87 (0.76) | 0.94 (0.87) | 0.97 (0.95) | 0.99 (0.97) | 0.99 (0.99) | 1.00 (0.99) | 1.00 (1.00) | 1.00 (1.00) |
+
+## E8, when the trace says something true (a reading added after the results)
+
+`analysis/informative.py`: added on 20 November 2026, not a test. The presentations of E8 are resampled so that the frame has a sensitivity of 0, 0.5 or 1 at test; the cues of the networks are untouched. The theorem for an informative trace (`cognitive_resonance.chart`) says that only the excess of the judge's weight over the deserved one is a bias. The new branch is linear in the frame and is trained on the error of the sum on the resampled validation set; the partner of E8 was trained when the frame said nothing. Medians over the units. With the whole view (v = 100) the judge has almost no private part and the deserved weight is badly determined.
+
+| v | d_a of the frame | units | weight the judge gives | weight deserved | excess, share of the push | share of the push the new branch removes | D1 theorem | D1 measured | D2 theorem | best linear use of 3 cues | pair with the new branch | pair with the partner of E8 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 100 | 0.0 | 25 | 0.61 | -0.01 | 1.01 | 1.04 | 3.08 | 3.09 | 3.13 | 3.12 | 3.14 | 3.13 |
+| 100 | 0.5 | 25 | 0.59 | 0.46 | 0.21 | 0.61 | 3.17 | 3.17 | 3.19 | 3.17 | 3.17 | 3.15 |
+| 100 | 1.0 | 25 | 0.57 | 0.89 | -0.53 | 0.13 | 3.30 | 3.27 | 3.31 | 3.26 | 3.26 | 3.21 |
+| 50 | 0.0 | 25 | 0.60 | -0.00 | 1.00 | 1.03 | 2.81 | 2.80 | 3.00 | 3.01 | 2.98 | 2.99 |
+| 50 | 0.5 | 25 | 0.60 | 0.25 | 0.59 | 0.66 | 3.01 | 3.01 | 3.09 | 3.07 | 3.07 | 3.07 |
+| 50 | 1.0 | 25 | 0.58 | 0.49 | 0.18 | 0.26 | 3.19 | 3.15 | 3.20 | 3.16 | 3.16 | 3.14 |
+| 25 | 0.0 | 25 | 0.60 | 0.00 | 1.00 | 1.03 | 2.68 | 2.65 | 2.93 | 2.94 | 2.90 | 2.90 |
+| 25 | 0.5 | 25 | 0.59 | 0.20 | 0.68 | 0.68 | 2.88 | 2.87 | 3.00 | 2.98 | 2.96 | 2.97 |
+| 25 | 1.0 | 25 | 0.58 | 0.39 | 0.34 | 0.31 | 3.10 | 3.07 | 3.13 | 3.09 | 3.09 | 3.09 |
+
 ## E7. Different views
 
 Protocol § 13 (v2.1), registered before the run. Each judge sees half of the image; the overlap is the share of the machine's half that the judge H sees too. M0 is the soloist, Mramo is M0 plus a frame-only branch, Mpair is trained from scratch on the sum with H. Medians over the units. The primary criteria are V1 and V4.
@@ -528,6 +562,18 @@ Protocol § 13 (v2.1), registered before the run. Each judge sees half of the im
 | 100 | 25 | 1.29 | 0.83 | 1.51 | 2.32 | 2.54 | 2.55 | 2.55 | 2.58 | 2.56 | n/a | 2.32 | 25/25 | 13/25 | 0/25 | 1.10 | 0.99 |
 | 50 | 25 | 1.29 | 0.55 | 1.51 | 2.32 | 2.42 | 2.52 | 2.52 | 2.67 | 2.62 | 0.94 | 2.32 | 25/25 | 23/25 | 5/25 | 1.09 | 0.94 |
 | 0 | 25 | 1.29 | 0.43 | 1.51 | 2.32 | 2.57 | 2.70 | 2.70 | 2.91 | 2.92 | 0.99 | 2.32 | 25/25 | 25/25 | 0/25 | 1.10 | 0.91 |
+
+## E4, the theorem on people already measured (a reading, with no measure of the bias)
+
+`analysis/private_people.py`: added on 20 November 2026, not a test. The 74 comparisons of people with a language model of turing-meter (commit `8ac118d`), with d_H, d_m and rho as published: the people's biases are in them. P_obs is what the person adds to the machine today; the last columns say by how much the best pair would grow if a share B / (1 + B) of the person's noise were a bias a machine can read (in brackets, the comparisons where such a judge can exist). Nothing here measures B. Medians over the comparisons.
+
+| source | comparisons | d_H | d_m | rho | P_obs | best pair over the machine alone, % | gain if B = 0.25, % | gain if B = 1, % | gain if B = 3, % |
+|---|---|---|---|---|---|---|---|---|---|
+| alphanli | 20 | 1.98 | 1.55 | 0.43 | 2.11 | 36.6 | 7.3 (20) | 32.2 (20) | 144.4 (14) |
+| chatbench | 20 | 1.12 | 1.72 | 0.16 | 0.93 | 11.7 | 2.5 (20) | 9.8 (20) | 28.3 (20) |
+| haiid-images | 16 | 0.99 | 2.85 | 0.20 | 0.21 | 1.8 | 0.4 (16) | 1.8 (16) | 5.9 (16) |
+| haiid-text | 18 | 0.96 | 1.35 | 0.43 | 0.21 | 4.6 | 1.6 (18) | 7.8 (16) | 38.2 (13) |
+| all | 74 | 1.12 | 1.72 | 0.31 | 0.68 | 9.2 | 2.5 (74) | 13.6 (72) | 28.6 (63) |
 
 ## E9. The shape of the noise
 
