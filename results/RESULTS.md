@@ -454,6 +454,19 @@ Expectation written before, not a criterion (the rule chooses the branch built f
 | E2 bis | 10 | 0.76 | 0.81 | 2.86 | 3.02 | 3.05 | 3.04 | 3.11 | n/a | 2.86 | 2.85 | 1.08 | 0.98 | 1.4 |
 | E2 ter | 10 | 0.75 | 0.80 | 2.86 | 3.04 | 3.07 | 3.06 | 3.13 | 3.10 | n/a | n/a | 1.08 | 0.98 | 1.4 |
 
+## E6, the push of the branch (a reading added after the results)
+
+`analysis/push.py`: added on 20 November 2026, after the results of E6 were seen: not a test. The design reading found the break-even against the control soloist earlier than twice the built weight. Either the branch does not cancel the push exactly, or the control is not the same machine without the branch (M0plus is M0 trained ten more epochs). Per unit, in raw log-odds: b is the within-class slope of the judge's cue on the frame (median 1.770), c is minus the slope of the branch; the pair should peak at b / c and beat the same machine without the branch up to 2 b / c. The slope of M0 on the frame is 0.034 in absolute value. Medians over 25 units.
+
+| branch | built for w | c | b / c | push left at the built weight, % | its size, median, % | largest, % | measured peak | predicted break-even | break-even against M0 | closed in units | break-even against M0plus | closed in units |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Mramo_w0.5 | 0.5 | 3.546 | 0.498 | -0.4 | 2.0 | 6.2 | 0.54 | 1 | 1.02 | 25/25 | 0.96 | 25/25 |
+| Mramo_w1 | 1.0 | 1.763 | 0.997 | -0.3 | 2.7 | 11.4 | 1.12 | 2 | 2.05 | 25/25 | 1.83 | 25/25 |
+| Mramo_w2 | 2.0 | 0.864 | 2.004 | 0.2 | 3.7 | 23.0 | 2.43 | 4 | 4.25 | 25/25 | 3.03 | 25/25 |
+| Mramo_w4 | 4.0 | 0.437 | 3.980 | -0.5 | 6.5 | 46.8 | 4.00 | 8 | 8.96 | 25/25 | 5.51 | 10/25 |
+
+In the median the branch leaves less than half a per cent of the push: it neither under- nor over-corrects. Unit by unit what is left is a few per cent of the push, more for the branches built for the higher weights. Against the same machine without the branch the break-even is where the model puts it, a little later at the higher weights; the earlier break-even of the registered comparison comes from the control, which alone is a slightly better machine than M0.
+
 ## E8. The bench of the chart
 
 Protocol § 14 (v2.1), registered before the run. The judge H sees the whole image; the machine sees the frame and v per cent of the inside. M is the soloist, Mramo is M plus a frame-only branch trained on the sum with H, Mblind sees only the frame; H0 is the judge without the bias. "Theorem" columns are computed from quantities measured on H and M of the same unit. Medians over the units. The primary criteria are K2 and K4.
@@ -505,6 +518,16 @@ Protocol § 13 (v2.1), registered before the run. Each judge sees half of the im
 - **V5** **passes**: where the views do not overlap, the tuned pair (H, Mramo) is more sensitive than M0 alone: interval above zero in every seed, in >= 3 tasks of 5. Numbers: tasks passing 5; tasks needed 3; tasks passing by overlap 100: 0, 50: 4, 0: 5; median difference by overlap 100: 0.007, 50: 0.147, 0: 0.359.
 
 - **V6** **passes**: where the views do not overlap, at face value (raw log-odds added) the pair (H, Mramo) is more sensitive than the pair (H, M0): interval above zero in every seed, in >= 3 tasks of 5. Numbers: tasks passing 5; tasks needed 3; median difference by overlap 100: 0.312, 50: 0.401, 0: 0.428.
+
+## The theorem of the chart on E7 (a reading added after the results)
+
+`analysis/chart.py --views`: the theorem of protocol § 14 on the files of E7, a bench it was not registered for, where the machine too sees things the judge does not. Added on 20 November 2026, after the results of E7 were seen: not a test. Per unit, B, d_h, d_m and r come from the judge and the soloist M0 alone, as in E8. No blind network was trained in E7: the blind corrector here is the best linear use of the judge's cue and the frame, fitted on half of the images and read on the other half. Medians over the units; the share of the predicted gain is over the units where the theorem predicts a gain above 0.05.
+
+| overlap % | units | B | r | d_a H | d_h clean | d_m | D1 theorem | D1 measured | D2 theorem | pair with Mramo | share of predicted gain taken | pair with an ideal blind corrector | partner beats blind | partner beats soloist | blind beats soloist | d_m / d_h | threshold |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 100 | 25 | 1.29 | 0.83 | 1.51 | 2.32 | 2.54 | 2.55 | 2.55 | 2.58 | 2.56 | n/a | 2.32 | 25/25 | 13/25 | 0/25 | 1.10 | 0.99 |
+| 50 | 25 | 1.29 | 0.55 | 1.51 | 2.32 | 2.42 | 2.52 | 2.52 | 2.67 | 2.62 | 0.94 | 2.32 | 25/25 | 23/25 | 5/25 | 1.09 | 0.94 |
+| 0 | 25 | 1.29 | 0.43 | 1.51 | 2.32 | 2.57 | 2.70 | 2.70 | 2.91 | 2.92 | 0.99 | 2.32 | 25/25 | 25/25 | 0/25 | 1.10 | 0.91 |
 
 ## E9. The shape of the noise
 

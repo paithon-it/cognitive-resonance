@@ -451,3 +451,35 @@ def test_design_reading_with_one_branch_is_not_judged(trust_units):
     r = design.reading({"units": units})
     assert all(c["outcome"] == "not evaluable" for c in r["criteria"].values())
     assert r["by_fraction"][2]["partner"] == "Mramo_w1" and r["choice"]["expectation"]["met"] is None
+
+
+# --- readings added after the results of E6 and E7 (not tests of the hypotheses) ---------------------------------
+
+def test_chart_reads_the_files_of_e7(tmp_path):
+    import chart
+    synthetic.write_views(tmp_path, **SMALL)
+    units = [chart.views_unit(f) for f in sorted(tmp_path.glob("*.npz"))]
+    rows = chart.views_summary(units)
+    assert [r["overlap"] for r in rows] == list(raw.VIEWS_OVERLAPS)
+    for r in rows:
+        assert r["units"] == 6 and r["theorem_d2"] >= r["theorem_d1"] - 1e-9
+        assert r["measured_d_blind_two_cues"] == pytest.approx(r["theorem_d_blind"], rel=0.1)   # the same thing, two ways
+        assert r["measured_d1"] == pytest.approx(r["theorem_d1"], rel=0.1)
+    apart, same = rows[-1], rows[0]                    # nothing in common against the same view
+    assert apart["theorem_d2"] - apart["theorem_d1"] > same["theorem_d2"] - same["theorem_d1"]
+    assert apart["units_where_partner_beats_blind"] == apart["units"]
+
+
+def test_the_push_of_the_branch_on_the_toy(tmp_path, trust_units):
+    import push
+    synthetic.write_trust(tmp_path, **SMALL)                       # the same files as the fixture: same seeds
+    rows = [push.slopes(f) for f in sorted(tmp_path.glob("*.npz"))]
+    r = push.reading({"units": trust_units}, rows)
+    assert r["units"] == len(trust_units) and r["median_b"] > 0
+    assert list(r["by_branch"]) == ["Mramo_w0.5", "Mramo_w1", "Mramo_w2", "Mramo_w4"]
+    for name, s in r["by_branch"].items():
+        assert s["predicted_break_even"] == 2 * s["built_for_weight"]
+        assert s["median_b_over_c_over_built_weight"] == pytest.approx(1.0, abs=0.1)   # the toy cancels the push exactly
+        assert abs(s["median_push_left_at_the_built_weight"]) < 0.1
+    one = r["by_branch"]["Mramo_w1"]["break_even_against_same_machine"]
+    assert one["closed_units"] == len(trust_units) and 1 / 1.5 <= one["median_over_predicted"] <= 1.5

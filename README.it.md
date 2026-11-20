@@ -93,7 +93,7 @@ su cinque compiti e cinque semi):
 | E8 | 7 su 7 | quando la macchina vede un quarto dell'immagine la coppia con il compagno vale 2,87 contro 2,49 con il solista, in 5 compiti su 5; il guadagno è 1,02 volte quello previsto dal teorema; il correttore cieco batte il solista in 25 unità su 25 |
 | E9 | 3 su 5 | con la cornice gaussiana la formula regge di nuovo su semi nuovi; con una cornice a due valori promette 3,69 dove la coppia dà 2,29, e la coppia non dipende dalla forma. **Non confermati**: le code pesanti portano il rapporto a 0,95, non sotto 0,9 (S2), e la cornice uniforme va a 0,945, appena sotto la sua banda (S4) |
 
-Quattro riletture di dati già raccolti, nessuna delle quali è una prova:
+Sei riletture di dati già raccolti, nessuna delle quali è una prova (le ultime due sono state aggiunte dopo i risultati di E6 ed E7):
 
 | | Che cosa | File dei risultati |
 |---|---|---|
@@ -101,6 +101,8 @@ Quattro riletture di dati già raccolti, nessuna delle quali è una prova:
 | il picco si sposta | sui file di E2 ter, la coppia a pesi fissati: il compagno non alza il massimo, sposta il peso a cui la coppia lo raggiunge | `results/e6_trust_from_e2ter.json` |
 | le tre macchine | il teorema di E8 sui file di E2 bis ed E2 ter, unità per unità | `results/chart_from_e2.json` |
 | per chi conviene un compagno | la lettura di progetto di E6 (protocollo, § 12 bis) sull'unico ramo di E2 ter: batte il solista fino a circa due volte il peso per cui è costruito, e non per chi dà al solista un quarto del peso dovuto | `results/e6_design_from_e2ter.json` |
+| la spinta del ramo | sui file di E6: il ramo cancella la spinta del giudice senza errore sistematico, e contro la stessa macchina senza il ramo il pareggio cade a 1,02, 2,05, 4,25 e 8,96 per i pesi 0,5, 1, 2 e 4 (previsti 1, 2, 4 e 8); l'anticipo contro il solista di controllo viene dal controllo | `results/e6_push.json` |
+| il teorema sulle viste diverse | il teorema di E8 sui file di E7: dove le viste non hanno niente in comune prevede 2,91 per la coppia con il compagno, misurato 2,92, e il compagno batte sia il solista sia un correttore cieco ideale in 25 unità su 25 | `results/chart_from_e7.json` |
 
 I risultati, con l'esito di ogni criterio: [`results/RESULTS.md`](results/RESULTS.md) (in
 inglese).
@@ -169,6 +171,8 @@ uv run python analysis/views.py                # E7, results/e7_views.json
 uv run python analysis/chart.py                # E8, results/e8_chart.json
 uv run python analysis/shape.py                # E9, results/e9_shape.json
 uv run python analysis/design.py               # E6, lettura di progetto (dopo trust.py), results/e6_design.json
+uv run python analysis/push.py                 # E6, la spinta del ramo (dopo trust.py), results/e6_push.json
+uv run python analysis/chart.py --views        # il teorema sui file di E7, results/chart_from_e7.json
 ```
 
 E3 ed E3 bis importano `compare_votes` da un clone locale di turing-meter e ne scrivono il

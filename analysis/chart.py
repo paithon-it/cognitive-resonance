@@ -15,6 +15,10 @@ are compared with the pairs actually measured. Writes every measure and K1-K7.
 
 With `--e2` it reads instead the files of E2 bis and E2 ter (results/raw/rephase_bis and
 rephase_ter): the theorem on runs made before it was written. A look at old data, not a test.
+
+With `--views` it reads the files of E7 (results/raw/views): the same theorem on a bench it was
+not registered for, where the machine too sees things the judge does not. Added after the
+results of E7 were seen: not a test.
 """
 from __future__ import annotations
 
@@ -50,6 +54,19 @@ def clean_judge(zh, a, y):
 def ideal_three(zh, zm, a, y, half) -> float:
     """The best linear use of (z_H, z_M, a): weights from one half of the images, d_a read on the other, swapped."""
     X = np.column_stack([zh, zm, a])
+    out = []
+    for fit, read in ((0, 1), (1, 0)):
+        f, r = half == fit, half == read
+        mean1, mean0 = X[f & (y == 1)].mean(axis=0), X[f & (y == 0)].mean(axis=0)
+        res = np.vstack([X[f & (y == 1)] - mean1, X[f & (y == 0)] - mean0])
+        w = np.linalg.solve(res.T @ res / (res.shape[0] - 2), mean1 - mean0)
+        out.append(float(est.d_a(X[r] @ w, y[r])))
+    return float(np.mean(out))
+
+
+def ideal_two(zh, a, y, half) -> float:
+    """The judge with an ideal blind corrector: the best linear use of (z_H, a), fitted on one half, read on the other."""
+    X = np.column_stack([zh, a])
     out = []
     for fit, read in ((0, 1), (1, 0)):
         f, r = half == fit, half == read
@@ -234,6 +251,51 @@ def old_summary(units) -> dict:
     return out
 
 
+def views_unit(path):
+    d = raw.read_views(path)
+    y, a = d["y"], np.asarray(d["a"], float)
+    names = d["machine_names"]
+    cue = lambda z, vz: est.standardize(z, y, vz, d["val_y"])                                # noqa: E731
+    zh = cue(d["z_H"], d["val_z_H"])
+    zm = {n: cue(d["z_M"][i], d["val_z_M"][i]) for i, n in enumerate(names)}
+    half = est.split_halves(d["image"], y)
+    tuned = {n: est.tuned_turing(zh, zm[n], y, half)["d_pair_tuned"] for n in names}
+    return {"task": d["task"], "seed": d["seed"], "overlap": d["overlap"], "theorem": predictions(zh, zm["M0"], a, y),
+            "measured": {"d_h": float(est.d_a(zh, y)), "d1": tuned["M0"], "pair_with_Mramo": tuned["Mramo"],
+                         "pair_with_Mpair": tuned["Mpair"], "d2_three_cues": ideal_three(zh, zm["M0"], a, y, half),
+                         "d_blind_two_cues": ideal_two(zh, a, y, half)}}
+
+
+def views_summary(units) -> list:
+    rows = []
+    for o in raw.VIEWS_OVERLAPS:
+        us = [u for u in units if u["overlap"] == o]
+        if not us:
+            continue
+        m = lambda f: med([f(u) for u in us])                                           # noqa: E731
+        t_, me = (lambda u: u["theorem"]), (lambda u: u["measured"])
+        taken = [(me(u)["pair_with_Mramo"] - me(u)["d1"]) / (t_(u)["d2"] - t_(u)["d1"]) for u in us
+                 if t_(u)["d2"] - t_(u)["d1"] > 0.05]
+        rows.append({
+            "overlap": o, "units": len(us), "b": m(lambda u: t_(u)["b"]), "r": m(lambda u: t_(u)["r"]),
+            "d_h": m(lambda u: me(u)["d_h"]), "d_h_clean": m(lambda u: t_(u)["d_h_clean"]), "d_m": m(lambda u: t_(u)["d_m"]),
+            "theorem_d1": m(lambda u: t_(u)["d1"]), "measured_d1": m(lambda u: me(u)["d1"]),
+            "theorem_d2": m(lambda u: t_(u)["d2"]), "measured_d2_three_cues": m(lambda u: me(u)["d2_three_cues"]),
+            "measured_d2_partner": m(lambda u: me(u)["pair_with_Mramo"]),
+            "measured_pair_from_scratch": m(lambda u: me(u)["pair_with_Mpair"]),
+            "theorem_d_blind": m(lambda u: t_(u)["d_blind"]), "measured_d_blind_two_cues": m(lambda u: me(u)["d_blind_two_cues"]),
+            "strength": m(lambda u: t_(u)["strength"]), "blind_threshold": m(lambda u: t_(u)["blind_band"][1]),
+            "median_partner_over_theorem": m(lambda u: me(u)["pair_with_Mramo"] / t_(u)["d2"]),
+            "median_share_of_predicted_gain_taken": med(taken) if taken else None,
+            "units_with_a_predicted_gain_above_0.05": len(taken),
+            "median_partner_minus_blind": m(lambda u: me(u)["pair_with_Mramo"] - me(u)["d_blind_two_cues"]),
+            "units_where_partner_beats_blind": sum(me(u)["pair_with_Mramo"] > me(u)["d_blind_two_cues"] for u in us),
+            "units_where_partner_beats_soloist": sum(me(u)["pair_with_Mramo"] > me(u)["d1"] for u in us),
+            "units_where_blind_beats_soloist": sum(me(u)["d_blind_two_cues"] > me(u)["d1"] for u in us),
+            "units_where_theorem_says_blind": sum(bool(t_(u)["blind_beats_soloist"]) for u in us)})
+    return rows
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--raw", type=Path, default=None)
@@ -241,8 +303,26 @@ def main() -> None:
     ap.add_argument("--reps", type=int, default=1000)
     ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--e2", action="store_true", help="the theorem on the files of E2 bis and E2 ter: not a test")
+    ap.add_argument("--views", action="store_true", help="the theorem on the files of E7, added after its results: not a test")
     args = ap.parse_args()
     timer = Timer()
+    if args.views:
+        folder = args.raw or ROOT / "results" / "raw" / "views"
+        files = raw.list_units(folder, raw.VIEWS_RE)
+        if not files:
+            raise SystemExit(f"no views files in {folder}")
+        units = run_pool(views_unit, files, args.workers)
+        out = {"experiment": "E7, read with the theorem of the chart", "protocol": "§ 14 (v2.1), on the files of § 13",
+               "status": "a reading added on 20 November 2026, after the results of E7 were seen: not a test",
+               "how": "per unit: the slope of H's cue on the frame gives the bias B, the cue without it is h; d_h, d_m "
+                      "and r from h and the soloist M0; D1, D2 and the threshold from cognitive_resonance.chart. The "
+                      "blind corrector is not a trained network here: it is the best linear use of (z_H, a), fitted "
+                      "on one half of the images and read on the other",
+               "by_overlap": views_summary(units), "units": units, "minutes": timer.minutes(), "environment": environment()}
+        write_json(args.out or ROOT / "results" / "chart_from_e7.json", out)
+        for row in out["by_overlap"]:
+            print({a: (round(b, 3) if isinstance(b, float) else b) for a, b in row.items()})
+        return
     if args.e2:
         root = args.raw or ROOT / "results" / "raw"
         jobs = [(f, "bis") for f in raw.list_units(root / "rephase_bis", raw.REPHASE_RE)]

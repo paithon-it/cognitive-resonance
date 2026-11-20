@@ -230,6 +230,59 @@ def design(d):
                         criteria(d["criteria"])])
 
 
+def chart_e7(d):
+    rows = []
+    for s in d["by_overlap"]:
+        rows.append([s["overlap"], s["units"], f(s["b"], 2), f(s["r"], 2), f(s["d_h"], 2), f(s["d_h_clean"], 2),
+                     f(s["d_m"], 2), f(s["theorem_d1"], 2), f(s["measured_d1"], 2), f(s["theorem_d2"], 2),
+                     f(s["measured_d2_partner"], 2), f(s["median_share_of_predicted_gain_taken"], 2),
+                     f(s["measured_d_blind_two_cues"], 2), f"{s['units_where_partner_beats_blind']}/{s['units']}",
+                     f"{s['units_where_partner_beats_soloist']}/{s['units']}",
+                     f"{s['units_where_blind_beats_soloist']}/{s['units']}", f(s["strength"], 2),
+                     f(s["blind_threshold"], 2)])
+    return "\n\n".join([
+        "## The theorem of the chart on E7 (a reading added after the results)",
+        "`analysis/chart.py --views`: the theorem of protocol § 14 on the files of E7, a bench it was not registered "
+        "for, where the machine too sees things the judge does not. Added on 20 November 2026, after the results of "
+        "E7 were seen: not a test. Per unit, B, d_h, d_m and r come from the judge and the soloist M0 alone, as in "
+        "E8. No blind network was trained in E7: the blind corrector here is the best linear use of the judge's cue "
+        "and the frame, fitted on half of the images and read on the other half. Medians over the units; the share "
+        "of the predicted gain is over the units where the theorem predicts a gain above 0.05.",
+        table(["overlap %", "units", "B", "r", "d_a H", "d_h clean", "d_m", "D1 theorem", "D1 measured", "D2 theorem",
+               "pair with Mramo", "share of predicted gain taken", "pair with an ideal blind corrector",
+               "partner beats blind", "partner beats soloist", "blind beats soloist", "d_m / d_h", "threshold"], rows)])
+
+
+def push(d):
+    rows = []
+    for name, s in d["by_branch"].items():
+        same, control = s["break_even_against_same_machine"], s["break_even_against_control"]
+        rows.append([name, f(s["built_for_weight"], 1), f(s["median_c"], 3), f(s["median_b_over_c"], 3),
+                     f(100 * s["median_push_left_at_the_built_weight"], 1), f(100 * s["median_abs_push_left"], 1),
+                     f(100 * s["largest_abs_push_left"], 1),
+                     f(s["median_measured_peak"], 2), f(s["predicted_break_even"], 0),
+                     f(same["median"], 2), f"{same['closed_units']}/{s['units']}",
+                     f(control["median"], 2), f"{control['closed_units']}/{s['units']}"])
+    return "\n\n".join([
+        "## E6, the push of the branch (a reading added after the results)",
+        "`analysis/push.py`: added on 20 November 2026, after the results of E6 were seen: not a test. The design "
+        "reading found the break-even against the control soloist earlier than twice the built weight. Either the "
+        "branch does not cancel the push exactly, or the control is not the same machine without the branch (M0plus "
+        "is M0 trained ten more epochs). Per unit, in raw log-odds: b is the within-class slope of the judge's cue on "
+        f"the frame (median {f(d['median_b'], 3)}), c is minus the slope of the branch; the pair should peak at b / c "
+        "and beat the same machine without the branch up to 2 b / c. The slope of M0 on the frame is "
+        f"{f(d['median_abs_slope_of_M0'], 3)} in absolute value. Medians over {d['units']} units.",
+        table(["branch", "built for w", "c", "b / c", "push left at the built weight, %", "its size, median, %", "largest, %",
+               "measured peak", "predicted break-even", "break-even against M0", "closed in units",
+               "break-even against M0plus", "closed in units"], rows),
+        "In the median the branch leaves less than half a per cent of the push: it neither under- nor over-corrects. "
+        "Unit by unit what is left is a few per cent of the push, more for the branches built for the higher weights. "
+        "Against the same machine without the branch the break-even is where the model puts it, a little later at the "
+        "higher weights; the earlier break-even of the registered comparison comes from the control, which alone is a "
+        "slightly better machine than M0."])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
-            ("chart_from_e2.json", chart_old), ("e8_chart.json", e8), ("e7_views.json", e7), ("e9_shape.json", e9))
+            ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e7_views.json", e7), ("chart_from_e7.json", chart_e7),
+            ("e9_shape.json", e9))
