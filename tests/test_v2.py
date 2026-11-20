@@ -590,3 +590,19 @@ def test_the_right_answers_of_e8_pair_by_pair():
     assert cells[2:7] == ["0.820", "0.860", "0.900", "0.910", "0.930"]
     assert cells[7] == "0.050 (0.030 to 0.060)"
     assert cells[8] == "2 of 3 (-0.020 to 0.020)" and cells[9] == "2 of 3"
+
+
+def test_yes_and_no_are_worth_less_than_a_graded_judgment():
+    """The Fisher factor of protocol § 18: pi / 2 at best, larger for a sensitive judge, and checked by simulation."""
+    from cognitive_resonance import chart
+    assert chart.yes_no_factor(0.0, 0.0, 0.0, 1.0) == pytest.approx(math.pi / 2, rel=1e-3)
+    easy, hard = chart.yes_no_factor(-0.5, 0.5, 0.3, 2.0), chart.yes_no_factor(-1.45, 1.45, 0.6, 2.0)
+    assert math.pi / 2 < easy < hard and hard == pytest.approx(5.28, abs=0.05)
+    # simulation: the variance of the probit slope against the variance of the graded slope, one class, intercept known
+    gen = np.random.default_rng(5)
+    a = gen.normal(0.0, math.sqrt(2.0), 400000)
+    from scipy.stats import norm
+    eta = 0.6 * a
+    lam = norm.pdf(eta) ** 2 / (norm.cdf(eta) * norm.sf(eta))
+    by_hand = 2.0 / (np.mean(lam * a * a) - np.mean(lam * a) ** 2 / np.mean(lam))
+    assert chart.yes_no_factor(0.0, 0.0, 0.6, 2.0) == pytest.approx(by_hand, rel=0.02)

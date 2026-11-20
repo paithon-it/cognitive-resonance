@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 2.2, 19 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 2.3, 20 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -788,6 +788,159 @@ Attese.
 Dati grezzi: `shape/{compito}_mu{mu}_s{seme}.npz`: `a`, `z_plus` e `z_minus` di forma
 (4, N), una riga per forma nell'ordine di `shapes`; `manifest.json`.
 
+## 16. E10. La cartella che dice il vero
+
+Aggiunto con la versione 2.3, il 20 novembre 2026, dopo una quarta revisione dell'articolo e
+prima di ogni addestramento di E10, E11 ed E12. Le tre prove condividono un banco e una
+corsa (`gpu/trace.py`), su semi mai usati (7-11).
+
+**Perché.** In E8 la cornice, alla prova, non dice niente della classe. Una traccia vera
+spesso dice qualcosa e riceve troppo peso. Il teorema del § 14 si estende a quel caso
+(`cognitive_resonance.chart`): con una traccia di sensibilità `d_a` a cui il giudice dà
+peso `beta`, il peso che merita è `beta_0 = d_a (1 - r^2) / (d_h - r d_m)` e il guadagno di
+un compagno è `B / (1 - r^2 + B) * P * (1 - beta_0 / beta)^2`. Finora lo abbiamo guardato
+solo ricampionando i file di E8, con un ramo lineare a due numeri, dopo aver visto i
+risultati: una lettura, non una prova.
+
+**Che cosa si sapeva** (dai file di E8 ricampionati: `analysis/informative.py`,
+`analysis/informative_face.py`). Con la macchina che vede un quarto della fotografia il ramo
+lineare toglie il 68 e il 31 per cento della spinta dove l'eccesso `1 - beta_0 / beta` del
+teorema è 68 e 34 (cornice di sensibilità 0,5 e 1). Con la macchina che vede tutto toglie il
+61 e il 13 dove il teorema dice 21 e -53: lì l'accordo non c'è, e non ne conosciamo la
+ragione. Al peso migliore il compagno di E8, che toglie tutta la spinta, vale quanto il ramo
+nuovo o poco di più (0,02 in 25 unità su 25 a sensibilità 0,5): la frase dell'articolo
+«butterebbe via anche la parte buona» non ha lì un sostegno. A peso fissato sì: con i due
+indizi sommati così come sono il ramo nuovo supera il compagno di E8 di 0,05, 0,17 e 0,38
+(sensibilità 0,5, 1 e 1,5; 25 unità su 25), e da sensibilità 1 in su il compagno di E8 fa
+peggio del solista senza ramo (-0,18 e -0,38, 0 unità su 25).
+
+**Il banco.** La cornice a livello `d` è `a = mu_d (2y - 1) + sd_d eps`, con
+`mu_d = d sqrt(2 / (4 + d^2))` e `sd_d^2 = 2 - mu_d^2`: varianza totale 2 come in E8,
+sensibilità `d`. I livelli sono 0 (il banco di E8), 0,5, 1 e 1,5. In validazione e alla prova
+`eps` è lo stesso ai quattro livelli.
+
+- **H**: il giudice di E8 (rete «più», `mu = 1`, metà A, fotografia intera). È stato
+  addestrato dove la cornice valeva 2: alla prova le dà più peso di quanto merita.
+- **`C_d`**, uno per livello: stessa rete e stesso seme, addestrata con cornici di livello
+  `d`. È il giudice che dà alla cornice il peso che ha alla prova (`C_0` è l'H0 di E8).
+- Per ogni vista della macchina (`v = 25`, il quarto sinistro; `v = 100`, tutto l'interno):
+  **`M`**, il solista, sulla sua parte di fotografia. Qui non vede la cornice: in E8 la
+  vedeva senza che dicesse niente, e un solista che la leggesse quando dice il vero sarebbe
+  un'altra macchina. **`R_t`**, uno per livello `t`: un ramo che vede solo la cornice,
+  addestrato da zero sull'entropia incrociata di `z_H + z_M + z_ramo` con cornici di livello
+  `t`. Il compagno costruito per il livello `t` è `M + R_t`; **`R_0` è il compagno di E8**,
+  addestrato dove la cornice non diceva niente, che toglie tutta la spinta.
+- I quattro rami di un'unità hanno lo stesso seme, lo stesso ordine e lo stesso rumore delle
+  cornici: cambia solo il livello. Ogni ramo è letto a ogni livello.
+- Semi 7-11, cinque compiti, 30 epoche e gli iperparametri della prova pilota.
+
+**Misure**, per unità e per livello `d` della prova, con il compagno costruito per quel
+livello. `s`, la quota della spinta che il ramo toglie: meno la pendenza dell'indizio grezzo
+del ramo sulla cornice, divisa per la pendenza dell'indizio grezzo di H, a parità di classe.
+`e = 1 - beta_0 / beta`, l'eccesso secondo il teorema, con le grandezze della stessa unità
+misurate come in `analysis/informative.py`. Le coppie sintonizzate del § 3 e le coppie così
+come sono (somma degli indizi grezzi), con il bootstrap appaiato per immagine.
+
+Attese. Le primarie sono T2 (qui), X1 e X2 (§ 17), Y1 e Y2 (§ 18).
+
+- **T1, la dose.** A `v = 25` la mediana di `s` sta fra 0,9 e 1,1 a livello 0 e cala al
+  crescere del livello: `s(0) > s(0,5) > s(1) > s(1,5)`.
+- **T2, solo l'eccesso (primaria).** A `v = 25`, ai livelli 0,5 e 1, la mediana sulle unità
+  di `|s - e|` è al più 0,10.
+- **T3, a vista intera il teorema non descrive il ramo.** A `v = 100` e livello 0,5 la
+  mediana di `s - e` è sopra 0,20: è ciò che si è visto sui dati vecchi, scritto come attesa
+  perché una prova nuova possa smentirlo.
+- **T4, dove c'è un eccesso il compagno vince.** A `v = 25` e livello 0,5 la coppia
+  sintonizzata `(H, M + R_0,5)` è più sensibile della coppia `(H, M)`, con intervallo della
+  differenza sopra lo zero in ogni seme, in almeno 3 compiti su 5.
+- **T5, dove il peso è quasi giusto non c'è niente da prendere.** A `v = 25` e livello 1,5,
+  così come sono, la differenza fra la coppia con `M + R_1,5` e la coppia con `M`, divisa
+  per la seconda, è in mediana fra -0,03 e 0,03.
+- **T6, niente si crea.** A `v = 25` e a ogni livello la coppia sintonizzata `(H, M + R_d)`
+  divisa per la coppia `(C_d, M)` è in mediana al più 1,05.
+- Senza criterio: le quote di risposte giuste di ogni coppia, la quota del guadagno previsto
+  che il compagno prende, e tutte le misure a `v = 100`.
+
+Dati grezzi: `trace/{compito}_v{v}_s{seme}.npz`: `levels`, `y`, `image`, `eps`, `a` (4, N),
+`z_H` (4, N), `z_C` (4, N: `C_d` al suo livello), `z_M` (N), `z_R` (4, 4, N: costruito per,
+letto a), e gli stessi con `val_`; `manifest.json`.
+
+## 17. E11. Togliere tutto o solo l'eccesso, a peso fissato
+
+Aggiunto con la versione 2.3, sugli stessi file di E10.
+
+**Perché.** Il teorema dice che chi toglie tutta la spinta, quando la traccia dice il vero,
+butta via anche la parte buona. Al peso migliore i dati vecchi non lo mostrano: il peso
+compensa. La domanda va fatta a peso fissato, dove nessuno aggiusta niente: i due indizi
+sommati così come sono.
+
+Misure: la sensibilità della somma grezza `z_H + z_M + z_R`, con `R_d` (il ramo costruito
+per il livello della prova, «nuovo») e con `R_0` (il compagno di E8, «vecchio»), e della
+somma `z_H + z_M` (il solista); differenze appaiate.
+
+- **X1, il nuovo batte il vecchio (primaria).** A `v = 25` e livello 1 la coppia con
+  `M + R_1` è più sensibile della coppia con `M + R_0`, con intervallo sopra lo zero in ogni
+  seme, in almeno 3 compiti su 5.
+- **X2, togliere tutto fa peggio che non togliere niente (primaria).** A `v = 25` e livello
+  1,5 la coppia con `M + R_0` è meno sensibile della coppia con `M`, con intervallo sotto lo
+  zero in ogni seme, in almeno 3 compiti su 5.
+- **X3, la dose.** A `v = 25` la mediana della differenza fra nuovo e vecchio è positiva ai
+  livelli 0,5, 1 e 1,5 e cresce con il livello.
+- **X4, il peso compensa.** A `v = 25` e ai livelli 0,5 e 1 le coppie sintonizzate con
+  `M + R_d` e con `M + R_0` differiscono in mediana, in valore assoluto, di al più 0,02
+  volte la seconda.
+- **X5, anche a vista intera.** A `v = 100` e livello 1 vale ciò che dice X1.
+- Senza criterio: le quote di risposte giuste delle tre somme a ogni livello.
+
+Se X1 non passa, la frase sull'articolo va tolta. Se X2 non passa, resta vero soltanto che
+il compagno nuovo non perde.
+
+## 18. E12. La spinta stimata da sì e no
+
+Aggiunto con la versione 2.3, sugli stessi file (`v = 25`, livello 0: il caso del § 14).
+
+**Perché.** `analysis/judgments.py` stima la spinta dall'indizio graduato del giudice, e il
+pregiudizio che resta dopo `n` giudizi è `1 / n`. Una persona non dà un indizio graduato:
+dà una risposta. Con un sì o un no l'informazione sulla pendenza è minore, e i giudizi che
+servono sono di più.
+
+**La previsione.** Nel modello la risposta è sì quando `h + beta a > 0`: una regressione
+probit della risposta sulla classe (due intercette) e sulla cornice dà `beta` in unità del
+rumore pulito. L'informazione di Fisher sulla pendenza, per giudizio, è
+`E[lambda a^2] - sum_y p_y E_y[lambda a]^2 / E_y[lambda]`, con
+`lambda = phi(eta)^2 / (Phi(eta) (1 - Phi(eta)))` e `eta = m_y + beta a`, dove `m_y` è la media
+dell'indizio pulito nella classe `y`; con l'indizio graduato è la varianza di `a`. Il loro
+rapporto `kappa` dice quanti sì e no valgono un giudizio graduato: con le grandezze mediane
+di E8 (medie `±1,45`, `beta` 0,6, varianza della cornice 2) fa circa 5, e sta fra 4 e 6 per
+giudici un po' meno o un po' più sensibili (`cognitive_resonance.chart.yes_no_factor`). La quota di guadagno che resta con `n` sì e no è quella prevista
+per `n / kappa` giudizi graduati (`cognitive_resonance.chart.share_kept_after`).
+
+**Come.** Per unità e per `n` (5, 10, 20, 50, 100, 200, 500, 1.000, 5.000): 40 estrazioni di
+`n` presentazioni dalla validazione, le stesse per i due stimatori (una sola estrazione
+quando `n` è tutta la validazione). Graduato: la pendenza dell'indizio standardizzato sulla
+cornice, a parità di classe. Sì e no: la regressione probit della risposta del giudice
+(il segno dell'indizio grezzo), con una penalità quadratica di 0,05 sui tre coefficienti
+perché resti definita quando le risposte separano le classi; la pendenza si riporta alle
+unità dell'indizio standardizzato dividendo per `sqrt(1 + beta^2 var(a))`. La correzione si
+applica all'indizio graduato del giudice alla prova, e la quota che resta è
+`(D_n^2 - D_1^2) / (D_tutti^2 - D_1^2)` come in `analysis/judgments.py`, mediana sulle
+estrazioni. Restano fuori le unità con un guadagno al quadrato sotto 0,2.
+
+- **Y1, con sì e no ne servono di più (primaria).** Con 50 giudizi la quota che resta con
+  sì e no è più bassa di quella con l'indizio graduato in almeno 20 unità su 25.
+- **Y2, quanti di più (primaria).** Il numero di giudizi a cui la quota che resta arriva a
+  0,90 (interpolazione lineare in `ln n` sulla griglia) è, con sì e no, fra 3 e 9 volte
+  quello con l'indizio graduato, in mediana sulle unità. Un'unità che con sì e no non
+  arriva a 0,90 nemmeno con 5.000 giudizi conta come fuori.
+- **Y3, la previsione.** Con 100 e con 200 sì e no la mediana sulle unità dello scarto, in
+  valore assoluto, fra la quota misurata e quella prevista con `kappa` dell'unità è al più
+  0,07.
+- **Y4, alla lunga basta.** Con 5.000 sì e no la quota che resta è, in mediana, almeno 0,90.
+
+Se Y2 passa, «poche decine di giudizi» nell'articolo diventa «fra cinquanta e cento» per chi
+risponde sì o no. Se non passa perché ne servono più di nove volte tanti, o perché Y4 non passa, la
+stima da risposte secche con questo modello non basta, e l'articolo lo dice.
+
 ## Deviazioni
 
 Tutte del 10 novembre 2026. Le prime vengono dalle corse; le altre sono scelte
@@ -994,3 +1147,10 @@ legge sul banco la frazione di peso stimata da Kong e colleghi, una previsione s
 parametri (il compagno costruito per un peso batte il solista fino a due volte quel
 peso), e la regola con cui si sceglie una macchina, fissata prima di leggere i dati. Il codice
 dell'addestramento non cambia.
+
+La versione 2.3, del 20 novembre 2026, viene da una quarta revisione dell'articolo e prima di
+ogni addestramento delle prove che aggiunge: E10, E11 ed E12 (§§ 16-18), sullo stesso banco
+e nella stessa corsa, con semi mai usati. Le tre letture fatte dopo i risultati (traccia
+informativa, quanti giudizi, ramo nuovo contro vecchio) diventano tre prove con le attese
+scritte prima; le soglie vengono dai dati vecchi, e lo dichiarano. Non tocca criteri né
+esiti delle prove registrate.
