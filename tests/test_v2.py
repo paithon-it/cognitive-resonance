@@ -735,3 +735,87 @@ def test_the_turing_of_the_pair_in_three_factors(tmp_path):
     assert read["comparisons"][0]["exchange"] == pytest.approx(1.0) and read["comparisons"][0]["tu"] == pytest.approx(math.sqrt(5))
     assert read["comparisons"][1]["tu"] == pytest.approx(1.0) and read["by_source"][-1]["comparisons"] == 2   # r = q: nothing to add
     assert factors.people(tmp_path / "missing.json") is None
+
+
+# --- E13: the readable bias of a person --------------------------------------------------------
+
+def _simulated_person(push: float, n: int = 6000, seed: int = 0, d: float = 1.5, fine: bool = False):
+    """A person whose judgment leans towards their previous answer by `push` (in units of the clean noise)."""
+    rng = np.random.default_rng(seed)
+    stimulus = rng.integers(0, 2, n)
+    clean = d * (stimulus - 0.5) + rng.standard_normal(n)
+    judgment, previous = np.empty(n), 0.0
+    for t in range(n):
+        judgment[t] = clean[t] + push * previous
+        previous = 1.0 if judgment[t] > 0 else -1.0
+    response = (judgment > 0).astype(int)
+    confidence = np.abs(judgment) if fine else np.digitize(np.abs(judgment), [0.5, 1.2, 2.0])   # four steps
+    return stimulus, response, confidence
+
+
+def test_the_graded_judgment_orders_the_trials_from_one_sure_answer_to_the_other():
+    from cognitive_resonance import readable
+    g = readable.graded_judgment(np.array([0, 0, 1, 1]), np.array([3.0, 1.0, 1.0, 3.0]))
+    assert np.all(np.diff(g) > 0) and abs(g.sum()) < 1e-12
+    a = readable.history(np.array([0, 1, 1]), np.array([-1.0, 0.5, 2.0]))
+    assert a.shape == (2, 3) and a[0].tolist() == [-1.0, -1.0, -1.0] and a[1].tolist() == [1.0, 0.5, -0.25]
+
+
+def test_a_person_without_a_readable_bias_has_nothing_to_give_back():
+    from cognitive_resonance import readable
+    m = readable.person(*_simulated_person(0.0, seed=1))
+    assert abs(m["b"]) < 0.01 and abs(m["gain_personal"] - 1.0) < 0.01
+
+
+def test_a_planted_push_is_read_and_removing_it_gives_what_the_formula_says():
+    from cognitive_resonance import readable
+    weak, strong = (readable.person(*_simulated_person(p, seed=2, fine=True)) for p in (0.15, 0.3))
+    assert 0.01 < weak["b"] < strong["b"] < 0.15                       # planted: 0.0225 and 0.09
+    assert 1.0 < weak["gain_personal"] < strong["gain_personal"]
+    for m in (weak, strong):
+        predicted = readable.predicted_gain_sq(m["b_first"], m["n_first"])
+        assert abs(m["gain_personal"] ** 2 - predicted) < 0.03
+        assert abs(m["gain_moments"] ** 2 - predicted) < 0.03
+    assert 90 < readable.corrector_angle(weak["b"]) < readable.corrector_angle(strong["b"]) < 180
+
+
+def test_with_a_scale_of_a_few_steps_the_corrector_gives_more_than_the_formula():
+    """The trace also reorders the trials that fell on the same step: a gain the Gaussian count does not have."""
+    from cognitive_resonance import readable
+    gaps = []
+    for seed in range(4):
+        m = readable.person(*_simulated_person(0.15, seed=seed))
+        gaps.append(m["gain_personal"] ** 2 - readable.predicted_gain_sq(m["b_first"], m["n_first"]))
+    assert 0.0 < float(np.mean(gaps)) < 0.08
+
+
+def test_the_files_of_e13_are_split_by_their_name_and_the_split_does_not_move():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("people_bias", ANALYSIS / "people_bias.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.split_of("data_Adler_2018_Expt1.csv") == mod.split_of("DATA_ADLER_2018_EXPT1.CSV")
+    parts = [mod.split_of(f"data_{i}.csv") for i in range(400)]
+    assert 0.12 < parts.count("exploration") / 400 < 0.26
+
+
+def test_a_file_of_e13_is_read_with_text_labels_a_byte_order_mark_and_any_case(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("people_bias", ANALYSIS / "people_bias.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    rows = ["﻿subj_idx,STIMULUS,Response,confidence"]
+    for i in range(60):
+        stimulus = "old" if i % 3 else "new"
+        wrong = i % 5 == 0
+        response = ("new" if stimulus == "old" else "old") if wrong else stimulus
+        rows.append(f"s{i % 2},{stimulus},{response},{1 if wrong else 2 + i % 2}")
+    rows += ["s0,old,NaN,2", "s0,old,old,", ",old,old,2"]
+    path = tmp_path / "data_test.csv"
+    path.write_text("\n".join(rows), encoding="utf-8")
+    people, status = mod.read_file(path)
+    assert status == "read" and sorted(people) == ["s0", "s1"]
+    assert sum(p["stimulus"].size for p in people.values()) == 60
+    assert set(np.unique(people["s0"]["stimulus"])) == {0, 1}
+    path.write_text("Subj_idx,Stimulus,Response,Confidence\n1,1,1,2\n1,2,3,1\n1,3,1,3\n", encoding="utf-8")
+    assert mod.read_file(path) == (None, "not a two-answer task")

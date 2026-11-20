@@ -1298,6 +1298,28 @@ same run, with seeds never used before. The three readings made after the result
 their expectations written beforehand; the thresholds come from the old data, and say so.
 It touches neither the criteria nor the outcomes of the registered tests.
 
+**E13, before the confirmation run.** From 20 November 2026, on the exploration files only
+(35 files, 12 included, 464 people) and on simulated people, with the confirmation files
+never opened.
+
+- **Reading the files.** Some files have a byte-order mark at the start of the header, or
+  the column names in lowercase: with the first version of the code they looked as if the
+  required columns were missing. The header is now read without that mark and without
+  regard to case.
+- **Stimulus and response written as words.** § 19 removed the rows with a non-numeric
+  value in one of the four columns, and so left out the files that write the two answers as
+  words ("old" and "new"). Stimulus and response are now read as labels: the files in which
+  they have the same two values stay in. Confidence stays a number.
+- **A guard.** The gain of a person is not computed if in the second half the sensitivity
+  of the judgment as it is lies below 0.2; how many they are is reported.
+- **One more measure, with no threshold.** On simulated people with a confidence scale of
+  four steps the corrector gives more than the formula of P3, because the trace also
+  reorders the trials that fell on the same step. Next to the gain from the area under the
+  curve we report the one with the sensitivity as the difference of the means over the
+  within-class deviation, which does not see the order inside a step.
+- **What was seen on the exploration files**, for the record: median `B` 0.011, median gain
+  of the personal corrector 0.998. Expectations and thresholds of P1-P4 do not change.
+
 Version 2.4, of the same day, comes from two independent reviews of the article and before
 opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
 people, on the public data of the Confidence Database. It does not touch criteria or

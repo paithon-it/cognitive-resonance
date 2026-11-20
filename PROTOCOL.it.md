@@ -1292,6 +1292,27 @@ informativa, quanti giudizi, ramo nuovo contro vecchio) diventano tre prove con 
 scritte prima; le soglie vengono dai dati vecchi, e lo dichiarano. Non tocca criteri né
 esiti delle prove registrate.
 
+**E13, prima della corsa di conferma.** Del 20 novembre 2026, sui soli file di esplorazione
+(35 file, 12 inclusi, 464 persone) e su persone simulate, a file di conferma mai aperti.
+
+- **La lettura dei file.** Alcuni file hanno un segno d'ordine dei byte in testa
+  all'intestazione, o i nomi delle colonne in minuscolo: con la prima versione del codice
+  risultavano senza le colonne richieste. Ora l'intestazione si legge senza quel segno e
+  senza distinguere maiuscole e minuscole.
+- **Stimolo e risposta scritti a parole.** Il § 19 toglieva le righe con un valore non
+  numerico in una delle quattro colonne, e lasciava così fuori i file che scrivono le due
+  risposte come parole («old» e «new»). Stimolo e risposta si leggono ora come etichette:
+  restano dentro i file in cui hanno gli stessi due valori. La sicurezza resta un numero.
+- **Una guardia.** Il guadagno di una persona non si calcola se nella seconda metà la
+  sensibilità del giudizio com'è sta sotto 0,2; quante sono si riporta.
+- **Una misura in più, senza soglia.** Su persone simulate con una scala di sicurezza a
+  quattro gradini il correttore rende più della formula di P3, perché la traccia riordina
+  anche le prove finite sullo stesso gradino. Accanto al guadagno ricavato dall'area sotto
+  la curva si riporta quello con la sensibilità come differenza delle medie divisa per la
+  deviazione entro la classe, che l'ordine dentro un gradino non lo vede.
+- **Che cosa si è visto sull'esplorazione**, perché si sappia: `B` mediano 0,011, guadagno
+  mediano del correttore personale 0,998. Attese e soglie di P1-P4 non cambiano.
+
 La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca
