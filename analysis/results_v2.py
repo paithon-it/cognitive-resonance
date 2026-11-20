@@ -282,7 +282,65 @@ def push(d):
         "slightly better machine than M0."])
 
 
+def judgments(d):
+    ns = [str(n) for n in d["settings"]["ns"]]
+    rows = []
+    for s in d["by_v"]:
+        rows.append([s["v"], s["units"], f(s["median_b"], 2), f(s["median_r"], 2)]
+                    + [f"{f(s['by_n'][n]['share_kept'], 2)} ({f(s['by_n'][n]['predicted'], 2)})" for n in ns])
+    return "\n\n".join([
+        "## E8, how many judgments a correction needs (a reading added after the results)",
+        "`analysis/judgments.py`: added on 20 November 2026, not a test. The slope of the judge's cue on the frame is "
+        "estimated from n presentations of the validation set whose answer is known; the judge's test cue is corrected "
+        "with it and put beside the soloist. Each cell: the share of the gain that is kept, median over the draws and "
+        "the units, and in brackets the share predicted from a bias left of 1 / n. Units where the gain is below 0.2 "
+        "are left out.",
+        table(["v", "units", "B", "r"] + [f"n = {n}" for n in ns], rows)])
+
+
+def informative(d):
+    rows = []
+    for s in d["by_v_and_d_a"]:
+        rows.append([s["v"], f(s["target_d_a"], 1), s["units"], f(s["beta"], 2), f(s["beta_deserved"], 2),
+                     f(s["excess_share_of_the_push"], 2), f(s["share_of_the_push_removed_by_new_branch"], 2),
+                     f(s["theorem_d1"], 2), f(s["measured_d1"], 2), f(s["theorem_d2"], 2),
+                     f(s["measured_d2_three_cues"], 2), f(s["pair_with_new_branch"], 2),
+                     f(s["pair_with_partner_of_e8"], 2)])
+    return "\n\n".join([
+        "## E8, when the trace says something true (a reading added after the results)",
+        "`analysis/informative.py`: added on 20 November 2026, not a test. The presentations of E8 are resampled so "
+        "that the frame has a sensitivity of 0, 0.5 or 1 at test; the cues of the networks are untouched. The theorem "
+        "for an informative trace (`cognitive_resonance.chart`) says that only the excess of the judge's weight over "
+        "the deserved one is a bias. The new branch is linear in the frame and is trained on the error of the sum on "
+        "the resampled validation set; the partner of E8 was trained when the frame said nothing. Medians over the "
+        "units. With the whole view (v = 100) the judge has almost no private part and the deserved weight is badly "
+        "determined.",
+        table(["v", "d_a of the frame", "units", "weight the judge gives", "weight deserved", "excess, share of the push",
+               "share of the push the new branch removes", "D1 theorem", "D1 measured", "D2 theorem",
+               "best linear use of 3 cues", "pair with the new branch", "pair with the partner of E8"], rows)])
+
+
+def private_people(d):
+    rows = []
+    for s in d["by_source"]:
+        g = s["if_bias"]
+        rows.append([s["source"], s["comparisons"], f(s["d_h"], 2), f(s["d_m"], 2), f(s["rho"], 2),
+                     f(s["private_observed"], 2), f(100 * (s["pair_now_over_machine"] - 1), 1)]
+                    + [f"{f(100 * g[b]['median_gain_over_pair_now'], 1)} ({g[b]['comparisons']})" for b in g])
+    return "\n\n".join([
+        "## E4, the theorem on people already measured (a reading, with no measure of the bias)",
+        "`analysis/private_people.py`: added on 20 November 2026, not a test. The 74 comparisons of people with a "
+        f"language model of turing-meter (commit `{(d['source']['commit'] or '')[:7]}`), with d_H, d_m and rho as "
+        "published: the people's biases are in them. P_obs is what the person adds to the machine today; the last "
+        "columns say by how much the best pair would grow if a share B / (1 + B) of the person's noise were a bias a "
+        "machine can read (in brackets, the comparisons where such a judge can exist). Nothing here measures B. "
+        "Medians over the comparisons.",
+        table(["source", "comparisons", "d_H", "d_m", "rho", "P_obs", "best pair over the machine alone, %",
+               "gain if B = 0.25, %", "gain if B = 1, %", "gain if B = 3, %"], rows)])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
-            ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e7_views.json", e7), ("chart_from_e7.json", chart_e7),
+            ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
+            ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
             ("e9_shape.json", e9))

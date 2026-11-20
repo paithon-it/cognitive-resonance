@@ -926,6 +926,26 @@ toccano criteri né esiti delle prove registrate.
   0,5, 1, 2 e 4: l'anticipo del confronto registrato viene dal controllo, che da solo è
   una macchina un po' migliore di `M_0`.
 
+**Letture aggiunte dopo una terza revisione.** Del 20 novembre 2026. Non sono prove: non
+hanno criteri, e non toccano criteri né esiti delle prove registrate.
+
+- **Quanti giudizi servono** (`analysis/judgments.py`, `results/e8_judgments.json`). Sui
+  file di E8, la pendenza dell'indizio del giudice sulla cornice si stima da `n` giudizi
+  con la risposta nota; il pregiudizio che resta vale `1 / n` in unità del rumore pulito.
+- **Quando la traccia dice qualcosa di vero** (`analysis/informative.py`,
+  `results/e8_informative.json`). Il teorema del § 14 si estende a una traccia informativa
+  a cui il giudice dà un peso `beta` diverso da quello che merita, `beta_0`: il guadagno è
+  `B / (1 - r^2 + B) · P · (1 - beta_0 / beta)^2` (`cognitive_resonance.chart`, verificato
+  contro l'inversione delle matrici). Nessuna corsa ha una cornice informativa alla prova:
+  la si ottiene ricampionando le presentazioni di E8, e il ramo nuovo è lineare.
+- **Il teorema sulle persone già misurate** (`analysis/private_people.py`,
+  `results/e4_private.json`). Sulle 74 coppie di persone e macchine di turing-meter, con
+  `d_H`, `d_m` e `rho` pubblicati: quanto crescerebbe la coppia migliore se una quota del
+  rumore della persona fosse un pregiudizio leggibile. Il pregiudizio delle persone non è
+  misurato.
+- **Due conti senza dati**: il tetto `(1 + w k) / |1 - w|` per ogni `k`, e le radici di due
+  sistemi che si adattano l'uno all'altro (`cognitive_resonance.model`).
+
 **Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e

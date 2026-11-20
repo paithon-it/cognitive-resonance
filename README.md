@@ -88,7 +88,7 @@ over five tasks and five seeds):
 | E8 | 7 of 7 | when the machine sees a quarter of the image the pair with the partner is worth 2.87 against 2.49 with the soloist, in 5 tasks of 5; the gain is 1.02 times the one the theorem predicts; the blind corrector beats the soloist in 25 units of 25 |
 | E9 | 3 of 5 | with a Gaussian frame the formula holds again on new seeds; with a two-valued frame it promises 3.69 where the pair gives 2.29, and the pair itself does not depend on the shape. **Not confirmed**: heavy tails move the ratio to 0.95, not below 0.9 (S2), and the uniform frame goes to 0.945, just below its band (S4) |
 
-Six readings of data already collected, none of them a test (the last two were added after the results of E6 and E7):
+Nine readings of data already collected, none of them a test (the last five were added after the results of E6 to E9):
 
 | | What | Result file |
 |---|---|---|
@@ -98,6 +98,9 @@ Six readings of data already collected, none of them a test (the last two were a
 | who a partner is worth it for | the design reading of E6 (protocol § 12 bis) on the one branch of E2 ter: it beats the soloist up to about twice the weight it is built for, and not for someone who gives the soloist a quarter of the weight due | `results/e6_design_from_e2ter.json` |
 | the push of the branch | on the files of E6: the branch cancels the judge's push with no systematic error, and against the same machine without the branch the break-even falls at 1.02, 2.05, 4.25 and 8.96 for the weights 0.5, 1, 2 and 4 (predicted 1, 2, 4, 8); the earlier break-even against the control soloist comes from the control | `results/e6_push.json` |
 | the theorem on the different views | the theorem of E8 on the files of E7: where the views share nothing it predicts 2.91 for the pair with the partner, measured 2.92, and the partner beats both the soloist and an ideal blind corrector in 25 units of 25 | `results/chart_from_e7.json` |
+| how many judgments | on the files of E8: a correction learned from 20 judgments with a known answer keeps about 94 per cent of the gain, from 100 about 99; the bias left is 1 / n | `results/e8_judgments.json` |
+| when the trace says something true | the theorem extended to an informative trace that the judge overweights: only the excess is a bias. On the files of E8, resampled, a branch trained on the error of the sum removes 68 per cent of the push where the excess is 68 per cent | `results/e8_informative.json` |
+| the theorem on people | on the 74 pairs of people and machines of turing-meter: if half of a person's noise were a readable bias, the best pair would grow by about 14 per cent (10 on ChatBench). The bias of the people is not measured | `results/e4_private.json` |
 
 Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RESULTS.md).
 
@@ -165,6 +168,9 @@ uv run python analysis/shape.py                # E9, results/e9_shape.json
 uv run python analysis/design.py               # E6, design reading (after trust.py), results/e6_design.json
 uv run python analysis/push.py                 # E6, the push of the branch (after trust.py), results/e6_push.json
 uv run python analysis/chart.py --views        # the theorem on the files of E7, results/chart_from_e7.json
+uv run python analysis/judgments.py            # how many judgments a correction needs, results/e8_judgments.json
+uv run python analysis/informative.py          # when the trace says something true, results/e8_informative.json
+uv run python analysis/private_people.py --turing-meter PATH_TO_TURING_METER_CLONE   # results/e4_private.json
 ```
 
 E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its
