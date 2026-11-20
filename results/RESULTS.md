@@ -714,7 +714,7 @@ Protocol § 18 (v2.3), registered before the run, on the files of E10 with the m
 
 **Added after the results.** The registered prediction was too pessimistic: a factor was missing. The probit slope is in units of the clean noise, and bringing it to the units of the judge's whole cue with the same estimate shrinks its error; the bias left is kappa / (n (1 + B)^2). That gives a factor of 1.80 (median), where the measured one is 1.57 at a target of 0.90 and 1.09 at 0.8, 1.77 at 0.95, 1.78 at 0.975. The criteria above use the registered prediction and are untouched.
 
-## The turing of the pair in three factors (a reading added after the results)
+## The turing of the pair: one factor and two addends (a reading added after the results)
 
 `analysis/factors.py`: added on 20 November 2026, not a test. The theorem of the three machines divided by what the judge is worth alone: with the partner Tu^2 = (1 + B)(q^2 + p), with q = d_m / d_h and p = (1 - r q)^2 / (1 - r^2) (`cognitive_resonance.chart.pair_factors`). 1 + B is what cancelling the readable bias is worth, q^2 what the machine knows of the task, p what the judge knows and the machine does not; with the soloist p shrinks by (1 - r^2) / (1 - r^2 + B), with the blind machine Tu^2 = 1 + B. Each cell gives the turing from the equation and the measured one (tuned pair over the judge alone); medians over the units. On the bench of the curve the second network carries the opposite push itself and is read as a partner. Last column: the share of ln Tu^2 that comes from 1 + B.
 
@@ -752,3 +752,36 @@ The same two sides on the pairs of people and language models already measured (
 | haiid-images | 16 | 2.62 | 78 | 2.79 | 1.02 | 0.30 | 11 | 1 | 68-103 |
 | haiid-text | 18 | 1.36 | 65 | 1.42 | 1.05 | 0.10 | 10 | 1 | 32-82 |
 | all | 74 | 1.36 | 72 | 1.46 | 1.09 | 0.15 | 25 | 17 | 32-103 |
+
+## E13. The readable bias, measured on people (protocol § 19)
+
+`analysis/people_bias.py`, on the Confidence Database (Rahnev and colleagues, 2020; CC0, not copied here: `analysis/download_confidence_db.py`). For every person the graded judgment is the response with its confidence, the trace is the history of their previous trials, and the corrector sees no stimulus. The plan was in the repository before a data file was opened; the code was written on simulated people and on the exploration files (35 files, chosen by the SHA-1 of the name), recorded, and then run once on the 145 confirmation files. Medians over people, 95 per cent interval resampling the files.
+
+| files | people | files included | trials per person | B | B, trials shuffled | gain of the personal corrector | the same, sensitivity from the moments | gain of the corrector of everyone | gain, trials shuffled |
+|---|---|---|---|---|---|---|---|---|---|
+| confirmation | 1968 | 44 | 623 | 0.0148 (0.0112 to 0.0183) | -0.0007 (-0.0010 to -0.0005) | 1.011 (1.006 to 1.016) | 1.000 (0.999 to 1.002) | 1.013 (1.007 to 1.018) | 0.999 (0.998 to 0.999) |
+| exploration | 464 | 12 | 999 | 0.0110 (0.0079 to 0.0193) | -0.0002 (-0.0009 to -0.0001) | 0.998 (0.995 to 1.010) | 0.997 (0.995 to 1.000) | 1.001 (0.995 to 1.016) | 1.000 (0.999 to 1.001) |
+
+- **P1, it is there** **passes**: median B 0.0148 (0.0112 to 0.0183); with the trials shuffled -0.0007 (-0.0010 to -0.0005), below 0.002 in absolute value. The median is above zero in 42 files of 44.
+
+- **P2, it is small** **passes**: median gain of the personal corrector 1.011 (1.006 to 1.016), below 1.02; tenth and ninetieth percentile 0.963 and 1.084. B is above 0.05 in 19 per cent of the people and above 0.2 in 2.3 per cent.
+
+- **P3, it follows the formula** **does not pass**: measured gain squared minus (1 + B_1) / (1 + 3 / n_1), median 0.0146 (0.0070 to 0.0196), outside the band of 0.01; rank correlation 0.19 (0.13 to 0.30). The corrector gives a little more than the formula. The gain with the sensitivity from the moments, which does not see the order of the trials inside one step of the confidence scale, is 1.0003 (0.9991 to 1.0022): what the corrector gives on these scales comes from reordering trials that fell on the same step, as on simulated people with a scale of four steps (an explanation added after the result).
+
+- **P4, tailored or for everyone** (no threshold): the personal corrector gives more than the corrector of everyone in 47 per cent of the people; median difference -0.0014 (-0.0029 to -0.0000). At the median B the angle between the error of the person and that of the corrector is 97 degrees. The gain was not computed for 39 people (sensitivity below 0.2 in the second half).
+
+## What a shortcut costs twice (a reading added after the results)
+
+`analysis/shortcut.py`, on the files of E1: added on 20 November 2026, not a test. In training the frame says something about the class (strength mu); at test it says nothing, and is a readable bias. For every network: the sensitivity as it is, the sensitivity with the frame removed (slope of the cue on the frame, at equal class), and both over the sensitivity of the network of the same task, seed and role trained without the shortcut. Removing the bias gives back what the bias was covering; it does not give back what the network did not learn from the image while it leaned on the frame. Medians over five tasks, two seeds and three networks.
+
+| mu in training | networks | B at test | sensitivity as it is | with the frame removed | kept, as it is | kept, with the frame removed | share of the loss given back |
+|---|---|---|---|---|---|---|---|
+| 0.00 | 30 | 0.00 | 3.38 | 3.38 | 1.000 | 1.000 | n/a |
+| 0.25 | 30 | 0.01 | 3.37 | 3.38 | 0.988 | 0.996 | n/a |
+| 0.50 | 30 | 0.06 | 3.27 | 3.34 | 0.951 | 0.984 | 0.67 |
+| 0.75 | 30 | 0.20 | 3.04 | 3.31 | 0.868 | 0.968 | 0.75 |
+| 1.00 | 30 | 0.55 | 2.56 | 3.22 | 0.728 | 0.935 | 0.76 |
+| 1.50 | 30 | 3.11 | 1.34 | 2.80 | 0.386 | 0.802 | 0.68 |
+| 2.00 | 30 | 8.14 | 0.59 | 1.81 | 0.175 | 0.532 | 0.43 |
+
+What is kept with the frame removed falls with mu in 5 tasks of 5 (rank correlation of -0.9 or below).

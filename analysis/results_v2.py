@@ -475,7 +475,7 @@ def pair_factors(d):
                      f"{f(s['angle_partner'], 0)} / {f(s['measured_angle_partner'], 0)}",
                      g("share_of_log_turing_from_resonance")])
     return "\n\n".join([
-        "## The turing of the pair in three factors (a reading added after the results)",
+        "## The turing of the pair: one factor and two addends (a reading added after the results)",
         "`analysis/factors.py`: added on 20 November 2026, not a test. The theorem of the three machines divided by "
         "what the judge is worth alone: with the partner Tu^2 = (1 + B)(q^2 + p), with q = d_m / d_h and "
         "p = (1 - r q)^2 / (1 - r^2) (`cognitive_resonance.chart.pair_factors`). 1 + B is what cancelling the readable "
@@ -519,9 +519,70 @@ def pair_factors(d):
                     f"{f(s['angle_min'], 0)}-{f(s['angle_max'], 0)}"] for s in d["people"]["by_source"]])]))
 
 
+def e13(d):
+    ci = lambda v, nd=3: f"{f(v['median'], nd)} ({f(v['lo'], nd)} to {f(v['hi'], nd)})"                # noqa: E731
+    c, k = d["confirmation"], d["criteria"]
+    verdict = lambda ok: "**passes**" if ok else "**does not pass**"                                  # noqa: E731
+    rows = [[name, s["people"], s["files"], f(s["trials_median"], 0), ci(s["b"], 4), ci(s["b_shuffled"], 4),
+             ci(s["gain_personal"]), ci(s["gain_moments"]), ci(s["gain_everyone"]), ci(s["gain_shuffled"])]
+            for name, s in (("confirmation", c), ("exploration", d["exploration"])) if s.get("people")]
+    fm = c["formula"]
+    return "\n\n".join([
+        "## E13. The readable bias, measured on people (protocol § 19)",
+        "`analysis/people_bias.py`, on the Confidence Database (Rahnev and colleagues, 2020; CC0, not copied here: "
+        "`analysis/download_confidence_db.py`). For every person the graded judgment is the response with its "
+        "confidence, the trace is the history of their previous trials, and the corrector sees no stimulus. The plan "
+        "was in the repository before a data file was opened; the code was written on simulated people and on the "
+        f"exploration files ({d['files_by_split']['exploration']['read']} files, chosen by the SHA-1 of the name), "
+        f"recorded, and then run once on the {d['files_by_split']['confirmation']['read']} confirmation files. "
+        "Medians over people, 95 per cent interval resampling the files.",
+        table(["files", "people", "files included", "trials per person", "B", "B, trials shuffled",
+               "gain of the personal corrector", "the same, sensitivity from the moments", "gain of the corrector of everyone",
+               "gain, trials shuffled"], rows),
+        f"- **P1, it is there** {verdict(k['P1_there'])}: median B {ci(c['b'], 4)}; with the trials shuffled "
+        f"{ci(c['b_shuffled'], 4)}, below 0.002 in absolute value. The median is above zero in "
+        f"{c['files_b_above_zero']} files of {c['files']}.",
+        f"- **P2, it is small** {verdict(k['P2_small'])}: median gain of the personal corrector {ci(c['gain_personal'])}, "
+        f"below 1.02; tenth and ninetieth percentile {f(c['gain_personal']['p10'])} and {f(c['gain_personal']['p90'])}. "
+        f"B is above 0.05 in {f(100 * c['share_b_above_0_05'], 0)} per cent of the people and above 0.2 in "
+        f"{f(100 * c['share_b_above_0_2'], 1)} per cent.",
+        f"- **P3, it follows the formula** {verdict(k['P3_formula'])}: measured gain squared minus "
+        f"(1 + B_1) / (1 + 3 / n_1), median {ci(fm['gap'], 4)}, outside the band of 0.01; rank correlation "
+        f"{f(fm['spearman'], 2)} ({f(fm['spearman_lo'], 2)} to {f(fm['spearman_hi'], 2)}). The corrector gives a little "
+        "more than the formula. The gain with the sensitivity from the moments, which does not see the order of the "
+        f"trials inside one step of the confidence scale, is {ci(c['gain_moments'], 4)}: what the corrector gives on "
+        "these scales comes from reordering trials that fell on the same step, as on simulated people with a scale of "
+        "four steps (an explanation added after the result).",
+        f"- **P4, tailored or for everyone** (no threshold): the personal corrector gives more than the corrector of "
+        f"everyone in {f(100 * c['share_personal_above_everyone'], 0)} per cent of the people; median difference "
+        f"{ci(c['personal_minus_everyone'], 4)}. At the median B the angle between the error of the person and that of "
+        f"the corrector is {f(c['corrector_angle_at_median_b'], 0)} degrees. The gain was not computed for "
+        f"{c['gain_not_computed']} people (sensitivity below 0.2 in the second half).",
+    ])
+
+
+def shortcut(d):
+    rows = [[f(r["mu"], 2), r["networks"], f(r["b"], 2), f(r["d_as_it_is"], 2), f(r["d_frame_removed"], 2),
+             f(r["kept_as_it_is"], 3), f(r["kept_frame_removed"], 3), f(r["given_back"], 2)] for r in d["by_mu"]]
+    return "\n\n".join([
+        "## What a shortcut costs twice (a reading added after the results)",
+        "`analysis/shortcut.py`, on the files of E1: added on 20 November 2026, not a test. In training the frame says "
+        "something about the class (strength mu); at test it says nothing, and is a readable bias. For every network: "
+        "the sensitivity as it is, the sensitivity with the frame removed (slope of the cue on the frame, at equal "
+        "class), and both over the sensitivity of the network of the same task, seed and role trained without the "
+        "shortcut. Removing the bias gives back what the bias was covering; it does not give back what the network did "
+        "not learn from the image while it leaned on the frame. Medians over five tasks, two seeds and three networks.",
+        table(["mu in training", "networks", "B at test", "sensitivity as it is", "with the frame removed",
+               "kept, as it is", "kept, with the frame removed", "share of the loss given back"], rows),
+        f"What is kept with the frame removed falls with mu in {d['tasks_where_what_is_learned_falls_with_the_shortcut']} "
+        f"tasks of {d['tasks']} (rank correlation of -0.9 or below).",
+    ])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
             ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
-            ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors))
+            ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors), ("e13_people_bias.json", e13),
+            ("shortcut.json", shortcut))

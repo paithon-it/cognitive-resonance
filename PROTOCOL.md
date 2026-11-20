@@ -1320,6 +1320,29 @@ never opened.
 - **What was seen on the exploration files**, for the record: median `B` 0.011, median gain
   of the personal corrector 0.998. Expectations and thresholds of P1-P4 do not change.
 
+**Readings added after two independent reviews.** From 20 and 21 November 2026. They are not
+tests, and have no criteria.
+
+- **A shortcut costs twice** (`analysis/shortcut.py`, `results/shortcut.json`), on the files
+  of E1. In training the frame says something about the class, at test it does not: there
+  it is a readable bias. For every network we measure the sensitivity as it is, the one with
+  the frame removed, and the sensitivity of the network of the same task, seed and role
+  trained without the shortcut. Removing the frame gives back what the bias covered, not
+  what the network did not learn from the image while it leaned on the frame.
+- **E13, file by file** (`analysis/people_bias.py`): after the confirmation run the medians
+  of `B` and of the gain by file were added, with the count of the files in which they are
+  above zero and above one. In the output people are numbered in the order of the file,
+  without their identifier. Medians and criteria of the confirmation run do not change.
+- **Three calculations of the model** (`cognitive_resonance.chart`): the proposition written
+  in `d'^2`, where the parts add up (`pair_information`); two opposite errors as one hidden
+  common cause entering with opposite signs (`opposite_errors_as_a_common_cause`); how much
+  of a bias stays if no correction larger than a ceiling reaches the person
+  (`left_under_a_ceiling`), and how much if the correction is shown apart and the person
+  applies a share of it (`left_by_an_open_warning`).
+- **P3 of E13 does not pass**, and the explanation came first on simulated people and then
+  on the data: with a confidence scale of a few steps the corrector gives a little more than
+  the formula. It stands as an explanation, not as a criterion.
+
 Version 2.4, of the same day, comes from two independent reviews of the article and before
 opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
 people, on the public data of the Confidence Database. It does not touch criteria or

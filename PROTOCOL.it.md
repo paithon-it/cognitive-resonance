@@ -1313,6 +1313,29 @@ esiti delle prove registrate.
 - **Che cosa si è visto sull'esplorazione**, perché si sappia: `B` mediano 0,011, guadagno
   mediano del correttore personale 0,998. Attese e soglie di P1-P4 non cambiano.
 
+**Letture aggiunte dopo due revisioni indipendenti.** Del 20 e 21 novembre 2026. Non sono
+prove, e non hanno criteri.
+
+- **La scorciatoia costa due volte** (`analysis/shortcut.py`, `results/shortcut.json`), sui
+  file di E1. In addestramento la cornice dice qualcosa della classe, alla prova no: lì è un
+  pregiudizio che si legge. Per ogni rete si misurano la sensibilità com'è, quella con la
+  cornice tolta, e la sensibilità della rete dello stesso compito, seme e ruolo addestrata
+  senza scorciatoia. Togliere la cornice rende ciò che il pregiudizio copriva, non ciò che
+  la rete non ha imparato dall'immagine mentre si appoggiava alla cornice.
+- **E13, file per file** (`analysis/people_bias.py`): dopo la corsa di conferma si sono
+  aggiunte le mediane di `B` e del guadagno per file, con il conto dei file in cui stanno
+  sopra zero e sopra uno. Nell'uscita le persone sono numerate nell'ordine del file, senza
+  il loro identificativo. Le mediane e i criteri della corsa di conferma non cambiano.
+- **Tre conti del modello** (`cognitive_resonance.chart`): la proposizione scritta in `d'^2`,
+  dove le parti si sommano (`pair_information`); due errori opposti come una causa comune
+  nascosta che entra con segni contrari (`opposite_errors_as_a_common_cause`); quanta parte
+  di un pregiudizio resta se nessuna correzione più grande di un tetto arriva a chi decide
+  (`left_under_a_ceiling`), e quanta se la correzione è mostrata a parte e chi decide ne
+  applica una quota (`left_by_an_open_warning`).
+- **P3 di E13 non passa**, e la spiegazione è venuta prima sul simulato e poi sui dati: con
+  una scala di sicurezza a pochi gradini il correttore rende un po' più della formula. Vale
+  come spiegazione, non come criterio.
+
 La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca

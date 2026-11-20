@@ -819,3 +819,49 @@ def test_a_file_of_e13_is_read_with_text_labels_a_byte_order_mark_and_any_case(t
     assert set(np.unique(people["s0"]["stimulus"])) == {0, 1}
     path.write_text("Subj_idx,Stimulus,Response,Confidence\n1,1,1,2\n1,2,3,1\n1,3,1,3\n", encoding="utf-8")
     assert mod.read_file(path) == (None, "not a two-answer task")
+
+
+def test_in_information_the_parts_of_the_pair_add_up_and_the_bias_only_covers():
+    from cognitive_resonance import chart
+    d_h, d_m, r, b = 2.0, 1.5, 0.4, 0.7
+    info, old = chart.pair_information(d_h, d_m, r, b), chart.pair_factors(d_h, d_m, r, b)
+    alone = info["person_alone"]
+    assert info["person_with_tailored"] / alone == pytest.approx(old["tu_partner"] ** 2)
+    assert info["person_with_generic"] / alone == pytest.approx(old["tu_soloist"] ** 2)
+    assert info["person_with_corrector"] / alone == pytest.approx(old["tu_blind"] ** 2)
+    assert info["person_with_tailored"] - info["person_with_generic"] == pytest.approx(info["covered_by_the_bias"])
+    assert info["covered_by_the_bias"] == pytest.approx(b / (1 - r * r + b) * info["private"])
+    assert chart.pair_information(d_h, d_m, r, 0.0)["covered_by_the_bias"] == 0.0
+
+
+def test_opposite_errors_are_a_hidden_common_cause_with_opposite_signs():
+    from cognitive_resonance import chart
+    rng = np.random.default_rng(0)
+    c_h, c_m, s = chart.opposite_errors_as_a_common_cause(-0.6)
+    z, n_h, n_m = rng.standard_normal((3, 400_000))
+    e_h, e_m = c_h * z + s * n_h, c_m * z + s * n_m
+    assert e_h.var() == pytest.approx(1.0, abs=0.01) and e_m.var() == pytest.approx(1.0, abs=0.01)
+    assert np.corrcoef(e_h, e_m)[0, 1] == pytest.approx(-0.6, abs=0.01)
+    # what is left of e_h once Z is known does not go with anything the machine computes from Z and its own noise
+    assert abs(np.corrcoef(e_h - c_h * z, e_m)[0, 1]) < 0.01
+
+
+def test_a_correction_with_a_ceiling_leaves_the_large_pushes():
+    from cognitive_resonance import chart
+    rng = np.random.default_rng(1)
+    a = rng.standard_normal(1_000_000)
+    for s in (0.0, 0.5, 1.0, 2.0):
+        left = np.clip(np.abs(a) - s, 0.0, None)
+        assert chart.left_under_a_ceiling(s) == pytest.approx(float((left ** 2).mean()), abs=0.005)
+    assert chart.left_under_a_ceiling(0.0) == pytest.approx(1.0)
+    assert chart.left_by_an_open_warning(0.5) == 0.25
+
+
+def test_the_shortcut_reading_says_that_what_is_learned_falls_with_the_shortcut():
+    path = ANALYSIS.parent / "results" / "shortcut.json"
+    if not path.exists():
+        pytest.skip("results/shortcut.json not there")
+    d = json.loads(path.read_text())
+    kept = [r["kept_frame_removed"] for r in d["by_mu"]]
+    assert kept[0] == pytest.approx(1.0) and all(x >= y - 0.01 for x, y in zip(kept, kept[1:]))
+    assert all(r["kept_frame_removed"] >= r["kept_as_it_is"] - 1e-9 for r in d["by_mu"])

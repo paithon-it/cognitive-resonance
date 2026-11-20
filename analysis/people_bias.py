@@ -107,7 +107,7 @@ def measure_file(name: str, people: dict) -> list[dict]:
         seed = int(hashlib.sha1(f"{name}|{k}".encode()).hexdigest()[:12], 16)
         order = np.random.default_rng(seed).permutation(p["stimulus"].size)
         s = readable.person(p["stimulus"][order], p["response"][order], p["confidence"][order])
-        out.append({"file": name, "person": k, "n": m["n"], "n_first": m["n_first"],
+        out.append({"file": name, "person": len(out) + 1, "n": m["n"], "n_first": m["n_first"],
                     "accuracy": float((p["stimulus"] == p["response"]).mean()),
                     "b": m["b"], "b_first": m["b_first"], "gain_personal": m["gain_personal"],
                     "gain_moments": m["gain_moments"],
@@ -191,6 +191,18 @@ def summary(records: list[dict], seed: int) -> dict:
     for r in both:
         del r["_edge"]
     out["corrector_angle_at_median_b"] = readable.corrector_angle(out["b"]["median"])
+    # added after the confirmation run, descriptive: the same medians file by file (the file is the unit resampled)
+    by_file = []
+    for name in sorted({r["file"] for r in records}):
+        rs = [r for r in records if r["file"] == name]
+        gains = [r["gain_personal"] for r in rs if r["gain_personal"] is not None]
+        by_file.append({"file": name, "people": len(rs), "b": float(np.median([r["b"] for r in rs])),
+                        "gain_personal": float(np.median(gains)) if gains else None})
+    out["by_file"] = by_file
+    out["files_b_above_zero"] = sum(f["b"] > 0 for f in by_file)
+    out["files_gain_above_1"] = sum(f["gain_personal"] is not None and f["gain_personal"] > 1 for f in by_file)
+    out["b_median_of_files"] = float(np.median([f["b"] for f in by_file]))
+    out["gain_median_of_files"] = float(np.median([f["gain_personal"] for f in by_file if f["gain_personal"] is not None]))
     return out
 
 

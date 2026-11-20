@@ -191,3 +191,52 @@ def gain_if_bias(d_big_h: float, d_m: float, rho: float, b: float) -> float | No
     bias a machine can read: P_obs * B / (1 - rho^2 (1 + B)). None when rho^2 (1 + B) >= 1 (no such judge)."""
     den = 1 - rho ** 2 * (1 + b)
     return private_observed(d_big_h, d_m, rho) * b / den if den > 0 else None
+
+
+def _phi(x: float) -> float:
+    return math.exp(-0.5 * x * x) / math.sqrt(2.0 * math.pi)
+
+
+def _Phi(x: float) -> float:
+    return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
+
+
+def pair_information(d_h: float, d_m: float, r: float, b: float) -> dict:
+    """The four pairs of the proposition in d'^2, where the parts add up.
+
+    The person alone is worth d_h^2 / (1 + B); with a corrector that reads only the bias, d_h^2; with a machine that
+    knows the task, d_m^2 plus the private part P shrunk by (1 - r^2) / (1 - r^2 + B); with a machine that also reads
+    the bias, d_m^2 + P. The bias never adds anything: it only covers a share of P.
+    """
+    private = (d_h - r * d_m) ** 2 / (1.0 - r * r)
+    reaching = private * (1.0 - r * r) / (1.0 - r * r + b)
+    return {"person_alone": d_h ** 2 / (1.0 + b), "person_with_corrector": d_h ** 2, "machine_alone": d_m ** 2,
+            "private": private, "private_reaching_the_pair": reaching, "covered_by_the_bias": private - reaching,
+            "person_with_generic": d_m ** 2 + reaching, "person_with_tailored": d_m ** 2 + private}
+
+
+def opposite_errors_as_a_common_cause(r: float) -> tuple[float, float, float]:
+    """Two unit errors with correlation r < 0 as one hidden cause Z entering with opposite signs.
+
+    e_h = c Z + s n_h and e_m = -c Z + s n_m, with c = sqrt(|r|) and s = sqrt(1 - |r|): returns (c, -c, s). Errors in
+    antiphase are a shared disturbance that nobody has labelled, the corrector's case with the trace unknown.
+    """
+    if not -1.0 < r < 0.0:
+        raise ValueError("r must be negative")
+    c = math.sqrt(-r)
+    return c, -c, math.sqrt(1.0 + r)
+
+
+def left_under_a_ceiling(ceiling: float) -> float:
+    """Share of a Gaussian bias that stays when no correction larger than `ceiling` gets through.
+
+    The push is beta a with a ~ N(0, 1); `ceiling` is in units of beta. What stays is (|a| - ceiling)+, and its mean
+    square is 2 [(1 + s^2)(1 - Phi(s)) - s phi(s)].
+    """
+    s = max(0.0, ceiling)
+    return 2.0 * ((1.0 + s * s) * (1.0 - _Phi(s)) - s * _phi(s))
+
+
+def left_by_an_open_warning(weight: float) -> float:
+    """Share of the bias that stays when the correction is shown apart and the person applies a share of it."""
+    return (1.0 - weight) ** 2
