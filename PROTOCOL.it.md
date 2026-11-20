@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 2.3, 20 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 2.4, 20 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -941,6 +941,106 @@ Se Y2 passa, «poche decine di giudizi» nell'articolo diventa «fra cinquanta e
 risponde sì o no. Se non passa perché ne servono più di nove volte tanti, o perché Y4 non passa, la
 stima da risposte secche con questo modello non basta, e l'articolo lo dice.
 
+## 19. E13. Il pregiudizio che si legge, su persone
+
+Aggiunto con la versione 2.4, il 20 novembre 2026, dopo due revisioni indipendenti
+dell'articolo. È la prima prova su persone misurate una per una. Non chiede addestramenti.
+
+**Perché.** Sul banco il pregiudizio l'abbiamo piantato noi, e vale circa 0,7 del rumore
+pulito del giudice. Sulle persone abbiamo solo un conto, fatto sui giudici d'asilo di Chen,
+Moskowitz e Shue: fra 0,002 e 0,01. Nessuno dei due numeri è una misura di quanto, in una
+persona, il rumore del giudizio si legga da una traccia, né di quanto renda toglierlo. I
+dati per misurarlo sono pubblici: la raccolta di Rahnev e colleghi (2020, Confidence
+Database, `osf.io/s46pr`, licenza CC0) ha, prova per prova, lo stimolo, la risposta e la
+sicurezza dichiarata da migliaia di persone in compiti di scelta fra due risposte.
+
+**Che cosa si misura.** Per ogni persona il giudizio graduato è la risposta con la sua
+sicurezza. La traccia è la storia delle sue prove precedenti, che non dice niente dello
+stimolo che sta per arrivare. Il correttore è la macchina bendata del § 14: non vede lo
+stimolo, conosce solo la persona. `B` è la varianza della parte del giudizio che la traccia
+prevede, a parità di classe, divisa per la varianza del resto.
+
+**Dati e inclusione**, fissati prima di aprire un file di dati (alla scrittura di questo
+paragrafo è stato letto solo l'elenco delle cartelle del progetto su OSF).
+
+- I file: tutti i `data_*.csv` della cartella «Confidence Database».
+- Colonne richieste: `Subj_idx`, `Stimulus`, `Response`, `Confidence`. Le righe con un valore
+  mancante o non numerico in una delle quattro si tolgono per prime; la storia si calcola
+  sulle righe rimaste.
+- Compito a due risposte: dopo la pulizia `Stimulus` e `Response` hanno gli stessi due
+  valori distinti. Gli altri file restano fuori.
+- Sicurezza con almeno tre valori distinti nel file, e orientata: sull'intero file la
+  sicurezza media delle risposte giuste supera quella delle sbagliate. Altrimenti il file
+  resta fuori.
+- Ordine: le righe di una persona, nell'ordine del file, sono le sue prove nell'ordine in
+  cui le ha fatte. È un'ipotesi: se in un file non fosse vero, lì il pregiudizio misurato
+  sarebbe più piccolo del vero.
+- Persona inclusa: almeno 400 prove valide, fra il 55 e il 95 per cento di risposte giuste,
+  ogni classe in almeno il 20 per cento delle prove, almeno tre valori distinti di sicurezza.
+- File incluso: almeno 10 persone incluse. L'unità che si ricampiona è il file.
+
+**Il giudizio graduato.** Per ogni persona le prove si ordinano dalla risposta più sicura
+per la prima classe alla più sicura per la seconda (chiave: segno della risposta per uno più
+il rango della sicurezza), e a ogni prova si dà il punteggio normale del suo rango medio,
+`Phi^-1((rango - 0,5) / n)`, su tutte le prove della persona.
+
+**La traccia**, tre numeri noti prima che lo stimolo compaia: il segno della risposta
+precedente, il giudizio graduato precedente, la media dei giudizi graduati delle venti prove
+precedenti (di quelle che ci sono, se sono meno). La prima prova di ogni persona resta fuori.
+
+**Gli stimatori.**
+
+- `B` di una persona: la regressione ai minimi quadrati del giudizio sulla classe (due
+  medie) e sulle tre tracce, su tutte le sue prove; `R^2` parziale delle tracce, corretto
+  per i gradi di libertà (`1 - (1 - R^2)(n - 2)/(n - 5)`), e `B = R^2 / (1 - R^2)`. Può
+  venire negativo.
+- Il correttore personale: le pendenze stimate sulla prima metà delle prove della persona
+  si tolgono dal giudizio nella seconda metà. Il guadagno `G` è la sensibilità del giudizio
+  corretto divisa per quella del giudizio com'è, tutte e due sulla seconda metà, ricavate
+  dall'area sotto la curva ROC (`d' = sqrt(2) Phi^-1(AUC)`).
+- Il correttore di tutti: le stesse pendenze stimate sulle prime metà delle altre persone
+  dello stesso file (giudizi e tracce centrati entro persona e classe), applicate alla
+  seconda metà della persona.
+- Il controllo: le prove di ogni persona rimescolate una volta (seme ricavato dal nome del
+  file e dalla persona), e tutto rifatto. Lì la storia non dice niente.
+- Riassunto: la mediana sulle persone, con l'intervallo al 95 per cento da 2.000
+  ricampionamenti dei file.
+
+**Esplorazione e conferma.** I file si dividono con una regola scritta prima: la prima
+cifra esadecimale dello SHA-1 del nome del file (in minuscolo) è 0, 1 o 2 per i file di
+esplorazione, un'altra per quelli di conferma. Il codice si scrive e si prova su dati
+simulati e sui soli file di esplorazione, poi si registra nel repository, e solo dopo gira
+una volta sui file di conferma. I criteri si leggono sui file di conferma; quelli di
+esplorazione si riportano a parte. Ogni modifica al codice dopo la prima corsa di conferma
+va nelle «Deviazioni».
+
+**Le attese.**
+
+- **P1, c'è (primaria).** La mediana di `B` sulle persone è maggiore di zero, con un
+  intervallo che esclude lo zero. Nel controllo rimescolato l'intervallo della mediana
+  contiene lo zero, oppure la mediana è sotto 0,002 in valore assoluto.
+- **P2, è piccolo (primaria).** La mediana del guadagno del correttore personale è sotto
+  1,02. L'articolo sostiene che cancellare a una persona il pregiudizio che si legge rende
+  poco: se la mediana è 1,02 o più, rende più di quanto abbiamo scritto, e l'articolo lo dice.
+- **P3, segue la formula.** Per ogni persona il guadagno previsto è
+  `G^2 = (1 + B_1) / (1 + 3/n_1)`, con `B_1` stimato come sopra sulla sola prima metà e
+  `n_1` le prove della prima metà: è la (4) con il pregiudizio che resta dopo `n` giudizi,
+  `p/n` con tre tracce. Sulle persone di conferma la mediana di `G^2` misurato meno `G^2`
+  previsto sta fra -0,01 e 0,01, e la correlazione per ranghi fra i due è positiva, con un
+  intervallo che esclude lo zero.
+- **P4, su misura o per tutti (senza soglia).** In quante persone il correttore personale
+  rende più di quello di tutti, e di quanto in mediana.
+- Si riportano senza soglia: la quota di persone con `B` sopra 0,05 e sopra 0,2; il decimo e
+  il novantesimo percentile di `B` e di `G`; l'angolo fra l'errore della persona e quello
+  del correttore, `arccos(-sqrt(B/(1 + B)))`, alla mediana di `B`.
+
+**Che cosa non dice.** La traccia è una sola famiglia, la storia delle prove, scelta prima
+dalla letteratura (Fründ, Wichmann e Macke, 2014): pregiudizi che si leggono da altro non
+entrano. La sicurezza dichiarata è una scala a pochi gradini, non un indizio continuo. I
+compiti sono percettivi o di memoria, di laboratorio. E il piano lo ha scritto chi esegue,
+lo stesso giorno: la divisione fra esplorazione e conferma impedisce di scegliere stimatori
+e soglie guardando i file di conferma, non sostituisce una replica fatta da altri.
+
 ## Deviazioni
 
 Tutte del 10 novembre 2026. Le prime vengono dalle corse; le altre sono scelte
@@ -1191,3 +1291,8 @@ e nella stessa corsa, con semi mai usati. Le tre letture fatte dopo i risultati 
 informativa, quanti giudizi, ramo nuovo contro vecchio) diventano tre prove con le attese
 scritte prima; le soglie vengono dai dati vecchi, e lo dichiarano. Non tocca criteri né
 esiti delle prove registrate.
+
+La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
+prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
+pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca
+criteri né esiti delle prove registrate.
