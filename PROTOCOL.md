@@ -907,6 +907,25 @@ users. No reduction: five seeds and five tasks in all four experiments.
   left a margin, the choice is written next to the criterion in the results files
   (`rule`).
 
+**Readings added after the results of E6 to E9.** From 20 November 2026, after a review of
+the article. They are not tests: they come from results already seen, have no criteria,
+and touch neither the criteria nor the outcomes of the registered tests.
+
+- **The theorem of § 14 on the files of E7** (`analysis/chart.py --views`,
+  `results/chart_from_e7.json`). The same calculation as E8 on a bench it was not
+  registered for, where the machine too sees things the judge does not. No blind machine
+  was trained in E7: the blind corrector is the best linear use of the judge's cue and
+  the frame, fitted on half of the images and read on the other half.
+- **The push of the branch on the files of E6** (`analysis/push.py`,
+  `results/e6_push.json`). The reading of § 12 bis finds the break-even against `M_0+`
+  earlier than twice the built weight. On the raw log-odds we measure the slope `b` of the
+  judge's cue on the frame and the slope `c` of the branch, and the break-even of each
+  partner against `M_0` too, the same machine without the branch. In the median the
+  branch leaves less than 0.5 per cent of the push, and against `M_0` the break-even
+  falls at 1.02, 2.05, 4.25 and 8.96 for the weights 0.5, 1, 2 and 4: the earlier
+  break-even of the registered comparison comes from the control, which alone is a
+  slightly better machine than `M_0`.
+
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and

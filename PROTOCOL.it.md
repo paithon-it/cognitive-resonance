@@ -907,6 +907,25 @@ altri utenti. Nessuna riduzione: cinque semi e cinque compiti in tutte e quattro
   lasciava un margine, la scelta è scritta accanto al criterio nei file dei risultati
   (`rule`).
 
+**Letture aggiunte dopo i risultati di E6-E9.** Del 20 novembre 2026, dopo una revisione
+dell'articolo. Non sono prove: nascono da risultati già visti, non hanno criteri, e non
+toccano criteri né esiti delle prove registrate.
+
+- **Il teorema del § 14 sui file di E7** (`analysis/chart.py --views`,
+  `results/chart_from_e7.json`). Lo stesso conto di E8 su un banco per cui non era stato
+  registrato, dove anche la macchina vede cose che il giudice non vede. In E7 non è stata
+  addestrata una macchina bendata: il correttore cieco è il miglior uso lineare
+  dell'indizio del giudice e della cornice, stimato su metà delle immagini e letto
+  sull'altra.
+- **La spinta del ramo sui file di E6** (`analysis/push.py`, `results/e6_push.json`). La
+  lettura del § 12 bis trova il pareggio contro `M_0+` prima del doppio del peso di
+  costruzione. Si misurano, sui log-odds grezzi, la pendenza `b` dell'indizio del giudice
+  sulla cornice e la pendenza `c` del ramo, e il pareggio di ogni compagno anche contro
+  `M_0`, la stessa macchina senza il ramo. In mediana il ramo lascia meno dello 0,5 per
+  cento della spinta, e contro `M_0` il pareggio cade a 1,02, 2,05, 4,25 e 8,96 per i pesi
+  0,5, 1, 2 e 4: l'anticipo del confronto registrato viene dal controllo, che da solo è
+  una macchina un po' migliore di `M_0`.
+
 **Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e
