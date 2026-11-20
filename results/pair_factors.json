@@ -22,7 +22,10 @@
    "tu_blind": 1.0000679356803057,
    "angle_blind": 90.66186094767023,
    "angle_partner": 22.968362965204317,
+   "tu_without_bias": 1.018623447441497,
+   "yield_on_machine": 1.0223479711370134,
    "judge_adds_to_machine": 0.022347971137013367,
+   "exchange": 0.0016154310172786,
    "measured_judge_alone": 3.379621902504578,
    "measured_tu_partner": 1.0183787327530278,
    "measured_angle_partner": 22.93626005685271,
@@ -48,7 +51,10 @@
    "tu_blind": 1.0068777326016525,
    "angle_blind": 96.6987216655767,
    "angle_partner": 26.815003469091124,
+   "tu_without_bias": 1.0192561397571427,
+   "yield_on_machine": 1.0215578661354892,
    "judge_adds_to_machine": 0.021557866135489268,
+   "exchange": 0.0016577766960121716,
    "measured_judge_alone": 3.3426113974762743,
    "measured_tu_partner": 1.0300882708774668,
    "measured_angle_partner": 26.023409102282493,
@@ -74,7 +80,10 @@
    "tu_blind": 1.0301726329742422,
    "angle_blind": 103.89758537849991,
    "angle_partner": 35.966756631310105,
+   "tu_without_bias": 1.0184734339708348,
+   "yield_on_machine": 1.0232857690780848,
    "judge_adds_to_machine": 0.023285769078084773,
+   "exchange": 0.0015080600900499869,
    "measured_judge_alone": 3.2594084744607215,
    "measured_tu_partner": 1.053999378067208,
    "measured_angle_partner": 35.17947152505613,
@@ -100,7 +109,10 @@
    "tu_blind": 1.0982863304357493,
    "angle_blind": 114.42278399058284,
    "angle_partner": 53.83893336055064,
+   "tu_without_bias": 1.0223041410095712,
+   "yield_on_machine": 1.0206188315521976,
    "judge_adds_to_machine": 0.02061883155219768,
+   "exchange": 0.0014211644677809446,
    "measured_judge_alone": 3.0526409438070594,
    "measured_tu_partner": 1.1401107227612604,
    "measured_angle_partner": 52.714840790595275,
@@ -126,7 +138,10 @@
    "tu_blind": 1.247271216385541,
    "angle_blind": 126.69353422124911,
    "angle_partner": 76.80066712047679,
+   "tu_without_bias": 1.0195922704633729,
+   "yield_on_machine": 1.0246756999169722,
    "judge_adds_to_machine": 0.02467569991697205,
+   "exchange": 0.0017697085882701072,
    "measured_judge_alone": 2.565063222879571,
    "measured_tu_partner": 1.3069808493896509,
    "measured_angle_partner": 75.8897751779341,
@@ -152,7 +167,10 @@
    "tu_blind": 2.0188155641388965,
    "angle_blind": 150.30419144030748,
    "angle_partner": 123.50932374358197,
+   "tu_without_bias": 1.0378422595179297,
+   "yield_on_machine": 1.0446623530781558,
    "judge_adds_to_machine": 0.04466235307815569,
+   "exchange": 0.006598014936149522,
    "measured_judge_alone": 1.3444424534825505,
    "measured_tu_partner": 2.18274582574518,
    "measured_angle_partner": 122.15963327360984,
@@ -178,7 +196,10 @@
    "tu_blind": 3.1753698533684362,
    "angle_blind": 161.5902506186328,
    "angle_partner": 149.51542987053125,
+   "tu_without_bias": 1.247421820731899,
+   "yield_on_machine": 1.2178209790824992,
    "judge_adds_to_machine": 0.2178209790824993,
+   "exchange": 0.26174419204713795,
    "measured_judge_alone": 0.5741093791922559,
    "measured_tu_partner": 3.9420139469902287,
    "measured_angle_partner": 149.29036208694487,
@@ -204,7 +225,10 @@
    "tu_blind": 1.3156115722645028,
    "angle_blind": 130.52674131936575,
    "angle_partner": 97.33206750059198,
+   "tu_without_bias": 1.0164255824635404,
+   "yield_on_machine": 1.4736323075493822,
    "judge_adds_to_machine": 0.47363230754938224,
+   "exchange": 0.03771616793739532,
    "measured_judge_alone": 2.1046111525926103,
    "measured_tu_soloist": 1.1633399705825715,
    "measured_angle_soloist": 66.68783192823594,
@@ -220,6 +244,8 @@
    "measured_judge_without_bias_alone": 3.058353968618674,
    "measured_pair_without_bias": 3.105804402795851,
    "measured_tu_without_bias": 1.0112881036561492,
+   "measured_yield_on_machine": 1.4532227439756698,
+   "measured_yield_on_machine_without_bias": 1.5861611689263786,
    "measured_judge_without_bias_over_judge": 1.463202255036862,
    "measured_pair_without_bias_over_pair_partner": 1.107141238497163,
    "measured_accuracy_judge": 0.8516,
@@ -251,7 +277,10 @@
    "tu_blind": 1.3156115722645028,
    "angle_blind": 130.52674131936575,
    "angle_partner": 92.5124958917871,
+   "tu_without_bias": 1.0475140080429703,
+   "yield_on_machine": 1.1533564873076376,
    "judge_adds_to_machine": 0.15335648730763762,
+   "exchange": 0.03429286257498345,
    "measured_judge_alone": 2.1046111525926103,
    "measured_tu_soloist": 1.3009275175074047,
    "measured_angle_soloist": 58.97992735032927,
@@ -267,6 +296,8 @@
    "measured_judge_without_bias_alone": 3.058353968618674,
    "measured_pair_without_bias": 3.157410057271739,
    "measured_tu_without_bias": 1.0254134054644874,
+   "measured_yield_on_machine": 1.1423185463601409,
+   "measured_yield_on_machine_without_bias": 1.2144983321135199,
    "measured_judge_without_bias_over_judge": 1.463202255036862,
    "measured_pair_without_bias_over_pair_partner": 1.0718263130136259,
    "measured_accuracy_judge": 0.8516,
@@ -298,7 +329,10 @@
    "tu_blind": 1.3156115722645028,
    "angle_blind": 130.52674131936575,
    "angle_partner": 87.1729936138624,
+   "tu_without_bias": 1.1003810295187946,
+   "yield_on_machine": 1.018532427256006,
    "judge_adds_to_machine": 0.0185324272560059,
+   "exchange": 0.007004950943056661,
    "measured_judge_alone": 2.1046111525926103,
    "measured_tu_soloist": 1.450165299144211,
    "measured_angle_soloist": 51.83686055222886,
@@ -314,6 +348,8 @@
    "measured_judge_without_bias_alone": 3.058353968618674,
    "measured_pair_without_bias": 3.1974274627357895,
    "measured_tu_without_bias": 1.0396968853292263,
+   "measured_yield_on_machine": 1.0087938225636102,
+   "measured_yield_on_machine_without_bias": 1.0413637390520345,
    "measured_judge_without_bias_over_judge": 1.463202255036862,
    "measured_pair_without_bias_over_pair_partner": 1.035560922748856,
    "measured_accuracy_judge": 0.8516,
@@ -345,7 +381,10 @@
    "tu_blind": 1.3068530549916821,
    "angle_blind": 130.07548133711913,
    "angle_partner": 97.12522010636927,
+   "tu_without_bias": 1.020944946068298,
+   "yield_on_machine": 1.4388092010680564,
    "judge_adds_to_machine": 0.43880920106805643,
+   "exchange": 0.04569419557960107,
    "measured_judge_alone": 2.1650588443428935,
    "measured_tu_soloist": 1.1903310698588825,
    "measured_angle_soloist": 66.8308576415629,
@@ -361,6 +400,8 @@
    "measured_judge_without_bias_alone": 3.077396434581867,
    "measured_pair_without_bias": 3.1367152653931685,
    "measured_tu_without_bias": 1.0156303657175914,
+   "measured_yield_on_machine": 1.420550170505332,
+   "measured_yield_on_machine_without_bias": 1.549531344284553,
    "measured_judge_without_bias_over_judge": 1.464902979462175,
    "measured_pair_without_bias_over_pair_partner": 1.1019154506095625,
    "measured_accuracy_judge": 0.8587,
@@ -392,7 +433,10 @@
    "tu_blind": 1.3068530549916821,
    "angle_blind": 130.07548133711913,
    "angle_partner": 87.06526621394067,
+   "tu_without_bias": 1.1188563073505833,
+   "yield_on_machine": 1.016705336297899,
    "judge_adds_to_machine": 0.016705336297899054,
+   "exchange": 0.008809300685397745,
    "measured_judge_alone": 2.1650588443428935,
    "measured_tu_soloist": 1.442965205215583,
    "measured_angle_soloist": 53.75967842145244,
@@ -408,6 +452,8 @@
    "measured_judge_without_bias_alone": 3.077396434581867,
    "measured_pair_without_bias": 3.2556877123313113,
    "measured_tu_without_bias": 1.054629523274394,
+   "measured_yield_on_machine": 1.005949318900709,
+   "measured_yield_on_machine_without_bias": 1.0432170549860418,
    "measured_judge_without_bias_over_judge": 1.464902979462175,
    "measured_pair_without_bias_over_pair_partner": 1.0379209903564321,
    "measured_accuracy_judge": 0.8587,
@@ -443,7 +489,10 @@
     "tu_blind": 1.008591901698001,
     "angle_blind": 97.48399220767632,
     "angle_partner": 27.446029793674246,
-    "judge_adds_to_machine": 0.02727995353574464
+    "tu_without_bias": 1.0149233539642293,
+    "yield_on_machine": 1.0272799535357446,
+    "judge_adds_to_machine": 0.02727995353574464,
+    "exchange": 0.0016629619904316368
    },
    "measured": {
     "judge_alone": 3.4093878202641537,
@@ -472,7 +521,10 @@
     "tu_blind": 1.00342098048573,
     "angle_blind": 94.73254556940252,
     "angle_partner": 23.027643921475583,
-    "judge_adds_to_machine": 0.014495188600995412
+    "tu_without_bias": 1.019837388830245,
+    "yield_on_machine": 1.0144951886009954,
+    "judge_adds_to_machine": 0.014495188600995412,
+    "exchange": 0.0011700138910500412
    },
    "measured": {
     "judge_alone": 3.4236581776718977,
@@ -501,7 +553,10 @@
     "tu_blind": 1.0330361273815065,
     "angle_blind": 104.52909853993685,
     "angle_partner": 35.92876229428906,
-    "judge_adds_to_machine": 0.02889893113346753
+    "tu_without_bias": 1.0092193625729187,
+    "yield_on_machine": 1.0288989311334675,
+    "judge_adds_to_machine": 0.02889893113346753,
+    "exchange": 0.001086101574104744
    },
    "measured": {
     "judge_alone": 3.341323937528218,
@@ -530,7 +585,10 @@
     "tu_blind": 1.0214570774125367,
     "angle_blind": 101.76456959238949,
     "angle_partner": 32.49476155646263,
-    "judge_adds_to_machine": 0.024936588888091027
+    "tu_without_bias": 1.0151380887629484,
+    "yield_on_machine": 1.024936588888091,
+    "judge_adds_to_machine": 0.024936588888091027,
+    "exchange": 0.0015403674487244057
    },
    "measured": {
     "judge_alone": 3.3531107010703485,
@@ -559,7 +617,10 @@
     "tu_blind": 1.0892261327960313,
     "angle_blind": 113.35258013028513,
     "angle_partner": 51.523396397084376,
-    "judge_adds_to_machine": 0.03193000466724105
+    "tu_without_bias": 1.0100833051183171,
+    "yield_on_machine": 1.031930004667241,
+    "judge_adds_to_machine": 0.03193000466724105,
+    "exchange": 0.0013149967848983652
    },
    "measured": {
     "judge_alone": 3.064002627769599,
@@ -588,7 +649,10 @@
     "tu_blind": 1.0742400143539752,
     "angle_blind": 111.425918504649,
     "angle_partner": 47.99040598514464,
-    "judge_adds_to_machine": 0.013666703634948485
+    "tu_without_bias": 1.025138323361219,
+    "yield_on_machine": 1.0136667036349485,
+    "judge_adds_to_machine": 0.013666703634948485,
+    "exchange": 0.0014010136492525849
    },
    "measured": {
     "judge_alone": 3.099094673825218,
@@ -617,7 +681,10 @@
     "tu_blind": 1.0006667332983408,
     "angle_blind": 92.09166962008379,
     "angle_partner": 23.01290955159075,
-    "judge_adds_to_machine": 0.032782724074315484
+    "tu_without_bias": 1.0102274189746983,
+    "yield_on_machine": 1.0327827240743155,
+    "judge_adds_to_machine": 0.032782724074315484,
+    "exchange": 0.0013700841412594528
    },
    "measured": {
     "judge_alone": 3.450049125471844,
@@ -646,7 +713,10 @@
     "tu_blind": 1.0000499543980699,
     "angle_blind": 90.5726845358062,
     "angle_partner": 21.37420456297033,
-    "judge_adds_to_machine": 0.016099539278116692
+    "tu_without_bias": 1.0191719483974377,
+    "yield_on_machine": 1.0160995392781167,
+    "judge_adds_to_machine": 0.016099539278116692,
+    "exchange": 0.0012565071778180758
    },
    "measured": {
     "judge_alone": 3.435812351215327,
@@ -675,7 +745,10 @@
     "tu_blind": 1.8549586757158676,
     "angle_blind": 147.37790858925914,
     "angle_partner": 117.47474779534262,
-    "judge_adds_to_machine": 0.038850661767031
+    "tu_without_bias": 1.0387425038301337,
+    "yield_on_machine": 1.038850661767031,
+    "judge_adds_to_machine": 0.038850661767031,
+    "exchange": 0.006256535298623827
    },
    "measured": {
     "judge_alone": 1.45186062603341,
@@ -704,7 +777,10 @@
     "tu_blind": 1.8997628582912285,
     "angle_blind": 148.2387090204661,
     "angle_partner": 119.21302002306378,
-    "judge_adds_to_machine": 0.04405302224455765
+    "tu_without_bias": 1.0369420152057256,
+    "yield_on_machine": 1.0440530222445576,
+    "judge_adds_to_machine": 0.04405302224455765,
+    "exchange": 0.0067759019748428505
    },
    "measured": {
     "judge_alone": 1.456313937196498,
@@ -733,7 +809,10 @@
     "tu_blind": 1.2217694128201932,
     "angle_blind": 125.06657218343352,
     "angle_partner": 73.31061422815286,
-    "judge_adds_to_machine": 0.027268347747040123
+    "tu_without_bias": 1.0143131853290035,
+    "yield_on_machine": 1.0272683477470401,
+    "judge_adds_to_machine": 0.027268347747040123,
+    "exchange": 0.0015937982795125633
    },
    "measured": {
     "judge_alone": 2.594190643571671,
@@ -762,7 +841,10 @@
     "tu_blind": 1.193857028286298,
     "angle_blind": 123.11022601426494,
     "angle_partner": 69.82025498593823,
-    "judge_adds_to_machine": 0.01386216216487779
+    "tu_without_bias": 1.0307347025199036,
+    "yield_on_machine": 1.0138621621648778,
+    "judge_adds_to_machine": 0.01386216216487779,
+    "exchange": 0.0017423801773928434
    },
    "measured": {
     "judge_alone": 2.678782739200841,
@@ -791,7 +873,10 @@
     "tu_blind": 2.9550233690729906,
     "angle_blind": 160.22016263435856,
     "angle_partner": 147.90599250341282,
-    "judge_adds_to_machine": 0.22292464492155784
+    "tu_without_bias": 1.2255262520975259,
+    "yield_on_machine": 1.2229246449215578,
+    "judge_adds_to_machine": 0.22292464492155784,
+    "exchange": 0.2487211107505402
    },
    "measured": {
     "judge_alone": 0.6085148382458379,
@@ -820,7 +905,10 @@
     "tu_blind": 3.0115910214070887,
     "angle_blind": 160.60672630273598,
     "angle_partner": 148.47396849084467,
-    "judge_adds_to_machine": 0.16353334626059124
+    "tu_without_bias": 1.2952167725045338,
+    "yield_on_machine": 1.1635333462605912,
+    "judge_adds_to_machine": 0.16353334626059124,
+    "exchange": 0.23973677215264366
    },
    "measured": {
     "judge_alone": 0.5858371714912356,
@@ -849,7 +937,10 @@
     "tu_blind": 1.0040739425412133,
     "angle_blind": 95.16308391582933,
     "angle_partner": 23.418197952206274,
-    "judge_adds_to_machine": 0.010229285290329848
+    "tu_without_bias": 1.0258377374349912,
+    "yield_on_machine": 1.0102292852903298,
+    "judge_adds_to_machine": 0.010229285290329848,
+    "exchange": 0.001076341347969686
    },
    "measured": {
     "judge_alone": 3.355716376521471,
@@ -878,7 +969,10 @@
     "tu_blind": 1.005299894030552,
     "angle_blind": 95.88592044682022,
     "angle_partner": 25.50116303288019,
-    "judge_adds_to_machine": 0.01209909056513192
+    "tu_without_bias": 1.0296942892731138,
+    "yield_on_machine": 1.012099090565132,
+    "judge_adds_to_machine": 0.01209909056513192,
+    "exchange": 0.0014672551991969415
    },
    "measured": {
     "judge_alone": 3.3295064184310776,
@@ -907,7 +1001,10 @@
     "tu_blind": 1.02229237682505,
     "angle_blind": 101.98727934653832,
     "angle_partner": 32.21487798098555,
-    "judge_adds_to_machine": 0.016042567916688677
+    "tu_without_bias": 1.0204226234916534,
+    "yield_on_machine": 1.0160425679166887,
+    "judge_adds_to_machine": 0.016042567916688677,
+    "exchange": 0.0013345269178033352
    },
    "measured": {
     "judge_alone": 3.2831312596824986,
@@ -936,7 +1033,10 @@
     "tu_blind": 1.025735420422878,
     "angle_blind": 102.86168357800898,
     "angle_partner": 34.06003403624078,
-    "judge_adds_to_machine": 0.010373738178318881
+    "tu_without_bias": 1.031967353978318,
+    "yield_on_machine": 1.0103737381783189,
+    "judge_adds_to_machine": 0.010373738178318881,
+    "exchange": 0.0013546762014530582
    },
    "measured": {
     "judge_alone": 3.2356856892389443,
@@ -965,7 +1065,10 @@
     "tu_blind": 1.073682287743331,
     "angle_blind": 111.34994639925192,
     "angle_partner": 47.65734552067719,
-    "judge_adds_to_machine": 0.020355965745834093
+    "tu_without_bias": 1.0161040654720426,
+    "yield_on_machine": 1.020355965745834,
+    "judge_adds_to_machine": 0.020355965745834093,
+    "exchange": 0.0013352668854975749
    },
    "measured": {
     "judge_alone": 3.1002567724768384,
@@ -994,7 +1097,10 @@
     "tu_blind": 1.0742738259607363,
     "angle_blind": 111.43051345205483,
     "angle_partner": 47.949330658711176,
-    "judge_adds_to_machine": 0.014019752543007913
+    "tu_without_bias": 1.024212322249043,
+    "yield_on_machine": 1.014019752543008,
+    "judge_adds_to_machine": 0.014019752543007913,
+    "exchange": 0.0013838741066956347
    },
    "measured": {
     "judge_alone": 3.0888458429674857,
@@ -1023,7 +1129,10 @@
     "tu_blind": 1.0000346548546468,
     "angle_blind": 90.47699453154247,
     "angle_partner": 21.452154571890915,
-    "judge_adds_to_machine": 0.013461621131781065
+    "tu_without_bias": 1.0226534752315837,
+    "yield_on_machine": 1.013461621131781,
+    "judge_adds_to_machine": 0.013461621131781065,
+    "exchange": 0.0012419297774823338
    },
    "measured": {
     "judge_alone": 3.376433738889001,
@@ -1052,7 +1161,10 @@
     "tu_blind": 1.000154496904225,
     "angle_blind": 91.0070929731636,
     "angle_partner": 22.843383549696053,
-    "judge_adds_to_machine": 0.018358331903284508
+    "tu_without_bias": 1.0218121975978618,
+    "yield_on_machine": 1.0183583319032845,
+    "judge_adds_to_machine": 0.018358331903284508,
+    "exchange": 0.0016340740180033684
    },
    "measured": {
     "judge_alone": 3.3828100661201552,
@@ -1081,7 +1193,10 @@
     "tu_blind": 1.8037533582233682,
     "angle_blind": 146.3306346808877,
     "angle_partner": 115.55777071676647,
-    "judge_adds_to_machine": 0.051172478086775275
+    "tu_without_bias": 1.0299417989369681,
+    "yield_on_machine": 1.0511724780867753,
+    "judge_adds_to_machine": 0.051172478086775275,
+    "exchange": 0.006379697774363756
    },
    "measured": {
     "judge_alone": 1.6635279988328728,
@@ -1110,7 +1225,10 @@
     "tu_blind": 1.7879826662283098,
     "angle_blind": 145.9933211841267,
     "angle_partner": 114.67513246027062,
-    "judge_adds_to_machine": 0.03942423436844078
+    "tu_without_bias": 1.0333522711464276,
+    "yield_on_machine": 1.0394242343684408,
+    "judge_adds_to_machine": 0.03942423436844078,
+    "exchange": 0.0054526658192114085
    },
    "measured": {
     "judge_alone": 1.714864085389487,
@@ -1139,7 +1257,10 @@
     "tu_blind": 1.203031619831518,
     "angle_blind": 123.77435820780359,
     "angle_partner": 70.89433632189758,
-    "judge_adds_to_machine": 0.03583385273160444
+    "tu_without_bias": 1.0093697345527508,
+    "yield_on_machine": 1.0358338527316044,
+    "judge_adds_to_machine": 0.03583385273160444,
+    "exchange": 0.0013734820252209834
    },
    "measured": {
     "judge_alone": 2.7429249212865896,
@@ -1168,7 +1289,10 @@
     "tu_blind": 1.199793402800195,
     "angle_blind": 123.54243331332883,
     "angle_partner": 70.42525333681195,
-    "judge_adds_to_machine": 0.009552694578683907
+    "tu_without_bias": 1.0349021926993498,
+    "yield_on_machine": 1.009552694578684,
+    "judge_adds_to_machine": 0.009552694578683907,
+    "exchange": 0.0013633945169298774
    },
    "measured": {
     "judge_alone": 2.7169334367254474,
@@ -1197,7 +1321,10 @@
     "tu_blind": 2.722491229072368,
     "angle_blind": 158.45014710554352,
     "angle_partner": 144.97985001043665,
-    "judge_adds_to_machine": 0.18179203713753522
+    "tu_without_bias": 1.2656275061053683,
+    "yield_on_machine": 1.1817920371375352,
+    "judge_adds_to_machine": 0.18179203713753522,
+    "exchange": 0.2386985397381041
    },
    "measured": {
     "judge_alone": 0.7388058384779208,
@@ -1226,7 +1353,10 @@
     "tu_blind": 2.5908760586129507,
     "angle_blind": 157.29603810751155,
     "angle_partner": 143.56436611173925,
-    "judge_adds_to_machine": 0.2400541025596179
+    "tu_without_bias": 1.2292161353584294,
+    "yield_on_machine": 1.240054102559618,
+    "judge_adds_to_machine": 0.2400541025596179,
+    "exchange": 0.2747672733437357
    },
    "measured": {
     "judge_alone": 0.8138193114463318,
@@ -1255,7 +1385,10 @@
     "tu_blind": 1.0072090306755104,
     "angle_blind": 96.8592343047717,
     "angle_partner": 27.617364187878824,
-    "judge_adds_to_machine": 0.02127706547397268
+    "tu_without_bias": 1.0235361944821508,
+    "yield_on_machine": 1.0212770654739727,
+    "judge_adds_to_machine": 0.02127706547397268,
+    "exchange": 0.0020482586575829324
    },
    "measured": {
     "judge_alone": 3.1957247177499273,
@@ -1284,7 +1417,10 @@
     "tu_blind": 1.0065464345277948,
     "angle_blind": 96.53820902638168,
     "angle_partner": 26.183977144508,
-    "judge_adds_to_machine": 0.013874211987364715
+    "tu_without_bias": 1.0273275768052748,
+    "yield_on_machine": 1.0138742119873647,
+    "judge_adds_to_machine": 0.013874211987364715,
+    "exchange": 0.0015479813290026777
    },
    "measured": {
     "judge_alone": 3.2418924443220307,
@@ -1313,7 +1449,10 @@
     "tu_blind": 1.036564157030605,
     "angle_blind": 105.26343489764206,
     "angle_partner": 38.084007773124114,
-    "judge_adds_to_machine": 0.027087221483741653
+    "tu_without_bias": 1.0149893338122973,
+    "yield_on_machine": 1.0270872214837417,
+    "judge_adds_to_machine": 0.027087221483741653,
+    "exchange": 0.0016584102671071928
    },
    "measured": {
     "judge_alone": 3.1002113142001524,
@@ -1342,7 +1481,10 @@
     "tu_blind": 1.0315328721180528,
     "angle_blind": 104.20333854514493,
     "angle_partner": 36.004750968331145,
-    "judge_adds_to_machine": 0.012170818771715775
+    "tu_without_bias": 1.0282427736542208,
+    "yield_on_machine": 1.0121708187717158,
+    "judge_adds_to_machine": 0.012170818771715775,
+    "exchange": 0.0014028522235991342
    },
    "measured": {
     "judge_alone": 3.0804169888476314,
@@ -1371,7 +1513,10 @@
     "tu_blind": 1.1288945510844286,
     "angle_blind": 117.64711218536844,
     "angle_partner": 59.424505686591814,
-    "judge_adds_to_machine": 0.01503941495225325
+    "tu_without_bias": 1.0255123275227616,
+    "yield_on_machine": 1.0150394149522532,
+    "judge_adds_to_machine": 0.01503941495225325,
+    "exchange": 0.0015660277735060296
    },
    "measured": {
     "judge_alone": 2.740884331050499,
@@ -1400,7 +1545,10 @@
     "tu_blind": 1.104786528098937,
     "angle_blind": 115.15620503991578,
     "angle_partner": 54.67254802199247,
-    "judge_adds_to_machine": 0.011674655655679933
+    "tu_without_bias": 1.028056348804241,
+    "yield_on_machine": 1.01167465565568,
+    "judge_adds_to_machine": 0.011674655655679933,
+    "exchange": 0.001336327771694959
    },
    "measured": {
     "judge_alone": 2.782372801465718,
@@ -1429,7 +1577,10 @@
     "tu_blind": 1.0000068275005045,
     "angle_blind": 90.21172262273485,
     "angle_partner": 22.901339675323975,
-    "judge_adds_to_machine": 0.026883166387697166
+    "tu_without_bias": 1.0146807825250388,
+    "yield_on_machine": 1.0268831663876972,
+    "judge_adds_to_machine": 0.026883166387697166,
+    "exchange": 0.0016116271866933483
    },
    "measured": {
     "judge_alone": 3.2807223875822666,
@@ -1458,7 +1609,10 @@
     "tu_blind": 1.0000377914306828,
     "angle_blind": 90.49811252078663,
     "angle_partner": 22.923816378817886,
-    "judge_adds_to_machine": 0.014558712609802127
+    "tu_without_bias": 1.027072360103906,
+    "yield_on_machine": 1.0145587126098021,
+    "judge_adds_to_machine": 0.014558712609802127,
+    "exchange": 0.0016095270216361368
    },
    "measured": {
     "judge_alone": 3.2631129874979496,
@@ -1487,7 +1641,10 @@
     "tu_blind": 2.2441323742720587,
     "angle_blind": 153.53785023518785,
     "angle_partner": 129.23118919160666,
-    "judge_adds_to_machine": 0.045271683911753735
+    "tu_without_bias": 1.0340875959968236,
+    "yield_on_machine": 1.0452716839117537,
+    "judge_adds_to_machine": 0.045271683911753735,
+    "exchange": 0.006420127897456192
    },
    "measured": {
     "judge_alone": 1.1800005593352378,
@@ -1516,7 +1673,10 @@
     "tu_blind": 2.103162201442419,
     "angle_blind": 151.60975071030828,
     "angle_partner": 125.41193259826026,
-    "judge_adds_to_machine": 0.04110520408203855
+    "tu_without_bias": 1.0329272883742322,
+    "yield_on_machine": 1.0411052040820385,
+    "judge_adds_to_machine": 0.04110520408203855,
+    "exchange": 0.005616166976372447
    },
    "measured": {
     "judge_alone": 1.2228296377441277,
@@ -1545,7 +1705,10 @@
     "tu_blind": 1.324894118803831,
     "angle_blind": 130.99408584013065,
     "angle_partner": 84.71391462211226,
-    "judge_adds_to_machine": 0.02500480854182574
+    "tu_without_bias": 1.0180936349137013,
+    "yield_on_machine": 1.0250048085418257,
+    "judge_adds_to_machine": 0.02500480854182574,
+    "exchange": 0.0018489140728905396
    },
    "measured": {
     "judge_alone": 2.283574226655281,
@@ -1574,7 +1737,10 @@
     "tu_blind": 1.2755811716878016,
     "angle_blind": 128.37574090058078,
     "angle_partner": 79.70430799053904,
-    "judge_adds_to_machine": 0.02208038155664327
+    "tu_without_bias": 1.02028898109105,
+    "yield_on_machine": 1.0220803815566433,
+    "judge_adds_to_machine": 0.02208038155664327,
+    "exchange": 0.0018301164388714408
    },
    "measured": {
     "judge_alone": 2.3290928193869487,
@@ -1603,7 +1769,10 @@
     "tu_blind": 3.0010390549687784,
     "angle_blind": 160.53579287063312,
     "angle_partner": 148.00426964010762,
-    "judge_adds_to_machine": 0.1963117111945798
+    "tu_without_bias": 1.2223873264699852,
+    "yield_on_machine": 1.1963117111945798,
+    "judge_adds_to_machine": 0.1963117111945798,
+    "exchange": 0.21309338664657873
    },
    "measured": {
     "judge_alone": 0.6370237090881352,
@@ -1632,7 +1801,10 @@
     "tu_blind": 3.3391486853297834,
     "angle_blind": 162.57377493452964,
     "angle_partner": 150.55689125021783,
-    "judge_adds_to_machine": 0.18799922786269452
+    "tu_without_bias": 1.1693002919031805,
+    "yield_on_machine": 1.1879992278626945,
+    "judge_adds_to_machine": 0.18799922786269452,
+    "exchange": 0.15107082870827832
    },
    "measured": {
     "judge_alone": 0.5623815868932762,
@@ -1661,7 +1833,10 @@
     "tu_blind": 1.0090772807059445,
     "angle_blind": 97.69093958466857,
     "angle_partner": 29.64747796649345,
-    "judge_adds_to_machine": 0.03356941624127674
+    "tu_without_bias": 1.0179613815822153,
+    "yield_on_machine": 1.0335694162412767,
+    "judge_adds_to_machine": 0.03356941624127674,
+    "exchange": 0.0024743172388713855
    },
    "measured": {
     "judge_alone": 2.3305177645115305,
@@ -1690,7 +1865,10 @@
     "tu_blind": 1.0098593673998169,
     "angle_blind": 98.01282539335344,
     "angle_partner": 28.310114812013527,
-    "judge_adds_to_machine": 0.02398879225660311
+    "tu_without_bias": 1.0186748906840402,
+    "yield_on_machine": 1.023988792256603,
+    "judge_adds_to_machine": 0.02398879225660311,
+    "exchange": 0.0018303786276686793
    },
    "measured": {
     "judge_alone": 2.3302724856095898,
@@ -1719,7 +1897,10 @@
     "tu_blind": 1.0523109832444715,
     "angle_blind": 108.14168953240802,
     "angle_partner": 43.6269713614919,
-    "judge_adds_to_machine": 0.032074784315644145
+    "tu_without_bias": 1.0164506103645692,
+    "yield_on_machine": 1.0320747843156441,
+    "judge_adds_to_machine": 0.032074784315644145,
+    "exchange": 0.002162086359093962
    },
    "measured": {
     "judge_alone": 2.157464238750074,
@@ -1748,7 +1929,10 @@
     "tu_blind": 1.0556861527584978,
     "angle_blind": 108.69268129860231,
     "angle_partner": 44.38830113127926,
-    "judge_adds_to_machine": 0.018386832072295523
+    "tu_without_bias": 1.0282723962716178,
+    "yield_on_machine": 1.0183868320722955,
+    "judge_adds_to_machine": 0.018386832072295523,
+    "exchange": 0.002128140091627603
    },
    "measured": {
     "judge_alone": 2.158698071071339,
@@ -1777,7 +1961,10 @@
     "tu_blind": 1.1788012762450792,
     "angle_blind": 121.97065334411452,
     "angle_partner": 67.67985239937708,
-    "judge_adds_to_machine": 0.03521442415001519
+    "tu_without_bias": 1.0110464800423717,
+    "yield_on_machine": 1.0352144241500152,
+    "judge_adds_to_machine": 0.03521442415001519,
+    "exchange": 0.0015921236127223112
    },
    "measured": {
     "judge_alone": 1.825983987393099,
@@ -1806,7 +1993,10 @@
     "tu_blind": 1.1927900204798771,
     "angle_blind": 123.0315506261767,
     "angle_partner": 69.8030322802185,
-    "judge_adds_to_machine": 0.02088169735856127
+    "tu_without_bias": 1.0236282760939799,
+    "yield_on_machine": 1.0208816973585613,
+    "judge_adds_to_machine": 0.02088169735856127,
+    "exchange": 0.002017759793293881
    },
    "measured": {
     "judge_alone": 1.8046861357935258,
@@ -1835,7 +2025,10 @@
     "tu_blind": 1.0000859169625413,
     "angle_blind": 90.75103735953427,
     "angle_partner": 25.561505118537866,
-    "judge_adds_to_machine": 0.03448815467698796
+    "tu_without_bias": 1.0176339303415434,
+    "yield_on_machine": 1.034488154676988,
+    "judge_adds_to_machine": 0.03448815467698796,
+    "exchange": 0.0024964140428597697
    },
    "measured": {
     "judge_alone": 2.375006681755954,
@@ -1864,7 +2057,10 @@
     "tu_blind": 1.0000285260831774,
     "angle_blind": 90.43276640565381,
     "angle_partner": 24.03216104296867,
-    "judge_adds_to_machine": 0.03397359204896544
+    "tu_without_bias": 1.0132863245932586,
+    "yield_on_machine": 1.0339735920489654,
+    "judge_adds_to_machine": 0.03397359204896544,
+    "exchange": 0.0018484051905595968
    },
    "measured": {
     "judge_alone": 2.376390619391494,
@@ -1893,7 +2089,10 @@
     "tu_blind": 2.540685577581348,
     "angle_blind": 156.82165138244554,
     "angle_partner": 136.78446048219604,
-    "judge_adds_to_machine": 0.0766484206765301
+    "tu_without_bias": 1.0614817764719338,
+    "yield_on_machine": 1.07664842067653,
+    "judge_adds_to_machine": 0.0766484206765301,
+    "exchange": 0.02017400362332664
    },
    "measured": {
     "judge_alone": 0.6581010303127357,
@@ -1922,7 +2121,10 @@
     "tu_blind": 2.809302016774078,
     "angle_blind": 159.1476893273122,
     "angle_partner": 140.8140113955407,
-    "judge_adds_to_machine": 0.06052296946198821
+    "tu_without_bias": 1.0624904408570863,
+    "yield_on_machine": 1.0605229694619882,
+    "judge_adds_to_machine": 0.06052296946198821,
+    "exchange": 0.016073232279592925
    },
    "measured": {
     "judge_alone": 0.5934675913910749,
@@ -1951,7 +2153,10 @@
     "tu_blind": 1.4794057803215215,
     "angle_blind": 137.47226125657423,
     "angle_partner": 97.31414296541891,
-    "judge_adds_to_machine": 0.028166244902956272
+    "tu_without_bias": 1.0188955598356955,
+    "yield_on_machine": 1.0281662449029563,
+    "judge_adds_to_machine": 0.028166244902956272,
+    "exchange": 0.002179245300398009
    },
    "measured": {
     "judge_alone": 1.3635521715206795,
@@ -1980,7 +2185,10 @@
     "tu_blind": 1.4959718337063999,
     "angle_blind": 138.0515447564842,
     "angle_partner": 98.20264690638652,
-    "judge_adds_to_machine": 0.020151600358762733
+    "tu_without_bias": 1.0218332397111378,
+    "yield_on_machine": 1.0201516003587627,
+    "judge_adds_to_machine": 0.020151600358762733,
+    "exchange": 0.0017970369991473709
    },
    "measured": {
     "judge_alone": 1.3706640942908368,
@@ -2009,7 +2217,10 @@
     "tu_blind": 4.890397196429528,
     "angle_blind": 168.2008009416955,
     "angle_partner": 164.18231816565836,
-    "judge_adds_to_machine": 0.5315009389188299
+    "tu_without_bias": 1.4442945372092,
+    "yield_on_machine": 1.5315009389188299,
+    "judge_adds_to_machine": 0.5315009389188299,
+    "exchange": 1.4611898253929285
    },
    "measured": {
     "judge_alone": 0.16359550671217113,
@@ -2038,7 +2249,10 @@
     "tu_blind": 5.089668947570619,
     "angle_blind": 168.66901438192235,
     "angle_partner": 165.21208294172627,
-    "judge_adds_to_machine": 0.5574036493337751
+    "tu_without_bias": 1.4976628073704723,
+    "yield_on_machine": 1.557403649333775,
+    "judge_adds_to_machine": 0.5574036493337751,
+    "exchange": 1.7718953982414603
    },
    "measured": {
     "judge_alone": 0.15054639223850616,
@@ -2067,7 +2281,10 @@
     "tu_blind": 1.0057857368822258,
     "angle_blind": 96.14854904798646,
     "angle_partner": 25.88032839807028,
-    "judge_adds_to_machine": 0.021838666797005857
+    "tu_without_bias": 1.0185419366138495,
+    "yield_on_machine": 1.0218386667970059,
+    "judge_adds_to_machine": 0.021838666797005857,
+    "exchange": 0.0016525914015927065
    },
    "measured": {
     "judge_alone": 3.54353134020542,
@@ -2096,7 +2313,10 @@
     "tu_blind": 1.0080282537517447,
     "angle_blind": 97.23603207259576,
     "angle_partner": 27.695881103177523,
-    "judge_adds_to_machine": 0.02671206922801561
+    "tu_without_bias": 1.017291296108148,
+    "yield_on_machine": 1.0267120692280156,
+    "judge_adds_to_machine": 0.02671206922801561,
+    "exchange": 0.0018884076367742188
    },
    "measured": {
     "judge_alone": 3.4576343606262885,
@@ -2125,7 +2345,10 @@
     "tu_blind": 1.0279234931359387,
     "angle_blind": 103.38536360391022,
     "angle_partner": 34.661191986790264,
-    "judge_adds_to_machine": 0.021634949268078518
+    "tu_without_bias": 1.0167304308837537,
+    "yield_on_machine": 1.0216349492680785,
+    "judge_adds_to_machine": 0.021634949268078518,
+    "exchange": 0.0014757527313755683
    },
    "measured": {
     "judge_alone": 3.3869056355599816,
@@ -2154,7 +2377,10 @@
     "tu_blind": 1.0288123938304317,
     "angle_blind": 103.5918322118549,
     "angle_partner": 36.25914586735418,
-    "judge_adds_to_machine": 0.025483642702719855
+    "tu_without_bias": 1.0202164370579159,
+    "yield_on_machine": 1.0254836427027199,
+    "judge_adds_to_machine": 0.025483642702719855,
+    "exchange": 0.002108107561281033
    },
    "measured": {
     "judge_alone": 3.318130342804766,
@@ -2183,7 +2409,10 @@
     "tu_blind": 1.100247289462338,
     "angle_blind": 114.64806372914029,
     "angle_partner": 53.92638570784757,
-    "judge_adds_to_machine": 0.029647825573058784
+    "tu_without_bias": 1.0119052340418886,
+    "yield_on_machine": 1.0296478255730588,
+    "judge_adds_to_machine": 0.029647825573058784,
+    "exchange": 0.0014413152863093043
    },
    "measured": {
     "judge_alone": 3.0781004551262345,
@@ -2212,7 +2441,10 @@
     "tu_blind": 1.0963253714091608,
     "angle_blind": 114.19750425202538,
     "angle_partner": 53.75148101325371,
-    "judge_adds_to_machine": 0.024260424665119906
+    "tu_without_bias": 1.0209800059251624,
+    "yield_on_machine": 1.02426042466512,
+    "judge_adds_to_machine": 0.024260424665119906,
+    "exchange": 0.002082247774813963
    },
    "measured": {
     "judge_alone": 3.0412792598445195,
@@ -2241,7 +2473,10 @@
     "tu_blind": 1.0001336977824817,
     "angle_blind": 90.93686181957634,
     "angle_partner": 23.50761736867854,
-    "judge_adds_to_machine": 0.011637956550246908
+    "tu_without_bias": 1.0340041138734977,
+    "yield_on_machine": 1.011637956550247,
+    "judge_adds_to_machine": 0.011637956550246908,
+    "exchange": 0.001619234847863852
    },
    "measured": {
     "judge_alone": 3.5291562040206577,
@@ -2270,7 +2505,10 @@
     "tu_blind": 1.000242401776684,
     "angle_blind": 91.26142568602556,
     "angle_partner": 23.95202352874325,
-    "judge_adds_to_machine": 0.026337610370742226
+    "tu_without_bias": 1.0180749464855565,
+    "yield_on_machine": 1.0263376103707422,
+    "judge_adds_to_machine": 0.026337610370742226,
+    "exchange": 0.001946715491640488
    },
    "measured": {
     "judge_alone": 3.521089255408197,
@@ -2299,7 +2537,10 @@
     "tu_blind": 1.9990563359619407,
     "angle_blind": 149.98438332563603,
     "angle_partner": 122.820551112971,
-    "judge_adds_to_machine": 0.03976323234420298
+    "tu_without_bias": 1.0513471746167604,
+    "yield_on_machine": 1.039763232344203,
+    "judge_adds_to_machine": 0.03976323234420298,
+    "exchange": 0.008543132833726794
    },
    "measured": {
     "judge_alone": 1.339438260847925,
@@ -2328,7 +2569,10 @@
     "tu_blind": 2.0385747923158526,
     "angle_blind": 150.62399955497892,
     "angle_partner": 124.19809637419296,
-    "judge_adds_to_machine": 0.051344607968675904
+    "tu_without_bias": 1.0453281735836435,
+    "yield_on_machine": 1.051344607968676,
+    "judge_adds_to_machine": 0.051344607968675904,
+    "exchange": 0.009764830010581598
    },
    "measured": {
     "judge_alone": 1.3494466461171764,
@@ -2357,7 +2601,10 @@
     "tu_blind": 1.257007092143612,
     "angle_blind": 127.29366673228064,
     "angle_partner": 77.63578678125643,
-    "judge_adds_to_machine": 0.02758031419136242
+    "tu_without_bias": 1.015433305002179,
+    "yield_on_machine": 1.0275803141913624,
+    "judge_adds_to_machine": 0.02758031419136242,
+    "exchange": 0.0017394207450553698
    },
    "measured": {
     "judge_alone": 2.5553630948098043,
@@ -2386,7 +2633,10 @@
     "tu_blind": 1.2375353406274703,
     "angle_blind": 126.09340171021756,
     "angle_partner": 75.96554745969713,
-    "judge_adds_to_machine": 0.024346591292118358
+    "tu_without_bias": 1.0260674219255104,
+    "yield_on_machine": 1.0243465912921184,
+    "judge_adds_to_machine": 0.024346591292118358,
+    "exchange": 0.0026030050510184727
    },
    "measured": {
     "judge_alone": 2.5747633509493375,
@@ -2415,7 +2665,10 @@
     "tu_blind": 3.4187544172482593,
     "angle_blind": 162.99206199872825,
     "angle_partner": 153.08792457381244,
-    "judge_adds_to_machine": 0.2127173132434408
+    "tu_without_bias": 1.3079881916212062,
+    "yield_on_machine": 1.2127173132434408,
+    "judge_adds_to_machine": 0.2127173132434408,
+    "exchange": 0.33457726078285577
    },
    "measured": {
     "judge_alone": 0.46177746245096624,
@@ -2444,7 +2697,10 @@
     "tu_blind": 3.44728773493886,
     "angle_blind": 163.13706732168782,
     "angle_partner": 153.18322494333898,
-    "judge_adds_to_machine": 0.29755393262716034
+    "tu_without_bias": 1.2100890413122178,
+    "yield_on_machine": 1.2975539326271603,
+    "judge_adds_to_machine": 0.29755393262716034,
+    "exchange": 0.31742752265657176
    },
    "measured": {
     "judge_alone": 0.4652815159201904,
@@ -2473,7 +2729,10 @@
     "tu_blind": 1.2689476417737433,
     "angle_blind": 127.99592122921732,
     "angle_partner": 83.33955992554449,
-    "judge_adds_to_machine": 0.027088390861313538
+    "tu_without_bias": 1.094365791793745,
+    "yield_on_machine": 1.0270883908613135,
+    "judge_adds_to_machine": 0.027088390861313538,
+    "exchange": 0.010852330658501138
    },
    "measured": {
     "judge_alone": 2.1640407456789075,
@@ -2491,6 +2750,8 @@
     "judge_without_bias_alone": 3.16642929906903,
     "pair_without_bias": 3.2625426675228137,
     "tu_without_bias": 1.0303538653088014,
+    "yield_on_machine": 1.0376358519550042,
+    "yield_on_machine_without_bias": 1.078104992375729,
     "judge_without_bias_over_judge": 1.463202255036862,
     "pair_without_bias_over_pair_partner": 1.0390012935120516,
     "accuracy_judge": 0.8548,
@@ -2519,7 +2780,10 @@
     "tu_blind": 1.3243173532554289,
     "angle_blind": 130.96536595919798,
     "angle_partner": 88.49500795355178,
-    "judge_adds_to_machine": 0.020342117132979842
+    "tu_without_bias": 1.1072052070698757,
+    "yield_on_machine": 1.0203421171329798,
+    "judge_adds_to_machine": 0.020342117132979842,
+    "exchange": 0.00928418485486846
    },
    "measured": {
     "judge_alone": 2.0944775302054266,
@@ -2537,6 +2801,8 @@
     "judge_without_bias_alone": 3.1712292467622336,
     "pair_without_bias": 3.278305489577825,
     "tu_without_bias": 1.0337649013942825,
+    "yield_on_machine": 1.0212474808882963,
+    "yield_on_machine_without_bias": 1.06032035810001,
     "judge_without_bias_over_judge": 1.5140908417629093,
     "pair_without_bias_over_pair_partner": 1.0382599496624731,
     "accuracy_judge": 0.8516,
@@ -2565,7 +2831,10 @@
     "tu_blind": 1.2814368867881003,
     "angle_blind": 128.7051708260592,
     "angle_partner": 84.38449263600846,
-    "judge_adds_to_machine": 0.025407935456047692
+    "tu_without_bias": 1.0931468849271924,
+    "yield_on_machine": 1.0254079354560477,
+    "judge_adds_to_machine": 0.025407935456047692,
+    "exchange": 0.01003344157076269
    },
    "measured": {
     "judge_alone": 2.1459023484691375,
@@ -2583,6 +2852,8 @@
     "judge_without_bias_alone": 3.160584424666647,
     "pair_without_bias": 3.243208929827219,
     "tu_without_bias": 1.0261421604547984,
+    "yield_on_machine": 1.024073684051308,
+    "yield_on_machine_without_bias": 1.073418096474512,
     "judge_without_bias_over_judge": 1.4728463422025573,
     "pair_without_bias_over_pair_partner": 1.0481844355456864,
     "accuracy_judge": 0.8582,
@@ -2611,7 +2882,10 @@
     "tu_blind": 1.237394934754766,
     "angle_blind": 126.08448310641423,
     "angle_partner": 79.852821985071,
-    "judge_adds_to_machine": 0.03034457789153011
+    "tu_without_bias": 1.0851107399998403,
+    "yield_on_machine": 1.0303445778915301,
+    "judge_adds_to_machine": 0.03034457789153011,
+    "exchange": 0.010933629228933085
    },
    "measured": {
     "judge_alone": 2.2112186785830414,
@@ -2629,6 +2903,8 @@
     "judge_without_bias_alone": 3.1981523556768683,
     "pair_without_bias": 3.2773399421675062,
     "tu_without_bias": 1.0247604171671423,
+    "yield_on_machine": 1.0277155900042785,
+    "yield_on_machine_without_bias": 1.0780357122404196,
     "judge_without_bias_over_judge": 1.446330200921719,
     "pair_without_bias_over_pair_partner": 1.0489630815427562,
     "accuracy_judge": 0.8628,
@@ -2657,7 +2933,10 @@
     "tu_blind": 1.2441700347930458,
     "angle_blind": 126.51042091483625,
     "angle_partner": 80.54541059263319,
-    "judge_adds_to_machine": 0.053600130787414324
+    "tu_without_bias": 1.0532771092688478,
+    "yield_on_machine": 1.0536001307874143,
+    "judge_adds_to_machine": 0.053600130787414324,
+    "exchange": 0.012041205017295721
    },
    "measured": {
     "judge_alone": 2.297748254204906,
@@ -2675,6 +2954,8 @@
     "judge_without_bias_alone": 3.214438434338554,
     "pair_without_bias": 3.272572712247566,
     "tu_without_bias": 1.0180853605058933,
+    "yield_on_machine": 1.053010546866266,
+    "yield_on_machine_without_bias": 1.1007032804616363,
     "judge_without_bias_over_judge": 1.398951529374941,
     "pair_without_bias_over_pair_partner": 1.045291790986617,
     "accuracy_judge": 0.8703,
@@ -2703,7 +2984,10 @@
     "tu_blind": 1.2689476417737433,
     "angle_blind": 127.99592122921732,
     "angle_partner": 93.95487237013857,
-    "judge_adds_to_machine": 0.4458555612706505
+    "tu_without_bias": 1.0297871773986624,
+    "yield_on_machine": 1.4458555612706505,
+    "judge_adds_to_machine": 0.4458555612706505,
+    "exchange": 0.0659333057767316
    },
    "measured": {
     "judge_alone": 2.1640407456789075,
@@ -2721,6 +3005,8 @@
     "judge_without_bias_alone": 3.16642929906903,
     "pair_without_bias": 3.205897667137685,
     "tu_without_bias": 1.012464629505626,
+    "yield_on_machine": 1.4360017352705647,
+    "yield_on_machine_without_bias": 1.58484440595261,
     "judge_without_bias_over_judge": 1.463202255036862,
     "pair_without_bias_over_pair_partner": 1.1036507596239087,
     "accuracy_judge": 0.8548,
@@ -2749,7 +3035,10 @@
     "tu_blind": 1.3243173532554289,
     "angle_blind": 130.96536595919798,
     "angle_partner": 98.2110922071166,
-    "judge_adds_to_machine": 0.42207300576354556
+    "tu_without_bias": 1.0327294143644044,
+    "yield_on_machine": 1.4220730057635456,
+    "judge_adds_to_machine": 0.42207300576354556,
+    "exchange": 0.06801310665000954
    },
    "measured": {
     "judge_alone": 2.0944775302054266,
@@ -2767,6 +3056,8 @@
     "judge_without_bias_alone": 3.1712292467622336,
     "pair_without_bias": 3.219175979406134,
     "tu_without_bias": 1.015119289371102,
+    "yield_on_machine": 1.4052287339142258,
+    "yield_on_machine_without_bias": 1.5557866808375964,
     "judge_without_bias_over_judge": 1.5140908417629093,
     "pair_without_bias_over_pair_partner": 1.107141238497163,
     "accuracy_judge": 0.8516,
@@ -2795,7 +3086,10 @@
     "tu_blind": 1.2814368867881003,
     "angle_blind": 128.7051708260592,
     "angle_partner": 94.7500348471969,
-    "judge_adds_to_machine": 0.4209362664889196
+    "tu_without_bias": 1.0320900789003773,
+    "yield_on_machine": 1.4209362664889196,
+    "judge_adds_to_machine": 0.4209362664889196,
+    "exchange": 0.0664528239947253
    },
    "measured": {
     "judge_alone": 2.1459023484691375,
@@ -2813,6 +3107,8 @@
     "judge_without_bias_alone": 3.160584424666647,
     "pair_without_bias": 3.2101583218501872,
     "tu_without_bias": 1.0156850412843406,
+    "yield_on_machine": 1.403540983687079,
+    "yield_on_machine_without_bias": 1.5594062856807072,
     "judge_without_bias_over_judge": 1.4728463422025573,
     "pair_without_bias_over_pair_partner": 1.1110514789416213,
     "accuracy_judge": 0.8582,
@@ -2841,7 +3137,10 @@
     "tu_blind": 1.237394934754766,
     "angle_blind": 126.08448310641423,
     "angle_partner": 90.4592588400563,
-    "judge_adds_to_machine": 0.4433349567517608
+    "tu_without_bias": 1.024672054535688,
+    "yield_on_machine": 1.4433349567517608,
+    "judge_adds_to_machine": 0.4433349567517608,
+    "exchange": 0.05410968303975688
    },
    "measured": {
     "judge_alone": 2.2112186785830414,
@@ -2859,6 +3158,8 @@
     "judge_without_bias_alone": 3.1981523556768683,
     "pair_without_bias": 3.2248689327121856,
     "tu_without_bias": 1.0083537536877798,
+    "yield_on_machine": 1.4237124795913785,
+    "yield_on_machine_without_bias": 1.5736115537927915,
     "judge_without_bias_over_judge": 1.446330200921719,
     "pair_without_bias_over_pair_partner": 1.1052874624267084,
     "accuracy_judge": 0.8628,
@@ -2887,7 +3188,10 @@
     "tu_blind": 1.2441700347930458,
     "angle_blind": 126.51042091483625,
     "angle_partner": 91.12337264605745,
-    "judge_adds_to_machine": 0.47714464674931856
+    "tu_without_bias": 1.020255725236907,
+    "yield_on_machine": 1.4771446467493186,
+    "judge_adds_to_machine": 0.47714464674931856,
+    "exchange": 0.04836771447000356
    },
    "measured": {
     "judge_alone": 2.297748254204906,
@@ -2905,6 +3209,8 @@
     "judge_without_bias_alone": 3.214438434338554,
     "pair_without_bias": 3.258258547712427,
     "tu_without_bias": 1.0136322764517,
+    "yield_on_machine": 1.4543238517393577,
+    "yield_on_machine_without_bias": 1.5861611689263786,
     "judge_without_bias_over_judge": 1.398951529374941,
     "pair_without_bias_over_pair_partner": 1.0906519665680685,
     "accuracy_judge": 0.8703,
@@ -2933,7 +3239,10 @@
     "tu_blind": 1.2689476417737433,
     "angle_blind": 127.99592122921732,
     "angle_partner": 88.5866044570763,
-    "judge_adds_to_machine": 0.13150020565418696
+    "tu_without_bias": 1.0752640160080205,
+    "yield_on_machine": 1.131500205654187,
+    "judge_adds_to_machine": 0.13150020565418696,
+    "exchange": 0.04377967716323108
    },
    "measured": {
     "judge_alone": 2.1640407456789075,
@@ -2951,6 +3260,8 @@
     "judge_without_bias_alone": 3.16642929906903,
     "pair_without_bias": 3.2697998346354566,
     "tu_without_bias": 1.0326457740890722,
+    "yield_on_machine": 1.1436479683133893,
+    "yield_on_machine_without_bias": 1.2114911286872143,
     "judge_without_bias_over_judge": 1.463202255036862,
     "pair_without_bias_over_pair_partner": 1.059321716344128,
     "accuracy_judge": 0.8548,
@@ -2979,7 +3290,10 @@
     "tu_blind": 1.3243173532554289,
     "angle_blind": 130.96536595919798,
     "angle_partner": 93.28155588606708,
-    "judge_adds_to_machine": 0.12648882254871174
+    "tu_without_bias": 1.0769260344900855,
+    "yield_on_machine": 1.1264888225487117,
+    "judge_adds_to_machine": 0.12648882254871174,
+    "exchange": 0.04297438098623972
    },
    "measured": {
     "judge_alone": 2.0944775302054266,
@@ -2997,6 +3311,8 @@
     "judge_without_bias_alone": 3.1712292467622336,
     "pair_without_bias": 3.271580690619825,
     "tu_without_bias": 1.0316443360126197,
+    "yield_on_machine": 1.1287596459980354,
+    "yield_on_machine_without_bias": 1.2010708643659926,
     "judge_without_bias_over_judge": 1.5140908417629093,
     "pair_without_bias_over_pair_partner": 1.0640625474380958,
     "accuracy_judge": 0.8516,
@@ -3025,7 +3341,10 @@
     "tu_blind": 1.2814368867881003,
     "angle_blind": 128.7051708260592,
     "angle_partner": 89.3994800234832,
-    "judge_adds_to_machine": 0.12440652268109575
+    "tu_without_bias": 1.0751330822788518,
+    "yield_on_machine": 1.1244065226810958,
+    "judge_adds_to_machine": 0.12440652268109575,
+    "exchange": 0.04120576081323484
    },
    "measured": {
     "judge_alone": 2.1459023484691375,
@@ -3043,6 +3362,8 @@
     "judge_without_bias_alone": 3.160584424666647,
     "pair_without_bias": 3.2827748027308603,
     "tu_without_bias": 1.0386606910768097,
+    "yield_on_machine": 1.1298994846053991,
+    "yield_on_machine_without_bias": 1.2113734618204703,
     "judge_without_bias_over_judge": 1.4728463422025573,
     "pair_without_bias_over_pair_partner": 1.0721072788554504,
     "accuracy_judge": 0.8582,
@@ -3071,7 +3392,10 @@
     "tu_blind": 1.237394934754766,
     "angle_blind": 126.08448310641423,
     "angle_partner": 85.43313738763885,
-    "judge_adds_to_machine": 0.13774943322426592
+    "tu_without_bias": 1.0692979047663298,
+    "yield_on_machine": 1.137749433224266,
+    "judge_adds_to_machine": 0.13774943322426592,
+    "exchange": 0.04222695276308306
    },
    "measured": {
     "judge_alone": 2.2112186785830414,
@@ -3089,6 +3413,8 @@
     "judge_without_bias_alone": 3.1981523556768683,
     "pair_without_bias": 3.294926882622306,
     "tu_without_bias": 1.0302595111748378,
+    "yield_on_machine": 1.1393980753947206,
+    "yield_on_machine_without_bias": 1.2144983321135199,
     "judge_without_bias_over_judge": 1.446330200921719,
     "pair_without_bias_over_pair_partner": 1.0659122200928612,
     "accuracy_judge": 0.8628,
@@ -3117,7 +3443,10 @@
     "tu_blind": 1.2441700347930458,
     "angle_blind": 126.51042091483625,
     "angle_partner": 85.63372766280447,
-    "judge_adds_to_machine": 0.1556470185583636
+    "tu_without_bias": 1.0525083139178941,
+    "yield_on_machine": 1.1556470185583636,
+    "judge_adds_to_machine": 0.1556470185583636,
+    "exchange": 0.03616025228583576
    },
    "measured": {
     "judge_alone": 2.297748254204906,
@@ -3135,6 +3464,8 @@
     "judge_without_bias_alone": 3.214438434338554,
     "pair_without_bias": 3.302097915800739,
     "tu_without_bias": 1.0272705429743978,
+    "yield_on_machine": 1.1628996626447365,
+    "yield_on_machine_without_bias": 1.2190945821581876,
     "judge_without_bias_over_judge": 1.398951529374941,
     "pair_without_bias_over_pair_partner": 1.048323102429705,
     "accuracy_judge": 0.8703,
@@ -3163,7 +3494,10 @@
     "tu_blind": 1.2955621141390303,
     "angle_blind": 129.4782731198578,
     "angle_partner": 84.4966055694795,
-    "judge_adds_to_machine": 0.02480780984179498
+    "tu_without_bias": 1.066119734492737,
+    "yield_on_machine": 1.024807809841795,
+    "judge_adds_to_machine": 0.02480780984179498,
+    "exchange": 0.006862128057466326
    },
    "measured": {
     "judge_alone": 2.3229951265543454,
@@ -3181,6 +3515,8 @@
     "judge_without_bias_alone": 3.0198456361317625,
     "pair_without_bias": 3.175112713371435,
     "tu_without_bias": 1.051415567531644,
+    "yield_on_machine": 1.018488241940048,
+    "yield_on_machine_without_bias": 1.0247411408540572,
     "judge_without_bias_over_judge": 1.2999793247999802,
     "pair_without_bias_over_pair_partner": 1.0061393923430069,
     "accuracy_judge": 0.8781,
@@ -3209,7 +3545,10 @@
     "tu_blind": 1.2926013898936475,
     "angle_blind": 129.31867691083772,
     "angle_partner": 84.63349177794301,
-    "judge_adds_to_machine": 0.019039938033594828
+    "tu_without_bias": 1.0872204916191073,
+    "yield_on_machine": 1.0190399380335948,
+    "judge_adds_to_machine": 0.019039938033594828,
+    "exchange": 0.006998376457815158
    },
    "measured": {
     "judge_alone": 2.2957670729573,
@@ -3227,6 +3566,8 @@
     "judge_without_bias_alone": 3.057295214476542,
     "pair_without_bias": 3.159241771539584,
     "tu_without_bias": 1.033345342831244,
+    "yield_on_machine": 1.0065625139722651,
+    "yield_on_machine_without_bias": 1.0165467483313795,
     "judge_without_bias_over_judge": 1.3317096714599523,
     "pair_without_bias_over_pair_partner": 1.0099191398651566,
     "accuracy_judge": 0.8751,
@@ -3255,7 +3596,10 @@
     "tu_blind": 1.2842623433196725,
     "angle_blind": 128.86221476404125,
     "angle_partner": 83.71782076963643,
-    "judge_adds_to_machine": 0.020219946027028923
+    "tu_without_bias": 1.0823516636869912,
+    "yield_on_machine": 1.020219946027029,
+    "judge_adds_to_machine": 0.020219946027028923,
+    "exchange": 0.007004950943056661
    },
    "measured": {
     "judge_alone": 2.3112758672585407,
@@ -3273,6 +3617,8 @@
     "judge_without_bias_alone": 3.0640678567544857,
     "pair_without_bias": 3.20636462433264,
     "tu_without_bias": 1.0464404752866268,
+    "yield_on_machine": 1.0091720132840385,
+    "yield_on_machine_without_bias": 1.0413637390520345,
     "judge_without_bias_over_judge": 1.3257040841207974,
     "pair_without_bias_over_pair_partner": 1.0318991463737068,
     "accuracy_judge": 0.8746,
@@ -3301,7 +3647,10 @@
     "tu_blind": 1.3156115722645028,
     "angle_blind": 130.52674131936575,
     "angle_partner": 86.83639453352068,
-    "judge_adds_to_machine": 0.026651891177219333
+    "tu_without_bias": 1.0725176340384794,
+    "yield_on_machine": 1.0266518911772193,
+    "judge_adds_to_machine": 0.026651891177219333,
+    "exchange": 0.008118000064258921
    },
    "measured": {
     "judge_alone": 2.284852745797755,
@@ -3319,6 +3668,8 @@
     "judge_without_bias_alone": 3.13773601073597,
     "pair_without_bias": 3.2061111261238295,
     "tu_without_bias": 1.02179122627076,
+    "yield_on_machine": 1.0167207666514213,
+    "yield_on_machine_without_bias": 1.0398154584031265,
     "judge_without_bias_over_judge": 1.373277125410737,
     "pair_without_bias_over_pair_partner": 1.0227148815183227,
     "accuracy_judge": 0.8743,
@@ -3347,7 +3698,10 @@
     "tu_blind": 1.263636422032203,
     "angle_blind": 127.68656830079904,
     "angle_partner": 81.5043829411801,
-    "judge_adds_to_machine": 0.021495984098852228
+    "tu_without_bias": 1.077402271594112,
+    "yield_on_machine": 1.0214959840988522,
+    "judge_adds_to_machine": 0.021495984098852228,
+    "exchange": 0.006987221706289633
    },
    "measured": {
     "judge_alone": 2.3684554083031313,
@@ -3365,6 +3719,8 @@
     "judge_without_bias_alone": 3.064766512080714,
     "pair_without_bias": 3.1974274627357895,
     "tu_without_bias": 1.0432858262226998,
+    "yield_on_machine": 1.013586920169035,
+    "yield_on_machine_without_bias": 1.0331476275171487,
     "judge_without_bias_over_judge": 1.2939937570015099,
     "pair_without_bias_over_pair_partner": 1.0192985001669632,
     "accuracy_judge": 0.8861,
@@ -3393,7 +3749,10 @@
     "tu_blind": 1.2955621141390303,
     "angle_blind": 129.4782731198578,
     "angle_partner": 97.6707658798824,
-    "judge_adds_to_machine": 0.6386387170478247
+    "tu_without_bias": 1.017293868831918,
+    "yield_on_machine": 1.6386387170478247,
+    "judge_adds_to_machine": 0.6386387170478247,
+    "exchange": 0.05878905831023419
    },
    "measured": {
     "judge_alone": 2.3229951265543454,
@@ -3411,6 +3770,8 @@
     "judge_without_bias_alone": 3.0198456361317625,
     "pair_without_bias": 3.065583816379939,
     "tu_without_bias": 1.0151458669611881,
+    "yield_on_machine": 1.6099683337120625,
+    "yield_on_machine_without_bias": 1.6579390516236283,
     "judge_without_bias_over_judge": 1.2999793247999802,
     "pair_without_bias_over_pair_partner": 1.029796063007625,
     "accuracy_judge": 0.8781,
@@ -3439,7 +3800,10 @@
     "tu_blind": 1.2926013898936475,
     "angle_blind": 129.31867691083772,
     "angle_partner": 97.70929796358774,
-    "judge_adds_to_machine": 0.5950078497303604
+    "tu_without_bias": 1.0234736046303632,
+    "yield_on_machine": 1.5950078497303604,
+    "judge_adds_to_machine": 0.5950078497303604,
+    "exchange": 0.07333962755932226
    },
    "measured": {
     "judge_alone": 2.2957670729573,
@@ -3457,6 +3821,8 @@
     "judge_without_bias_alone": 3.057295214476542,
     "pair_without_bias": 3.0981136205443613,
     "tu_without_bias": 1.013351149694194,
+    "yield_on_machine": 1.5662256167247561,
+    "yield_on_machine_without_bias": 1.6575034298151408,
     "judge_without_bias_over_judge": 1.3317096714599523,
     "pair_without_bias_over_pair_partner": 1.0582788406189283,
     "accuracy_judge": 0.8751,
@@ -3485,7 +3851,10 @@
     "tu_blind": 1.2842623433196725,
     "angle_blind": 128.86221476404125,
     "angle_partner": 96.17898992034009,
-    "judge_adds_to_machine": 0.5974371761341624
+    "tu_without_bias": 1.0173752929958,
+    "yield_on_machine": 1.5974371761341624,
+    "judge_adds_to_machine": 0.5974371761341624,
+    "exchange": 0.05439464291326942
    },
    "measured": {
     "judge_alone": 2.3112758672585407,
@@ -3503,6 +3872,8 @@
     "judge_without_bias_alone": 3.0640678567544857,
     "pair_without_bias": 3.1086284029168416,
     "tu_without_bias": 1.0145429371167893,
+    "yield_on_machine": 1.5590530572480843,
+    "yield_on_machine_without_bias": 1.6818045895805913,
     "judge_without_bias_over_judge": 1.3257040841207974,
     "pair_without_bias_over_pair_partner": 1.0787346727950222,
     "accuracy_judge": 0.8746,
@@ -3531,7 +3902,10 @@
     "tu_blind": 1.3156115722645028,
     "angle_blind": 130.52674131936575,
     "angle_partner": 99.44688454785307,
-    "judge_adds_to_machine": 0.6078286560339987
+    "tu_without_bias": 1.0220534793520617,
+    "yield_on_machine": 1.6078286560339987,
+    "judge_adds_to_machine": 0.6078286560339987,
+    "exchange": 0.070685442201374
    },
    "measured": {
     "judge_alone": 2.284852745797755,
@@ -3549,6 +3923,8 @@
     "judge_without_bias_alone": 3.13773601073597,
     "pair_without_bias": 3.1843892527278,
     "tu_without_bias": 1.0148684407586241,
+    "yield_on_machine": 1.5726401296556138,
+    "yield_on_machine_without_bias": 1.6972711200714565,
     "judge_without_bias_over_judge": 1.373277125410737,
     "pair_without_bias_over_pair_partner": 1.0792495295431226,
     "accuracy_judge": 0.8743,
@@ -3577,7 +3953,10 @@
     "tu_blind": 1.263636422032203,
     "angle_blind": 127.68656830079904,
     "angle_partner": 95.16160497728562,
-    "judge_adds_to_machine": 0.6005539296567268
+    "tu_without_bias": 1.0212997189826656,
+    "yield_on_machine": 1.6005539296567268,
+    "judge_adds_to_machine": 0.6005539296567268,
+    "exchange": 0.06723918903392984
    },
    "measured": {
     "judge_alone": 2.3684554083031313,
@@ -3595,6 +3974,8 @@
     "judge_without_bias_alone": 3.064766512080714,
     "pair_without_bias": 3.134845303607354,
     "tu_without_bias": 1.0228659479442896,
+    "yield_on_machine": 1.5792626255017908,
+    "yield_on_machine_without_bias": 1.674310956505943,
     "judge_without_bias_over_judge": 1.2939937570015099,
     "pair_without_bias_over_pair_partner": 1.060185259544119,
     "accuracy_judge": 0.8861,
@@ -3623,7 +4004,10 @@
     "tu_blind": 1.2955621141390303,
     "angle_blind": 129.4782731198578,
     "angle_partner": 90.06170393279305,
-    "judge_adds_to_machine": 0.15516756141080146
+    "tu_without_bias": 1.0478146032030464,
+    "yield_on_machine": 1.1551675614108015,
+    "judge_adds_to_machine": 0.15516756141080146,
+    "exchange": 0.03274410831504138
    },
    "measured": {
     "judge_alone": 2.3229951265543454,
@@ -3641,6 +4025,8 @@
     "judge_without_bias_alone": 3.0198456361317625,
     "pair_without_bias": 3.137987366932131,
     "tu_without_bias": 1.0391217780759485,
+    "yield_on_machine": 1.1423185463601409,
+    "yield_on_machine_without_bias": 1.1615296768240704,
     "judge_without_bias_over_judge": 1.2999793247999802,
     "pair_without_bias_over_pair_partner": 1.016817664849392,
     "accuracy_judge": 0.8781,
@@ -3669,7 +4055,10 @@
     "tu_blind": 1.2926013898936475,
     "angle_blind": 129.31867691083772,
     "angle_partner": 90.92084644866013,
-    "judge_adds_to_machine": 0.1567586606733029
+    "tu_without_bias": 1.0624051678085218,
+    "yield_on_machine": 1.156758660673303,
+    "judge_adds_to_machine": 0.1567586606733029,
+    "exchange": 0.04351386284444086
    },
    "measured": {
     "judge_alone": 2.2957670729573,
@@ -3687,6 +4076,8 @@
     "judge_without_bias_alone": 3.057295214476542,
     "pair_without_bias": 3.1624474304681858,
     "tu_without_bias": 1.0343938705996527,
+    "yield_on_machine": 1.1423019997305106,
+    "yield_on_machine_without_bias": 1.1820798566720558,
     "judge_without_bias_over_judge": 1.3317096714599523,
     "pair_without_bias_over_pair_partner": 1.0348225398808106,
     "accuracy_judge": 0.8751,
@@ -3715,7 +4106,10 @@
     "tu_blind": 1.2842623433196725,
     "angle_blind": 128.86221476404125,
     "angle_partner": 89.80820216261625,
-    "judge_adds_to_machine": 0.14733653328148333
+    "tu_without_bias": 1.062399850017427,
+    "yield_on_machine": 1.1473365332814833,
+    "judge_adds_to_machine": 0.14733653328148333,
+    "exchange": 0.040716175178064376
    },
    "measured": {
     "judge_alone": 2.3112758672585407,
@@ -3733,6 +4127,8 @@
     "judge_without_bias_alone": 3.0640678567544857,
     "pair_without_bias": 3.203162839524427,
     "tu_without_bias": 1.0453955294962929,
+    "yield_on_machine": 1.1359819718638664,
+    "yield_on_machine_without_bias": 1.1919168548925307,
     "judge_without_bias_over_judge": 1.3257040841207974,
     "pair_without_bias_over_pair_partner": 1.0492392347889896,
     "accuracy_judge": 0.8746,
@@ -3761,7 +4157,10 @@
     "tu_blind": 1.3156115722645028,
     "angle_blind": 130.52674131936575,
     "angle_partner": 92.81279127475959,
-    "judge_adds_to_machine": 0.14935375496255743
+    "tu_without_bias": 1.0657569661212194,
+    "yield_on_machine": 1.1493537549625574,
+    "judge_adds_to_machine": 0.14935375496255743,
+    "exchange": 0.04360587845064533
    },
    "measured": {
     "judge_alone": 2.284852745797755,
@@ -3779,6 +4178,8 @@
     "judge_without_bias_alone": 3.13773601073597,
     "pair_without_bias": 3.248120607469135,
     "tu_without_bias": 1.0351796952820367,
+    "yield_on_machine": 1.1313844094594419,
+    "yield_on_machine_without_bias": 1.1868248037443085,
     "judge_without_bias_over_judge": 1.373277125410737,
     "pair_without_bias_over_pair_partner": 1.049002261142484,
     "accuracy_judge": 0.8743,
@@ -3807,7 +4208,10 @@
     "tu_blind": 1.263636422032203,
     "angle_blind": 127.68656830079904,
     "angle_partner": 87.3420534727452,
-    "judge_adds_to_machine": 0.1577175118251264
+    "tu_without_bias": 1.0491756433829234,
+    "yield_on_machine": 1.1577175118251264,
+    "judge_adds_to_machine": 0.1577175118251264,
+    "exchange": 0.03429286257498345
    },
    "measured": {
     "judge_alone": 2.3684554083031313,
@@ -3825,6 +4229,8 @@
     "judge_without_bias_alone": 3.064766512080714,
     "pair_without_bias": 3.1650815349127184,
     "tu_without_bias": 1.032731701562446,
+    "yield_on_machine": 1.1408740546861524,
+    "yield_on_machine_without_bias": 1.1902610174518469,
     "judge_without_bias_over_judge": 1.2939937570015099,
     "pair_without_bias_over_pair_partner": 1.0432887070775578,
     "accuracy_judge": 0.8861,
@@ -3853,7 +4259,10 @@
     "tu_blind": 1.342838995935886,
     "angle_blind": 131.8674423017916,
     "angle_partner": 89.55483498121448,
-    "judge_adds_to_machine": 0.01020960142892724
+    "tu_without_bias": 1.1227173371692032,
+    "yield_on_machine": 1.0102096014289272,
+    "judge_adds_to_machine": 0.01020960142892724,
+    "exchange": 0.005346237170100213
    },
    "measured": {
     "judge_alone": 1.991415551686858,
@@ -3871,6 +4280,8 @@
     "judge_without_bias_alone": 2.959832943442989,
     "pair_without_bias": 3.0629704071226596,
     "tu_without_bias": 1.0348457043523873,
+    "yield_on_machine": 0.9956590571875055,
+    "yield_on_machine_without_bias": 1.0421737738454266,
     "judge_without_bias_over_judge": 1.4862959872618344,
     "pair_without_bias_over_pair_partner": 1.0467175147176524,
     "accuracy_judge": 0.8423,
@@ -3899,7 +4310,10 @@
     "tu_blind": 1.3494315126593566,
     "angle_blind": 132.1788246961284,
     "angle_partner": 90.24557587963758,
-    "judge_adds_to_machine": 0.01809924879728264
+    "tu_without_bias": 1.101363697932846,
+    "yield_on_machine": 1.0180992487972826,
+    "judge_adds_to_machine": 0.01809924879728264,
+    "exchange": 0.007780127999609944
    },
    "measured": {
     "judge_alone": 1.958481875591417,
@@ -3917,6 +4331,8 @@
     "judge_without_bias_alone": 2.9050029304010843,
     "pair_without_bias": 3.0054780584847345,
     "tu_without_bias": 1.034586928306395,
+    "yield_on_machine": 1.0087938225636102,
+    "yield_on_machine_without_bias": 1.0418605358736144,
     "judge_without_bias_over_judge": 1.483293241875848,
     "pair_without_bias_over_pair_partner": 1.032778465302229,
     "accuracy_judge": 0.8353,
@@ -3945,7 +4361,10 @@
     "tu_blind": 1.3679212243503054,
     "angle_blind": 133.02666310101978,
     "angle_partner": 91.56088688813783,
-    "judge_adds_to_machine": 0.018341361310194815
+    "tu_without_bias": 1.0946408203439213,
+    "yield_on_machine": 1.0183413613101948,
+    "judge_adds_to_machine": 0.018341361310194815,
+    "exchange": 0.007338617383102838
    },
    "measured": {
     "judge_alone": 1.9552623038954788,
@@ -3963,6 +4382,8 @@
     "judge_without_bias_alone": 2.9117771319571197,
     "pair_without_bias": 3.0224265985054566,
     "tu_without_bias": 1.038000664726,
+    "yield_on_machine": 1.0115846464410787,
+    "yield_on_machine_without_bias": 1.0426792593830518,
     "judge_without_bias_over_judge": 1.4892002603210688,
     "pair_without_bias_over_pair_partner": 1.0307385180779178,
     "accuracy_judge": 0.8361,
@@ -3991,7 +4412,10 @@
     "tu_blind": 1.4289755054963724,
     "angle_blind": 135.58887473315426,
     "angle_partner": 96.49908909800962,
-    "judge_adds_to_machine": 0.019267400746738605
+    "tu_without_bias": 1.1003810295187946,
+    "yield_on_machine": 1.0192674007467386,
+    "judge_adds_to_machine": 0.019267400746738605,
+    "exchange": 0.008202886400264373
    },
    "measured": {
     "judge_alone": 1.8775614604858792,
@@ -4009,6 +4433,8 @@
     "judge_without_bias_alone": 2.8908098243384766,
     "pair_without_bias": 2.98832114149203,
     "tu_without_bias": 1.0337314880877255,
+    "yield_on_machine": 1.0082442620994803,
+    "yield_on_machine_without_bias": 1.0437166427596238,
     "judge_without_bias_over_judge": 1.5396618886661568,
     "pair_without_bias_over_pair_partner": 1.035182328324169,
     "accuracy_judge": 0.8291,
@@ -4037,7 +4463,10 @@
     "tu_blind": 1.361556795722735,
     "angle_blind": 132.73895183091437,
     "angle_partner": 90.27346035649141,
-    "judge_adds_to_machine": 0.013729765319547615
+    "tu_without_bias": 1.085466968608967,
+    "yield_on_machine": 1.0137297653195476,
+    "judge_adds_to_machine": 0.013729765319547615,
+    "exchange": 0.0049279457640201306
    },
    "measured": {
     "judge_alone": 1.977004758348517,
@@ -4055,6 +4484,8 @@
     "judge_without_bias_alone": 2.8899272154515483,
     "pair_without_bias": 2.975209260063021,
     "tu_without_bias": 1.0295101012079113,
+    "yield_on_machine": 1.0052709961297441,
+    "yield_on_machine_without_bias": 1.0405816859324093,
     "judge_without_bias_over_judge": 1.461770490560497,
     "pair_without_bias_over_pair_partner": 1.0351255432004007,
     "accuracy_judge": 0.8393,
@@ -4083,7 +4514,10 @@
     "tu_blind": 1.342838995935886,
     "angle_blind": 131.8674423017916,
     "angle_partner": 96.01067113947664,
-    "judge_adds_to_machine": 0.3973638060496252
+    "tu_without_bias": 1.0093075525678017,
+    "yield_on_machine": 1.3973638060496252,
+    "judge_adds_to_machine": 0.3973638060496252,
+    "exchange": 0.01781575228482785
    },
    "measured": {
     "judge_alone": 1.991415551686858,
@@ -4101,6 +4535,8 @@
     "judge_without_bias_alone": 2.959832943442989,
     "pair_without_bias": 2.9637151768165806,
     "tu_without_bias": 1.0013116393552521,
+    "yield_on_machine": 1.3513438779715545,
+    "yield_on_machine_without_bias": 1.5515962009441766,
     "judge_without_bias_over_judge": 1.4862959872618344,
     "pair_without_bias_over_pair_partner": 1.1481875385214402,
     "accuracy_judge": 0.8423,
@@ -4129,7 +4565,10 @@
     "tu_blind": 1.3494315126593566,
     "angle_blind": 132.1788246961284,
     "angle_partner": 96.69207439270974,
-    "judge_adds_to_machine": 0.38700955912031487
+    "tu_without_bias": 1.0114651825761267,
+    "yield_on_machine": 1.3870095591203149,
+    "judge_adds_to_machine": 0.38700955912031487,
+    "exchange": 0.02130440183378135
    },
    "measured": {
     "judge_alone": 1.958481875591417,
@@ -4147,6 +4586,8 @@
     "judge_without_bias_alone": 2.9050029304010843,
     "pair_without_bias": 2.9119585797443728,
     "tu_without_bias": 1.0023943691314376,
+    "yield_on_machine": 1.3360464881597813,
+    "yield_on_machine_without_bias": 1.4974432634106134,
     "judge_without_bias_over_judge": 1.483293241875848,
     "pair_without_bias_over_pair_partner": 1.1208017660172394,
     "accuracy_judge": 0.8353,
@@ -4175,7 +4616,10 @@
     "tu_blind": 1.3679212243503054,
     "angle_blind": 133.02666310101978,
     "angle_partner": 98.39906673933767,
-    "judge_adds_to_machine": 0.40649032838457866
+    "tu_without_bias": 1.0113628999585278,
+    "yield_on_machine": 1.4064903283845787,
+    "judge_adds_to_machine": 0.40649032838457866,
+    "exchange": 0.02235702208220632
    },
    "measured": {
     "judge_alone": 1.9552623038954788,
@@ -4193,6 +4637,8 @@
     "judge_without_bias_alone": 2.9117771319571197,
     "pair_without_bias": 2.9165983063681717,
     "tu_without_bias": 1.0016557498024623,
+    "yield_on_machine": 1.357130366504374,
+    "yield_on_machine_without_bias": 1.504109932611421,
     "judge_without_bias_over_judge": 1.4892002603210688,
     "pair_without_bias_over_pair_partner": 1.1083017296898523,
     "accuracy_judge": 0.8361,
@@ -4221,7 +4667,10 @@
     "tu_blind": 1.4289755054963724,
     "angle_blind": 135.58887473315426,
     "angle_partner": 101.89314105978525,
-    "judge_adds_to_machine": 0.3956979398591498
+    "tu_without_bias": 1.0083195972930108,
+    "yield_on_machine": 1.3956979398591498,
+    "judge_adds_to_machine": 0.3956979398591498,
+    "exchange": 0.015839117467804444
    },
    "measured": {
     "judge_alone": 1.8775614604858792,
@@ -4239,6 +4688,8 @@
     "judge_without_bias_alone": 2.8908098243384766,
     "pair_without_bias": 2.897940058318924,
     "tu_without_bias": 1.0024665178319294,
+    "yield_on_machine": 1.3500361112277817,
+    "yield_on_machine_without_bias": 1.5124914527447857,
     "judge_without_bias_over_judge": 1.5396618886661568,
     "pair_without_bias_over_pair_partner": 1.1203340711895922,
     "accuracy_judge": 0.8291,
@@ -4267,7 +4718,10 @@
     "tu_blind": 1.361556795722735,
     "angle_blind": 132.73895183091437,
     "angle_partner": 97.33206750059198,
-    "judge_adds_to_machine": 0.41037886023127945
+    "tu_without_bias": 1.0075972017472876,
+    "yield_on_machine": 1.4103788602312795,
+    "judge_adds_to_machine": 0.41037886023127945,
+    "exchange": 0.015086918068907499
    },
    "measured": {
     "judge_alone": 1.977004758348517,
@@ -4285,6 +4739,8 @@
     "judge_without_bias_alone": 2.8899272154515483,
     "pair_without_bias": 2.894588417282854,
     "tu_without_bias": 1.0016129132271512,
+    "yield_on_machine": 1.3585448299895713,
+    "yield_on_machine_without_bias": 1.5173603513109086,
     "judge_without_bias_over_judge": 1.461770490560497,
     "pair_without_bias_over_pair_partner": 1.1169012003251717,
     "accuracy_judge": 0.8393,
@@ -4313,7 +4769,10 @@
     "tu_blind": 1.342838995935886,
     "angle_blind": 131.8674423017916,
     "angle_partner": 92.5124958917871,
-    "judge_adds_to_machine": 0.12859942669709556
+    "tu_without_bias": 1.0402046631686719,
+    "yield_on_machine": 1.1285994266970956,
+    "judge_adds_to_machine": 0.12859942669709556,
+    "exchange": 0.022453452938738832
    },
    "measured": {
     "judge_alone": 1.991415551686858,
@@ -4331,6 +4790,8 @@
     "judge_without_bias_alone": 2.959832943442989,
     "pair_without_bias": 2.985583861334582,
     "tu_without_bias": 1.0087001254407415,
+    "yield_on_machine": 1.1151355338837894,
+    "yield_on_machine_without_bias": 1.2249167680538116,
     "judge_without_bias_over_judge": 1.4862959872618344,
     "pair_without_bias_over_pair_partner": 1.0984465393078062,
     "accuracy_judge": 0.8423,
@@ -4359,7 +4820,10 @@
     "tu_blind": 1.3494315126593566,
     "angle_blind": 132.1788246961284,
     "angle_partner": 93.20845089632073,
-    "judge_adds_to_machine": 0.14003272740163797
+    "tu_without_bias": 1.0368768504201575,
+    "yield_on_machine": 1.140032727401638,
+    "judge_adds_to_machine": 0.14003272740163797,
+    "exchange": 0.0225096403830038
    },
    "measured": {
     "judge_alone": 1.958481875591417,
@@ -4377,6 +4841,8 @@
     "judge_without_bias_alone": 2.9050029304010843,
     "pair_without_bias": 2.938866802766299,
     "tu_without_bias": 1.0116570871618844,
+    "yield_on_machine": 1.1255763245363748,
+    "yield_on_machine_without_bias": 1.2117323721380469,
     "judge_without_bias_over_judge": 1.483293241875848,
     "pair_without_bias_over_pair_partner": 1.0765439408448465,
     "accuracy_judge": 0.8353,
@@ -4405,7 +4871,10 @@
     "tu_blind": 1.3679212243503054,
     "angle_blind": 133.02666310101978,
     "angle_partner": 94.73636449969904,
-    "judge_adds_to_machine": 0.1405315287656761
+    "tu_without_bias": 1.037612128357197,
+    "yield_on_machine": 1.140531528765676,
+    "judge_adds_to_machine": 0.1405315287656761,
+    "exchange": 0.023053922368124664
    },
    "measured": {
     "judge_alone": 1.9552623038954788,
@@ -4423,6 +4892,8 @@
     "judge_without_bias_alone": 2.9117771319571197,
     "pair_without_bias": 2.952557698473049,
     "tu_without_bias": 1.0140053873177164,
+    "yield_on_machine": 1.1257111183333317,
+    "yield_on_machine_without_bias": 1.2034938554830383,
     "judge_without_bias_over_judge": 1.4892002603210688,
     "pair_without_bias_over_pair_partner": 1.0690965345219896,
     "accuracy_judge": 0.8361,
@@ -4451,7 +4922,10 @@
     "tu_blind": 1.4289755054963724,
     "angle_blind": 135.58887473315426,
     "angle_partner": 99.04263012682232,
-    "judge_adds_to_machine": 0.13336120801780105
+    "tu_without_bias": 1.0391875759181415,
+    "yield_on_machine": 1.133361208017801,
+    "judge_adds_to_machine": 0.13336120801780105,
+    "exchange": 0.022735237251575335
    },
    "measured": {
     "judge_alone": 1.8775614604858792,
@@ -4469,6 +4943,8 @@
     "judge_without_bias_alone": 2.8908098243384766,
     "pair_without_bias": 2.9324689776868778,
     "tu_without_bias": 1.0144108937909586,
+    "yield_on_machine": 1.1225261153008224,
+    "yield_on_machine_without_bias": 1.2059189669594765,
     "judge_without_bias_over_judge": 1.5396618886661568,
     "pair_without_bias_over_pair_partner": 1.074290344359878,
     "accuracy_judge": 0.8291,
@@ -4497,7 +4973,10 @@
     "tu_blind": 1.361556795722735,
     "angle_blind": 132.73895183091437,
     "angle_partner": 94.289321448194,
-    "judge_adds_to_machine": 0.14526428944798186
+    "tu_without_bias": 1.03610374091935,
+    "yield_on_machine": 1.1452642894479819,
+    "judge_adds_to_machine": 0.14526428944798186,
+    "exchange": 0.022908242587106543
    },
    "measured": {
     "judge_alone": 1.977004758348517,
@@ -4515,6 +4994,8 @@
     "judge_without_bias_alone": 2.8899272154515483,
     "pair_without_bias": 2.932599180188684,
     "tu_without_bias": 1.0147657575972786,
+    "yield_on_machine": 1.1293646267056896,
+    "yield_on_machine_without_bias": 1.21397085673083,
     "judge_without_bias_over_judge": 1.461770490560497,
     "pair_without_bias_over_pair_partner": 1.0749148928738217,
     "accuracy_judge": 0.8393,
@@ -4543,7 +5024,10 @@
     "tu_blind": 1.6427319935815512,
     "angle_blind": 142.5014013529137,
     "angle_partner": 109.6259014416357,
-    "judge_adds_to_machine": 0.004143570257493456
+    "tu_without_bias": 1.1844186124815712,
+    "yield_on_machine": 1.0041435702574935,
+    "judge_adds_to_machine": 0.004143570257493456,
+    "exchange": 0.003345369979029812
    },
    "measured": {
     "judge_alone": 1.0492246610413574,
@@ -4561,6 +5045,8 @@
     "judge_without_bias_alone": 1.9535979556779732,
     "pair_without_bias": 2.132915177684418,
     "tu_without_bias": 1.0917881908533298,
+    "yield_on_machine": 0.9918584086306528,
+    "yield_on_machine_without_bias": 1.0323694504101208,
     "judge_without_bias_over_judge": 1.8619443749435167,
     "pair_without_bias_over_pair_partner": 1.0408435734646815,
     "accuracy_judge": 0.6997,
@@ -4589,7 +5075,10 @@
     "tu_blind": 1.7018469679690258,
     "angle_blind": 144.01333837030555,
     "angle_partner": 112.6550340408515,
-    "judge_adds_to_machine": 0.003701354376908217
+    "tu_without_bias": 1.202751097001884,
+    "yield_on_machine": 1.0037013543769082,
+    "judge_adds_to_machine": 0.003701354376908217,
+    "exchange": 0.0033122438175744655
    },
    "measured": {
     "judge_alone": 0.9950466363541863,
@@ -4607,6 +5096,8 @@
     "judge_without_bias_alone": 2.012943517824276,
     "pair_without_bias": 2.168744856344956,
     "tu_without_bias": 1.077399756695151,
+    "yield_on_machine": 0.993554028690406,
+    "yield_on_machine_without_bias": 1.029065639507601,
     "judge_without_bias_over_judge": 2.0229639941295874,
     "pair_without_bias_over_pair_partner": 1.0357420027414137,
     "accuracy_judge": 0.686,
@@ -4635,7 +5126,10 @@
     "tu_blind": 1.7193502711200415,
     "angle_blind": 144.43578274315482,
     "angle_partner": 113.16238097561738,
-    "judge_adds_to_machine": 0.002642946704561888
+    "tu_without_bias": 1.1969323474689373,
+    "yield_on_machine": 1.0026429467045619,
+    "judge_adds_to_machine": 0.002642946704561888,
+    "exchange": 0.0022899482725432098
    },
    "measured": {
     "judge_alone": 1.0083631513356206,
@@ -4653,6 +5147,8 @@
     "judge_without_bias_alone": 2.032432723078363,
     "pair_without_bias": 2.1783454735378402,
     "tu_without_bias": 1.0717921674861026,
+    "yield_on_machine": 0.9875809671184352,
+    "yield_on_machine_without_bias": 1.0343362740046764,
     "judge_without_bias_over_judge": 2.015576154668403,
     "pair_without_bias_over_pair_partner": 1.047343264444093,
     "accuracy_judge": 0.6904,
@@ -4681,7 +5177,10 @@
     "tu_blind": 1.6443713658642303,
     "angle_blind": 142.54521722298492,
     "angle_partner": 109.83933419595009,
-    "judge_adds_to_machine": 0.002165920232422014
+    "tu_without_bias": 1.2118580952087668,
+    "yield_on_machine": 1.002165920232422,
+    "judge_adds_to_machine": 0.002165920232422014,
+    "exchange": 0.002032098929181278
    },
    "measured": {
     "judge_alone": 1.0286466519949158,
@@ -4699,6 +5198,8 @@
     "judge_without_bias_alone": 1.9645217539505824,
     "pair_without_bias": 2.163448816505749,
     "tu_without_bias": 1.1012597911706152,
+    "yield_on_machine": 0.9879645255446167,
+    "yield_on_machine_without_bias": 1.023097455716119,
     "judge_without_bias_over_judge": 1.909812033258134,
     "pair_without_bias_over_pair_partner": 1.035560922748856,
     "accuracy_judge": 0.6938,
@@ -4727,7 +5228,10 @@
     "tu_blind": 1.6272793556192198,
     "angle_blind": 142.0827576045627,
     "angle_partner": 108.89862115590819,
-    "judge_adds_to_machine": 0.0030629654894855918
+    "tu_without_bias": 1.196486088286539,
+    "yield_on_machine": 1.0030629654894856,
+    "judge_adds_to_machine": 0.0030629654894855918,
+    "exchange": 0.002647871886826428
    },
    "measured": {
     "judge_alone": 1.0197457957875262,
@@ -4745,6 +5249,8 @@
     "judge_without_bias_alone": 2.0119377597701877,
     "pair_without_bias": 2.156177188205832,
     "tu_without_bias": 1.071691794507659,
+    "yield_on_machine": 0.9924945336358513,
+    "yield_on_machine_without_bias": 1.0444594338812039,
     "judge_without_bias_over_judge": 1.9729797054141465,
     "pair_without_bias_over_pair_partner": 1.0523578704811472,
     "accuracy_judge": 0.6944,
@@ -4773,7 +5279,10 @@
     "tu_blind": 1.6427319935815512,
     "angle_blind": 142.5014013529137,
     "angle_partner": 117.34284294836843,
-    "judge_adds_to_machine": 0.835393539137989
+    "tu_without_bias": 1.0049449185348585,
+    "yield_on_machine": 1.835393539137989,
+    "judge_adds_to_machine": 0.835393539137989,
+    "exchange": 0.02348367409304608
    },
    "measured": {
     "judge_alone": 1.0492246610413574,
@@ -4791,6 +5300,8 @@
     "judge_without_bias_alone": 1.9535979556779732,
     "pair_without_bias": 1.9558645064149685,
     "tu_without_bias": 1.0011601930327618,
+    "yield_on_machine": 1.7716474693926307,
+    "yield_on_machine_without_bias": 2.0393730561358647,
     "judge_without_bias_over_judge": 1.8619443749435167,
     "pair_without_bias_over_pair_partner": 1.151116738159549,
     "accuracy_judge": 0.6997,
@@ -4819,7 +5330,10 @@
     "tu_blind": 1.7018469679690258,
     "angle_blind": 144.01333837030555,
     "angle_partner": 118.55990798157995,
-    "judge_adds_to_machine": 0.8374299825983451
+    "tu_without_bias": 1.0007374891247007,
+    "yield_on_machine": 1.8374299825983451,
+    "judge_adds_to_machine": 0.8374299825983451,
+    "exchange": 0.003506060369385363
    },
    "measured": {
     "judge_alone": 0.9950466363541863,
@@ -4837,6 +5351,8 @@
     "judge_without_bias_alone": 2.012943517824276,
     "pair_without_bias": 2.019904091981205,
     "tu_without_bias": 1.0034579083294162,
+    "yield_on_machine": 1.741601401742282,
+    "yield_on_machine_without_bias": 2.1087604371413904,
     "judge_without_bias_over_judge": 2.0229639941295874,
     "pair_without_bias_over_pair_partner": 1.210816915415781,
     "accuracy_judge": 0.686,
@@ -4865,7 +5381,10 @@
     "tu_blind": 1.7193502711200415,
     "angle_blind": 144.43578274315482,
     "angle_partner": 120.28521748480372,
-    "judge_adds_to_machine": 0.9126126033279085
+    "tu_without_bias": 1.0021917346609375,
+    "yield_on_machine": 1.9126126033279085,
+    "judge_adds_to_machine": 0.9126126033279085,
+    "exchange": 0.011664411344231754
    },
    "measured": {
     "judge_alone": 1.0083631513356206,
@@ -4883,6 +5402,8 @@
     "judge_without_bias_alone": 2.032432723078363,
     "pair_without_bias": 2.038286777007511,
     "tu_without_bias": 1.0028803186755828,
+    "yield_on_machine": 1.8362275154729004,
+    "yield_on_machine_without_bias": 2.204955264886294,
     "judge_without_bias_over_judge": 2.015576154668403,
     "pair_without_bias_over_pair_partner": 1.2008072236726242,
     "accuracy_judge": 0.6904,
@@ -4911,7 +5432,10 @@
     "tu_blind": 1.6443713658642303,
     "angle_blind": 142.54521722298492,
     "angle_partner": 116.74325185761069,
-    "judge_adds_to_machine": 0.8793114346946738
+    "tu_without_bias": 1.001364803864335,
+    "yield_on_machine": 1.8793114346946738,
+    "judge_adds_to_machine": 0.8793114346946738,
+    "exchange": 0.006915568131016496
    },
    "measured": {
     "judge_alone": 1.0286466519949158,
@@ -4929,6 +5453,8 @@
     "judge_without_bias_alone": 1.9645217539505824,
     "pair_without_bias": 1.9672178437385868,
     "tu_without_bias": 1.0013723898870464,
+    "yield_on_machine": 1.7814017959236652,
+    "yield_on_machine_without_bias": 2.111258477997858,
     "judge_without_bias_over_judge": 1.909812033258134,
     "pair_without_bias_over_pair_partner": 1.1851669190123166,
     "accuracy_judge": 0.6938,
@@ -4957,7 +5483,10 @@
     "tu_blind": 1.6272793556192198,
     "angle_blind": 142.0827576045627,
     "angle_partner": 117.15169968799623,
-    "judge_adds_to_machine": 0.8447554769415442
+    "tu_without_bias": 1.0069717725466818,
+    "yield_on_machine": 1.8447554769415442,
+    "judge_adds_to_machine": 0.8447554769415442,
+    "exchange": 0.0336248559582785
    },
    "measured": {
     "judge_alone": 1.0197457957875262,
@@ -4975,6 +5504,8 @@
     "judge_without_bias_alone": 2.0119377597701877,
     "pair_without_bias": 2.0104338848804133,
     "tu_without_bias": 0.9992525241486863,
+    "yield_on_machine": 1.7931401677085341,
+    "yield_on_machine_without_bias": 2.128128729399932,
     "judge_without_bias_over_judge": 1.9729797054141465,
     "pair_without_bias_over_pair_partner": 1.1868167183603286,
     "accuracy_judge": 0.6944,
@@ -5003,7 +5534,10 @@
     "tu_blind": 1.6427319935815512,
     "angle_blind": 142.5014013529137,
     "angle_partner": 112.47148736341302,
-    "judge_adds_to_machine": 0.16459176586803115
+    "tu_without_bias": 1.0475140080429703,
+    "yield_on_machine": 1.1645917658680311,
+    "judge_adds_to_machine": 0.16459176586803115,
+    "exchange": 0.03466032696604422
    },
    "measured": {
     "judge_alone": 1.0492246610413574,
@@ -5021,6 +5555,8 @@
     "judge_without_bias_alone": 1.9535979556779732,
     "pair_without_bias": 1.9991421212600802,
     "tu_without_bias": 1.023312967465868,
+    "yield_on_machine": 1.1678524427407861,
+    "yield_on_machine_without_bias": 1.2689032715978523,
     "judge_without_bias_over_judge": 1.8619443749435167,
     "pair_without_bias_over_pair_partner": 1.086527051842195,
     "accuracy_judge": 0.6997,
@@ -5049,7 +5585,10 @@
     "tu_blind": 1.7018469679690258,
     "angle_blind": 144.01333837030555,
     "angle_partner": 114.60782567965522,
-    "judge_adds_to_machine": 0.15335648730763762
+    "tu_without_bias": 1.0427627954812773,
+    "yield_on_machine": 1.1533564873076376,
+    "judge_adds_to_machine": 0.15335648730763762,
+    "exchange": 0.02884709687143103
    },
    "measured": {
     "judge_alone": 0.9950466363541863,
@@ -5067,6 +5606,8 @@
     "judge_without_bias_alone": 2.012943517824276,
     "pair_without_bias": 2.0524662233608053,
     "tu_without_bias": 1.0196342844131305,
+    "yield_on_machine": 1.152893342882525,
+    "yield_on_machine_without_bias": 1.2908028649822438,
     "judge_without_bias_over_judge": 2.0229639941295874,
     "pair_without_bias_over_pair_partner": 1.1196203646686953,
     "accuracy_judge": 0.686,
@@ -5095,7 +5636,10 @@
     "tu_blind": 1.7193502711200415,
     "angle_blind": 144.43578274315482,
     "angle_partner": 115.44296371520583,
-    "judge_adds_to_machine": 0.15740512313748356
+    "tu_without_bias": 1.042636790249465,
+    "yield_on_machine": 1.1574051231374836,
+    "judge_adds_to_machine": 0.15740512313748356,
+    "exchange": 0.02957510001383391
    },
    "measured": {
     "judge_alone": 1.0083631513356206,
@@ -5113,6 +5657,8 @@
     "judge_without_bias_alone": 2.032432723078363,
     "pair_without_bias": 2.06039627159995,
     "tu_without_bias": 1.0137586588741954,
+    "yield_on_machine": 1.1611675414672207,
+    "yield_on_machine_without_bias": 1.2964668289335899,
     "judge_without_bias_over_judge": 2.015576154668403,
     "pair_without_bias_over_pair_partner": 1.1165200392145036,
     "accuracy_judge": 0.6904,
@@ -5141,7 +5687,10 @@
     "tu_blind": 1.6443713658642303,
     "angle_blind": 142.54521722298492,
     "angle_partner": 112.44113910441243,
-    "judge_adds_to_machine": 0.15168058674628782
+    "tu_without_bias": 1.0518079007826657,
+    "yield_on_machine": 1.1516805867462878,
+    "judge_adds_to_machine": 0.15168058674628782,
+    "exchange": 0.03469289124135519
    },
    "measured": {
     "judge_alone": 1.0286466519949158,
@@ -5159,6 +5708,8 @@
     "judge_without_bias_alone": 1.9645217539505824,
     "pair_without_bias": 2.0060569686778456,
     "tu_without_bias": 1.0211426596034059,
+    "yield_on_machine": 1.1576823447796327,
+    "yield_on_machine_without_bias": 1.256091849359176,
     "judge_without_bias_over_judge": 1.909812033258134,
     "pair_without_bias_over_pair_partner": 1.085005619221286,
     "accuracy_judge": 0.6938,
@@ -5187,7 +5738,10 @@
     "tu_blind": 1.6272793556192198,
     "angle_blind": 142.0827576045627,
     "angle_partner": 112.03506502637282,
-    "judge_adds_to_machine": 0.17217193691381527
+    "tu_without_bias": 1.0494911345759392,
+    "yield_on_machine": 1.1721719369138153,
+    "judge_adds_to_machine": 0.17217193691381527,
+    "exchange": 0.03793412036963031
    },
    "measured": {
     "judge_alone": 1.0197457957875262,
@@ -5205,6 +5759,8 @@
     "judge_without_bias_alone": 2.0119377597701877,
     "pair_without_bias": 2.0501359967082307,
     "tu_without_bias": 1.0189857945418779,
+    "yield_on_machine": 1.1767799782140658,
+    "yield_on_machine_without_bias": 1.3230668979594402,
     "judge_without_bias_over_judge": 1.9729797054141465,
     "pair_without_bias_over_pair_partner": 1.1243111902425345,
     "accuracy_judge": 0.6944,
@@ -5233,7 +5789,10 @@
     "tu_blind": 1.2874738368410852,
     "angle_blind": 129.03923687707498,
     "angle_partner": 84.66381116594505,
-    "judge_adds_to_machine": 0.0185324272560059
+    "tu_without_bias": 1.1014743171858004,
+    "yield_on_machine": 1.018532427256006,
+    "judge_adds_to_machine": 0.0185324272560059,
+    "exchange": 0.007977159195736109
    },
    "measured": {
     "judge_alone": 2.19970695621512,
@@ -5251,6 +5810,8 @@
     "judge_without_bias_alone": 3.1350344487750395,
     "pair_without_bias": 3.264495939590045,
     "tu_without_bias": 1.04129507759176,
+    "yield_on_machine": 1.0066791321831767,
+    "yield_on_machine_without_bias": 1.0481127244775663,
     "judge_without_bias_over_judge": 1.4252054983584137,
     "pair_without_bias_over_pair_partner": 1.041158687976906,
     "accuracy_judge": 0.8649,
@@ -5279,7 +5840,10 @@
     "tu_blind": 1.3067241974013957,
     "angle_blind": 130.06876544412415,
     "angle_partner": 87.1729936138624,
-    "judge_adds_to_machine": 0.01603186865397488
+    "tu_without_bias": 1.1269667810825954,
+    "yield_on_machine": 1.0160318686539749,
+    "judge_adds_to_machine": 0.01603186865397488,
+    "exchange": 0.00872835407501517
    },
    "measured": {
     "judge_alone": 2.1046111525926103,
@@ -5297,6 +5861,8 @@
     "judge_without_bias_alone": 3.058353968618674,
     "pair_without_bias": 3.2449477784075924,
     "tu_without_bias": 1.0610111882743234,
+    "yield_on_machine": 1.0083907156987801,
+    "yield_on_machine_without_bias": 1.0371760878961165,
     "judge_without_bias_over_judge": 1.453168184940565,
     "pair_without_bias_over_pair_partner": 1.0285458520682522,
     "accuracy_judge": 0.8504,
@@ -5325,7 +5891,10 @@
     "tu_blind": 1.2749592387263564,
     "angle_blind": 128.34043331607472,
     "angle_partner": 82.77577724046245,
-    "judge_adds_to_machine": 0.016404371611386415
+    "tu_without_bias": 1.0912715758604152,
+    "yield_on_machine": 1.0164043716113864,
+    "judge_adds_to_machine": 0.016404371611386415,
+    "exchange": 0.006313689395995409
    },
    "measured": {
     "judge_alone": 2.2980837569643,
@@ -5343,6 +5912,8 @@
     "judge_without_bias_alone": 3.18573593267601,
     "pair_without_bias": 3.3121997266846455,
     "tu_without_bias": 1.0396968853292263,
+    "yield_on_machine": 1.0107491300441729,
+    "yield_on_machine_without_bias": 1.053067376321072,
     "judge_without_bias_over_judge": 1.3862575387088034,
     "pair_without_bias_over_pair_partner": 1.0418681995551655,
     "accuracy_judge": 0.8744,
@@ -5371,7 +5942,10 @@
     "tu_blind": 1.3780594540869755,
     "angle_blind": 133.47637875476795,
     "angle_partner": 92.96126243008575,
-    "judge_adds_to_machine": 0.021388605616287748
+    "tu_without_bias": 1.1036815065630088,
+    "yield_on_machine": 1.0213886056162877,
+    "judge_adds_to_machine": 0.021388605616287748,
+    "exchange": 0.00943004085206358
    },
    "measured": {
     "judge_alone": 2.0641060945396017,
@@ -5389,6 +5963,8 @@
     "judge_without_bias_alone": 3.0625145102151525,
     "pair_without_bias": 3.2096421020307164,
     "tu_without_bias": 1.0480414350119203,
+    "yield_on_machine": 1.0129042408063418,
+    "yield_on_machine_without_bias": 1.0345763542909046,
     "judge_without_bias_over_judge": 1.4837001442497293,
     "pair_without_bias_over_pair_partner": 1.0213960141654757,
     "accuracy_judge": 0.8424,
@@ -5417,7 +5993,10 @@
     "tu_blind": 1.2927476431232081,
     "angle_blind": 129.3265905320487,
     "angle_partner": 84.93110179022148,
-    "judge_adds_to_machine": 0.009987831914426648
+    "tu_without_bias": 1.1219818148246705,
+    "yield_on_machine": 1.0099878319144266,
+    "judge_adds_to_machine": 0.009987831914426648,
+    "exchange": 0.005196385968787417
    },
    "measured": {
     "judge_alone": 2.2168109201821524,
@@ -5435,6 +6014,8 @@
     "judge_without_bias_alone": 3.1324431636193903,
     "pair_without_bias": 3.305519042068842,
     "tu_without_bias": 1.055252679588756,
+    "yield_on_machine": 0.9961014304005603,
+    "yield_on_machine_without_bias": 1.031254779840094,
     "judge_without_bias_over_judge": 1.413040298160387,
     "pair_without_bias_over_pair_partner": 1.035290933600404,
     "accuracy_judge": 0.8665,
@@ -5463,7 +6044,10 @@
     "tu_blind": 1.2874738368410852,
     "angle_blind": 129.03923687707498,
     "angle_partner": 93.52980253939222,
-    "judge_adds_to_machine": 0.47363230754938224
+    "tu_without_bias": 1.012427113101842,
+    "yield_on_machine": 1.4736323075493822,
+    "judge_adds_to_machine": 0.47363230754938224,
+    "exchange": 0.02929994966571258
    },
    "measured": {
     "judge_alone": 2.19970695621512,
@@ -5481,6 +6065,8 @@
     "judge_without_bias_alone": 3.1350344487750395,
     "pair_without_bias": 3.1886055390117805,
     "tu_without_bias": 1.0170878792919398,
+    "yield_on_machine": 1.4532227439756698,
+    "yield_on_machine_without_bias": 1.6114526131801767,
     "judge_without_bias_over_judge": 1.4252054983584137,
     "pair_without_bias_over_pair_partner": 1.1088820484405768,
     "accuracy_judge": 0.8649,
@@ -5509,7 +6095,10 @@
     "tu_blind": 1.3067241974013957,
     "angle_blind": 130.06876544412415,
     "angle_partner": 95.8805665244517,
-    "judge_adds_to_machine": 0.45106032998021717
+    "tu_without_bias": 1.020064217177551,
+    "yield_on_machine": 1.4510603299802172,
+    "judge_adds_to_machine": 0.45106032998021717,
+    "exchange": 0.044810112071444586
    },
    "measured": {
     "judge_alone": 2.1046111525926103,
@@ -5527,6 +6116,8 @@
     "judge_without_bias_alone": 3.058353968618674,
     "pair_without_bias": 3.105804402795851,
     "tu_without_bias": 1.015515023657843,
+    "yield_on_machine": 1.4297441237409059,
+    "yield_on_machine_without_bias": 1.5663204764825334,
     "judge_without_bias_over_judge": 1.453168184940565,
     "pair_without_bias_over_pair_partner": 1.095525031698873,
     "accuracy_judge": 0.8504,
@@ -5555,7 +6146,10 @@
     "tu_blind": 1.2749592387263564,
     "angle_blind": 128.34043331607472,
     "angle_partner": 93.7004911321924,
-    "judge_adds_to_machine": 0.498363461521101
+    "tu_without_bias": 1.0170080102801673,
+    "yield_on_machine": 1.498363461521101,
+    "judge_adds_to_machine": 0.498363461521101,
+    "exchange": 0.042713282300017336
    },
    "measured": {
     "judge_alone": 2.2980837569643,
@@ -5573,6 +6167,8 @@
     "judge_without_bias_alone": 3.18573593267601,
     "pair_without_bias": 3.219228579403171,
     "tu_without_bias": 1.0105133154269403,
+    "yield_on_machine": 1.480165448229032,
+    "yield_on_machine_without_bias": 1.6190138938037726,
     "judge_without_bias_over_judge": 1.3862575387088034,
     "pair_without_bias_over_pair_partner": 1.0938060307655932,
     "accuracy_judge": 0.8744,
@@ -5601,7 +6197,10 @@
     "tu_blind": 1.3780594540869755,
     "angle_blind": 133.47637875476795,
     "angle_partner": 100.83423526561404,
-    "judge_adds_to_machine": 0.46244316759023274
+    "tu_without_bias": 1.0164255824635404,
+    "yield_on_machine": 1.4624431675902327,
+    "judge_adds_to_machine": 0.46244316759023274,
+    "exchange": 0.03771616793739532
    },
    "measured": {
     "judge_alone": 2.0641060945396017,
@@ -5619,6 +6218,8 @@
     "judge_without_bias_alone": 3.0625145102151525,
     "pair_without_bias": 3.119591404240321,
     "tu_without_bias": 1.018637264847166,
+    "yield_on_machine": 1.4401826277989564,
+    "yield_on_machine_without_bias": 1.5633629751969085,
     "judge_without_bias_over_judge": 1.4837001442497293,
     "pair_without_bias_over_pair_partner": 1.0855310604504442,
     "accuracy_judge": 0.8424,
@@ -5647,7 +6248,10 @@
     "tu_blind": 1.2927476431232081,
     "angle_blind": 129.3265905320487,
     "angle_partner": 94.33264358294502,
-    "judge_adds_to_machine": 0.4618722724346509
+    "tu_without_bias": 1.015868977679675,
+    "yield_on_machine": 1.461872272434651,
+    "judge_adds_to_machine": 0.4618722724346509,
+    "exchange": 0.036374636234467676
    },
    "measured": {
     "judge_alone": 2.2168109201821524,
@@ -5665,6 +6269,8 @@
     "judge_without_bias_alone": 3.1324431636193903,
     "pair_without_bias": 3.167802506747322,
     "tu_without_bias": 1.0112881036561492,
+    "yield_on_machine": 1.430550783495753,
+    "yield_on_machine_without_bias": 1.5798862389631094,
     "judge_without_bias_over_judge": 1.413040298160387,
     "pair_without_bias_over_pair_partner": 1.1043901811737395,
     "accuracy_judge": 0.8665,
@@ -5693,7 +6299,10 @@
     "tu_blind": 1.2874738368410852,
     "angle_blind": 129.03923687707498,
     "angle_partner": 88.8854128374171,
-    "judge_adds_to_machine": 0.18783587651030098
+    "tu_without_bias": 1.0293759911530527,
+    "yield_on_machine": 1.187835876510301,
+    "judge_adds_to_machine": 0.18783587651030098,
+    "exchange": 0.024498998565611847
    },
    "measured": {
     "judge_alone": 2.19970695621512,
@@ -5711,6 +6320,8 @@
     "judge_without_bias_alone": 3.1350344487750395,
     "pair_without_bias": 3.2090507721258974,
     "tu_without_bias": 1.0236094130894728,
+    "yield_on_machine": 1.1805322635654854,
+    "yield_on_machine_without_bias": 1.2857317473140601,
     "judge_without_bias_over_judge": 1.4252054983584137,
     "pair_without_bias_over_pair_partner": 1.0891119090899284,
     "accuracy_judge": 0.8649,
@@ -5739,7 +6350,10 @@
     "tu_blind": 1.3067241974013957,
     "angle_blind": 130.06876544412415,
     "angle_partner": 91.00216203415025,
-    "judge_adds_to_machine": 0.17178017041530258
+    "tu_without_bias": 1.0398964060540035,
+    "yield_on_machine": 1.1717801704153026,
+    "judge_adds_to_machine": 0.17178017041530258,
+    "exchange": 0.030362028309564054
    },
    "measured": {
     "judge_alone": 2.1046111525926103,
@@ -5757,6 +6371,8 @@
     "judge_without_bias_alone": 3.058353968618674,
     "pair_without_bias": 3.1360771580771045,
     "tu_without_bias": 1.0254134054644874,
+    "yield_on_machine": 1.168872012173387,
+    "yield_on_machine_without_bias": 1.2528277791926192,
     "judge_without_bias_over_judge": 1.453168184940565,
     "pair_without_bias_over_pair_partner": 1.0718263130136259,
     "accuracy_judge": 0.8504,
@@ -5785,7 +6401,10 @@
     "tu_blind": 1.2749592387263564,
     "angle_blind": 128.34043331607472,
     "angle_partner": 87.8071212272451,
-    "judge_adds_to_machine": 0.16746760384056825
+    "tu_without_bias": 1.0376522825678336,
+    "yield_on_machine": 1.1674676038405682,
+    "judge_adds_to_machine": 0.16746760384056825,
+    "exchange": 0.02784869225494088
    },
    "measured": {
     "judge_alone": 2.2980837569643,
@@ -5803,6 +6422,8 @@
     "judge_without_bias_alone": 3.18573593267601,
     "pair_without_bias": 3.26963312415728,
     "tu_without_bias": 1.026335262323766,
+    "yield_on_machine": 1.1721590873389687,
+    "yield_on_machine_without_bias": 1.2557349378078881,
     "judge_without_bias_over_judge": 1.3862575387088034,
     "pair_without_bias_over_pair_partner": 1.071300774247848,
     "accuracy_judge": 0.8744,
@@ -5831,7 +6452,10 @@
     "tu_blind": 1.3780594540869755,
     "angle_blind": 133.47637875476795,
     "angle_partner": 97.23729206787036,
-    "judge_adds_to_machine": 0.18317680502000355
+    "tu_without_bias": 1.0424450435557207,
+    "yield_on_machine": 1.1831768050200036,
+    "judge_adds_to_machine": 0.18317680502000355,
+    "exchange": 0.03466863571838944
    },
    "measured": {
     "judge_alone": 2.0641060945396017,
@@ -5849,6 +6473,8 @@
     "judge_without_bias_alone": 3.0625145102151525,
     "pair_without_bias": 3.157410057271739,
     "tu_without_bias": 1.0309861542663905,
+    "yield_on_machine": 1.1787257892177483,
+    "yield_on_machine_without_bias": 1.248205705135558,
     "judge_without_bias_over_judge": 1.4837001442497293,
     "pair_without_bias_over_pair_partner": 1.0589449357546674,
     "accuracy_judge": 0.8424,
@@ -5877,7 +6503,10 @@
     "tu_blind": 1.2927476431232081,
     "angle_blind": 129.3265905320487,
     "angle_partner": 89.73369837790096,
-    "judge_adds_to_machine": 0.17205520350459924
+    "tu_without_bias": 1.0392601331971114,
+    "yield_on_machine": 1.1720552035045992,
+    "judge_adds_to_machine": 0.17205520350459924,
+    "exchange": 0.029920101888788523
    },
    "measured": {
     "judge_alone": 2.2168109201821524,
@@ -5895,6 +6524,8 @@
     "judge_without_bias_alone": 3.1324431636193903,
     "pair_without_bias": 3.2054157075815506,
     "tu_without_bias": 1.0232957280150117,
+    "yield_on_machine": 1.1609428334247445,
+    "yield_on_machine_without_bias": 1.2528646276193567,
     "judge_without_bias_over_judge": 1.413040298160387,
     "pair_without_bias_over_pair_partner": 1.0791785706824564,
     "accuracy_judge": 0.8665,
@@ -5923,7 +6554,10 @@
     "tu_blind": 1.297007173132538,
     "angle_blind": 129.5557087636476,
     "angle_partner": 86.7341832239344,
-    "judge_adds_to_machine": 0.04670138257318257
+    "tu_without_bias": 1.0765475602381656,
+    "yield_on_machine": 1.0467013825731826,
+    "judge_adds_to_machine": 0.04670138257318257,
+    "exchange": 0.01519348692388277
    },
    "measured": {
     "judge_alone": 2.191020941875045,
@@ -5941,6 +6575,8 @@
     "judge_without_bias_alone": 3.1601779708059805,
     "pair_without_bias": 3.256979394944074,
     "tu_without_bias": 1.0306316368990462,
+    "yield_on_machine": 1.0430711865289661,
+    "yield_on_machine_without_bias": 1.0826254789344032,
     "judge_without_bias_over_judge": 1.4423312486011861,
     "pair_without_bias_over_pair_partner": 1.0379209903564321,
     "accuracy_judge": 0.8625,
@@ -5969,7 +6605,10 @@
     "tu_blind": 1.2542391607915984,
     "angle_blind": 127.1273301822965,
     "angle_partner": 82.35051224482916,
-    "judge_adds_to_machine": 0.029529675705875613
+    "tu_without_bias": 1.101169243796032,
+    "yield_on_machine": 1.0295296757058756,
+    "judge_adds_to_machine": 0.029529675705875613,
+    "exchange": 0.012739829695725425
    },
    "measured": {
     "judge_alone": 2.2413642760627743,
@@ -5987,6 +6626,8 @@
     "judge_without_bias_alone": 3.117749763960126,
     "pair_without_bias": 3.277815687381981,
     "tu_without_bias": 1.0513402086569452,
+    "yield_on_machine": 1.0306823889052625,
+    "yield_on_machine_without_bias": 1.069697379092251,
     "judge_without_bias_over_judge": 1.3910053788475778,
     "pair_without_bias_over_pair_partner": 1.0378535527597674,
     "accuracy_judge": 0.8679,
@@ -6015,7 +6656,10 @@
     "tu_blind": 1.2838740230657777,
     "angle_blind": 128.8407038531654,
     "angle_partner": 84.63892892880536,
-    "judge_adds_to_machine": 0.02939680418419055
+    "tu_without_bias": 1.0857195833672164,
+    "yield_on_machine": 1.0293968041841906,
+    "judge_adds_to_machine": 0.02939680418419055,
+    "exchange": 0.010666036413662925
    },
    "measured": {
     "judge_alone": 2.1700613138201867,
@@ -6033,6 +6677,8 @@
     "judge_without_bias_alone": 3.162655188308703,
     "pair_without_bias": 3.2634249018642105,
     "tu_without_bias": 1.0318623775136855,
+    "yield_on_machine": 1.0331323356308368,
+    "yield_on_machine_without_bias": 1.072835290973273,
     "judge_without_bias_over_judge": 1.4574036079843058,
     "pair_without_bias_over_pair_partner": 1.0384296899566048,
     "accuracy_judge": 0.8587,
@@ -6061,7 +6707,10 @@
     "tu_blind": 1.2764267679068821,
     "angle_blind": 128.42364687343408,
     "angle_partner": 84.52604680842911,
-    "judge_adds_to_machine": 0.03216927132082881
+    "tu_without_bias": 1.094348094051488,
+    "yield_on_machine": 1.0321692713208288,
+    "judge_adds_to_machine": 0.03216927132082881,
+    "exchange": 0.01291763773282653
    },
    "measured": {
     "judge_alone": 2.1650588443428935,
@@ -6079,6 +6728,8 @@
     "judge_without_bias_alone": 3.1391985292271753,
     "pair_without_bias": 3.2683932096889983,
     "tu_without_bias": 1.0411553074005895,
+    "yield_on_machine": 1.0322298364285707,
+    "yield_on_machine_without_bias": 1.0752019724610147,
     "judge_without_bias_over_judge": 1.4499368169274578,
     "pair_without_bias_over_pair_partner": 1.041630395204545,
     "accuracy_judge": 0.8598,
@@ -6107,7 +6758,10 @@
     "tu_blind": 1.285194554747485,
     "angle_blind": 128.91376055581034,
     "angle_partner": 85.54116540987113,
-    "judge_adds_to_machine": 0.03541142480804038
+    "tu_without_bias": 1.0920984324556218,
+    "yield_on_machine": 1.0354114248080404,
+    "judge_adds_to_machine": 0.03541142480804038,
+    "exchange": 0.013887688338787762
    },
    "measured": {
     "judge_alone": 2.1837821536557205,
@@ -6125,6 +6779,8 @@
     "judge_without_bias_alone": 3.1990289833865906,
     "pair_without_bias": 3.3098407509339385,
     "tu_without_bias": 1.0346391883671022,
+    "yield_on_machine": 1.0349821620538318,
+    "yield_on_machine_without_bias": 1.0818048739752453,
     "judge_without_bias_over_judge": 1.464902979462175,
     "pair_without_bias_over_pair_partner": 1.0452401148909638,
     "accuracy_judge": 0.8633,
@@ -6153,7 +6809,10 @@
     "tu_blind": 1.297007173132538,
     "angle_blind": 129.5557087636476,
     "angle_partner": 95.19878066261599,
-    "judge_adds_to_machine": 0.4026394084231455
+    "tu_without_bias": 1.0283415980058295,
+    "yield_on_machine": 1.4026394084231455,
+    "judge_adds_to_machine": 0.4026394084231455,
+    "exchange": 0.055612229538829085
    },
    "measured": {
     "judge_alone": 2.191020941875045,
@@ -6171,6 +6830,8 @@
     "judge_without_bias_alone": 3.1601779708059805,
     "pair_without_bias": 3.218711052413115,
     "tu_without_bias": 1.018522083929408,
+    "yield_on_machine": 1.3807400155220064,
+    "yield_on_machine_without_bias": 1.5009432767401885,
     "judge_without_bias_over_judge": 1.4423312486011861,
     "pair_without_bias_over_pair_partner": 1.0870571286896018,
     "accuracy_judge": 0.8625,
@@ -6199,7 +6860,10 @@
     "tu_blind": 1.2542391607915984,
     "angle_blind": 127.1273301822965,
     "angle_partner": 92.50715614775922,
-    "judge_adds_to_machine": 0.3949927411931109
+    "tu_without_bias": 1.0377925097219782,
+    "yield_on_machine": 1.394992741193111,
+    "judge_adds_to_machine": 0.3949927411931109,
+    "exchange": 0.07285494105803936
    },
    "measured": {
     "judge_alone": 2.2413642760627743,
@@ -6217,6 +6881,8 @@
     "judge_without_bias_alone": 3.117749763960126,
     "pair_without_bias": 3.1796771306034524,
     "tu_without_bias": 1.0198628406163897,
+    "yield_on_machine": 1.3822422744578984,
+    "yield_on_machine_without_bias": 1.4918873960061987,
     "judge_without_bias_over_judge": 1.3910053788475778,
     "pair_without_bias_over_pair_partner": 1.0793240979344971,
     "accuracy_judge": 0.8679,
@@ -6245,7 +6911,10 @@
     "tu_blind": 1.2838740230657777,
     "angle_blind": 128.8407038531654,
     "angle_partner": 94.00331069071332,
-    "judge_adds_to_machine": 0.39437582725867815
+    "tu_without_bias": 1.02882773799711,
+    "yield_on_machine": 1.3943758272586781,
+    "judge_adds_to_machine": 0.39437582725867815,
+    "exchange": 0.05522787676975451
    },
    "measured": {
     "judge_alone": 2.1700613138201867,
@@ -6263,6 +6932,8 @@
     "judge_without_bias_alone": 3.162655188308703,
     "pair_without_bias": 3.2086410756449117,
     "tu_without_bias": 1.0145402785312176,
+    "yield_on_machine": 1.3838082349432368,
+    "yield_on_machine_without_bias": 1.5078307758257987,
     "judge_without_bias_over_judge": 1.4574036079843058,
     "pair_without_bias_over_pair_partner": 1.089624080671589,
     "accuracy_judge": 0.8587,
@@ -6291,7 +6962,10 @@
     "tu_blind": 1.2764267679068821,
     "angle_blind": 128.42364687343408,
     "angle_partner": 95.01318718009621,
-    "judge_adds_to_machine": 0.40618209896118684
+    "tu_without_bias": 1.0413042243650676,
+    "yield_on_machine": 1.4061820989611868,
+    "judge_adds_to_machine": 0.40618209896118684,
+    "exchange": 0.0824046039524766
    },
    "measured": {
     "judge_alone": 2.1650588443428935,
@@ -6309,6 +6983,8 @@
     "judge_without_bias_alone": 3.1391985292271753,
     "pair_without_bias": 3.2129712053388833,
     "tu_without_bias": 1.023500481229478,
+    "yield_on_machine": 1.3918641405975871,
+    "yield_on_machine_without_bias": 1.5133210787805025,
     "judge_without_bias_over_judge": 1.4499368169274578,
     "pair_without_bias_over_pair_partner": 1.0872620643353659,
     "accuracy_judge": 0.8598,
@@ -6337,7 +7013,10 @@
     "tu_blind": 1.285194554747485,
     "angle_blind": 128.91376055581034,
     "angle_partner": 95.55718846564373,
-    "judge_adds_to_machine": 0.4309718281763577
+    "tu_without_bias": 1.0346770259219709,
+    "yield_on_machine": 1.4309718281763577,
+    "judge_adds_to_machine": 0.4309718281763577,
+    "exchange": 0.07392071049799792
    },
    "measured": {
     "judge_alone": 2.1837821536557205,
@@ -6355,6 +7034,8 @@
     "judge_without_bias_alone": 3.1990289833865906,
     "pair_without_bias": 3.2500004554797552,
     "tu_without_bias": 1.015933419908939,
+    "yield_on_machine": 1.4062161878457884,
+    "yield_on_machine_without_bias": 1.549531344284553,
     "judge_without_bias_over_judge": 1.464902979462175,
     "pair_without_bias_over_pair_partner": 1.1019154506095625,
     "accuracy_judge": 0.8633,
@@ -6383,7 +7064,10 @@
     "tu_blind": 1.2971450184015683,
     "angle_blind": 129.56307978215557,
     "angle_partner": 85.2988412864174,
-    "judge_adds_to_machine": 0.021045019067599258
+    "tu_without_bias": 1.088087656878465,
+    "yield_on_machine": 1.0210450190675993,
+    "judge_adds_to_machine": 0.021045019067599258,
+    "exchange": 0.007823283983049083
    },
    "measured": {
     "judge_alone": 2.361130752026894,
@@ -6401,6 +7085,8 @@
     "judge_without_bias_alone": 3.1791048482750766,
     "pair_without_bias": 3.2910219619717855,
     "tu_without_bias": 1.0352039706263332,
+    "yield_on_machine": 1.0131643010039486,
+    "yield_on_machine_without_bias": 1.0323880724647523,
     "judge_without_bias_over_judge": 1.3464332060162274,
     "pair_without_bias_over_pair_partner": 1.0189739921173246,
     "accuracy_judge": 0.88,
@@ -6429,7 +7115,10 @@
     "tu_blind": 1.2739635688402213,
     "angle_blind": 128.28377917415585,
     "angle_partner": 83.5919860398246,
-    "judge_adds_to_machine": 0.022993734552429146
+    "tu_without_bias": 1.0972407086458598,
+    "yield_on_machine": 1.0229937345524291,
+    "judge_adds_to_machine": 0.022993734552429146,
+    "exchange": 0.00948637842483466
    },
    "measured": {
     "judge_alone": 2.3373119721477487,
@@ -6447,6 +7136,8 @@
     "judge_without_bias_alone": 3.0955321712386263,
     "pair_without_bias": 3.2556877123313113,
     "tu_without_bias": 1.0517376438793726,
+    "yield_on_machine": 1.0131304415987594,
+    "yield_on_machine_without_bias": 1.0314225102091432,
     "judge_without_bias_over_judge": 1.3243983722011023,
     "pair_without_bias_over_pair_partner": 1.0180549985069232,
     "accuracy_judge": 0.8787,
@@ -6475,7 +7166,10 @@
     "tu_blind": 1.2417590341062563,
     "angle_blind": 126.35987098590462,
     "angle_partner": 79.94753566075207,
-    "judge_adds_to_machine": 0.01659532111871531
+    "tu_without_bias": 1.107266181984463,
+    "yield_on_machine": 1.0165953211187153,
+    "judge_adds_to_machine": 0.01659532111871531,
+    "exchange": 0.007564611625478508
    },
    "measured": {
     "judge_alone": 2.3660248079513844,
@@ -6493,6 +7187,8 @@
     "judge_without_bias_alone": 3.077396434581867,
     "pair_without_bias": 3.2455131347293946,
     "tu_without_bias": 1.054629523274394,
+    "yield_on_machine": 1.0053489029979819,
+    "yield_on_machine_without_bias": 1.022704882387087,
     "judge_without_bias_over_judge": 1.3006611022166001,
     "pair_without_bias_over_pair_partner": 1.0172636378647741,
     "accuracy_judge": 0.8821,
@@ -6521,7 +7217,10 @@
     "tu_blind": 1.2611788205298715,
     "angle_blind": 127.54180361149027,
     "angle_partner": 82.12804473072579,
-    "judge_adds_to_machine": 0.014563197998771704
+    "tu_without_bias": 1.1158408979074264,
+    "yield_on_machine": 1.0145631979987717,
+    "judge_adds_to_machine": 0.014563197998771704,
+    "exchange": 0.007190888799652979
    },
    "measured": {
     "judge_alone": 2.35602906047434,
@@ -6539,6 +7238,8 @@
     "judge_without_bias_alone": 3.09395770882524,
     "pair_without_bias": 3.2729138103128683,
     "tu_without_bias": 1.0578405131321518,
+    "yield_on_machine": 1.0017859110540146,
+    "yield_on_machine_without_bias": 1.0270115949602823,
     "judge_without_bias_over_judge": 1.3132086359759638,
     "pair_without_bias_over_pair_partner": 1.0251807133918729,
     "accuracy_judge": 0.8818,
@@ -6567,7 +7268,10 @@
     "tu_blind": 1.2369955913916924,
     "angle_blind": 126.05909525430354,
     "angle_partner": 79.27604590275426,
-    "judge_adds_to_machine": 0.01709808954433889
+    "tu_without_bias": 1.1025119834461652,
+    "yield_on_machine": 1.017098089544339,
+    "judge_adds_to_machine": 0.01709808954433889,
+    "exchange": 0.00743340373483932
    },
    "measured": {
     "judge_alone": 2.403192575935259,
@@ -6585,6 +7289,8 @@
     "judge_without_bias_alone": 3.0498604093969743,
     "pair_without_bias": 3.272347962438739,
     "tu_without_bias": 1.072950077438382,
+    "yield_on_machine": 1.005949318900709,
+    "yield_on_machine_without_bias": 1.021128139701036,
     "judge_without_bias_over_judge": 1.269086980351564,
     "pair_without_bias_over_pair_partner": 1.015089051222694,
     "accuracy_judge": 0.8843,
@@ -6613,7 +7319,10 @@
     "tu_blind": 1.2971450184015683,
     "angle_blind": 129.56307978215557,
     "angle_partner": 97.12522010636927,
-    "judge_adds_to_machine": 0.5961720714690664
+    "tu_without_bias": 1.0170494082890624,
+    "yield_on_machine": 1.5961720714690664,
+    "judge_adds_to_machine": 0.5961720714690664,
+    "exchange": 0.05322687245553401
    },
    "measured": {
     "judge_alone": 2.361130752026894,
@@ -6631,6 +7340,8 @@
     "judge_without_bias_alone": 3.1791048482750766,
     "pair_without_bias": 3.2259310670737094,
     "tu_without_bias": 1.0147293722709523,
+    "yield_on_machine": 1.568624121427557,
+    "yield_on_machine_without_bias": 1.6924814977628226,
     "judge_without_bias_over_judge": 1.3464332060162274,
     "pair_without_bias_over_pair_partner": 1.0789592450118304,
     "accuracy_judge": 0.88,
@@ -6659,7 +7370,10 @@
     "tu_blind": 1.2739635688402213,
     "angle_blind": 128.28377917415585,
     "angle_partner": 95.51805605912516,
-    "judge_adds_to_machine": 0.5365856542367846
+    "tu_without_bias": 1.0253500694158977,
+    "yield_on_machine": 1.5365856542367846,
+    "judge_adds_to_machine": 0.5365856542367846,
+    "exchange": 0.06988240480030725
    },
    "measured": {
     "judge_alone": 2.3373119721477487,
@@ -6677,6 +7391,8 @@
     "judge_without_bias_alone": 3.0955321712386263,
     "pair_without_bias": 3.1439164711656558,
     "tu_without_bias": 1.0156303657175914,
+    "yield_on_machine": 1.5226514969757965,
+    "yield_on_machine_without_bias": 1.6009523693346106,
     "judge_without_bias_over_judge": 1.3243983722011023,
     "pair_without_bias_over_pair_partner": 1.0514240274378812,
     "accuracy_judge": 0.8787,
@@ -6705,7 +7421,10 @@
     "tu_blind": 1.2417590341062563,
     "angle_blind": 126.35987098590462,
     "angle_partner": 93.10377897101088,
-    "judge_adds_to_machine": 0.5320521348282579
+    "tu_without_bias": 1.028234996345514,
+    "yield_on_machine": 1.5320521348282579,
+    "judge_adds_to_machine": 0.5320521348282579,
+    "exchange": 0.07714945128109327
    },
    "measured": {
     "judge_alone": 2.3660248079513844,
@@ -6723,6 +7442,8 @@
     "judge_without_bias_alone": 3.077396434581867,
     "pair_without_bias": 3.1367152653931685,
     "tu_without_bias": 1.019275654623081,
+    "yield_on_machine": 1.5086150743833493,
+    "yield_on_machine_without_bias": 1.6040841526728626,
     "judge_without_bias_over_judge": 1.3006611022166001,
     "pair_without_bias_over_pair_partner": 1.0632825960118002,
     "accuracy_judge": 0.8821,
@@ -6751,7 +7472,10 @@
     "tu_blind": 1.2611788205298715,
     "angle_blind": 127.54180361149027,
     "angle_partner": 94.99327430284681,
-    "judge_adds_to_machine": 0.5756965078562333
+    "tu_without_bias": 1.0243303849338086,
+    "yield_on_machine": 1.5756965078562333,
+    "judge_adds_to_machine": 0.5756965078562333,
+    "exchange": 0.07303291884619315
    },
    "measured": {
     "judge_alone": 2.35602906047434,
@@ -6769,6 +7493,8 @@
     "judge_without_bias_alone": 3.09395770882524,
     "pair_without_bias": 3.147060910509038,
     "tu_without_bias": 1.0171635189234571,
+    "yield_on_machine": 1.5528297737992585,
+    "yield_on_machine_without_bias": 1.6707120856242927,
     "judge_without_bias_over_judge": 1.3132086359759638,
     "pair_without_bias_over_pair_partner": 1.0759145102792662,
     "accuracy_judge": 0.8818,
@@ -6797,7 +7523,10 @@
     "tu_blind": 1.2369955913916924,
     "angle_blind": 126.05909525430354,
     "angle_partner": 92.27929656664719,
-    "judge_adds_to_machine": 0.5904068446906965
+    "tu_without_bias": 1.0186145192443685,
+    "yield_on_machine": 1.5904068446906965,
+    "judge_adds_to_machine": 0.5904068446906965,
+    "exchange": 0.05746780104239411
    },
    "measured": {
     "judge_alone": 2.403192575935259,
@@ -6815,6 +7544,8 @@
     "judge_without_bias_alone": 3.0498604093969743,
     "pair_without_bias": 3.102216476881746,
     "tu_without_bias": 1.0171667094413424,
+    "yield_on_machine": 1.5731442517229286,
+    "yield_on_machine_without_bias": 1.6383689952449352,
     "judge_without_bias_over_judge": 1.269086980351564,
     "pair_without_bias_over_pair_partner": 1.0414613875686045,
     "accuracy_judge": 0.8843,
@@ -6843,7 +7574,10 @@
     "tu_blind": 1.3850191363482147,
     "angle_blind": 133.7791804153039,
     "angle_partner": 93.83764938893582,
-    "judge_adds_to_machine": 0.010919006123301322
+    "tu_without_bias": 1.1477805614646337,
+    "yield_on_machine": 1.0109190061233013,
+    "judge_adds_to_machine": 0.010919006123301322,
+    "exchange": 0.0069692317759582414
    },
    "measured": {
     "judge_alone": 1.88619889402763,
@@ -6861,6 +7595,8 @@
     "judge_without_bias_alone": 2.9022582367520635,
     "pair_without_bias": 3.0455705500515604,
     "tu_without_bias": 1.0493795870693707,
+    "yield_on_machine": 0.9959045304111149,
+    "yield_on_machine_without_bias": 1.0365415227253916,
     "judge_without_bias_over_judge": 1.538680913206786,
     "pair_without_bias_over_pair_partner": 1.0408041042824672,
     "accuracy_judge": 0.827,
@@ -6889,7 +7625,10 @@
     "tu_blind": 1.4368588602378973,
     "angle_blind": 135.89602786274108,
     "angle_partner": 97.43709458955928,
-    "judge_adds_to_machine": 0.008352536540590094
+    "tu_without_bias": 1.1517439353580632,
+    "yield_on_machine": 1.00835253654059,
+    "judge_adds_to_machine": 0.008352536540590094,
+    "exchange": 0.005477220991623353
    },
    "measured": {
     "judge_alone": 1.8398048147877595,
@@ -6907,6 +7646,8 @@
     "judge_without_bias_alone": 2.9434554886839206,
     "pair_without_bias": 3.073165084488766,
     "tu_without_bias": 1.0440671164566655,
+    "yield_on_machine": 0.9886645939467754,
+    "yield_on_machine_without_bias": 1.0361260993055692,
     "judge_without_bias_over_judge": 1.5998737828194447,
     "pair_without_bias_over_pair_partner": 1.0480056691110242,
     "accuracy_judge": 0.8238,
@@ -6935,7 +7676,10 @@
     "tu_blind": 1.391908140482958,
     "angle_blind": 134.07431333175052,
     "angle_partner": 93.82096372285396,
-    "judge_adds_to_machine": 0.011830183132713001
+    "tu_without_bias": 1.1253400515416299,
+    "yield_on_machine": 1.011830183132713,
+    "judge_adds_to_machine": 0.011830183132713001,
+    "exchange": 0.006340172623415794
    },
    "measured": {
     "judge_alone": 1.92960850055304,
@@ -6953,6 +7697,8 @@
     "judge_without_bias_alone": 2.8810347942996875,
     "pair_without_bias": 3.062926766908326,
     "tu_without_bias": 1.063134250571539,
+    "yield_on_machine": 1.0027286407317666,
+    "yield_on_machine_without_bias": 1.0311577000696404,
     "judge_without_bias_over_judge": 1.4930670099525172,
     "pair_without_bias_over_pair_partner": 1.028351697740604,
     "accuracy_judge": 0.8356,
@@ -6981,7 +7727,10 @@
     "tu_blind": 1.4580778080745955,
     "angle_blind": 136.69873224758243,
     "angle_partner": 99.43372571071596,
-    "judge_adds_to_machine": 0.014644287510771514
+    "tu_without_bias": 1.1457904565576116,
+    "yield_on_machine": 1.0146442875107715,
+    "judge_adds_to_machine": 0.014644287510771514,
+    "exchange": 0.00922960317313015
    },
    "measured": {
     "judge_alone": 1.7946737446931582,
@@ -6999,6 +7748,8 @@
     "judge_without_bias_alone": 2.865796215454058,
     "pair_without_bias": 3.0482366340524023,
     "tu_without_bias": 1.0636613369835992,
+    "yield_on_machine": 1.0001235406059625,
+    "yield_on_machine_without_bias": 1.0345357556507304,
     "judge_without_bias_over_judge": 1.5968340897214348,
     "pair_without_bias_over_pair_partner": 1.0344079642640127,
     "accuracy_judge": 0.8158,
@@ -7027,7 +7778,10 @@
     "tu_blind": 1.4091341262377453,
     "angle_blind": 134.79309470026013,
     "angle_partner": 95.39318534345755,
-    "judge_adds_to_machine": 0.016705336297899054
+    "tu_without_bias": 1.118003887340767,
+    "yield_on_machine": 1.016705336297899,
+    "judge_adds_to_machine": 0.016705336297899054,
+    "exchange": 0.008420167628752842
    },
    "measured": {
     "judge_alone": 1.8463761970686103,
@@ -7045,6 +7799,8 @@
     "judge_without_bias_alone": 2.919530640185804,
     "pair_without_bias": 3.032885014528542,
     "tu_without_bias": 1.038826232128711,
+    "yield_on_machine": 1.004388897646539,
+    "yield_on_machine_without_bias": 1.054354412968502,
     "judge_without_bias_over_judge": 1.5812219875998086,
     "pair_without_bias_over_pair_partner": 1.0497471800405613,
     "accuracy_judge": 0.8185,
@@ -7073,7 +7829,10 @@
     "tu_blind": 1.3850191363482147,
     "angle_blind": 133.7791804153039,
     "angle_partner": 100.22382666121264,
-    "judge_adds_to_machine": 0.3646177605346357
+    "tu_without_bias": 1.0216877794179848,
+    "yield_on_machine": 1.3646177605346357,
+    "judge_adds_to_machine": 0.3646177605346357,
+    "exchange": 0.03780314568155117
    },
    "measured": {
     "judge_alone": 1.88619889402763,
@@ -7091,6 +7850,8 @@
     "judge_without_bias_alone": 2.9022582367520635,
     "pair_without_bias": 2.918448513586413,
     "tu_without_bias": 1.005578510082021,
+    "yield_on_machine": 1.3260118758853328,
+    "yield_on_machine_without_bias": 1.5062789262580123,
     "judge_without_bias_over_judge": 1.538680913206786,
     "pair_without_bias_over_pair_partner": 1.1359467842264395,
     "accuracy_judge": 0.827,
@@ -7119,7 +7880,10 @@
     "tu_blind": 1.4368588602378973,
     "angle_blind": 135.89602786274108,
     "angle_partner": 103.21152483024764,
-    "judge_adds_to_machine": 0.35836976202338633
+    "tu_without_bias": 1.018913790165771,
+    "yield_on_machine": 1.3583697620233863,
+    "judge_adds_to_machine": 0.35836976202338633,
+    "exchange": 0.032273019265379226
    },
    "measured": {
     "judge_alone": 1.8398048147877595,
@@ -7137,6 +7901,8 @@
     "judge_without_bias_alone": 2.9434554886839206,
     "pair_without_bias": 2.9478651168399477,
     "tu_without_bias": 1.0014981127361973,
+    "yield_on_machine": 1.3149712253839099,
+    "yield_on_machine_without_bias": 1.5134163982017332,
     "judge_without_bias_over_judge": 1.5998737828194447,
     "pair_without_bias_over_pair_partner": 1.1509121789032963,
     "accuracy_judge": 0.8238,
@@ -7165,7 +7931,10 @@
     "tu_blind": 1.391908140482958,
     "angle_blind": 134.07431333175052,
     "angle_partner": 99.96404936219075,
-    "judge_adds_to_machine": 0.39599041824551584
+    "tu_without_bias": 1.0117127073053496,
+    "yield_on_machine": 1.3959904182455158,
+    "judge_adds_to_machine": 0.39599041824551584,
+    "exchange": 0.022355943545390014
    },
    "measured": {
     "judge_alone": 1.92960850055304,
@@ -7183,6 +7952,8 @@
     "judge_without_bias_alone": 2.8810347942996875,
     "pair_without_bias": 2.8860538973792313,
     "tu_without_bias": 1.0017421181755508,
+    "yield_on_machine": 1.3423873764106289,
+    "yield_on_machine_without_bias": 1.4910571563298936,
     "judge_without_bias_over_judge": 1.4930670099525172,
     "pair_without_bias_over_pair_partner": 1.1107502815743013,
     "accuracy_judge": 0.8356,
@@ -7211,7 +7982,10 @@
     "tu_blind": 1.4580778080745955,
     "angle_blind": 136.69873224758243,
     "angle_partner": 104.43659165638135,
-    "judge_adds_to_machine": 0.3565128358167866
+    "tu_without_bias": 1.0184096247194372,
+    "yield_on_machine": 1.3565128358167866,
+    "judge_adds_to_machine": 0.3565128358167866,
+    "exchange": 0.031217579352471277
    },
    "measured": {
     "judge_alone": 1.7946737446931582,
@@ -7229,6 +8003,8 @@
     "judge_without_bias_alone": 2.865796215454058,
     "pair_without_bias": 2.877034963732825,
     "tu_without_bias": 1.0039216843884995,
+    "yield_on_machine": 1.3138734756174708,
+    "yield_on_machine_without_bias": 1.468705649651015,
     "judge_without_bias_over_judge": 1.5968340897214348,
     "pair_without_bias_over_pair_partner": 1.1178440518869437,
     "accuracy_judge": 0.8158,
@@ -7257,7 +8033,10 @@
     "tu_blind": 1.4091341262377453,
     "angle_blind": 134.79309470026013,
     "angle_partner": 100.90561045670566,
-    "judge_adds_to_machine": 0.36609793569306226
+    "tu_without_bias": 1.013806436030397,
+    "yield_on_machine": 1.3660979356930623,
+    "judge_adds_to_machine": 0.36609793569306226,
+    "exchange": 0.024084038135498646
    },
    "measured": {
     "judge_alone": 1.8463761970686103,
@@ -7275,6 +8054,8 @@
     "judge_without_bias_alone": 2.919530640185804,
     "pair_without_bias": 2.927100846204439,
     "tu_without_bias": 1.0025929530981574,
+    "yield_on_machine": 1.3247405052686823,
+    "yield_on_machine_without_bias": 1.5077986905706298,
     "judge_without_bias_over_judge": 1.5812219875998086,
     "pair_without_bias_over_pair_partner": 1.1381841836751416,
     "accuracy_judge": 0.8185,
@@ -7303,7 +8084,10 @@
     "tu_blind": 1.6278506504194008,
     "angle_blind": 142.09841928987225,
     "angle_partner": 109.91542087528559,
-    "judge_adds_to_machine": 0.007746178301362372
+    "tu_without_bias": 1.2139620984134576,
+    "yield_on_machine": 1.0077461783013624,
+    "judge_adds_to_machine": 0.007746178301362372,
+    "exchange": 0.00736721471779161
    },
    "measured": {
     "judge_alone": 1.0354453295919417,
@@ -7321,6 +8105,8 @@
     "judge_without_bias_alone": 1.9865824238918177,
     "pair_without_bias": 2.1622032645561657,
     "tu_without_bias": 1.0884035006814858,
+    "yield_on_machine": 0.9986868874864088,
+    "yield_on_machine_without_bias": 1.0445454632262505,
     "judge_without_bias_over_judge": 1.918577801374322,
     "pair_without_bias_over_pair_partner": 1.0459188723857815,
     "accuracy_judge": 0.6975,
@@ -7349,7 +8135,10 @@
     "tu_blind": 1.635974523678735,
     "angle_blind": 142.31959106850783,
     "angle_partner": 109.89401078037703,
-    "judge_adds_to_machine": 0.012699751575905083
+    "tu_without_bias": 1.1660112502473325,
+    "yield_on_machine": 1.012699751575905,
+    "judge_adds_to_machine": 0.012699751575905083,
+    "exchange": 0.009191204878947007
    },
    "measured": {
     "judge_alone": 1.056713411655142,
@@ -7367,6 +8156,8 @@
     "judge_without_bias_alone": 2.0298272191633577,
     "pair_without_bias": 2.1838384432682547,
     "tu_without_bias": 1.075874056003829,
+    "yield_on_machine": 1.0129783610961014,
+    "yield_on_machine_without_bias": 1.0579868450575205,
     "judge_without_bias_over_judge": 1.9208871551881004,
     "pair_without_bias_over_pair_partner": 1.0444318316066665,
     "accuracy_judge": 0.7019,
@@ -7395,7 +8186,10 @@
     "tu_blind": 1.7574744646895664,
     "angle_blind": 145.31959564703192,
     "angle_partner": 115.39808746919839,
-    "judge_adds_to_machine": 0.005312419543821889
+    "tu_without_bias": 1.2104151070870295,
+    "yield_on_machine": 1.005312419543822,
+    "judge_adds_to_machine": 0.005312419543821889,
+    "exchange": 0.00495478902407824
    },
    "measured": {
     "judge_alone": 0.9651976303116675,
@@ -7413,6 +8207,8 @@
     "judge_without_bias_alone": 1.985377523415766,
     "pair_without_bias": 2.1783198718692587,
     "tu_without_bias": 1.0971816927399998,
+    "yield_on_machine": 0.998605451812228,
+    "yield_on_machine_without_bias": 1.0393095326621382,
     "judge_without_bias_over_judge": 2.0569647718412623,
     "pair_without_bias_over_pair_partner": 1.0407609239224982,
     "accuracy_judge": 0.6798,
@@ -7441,7 +8237,10 @@
     "tu_blind": 1.5908567857371125,
     "angle_blind": 141.0536739159972,
     "angle_partner": 107.85938846696078,
-    "judge_adds_to_machine": 0.003693358942367775
+    "tu_without_bias": 1.2374340326834115,
+    "yield_on_machine": 1.0036933589423678,
+    "judge_adds_to_machine": 0.003693358942367775,
+    "exchange": 0.00393138869282049
    },
    "measured": {
     "judge_alone": 1.064533818439244,
@@ -7459,6 +8258,8 @@
     "judge_without_bias_alone": 2.0004235320486874,
     "pair_without_bias": 2.1930298842603273,
     "tu_without_bias": 1.0962827866828715,
+    "yield_on_machine": 0.9933784314716086,
+    "yield_on_machine_without_bias": 1.0432170549860418,
     "judge_without_bias_over_judge": 1.8791545157124165,
     "pair_without_bias_over_pair_partner": 1.0501708331240909,
     "accuracy_judge": 0.7032,
@@ -7487,7 +8288,10 @@
     "tu_blind": 1.7059527621691184,
     "angle_blind": 144.11341348617466,
     "angle_partner": 112.86228742443578,
-    "judge_adds_to_machine": 0.007255236421266353
+    "tu_without_bias": 1.1778524404549138,
+    "yield_on_machine": 1.0072552364212664,
+    "judge_adds_to_machine": 0.007255236421266353,
+    "exchange": 0.005640822687731968
    },
    "measured": {
     "judge_alone": 1.0178957704424596,
@@ -7505,6 +8309,8 @@
     "judge_without_bias_alone": 2.038784224788606,
     "pair_without_bias": 2.1700652498022333,
     "tu_without_bias": 1.0643918191132948,
+    "yield_on_machine": 1.0011385354167137,
+    "yield_on_machine_without_bias": 1.0533360192942085,
     "judge_without_bias_over_judge": 2.002940069101953,
     "pair_without_bias_over_pair_partner": 1.0521381227781508,
     "accuracy_judge": 0.6905,
@@ -7533,7 +8339,10 @@
     "tu_blind": 1.6278506504194008,
     "angle_blind": 142.09841928987225,
     "angle_partner": 116.20477095199107,
-    "judge_adds_to_machine": 0.7437419430718715
+    "tu_without_bias": 1.0061220546020762,
+    "yield_on_machine": 1.7437419430718715,
+    "judge_adds_to_machine": 0.7437419430718715,
+    "exchange": 0.025062251712331195
    },
    "measured": {
     "judge_alone": 1.0354453295919417,
@@ -7551,6 +8360,8 @@
     "judge_without_bias_alone": 1.9865824238918177,
     "pair_without_bias": 1.9868050630286298,
     "tu_without_bias": 1.0001120714318894,
+    "yield_on_machine": 1.6866001747156067,
+    "yield_on_machine_without_bias": 2.0038794854970705,
     "judge_without_bias_over_judge": 1.918577801374322,
     "pair_without_bias_over_pair_partner": 1.188117679304144,
     "accuracy_judge": 0.6975,
@@ -7579,7 +8390,10 @@
     "tu_blind": 1.635974523678735,
     "angle_blind": 142.31959106850783,
     "angle_partner": 117.96475535202077,
-    "judge_adds_to_machine": 0.9098231513584538
+    "tu_without_bias": 1.0067810932803944,
+    "yield_on_machine": 1.9098231513584538,
+    "judge_adds_to_machine": 0.9098231513584538,
+    "exchange": 0.03602660167838084
    },
    "measured": {
     "judge_alone": 1.056713411655142,
@@ -7597,6 +8411,8 @@
     "judge_without_bias_alone": 2.0298272191633577,
     "pair_without_bias": 2.034649974103311,
     "tu_without_bias": 1.0023759435751092,
+    "yield_on_machine": 1.830801457315137,
+    "yield_on_machine_without_bias": 2.152928505027729,
     "judge_without_bias_over_judge": 1.9208871551881004,
     "pair_without_bias_over_pair_partner": 1.1759486515730604,
     "accuracy_judge": 0.7019,
@@ -7625,7 +8441,10 @@
     "tu_blind": 1.7574744646895664,
     "angle_blind": 145.31959564703192,
     "angle_partner": 122.00994880052461,
-    "judge_adds_to_machine": 0.7795942821189732
+    "tu_without_bias": 1.008284171432627,
+    "yield_on_machine": 1.7795942821189732,
+    "judge_adds_to_machine": 0.7795942821189732,
+    "exchange": 0.03605157956836155
    },
    "measured": {
     "judge_alone": 0.9651976303116675,
@@ -7643,6 +8462,8 @@
     "judge_without_bias_alone": 1.985377523415766,
     "pair_without_bias": 1.9941784622262073,
     "tu_without_bias": 1.0044328792416768,
+    "yield_on_machine": 1.7136786304690854,
+    "yield_on_machine_without_bias": 2.02189509449514,
     "judge_without_bias_over_judge": 2.0569647718412623,
     "pair_without_bias_over_pair_partner": 1.1798566303774742,
     "accuracy_judge": 0.6798,
@@ -7671,7 +8492,10 @@
     "tu_blind": 1.5908567857371125,
     "angle_blind": 141.0536739159972,
     "angle_partner": 114.73237735546122,
-    "judge_adds_to_machine": 0.7206630731500598
+    "tu_without_bias": 1.0083308669936,
+    "yield_on_machine": 1.7206630731500598,
+    "judge_adds_to_machine": 0.7206630731500598,
+    "exchange": 0.03280442995692403
    },
    "measured": {
     "judge_alone": 1.064533818439244,
@@ -7689,6 +8513,8 @@
     "judge_without_bias_alone": 2.0004235320486874,
     "pair_without_bias": 2.009534627651997,
     "tu_without_bias": 1.0045545832956577,
+    "yield_on_machine": 1.6721709305752885,
+    "yield_on_machine_without_bias": 2.0111265752539946,
     "judge_without_bias_over_judge": 1.8791545157124165,
     "pair_without_bias_over_pair_partner": 1.2027039452013994,
     "accuracy_judge": 0.7032,
@@ -7717,7 +8543,10 @@
     "tu_blind": 1.7059527621691184,
     "angle_blind": 144.11341348617466,
     "angle_partner": 120.09774709887081,
-    "judge_adds_to_machine": 0.8082118722622864
+    "tu_without_bias": 1.0070377345278927,
+    "yield_on_machine": 1.8082118722622864,
+    "judge_adds_to_machine": 0.8082118722622864,
+    "exchange": 0.03205852341436472
    },
    "measured": {
     "judge_alone": 1.0178957704424596,
@@ -7735,6 +8564,8 @@
     "judge_without_bias_alone": 2.038784224788606,
     "pair_without_bias": 2.041603689050749,
     "tu_without_bias": 1.0013829144977004,
+    "yield_on_machine": 1.7412150381109974,
+    "yield_on_machine_without_bias": 2.0807529023549898,
     "judge_without_bias_over_judge": 2.002940069101953,
     "pair_without_bias_over_pair_partner": 1.1950005351506434,
     "accuracy_judge": 0.6905,
@@ -7763,7 +8594,10 @@
     "tu_blind": 1.3068530549916821,
     "angle_blind": 130.07548133711913,
     "angle_partner": 87.06526621394067,
-    "judge_adds_to_machine": 0.02964890422460975
+    "tu_without_bias": 1.0907136368562347,
+    "yield_on_machine": 1.0296489042246098,
+    "judge_adds_to_machine": 0.02964890422460975,
+    "exchange": 0.011412917992061348
    },
    "measured": {
     "judge_alone": 2.1976059235232244,
@@ -7781,6 +8615,8 @@
     "judge_without_bias_alone": 3.0828577818486274,
     "pair_without_bias": 3.2398270110674736,
     "tu_without_bias": 1.0509167922513507,
+    "yield_on_machine": 1.0228626092561686,
+    "yield_on_machine_without_bias": 1.0551835650162615,
     "judge_without_bias_over_judge": 1.4028255697937682,
     "pair_without_bias_over_pair_partner": 1.0315985308951678,
     "accuracy_judge": 0.8642,
@@ -7809,7 +8645,10 @@
     "tu_blind": 1.2762664287284717,
     "angle_blind": 128.41457185716595,
     "angle_partner": 84.9193929045259,
-    "judge_adds_to_machine": 0.023894025106769856
+    "tu_without_bias": 1.1219705714542543,
+    "yield_on_machine": 1.0238940251067699,
+    "judge_adds_to_machine": 0.023894025106769856,
+    "exchange": 0.01251617132163722
    },
    "measured": {
     "judge_alone": 2.1785521148999107,
@@ -7827,6 +8666,8 @@
     "judge_without_bias_alone": 3.0933711808348456,
     "pair_without_bias": 3.2587160819343692,
     "tu_without_bias": 1.053451361454431,
+    "yield_on_machine": 1.0194853341450845,
+    "yield_on_machine_without_bias": 1.0566240654794707,
     "judge_without_bias_over_judge": 1.419920671017303,
     "pair_without_bias_over_pair_partner": 1.0364289020062558,
     "accuracy_judge": 0.8657,
@@ -7855,7 +8696,10 @@
     "tu_blind": 1.3445316409818358,
     "angle_blind": 131.9478618019813,
     "angle_partner": 90.99829113261814,
-    "judge_adds_to_machine": 0.02400524986707131
+    "tu_without_bias": 1.1188563073505833,
+    "yield_on_machine": 1.0240052498670713,
+    "judge_adds_to_machine": 0.02400524986707131,
+    "exchange": 0.012236060183337756
    },
    "measured": {
     "judge_alone": 2.11639583914552,
@@ -7873,6 +8717,8 @@
     "judge_without_bias_alone": 3.128486567369981,
     "pair_without_bias": 3.305995257865655,
     "tu_without_bias": 1.0567394766361102,
+    "yield_on_machine": 1.0155722531030822,
+    "yield_on_machine_without_bias": 1.0549462744135616,
     "judge_without_bias_over_judge": 1.4782142874714237,
     "pair_without_bias_over_pair_partner": 1.038770280686748,
     "accuracy_judge": 0.8558,
@@ -7901,7 +8747,10 @@
     "tu_blind": 1.2620084460652563,
     "angle_blind": 127.59078877814575,
     "angle_partner": 83.19088823308897,
-    "judge_adds_to_machine": 0.01424931741447577
+    "tu_without_bias": 1.1432087871647652,
+    "yield_on_machine": 1.0142493174144758,
+    "judge_adds_to_machine": 0.01424931741447577,
+    "exchange": 0.008809300685397745
    },
    "measured": {
     "judge_alone": 2.239096914064863,
@@ -7919,6 +8768,8 @@
     "judge_without_bias_alone": 3.046692481617159,
     "pair_without_bias": 3.3195804804514983,
     "tu_without_bias": 1.0895686061133063,
+    "yield_on_machine": 1.001906626213085,
+    "yield_on_machine_without_bias": 1.0304920140596496,
     "judge_without_bias_over_judge": 1.360679148133068,
     "pair_without_bias_over_pair_partner": 1.0285309899133108,
     "accuracy_judge": 0.8704,
@@ -7947,7 +8798,10 @@
     "tu_blind": 1.3565218222371178,
     "angle_blind": 132.50830165247208,
     "angle_partner": 91.85096043022807,
-    "judge_adds_to_machine": 0.017539478574173373
+    "tu_without_bias": 1.1327836736457009,
+    "yield_on_machine": 1.0175394785741734,
+    "judge_adds_to_machine": 0.017539478574173373,
+    "exchange": 0.010021441768076513
    },
    "measured": {
     "judge_alone": 2.104223735433537,
@@ -7965,6 +8819,8 @@
     "judge_without_bias_alone": 3.143490618427484,
     "pair_without_bias": 3.3487394168120783,
     "tu_without_bias": 1.0652932753103839,
+    "yield_on_machine": 1.007505342603058,
+    "yield_on_machine_without_bias": 1.0363427113400479,
     "judge_without_bias_over_judge": 1.4938956183667536,
     "pair_without_bias_over_pair_partner": 1.0286225467177015,
     "accuracy_judge": 0.8483,
@@ -7993,7 +8849,10 @@
     "tu_blind": 1.3068530549916821,
     "angle_blind": 130.07548133711913,
     "angle_partner": 95.46026654589163,
-    "judge_adds_to_machine": 0.43880920106805643
+    "tu_without_bias": 1.018647662848827,
+    "yield_on_machine": 1.4388092010680564,
+    "judge_adds_to_machine": 0.43880920106805643,
+    "exchange": 0.04028454678435641
    },
    "measured": {
     "judge_alone": 2.1976059235232244,
@@ -8011,6 +8870,8 @@
     "judge_without_bias_alone": 3.0828577818486274,
     "pair_without_bias": 3.150312953819662,
     "tu_without_bias": 1.021880727800095,
+    "yield_on_machine": 1.420550170505332,
+    "yield_on_machine_without_bias": 1.5351849000275786,
     "judge_without_bias_over_judge": 1.4028255697937682,
     "pair_without_bias_over_pair_partner": 1.0806974170306618,
     "accuracy_judge": 0.8642,
@@ -8039,7 +8900,10 @@
     "tu_blind": 1.2762664287284717,
     "angle_blind": 128.41457185716595,
     "angle_partner": 93.6381836684359,
-    "judge_adds_to_machine": 0.4198362986723212
+    "tu_without_bias": 1.0266023930497485,
+    "yield_on_machine": 1.4198362986723212,
+    "judge_adds_to_machine": 0.4198362986723212,
+    "exchange": 0.05477157488076383
    },
    "measured": {
     "judge_alone": 2.1785521148999107,
@@ -8057,6 +8921,8 @@
     "judge_without_bias_alone": 3.0933711808348456,
     "pair_without_bias": 3.1644411110470907,
     "tu_without_bias": 1.0229749118542781,
+    "yield_on_machine": 1.407289346161811,
+    "yield_on_machine_without_bias": 1.5550109506821477,
     "judge_without_bias_over_judge": 1.419920671017303,
     "pair_without_bias_over_pair_partner": 1.1049688928031944,
     "accuracy_judge": 0.8657,
@@ -8085,7 +8951,10 @@
     "tu_blind": 1.3445316409818358,
     "angle_blind": 131.9478618019813,
     "angle_partner": 98.48868022179424,
-    "judge_adds_to_machine": 0.4221041162039467
+    "tu_without_bias": 1.0221027051914222,
+    "yield_on_machine": 1.4221041162039467,
+    "judge_adds_to_machine": 0.4221041162039467,
+    "exchange": 0.04569419557960107
    },
    "measured": {
     "judge_alone": 2.11639583914552,
@@ -8103,6 +8972,8 @@
     "judge_without_bias_alone": 3.128486567369981,
     "pair_without_bias": 3.1821482388530287,
     "tu_without_bias": 1.017152597694597,
+    "yield_on_machine": 1.3897137156897774,
+    "yield_on_machine_without_bias": 1.5436808289385575,
     "judge_without_bias_over_judge": 1.4782142874714237,
     "pair_without_bias_over_pair_partner": 1.1107905257827575,
     "accuracy_judge": 0.8558,
@@ -8131,7 +9002,10 @@
     "tu_blind": 1.2620084460652563,
     "angle_blind": 127.59078877814575,
     "angle_partner": 92.58192487312476,
-    "judge_adds_to_machine": 0.44223877161271563
+    "tu_without_bias": 1.0242924336301633,
+    "yield_on_machine": 1.4422387716127156,
+    "judge_adds_to_machine": 0.44223877161271563,
+    "exchange": 0.05311157901962915
    },
    "measured": {
     "judge_alone": 2.239096914064863,
@@ -8149,6 +9023,8 @@
     "judge_without_bias_alone": 3.046692481617159,
     "pair_without_bias": 3.116406137617384,
     "tu_without_bias": 1.0228817501014154,
+    "yield_on_machine": 1.4233405564610293,
+    "yield_on_machine_without_bias": 1.5353574866161377,
     "judge_without_bias_over_judge": 1.360679148133068,
     "pair_without_bias_over_pair_partner": 1.0787000199260992,
     "accuracy_judge": 0.8704,
@@ -8177,7 +9053,10 @@
     "tu_blind": 1.3565218222371178,
     "angle_blind": 132.50830165247208,
     "angle_partner": 99.57176077394868,
-    "judge_adds_to_machine": 0.4418219353250725
+    "tu_without_bias": 1.020944946068298,
+    "yield_on_machine": 1.4418219353250725,
+    "judge_adds_to_machine": 0.4418219353250725,
+    "exchange": 0.04566621254005689
    },
    "measured": {
     "judge_alone": 2.104223735433537,
@@ -8195,6 +9074,8 @@
     "judge_without_bias_alone": 3.143490618427484,
     "pair_without_bias": 3.2010362466847533,
     "tu_without_bias": 1.018306282805468,
+    "yield_on_machine": 1.4224437774434884,
+    "yield_on_machine_without_bias": 1.5574626947697758,
     "judge_without_bias_over_judge": 1.4938956183667536,
     "pair_without_bias_over_pair_partner": 1.0949203894504376,
     "accuracy_judge": 0.8483,
@@ -8204,11 +9085,11 @@
    }
   }
  ],
- "minutes": 0.86,
+ "minutes": 0.64,
  "environment": {
   "python": "3.13.14",
   "numpy": "2.5.4",
   "scipy": "1.18.1",
-  "code_commit": "7019665ff54cbf8d4a1e667a7edcbb2e23f469f1"
+  "code_commit": "c47e8b7e22da98158ce48bccdd6f552b657f8a76"
  }
 }

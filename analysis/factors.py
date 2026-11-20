@@ -64,6 +64,8 @@ def _without_bias(measured: dict, zh0, z_soloist, y, half, raw: dict) -> None:
     d0 = float(est.d_a(zh0, y))
     measured.update(judge_without_bias_alone=d0, pair_without_bias=clean["d_pair_tuned"],
                     tu_without_bias=clean["d_pair_tuned"] / d0,
+                    yield_on_machine=measured["pair_partner"] / measured["machine_alone"],
+                    yield_on_machine_without_bias=clean["d_pair_tuned"] / measured["machine_alone"],
                     judge_without_bias_over_judge=d0 / measured["judge_alone"],
                     pair_without_bias_over_pair_partner=clean["d_pair_tuned"] / measured["pair_partner"],
                     accuracy_judge=_accuracy(raw["judge"], y), accuracy_judge_without_bias=_accuracy(raw["clean"], y),

@@ -89,10 +89,12 @@ def pair_factors(d_h: float, d_m: float, r: float, b: float) -> dict:
     the task, p what the judge knows and the machine does not. It is the theorem of the three machines divided by
     d_H^2: the same algebra, rearranged. q^2 + p ("together") is what the two know together, in units of the judge
     without its bias: it is 1 when the machine sees a part of what the judge sees (r = q), q^2 when the judge sees a
-    part of what the machine sees (r = 1 / q), 1 + q^2 when their errors are independent. Also returned: what the
-    judge adds to the machine alone with the partner (sqrt(1 + p / q^2) - 1), and the angles between the errors of
-    the judge and of a blind machine or of a partner built for weight 1 (noise correlations -sqrt(B / (1 + B)) and
-    (r - B) / (1 + B))."""
+    part of what the machine sees (r = 1 / q), 1 + q^2 when their errors are independent. Also returned: the pair
+    seen from the two sides once the bias is gone, the turing sqrt(q^2 + p) and the yield on the machine
+    sqrt(1 + p / q^2) (what the judge adds to the machine is that, minus one). With independent errors the two are
+    tied: (Tu^2 - 1)(yield^2 - 1) = 1, and in general the product is ((1 + r^2 - r (q + 1 / q)) / (1 - r^2))^2
+    ("exchange"). And the angles between the errors of the judge and of a blind machine or of a partner built for
+    weight 1 (noise correlations -sqrt(B / (1 + B)) and (r - B) / (1 + B))."""
     q = d_m / d_h
     p = (1.0 - r * q) ** 2 / (1.0 - r * r)
     seen = p * (1.0 - r * r) / (1.0 - r * r + b)
@@ -101,7 +103,10 @@ def pair_factors(d_h: float, d_m: float, r: float, b: float) -> dict:
            "tu_blind": math.sqrt(1.0 + b),
            "angle_blind": math.degrees(math.acos(-math.sqrt(b / (1.0 + b)))),
            "angle_partner": math.degrees(math.acos(max(-1.0, min(1.0, (r - b) / (1.0 + b)))))}
-    out["judge_adds_to_machine"] = math.sqrt(1.0 + p / (q * q)) - 1.0 if q > 0 else None
+    out["tu_without_bias"] = math.sqrt(q * q + p)
+    out["yield_on_machine"] = math.sqrt(1.0 + p / (q * q)) if q > 0 else None
+    out["judge_adds_to_machine"] = out["yield_on_machine"] - 1.0 if q > 0 else None
+    out["exchange"] = (q * q + p - 1.0) * (p / (q * q)) if q > 0 else None
     return out
 
 

@@ -717,3 +717,12 @@ def test_the_turing_of_the_pair_in_three_factors(tmp_path):
     assert part["together"] == pytest.approx(1.0) and part["tu_partner"] == pytest.approx(part["tu_blind"])
     assert chart.pair_factors(2.0, 3.0, 2.0 / 3.0, 0.5)["private"] == pytest.approx(0.0, abs=1e-12)   # r = 1 / q
     assert chart.pair_factors(2.0, 3.0, 0.0, 0.5)["together"] == pytest.approx(1 + 1.5 ** 2)
+    for q in (0.3, 1.0, 2.5):                               # independent errors: what one adds, the other loses
+        g = chart.pair_factors(1.0, q, 0.0, 0.4)
+        assert (g["tu_without_bias"] ** 2 - 1) * (g["yield_on_machine"] ** 2 - 1) == pytest.approx(1.0)
+        assert g["exchange"] == pytest.approx(1.0)
+    for q, r in ((0.7, 0.5), (1.0, -0.5), (2.0, 0.3)):
+        g = chart.pair_factors(1.0, q, r, 0.0)
+        assert g["exchange"] == pytest.approx(((1 + r * r - r * (q + 1 / q)) / (1 - r * r)) ** 2)
+        assert g["tu_partner"] == pytest.approx(g["tu_without_bias"])
+    assert chart.pair_factors(1.0, 1.0, -0.5, 0.0)["yield_on_machine"] == pytest.approx(2.0)

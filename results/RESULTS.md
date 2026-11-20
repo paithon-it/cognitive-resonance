@@ -735,10 +735,10 @@ Protocol § 18 (v2.3), registered before the run, on the files of E10 with the m
 
 The same pairs seen from the two sides, and the judge that never learned the bias (H0 in E8, C_0 in E10: the same network trained where the frame says nothing). `q^2 + p` is what the two know together in units of the judge without its bias: the turing the equation leaves once the bias is gone. What the judge adds to the machine is the pair with the partner over the soloist alone, minus one. The last columns compare two ways of removing the bias: in the machine (judge + partner) or in the judge (judge without bias + soloist); right answers of the raw sums, and in how many units the second is above the first.
 
-| bench | condition | q^2 + p | judge adds to the machine: equation / measured | judge without bias alone, over the judge | turing of the judge without bias with the soloist | that pair over the pair judge + partner | right answers: judge / judge without bias | judge + partner / judge without bias + soloist | units where the second is above |
-|---|---|---|---|---|---|---|---|---|---|
-| the chart (E8) | v25 | 1.03 | 47% / 45% | 1.46 | 1.01 | 1.107 | 85.2% / 93.7% | 92.1% / 93.7% | 25 of 25 |
-| the chart (E8) | v50 | 1.10 | 15% / 14% | 1.46 | 1.03 | 1.072 | 85.2% / 93.7% | 93.0% / 94.2% | 25 of 25 |
-| the chart (E8) | v100 | 1.21 | 2% / 1% | 1.46 | 1.04 | 1.036 | 85.2% / 93.7% | 93.6% / 94.3% | 25 of 25 |
-| the chart, new seeds (E10, level 0) | v25 | 1.04 | 44% / 42% | 1.46 | 1.02 | 1.102 | 85.9% / 93.8% | 92.6% / 93.8% | 25 of 25 |
-| the chart, new seeds (E10, level 0) | v100 | 1.25 | 2% / 1% | 1.46 | 1.05 | 1.038 | 85.9% / 93.8% | 93.8% / 94.3% | 24 of 25 |
+| bench | condition | q^2 + p | judge adds to the machine: equation / measured | judge without bias alone, over the judge | turing of the judge without bias with the soloist | its pair over the soloist alone | that pair over the pair judge + partner | right answers: judge / judge without bias | judge + partner / judge without bias + soloist | units where the second is above |
+|---|---|---|---|---|---|---|---|---|---|---|
+| the chart (E8) | v25 | 1.03 | 47% / 45% | 1.46 | 1.01 | 1.59 | 1.107 | 85.2% / 93.7% | 92.1% / 93.7% | 25 of 25 |
+| the chart (E8) | v50 | 1.10 | 15% / 14% | 1.46 | 1.03 | 1.21 | 1.072 | 85.2% / 93.7% | 93.0% / 94.2% | 25 of 25 |
+| the chart (E8) | v100 | 1.21 | 2% / 1% | 1.46 | 1.04 | 1.04 | 1.036 | 85.2% / 93.7% | 93.6% / 94.3% | 25 of 25 |
+| the chart, new seeds (E10, level 0) | v25 | 1.04 | 44% / 42% | 1.46 | 1.02 | 1.55 | 1.102 | 85.9% / 93.8% | 92.6% / 93.8% | 25 of 25 |
+| the chart, new seeds (E10, level 0) | v100 | 1.25 | 2% / 1% | 1.46 | 1.05 | 1.04 | 1.038 | 85.9% / 93.8% | 93.8% / 94.3% | 24 of 25 |
