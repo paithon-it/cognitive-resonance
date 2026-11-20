@@ -1104,6 +1104,38 @@ hanno criteri, e non toccano criteri né esiti delle prove registrate.
   compagno supera la macchina cieca, e in quante il giudice senza pregiudizio, da solo,
   supera il giudice corretto dal compagno.
 
+**E10, E11 ed E12.** Del 20 novembre 2026; le ore sono UTC, quelle del repository vengono dal
+registro delle attività di GitHub.
+
+- La versione 2.3 di questo protocollo arriva nel repository alle 16:34:13 (`f6d9795`).
+- Sul server ambiente e dati sono preparati fra le 16:33 e le 16:36, senza addestrare niente.
+- Alle 16:38:18 un controllo tecnico: un'epoca, un compito, un seme fuori piano (99), in una
+  cartella a parte cancellata subito. Serve a sapere che lo script arriva in fondo; i suoi
+  file non sono stati letti da nessuna analisi.
+- La corsa parte alle 16:38:53 e finisce alle 17:44:30: 3.936 secondi, tre processi, una
+  sessione sola (nessun altro ha chiesto la scheda), 50 file.
+- Le analisi `analysis/trace.py` e `analysis/yesno.py` arrivano nel repository alle 16:41:43
+  (`84d27f8`); il primo file della corsa è delle 16:43:56.
+- Ambiente proprio: torch 2.15.0+cu132, numpy 2.5.5. La cartella sul server è stata
+  cancellata dopo aver copiato i file e confrontato le impronte.
+
+**Letture aggiunte dopo i risultati di E10-E12.** Del 20 novembre 2026. Non sono prove, e
+non toccano criteri né esiti.
+
+- **Che cosa lascia il ramo** (`analysis/trace_left.py`, `results/e10_trace_left.json`). T3 è
+  passato: a vista intera l'eccesso del teorema non descrive ciò che il ramo toglie. Il ramo
+  toglie le stesse quote alle due viste, e lascia alla cornice un coefficiente vicino alla
+  pendenza del suo rapporto di verosimiglianza (0,38, 0,89 e 1,51 contro 0,36, 0,79 e 1,33).
+  L'eccesso del teorema è quello del miglior uso dei tre indizi e dipende dalla macchina; il
+  ramo, addestrato sulla somma così com'è, no. Coincidono dove la macchina vede un quarto.
+- **Perché la previsione di E12 era sbagliata** (`analysis/yesno.py`, campi `kappa_corrected`
+  e `predicted_yes_no_corrected`, aggiunti dopo). La pendenza probit è in unità del rumore
+  pulito; riportarla alle unità dell'indizio intero con la stessa stima ne riduce l'errore di
+  `(1 + B)^(3/2)`. Il pregiudizio che resta con `n` sì e no è `kappa / (n (1 + B)^2)`, non
+  `kappa / n`: con le grandezze della prova fa 1,8 volte i giudizi graduati, dove il
+  misurato è 1,6 e la fascia scritta prima era da 3 a 9. Con un pregiudizio piccolo il
+  fattore torna vicino a `kappa`.
+
 **Le versioni.** La versione 1.1 è dello stesso giorno della 1 e viene prima di ogni corsa:
 precisa i conti di E0 e del bootstrap, che nella 1 non sarebbero stati eseguibili nel
 tempo disponibile. La versione 1.2, dello stesso giorno, aggiunge la domanda D6 e

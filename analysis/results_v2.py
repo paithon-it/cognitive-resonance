@@ -424,7 +424,9 @@ def trace(d):
 def yesno(d):
     s = d["summary"]
     rows = [[n, f(x["graded"], 2), f(x["predicted_graded"], 2), f(x["yes_no"], 2), f(x["predicted_yes_no"], 2),
-             f"{f(x['yes_no_range'][0], 2)} to {f(x['yes_no_range'][1], 2)}"] for n, x in s["by_n"].items()]
+             f(x["predicted_yes_no_corrected"], 2), f"{f(x['yes_no_range'][0], 2)} to {f(x['yes_no_range'][1], 2)}"]
+            for n, x in s["by_n"].items()]
+    late = s["added_after_the_results"]
     return "\n\n".join([
         "## E12. The push estimated from yes and no",
         "Protocol § 18 (v2.3), registered before the run, on the files of E10 with the machine seeing a quarter of "
@@ -434,14 +436,36 @@ def yesno(d):
         f"the {s['units']} units with a gain to keep. Predicted: a bias left of 1 / n with the graded cue, and of "
         f"kappa / n with yes and no, kappa from the Fisher information (median {f(s['median_kappa'], 2)}, from "
         f"{f(s['kappa_range'][0], 2)} to {f(s['kappa_range'][1], 2)}). The primary criteria are Y1 and Y2.",
-        table(["judgments", "kept, graded cue", "predicted", "kept, yes and no", "predicted", "yes and no, over the units"],
-              rows),
-        criteria(d["criteria"])])
+        table(["judgments", "kept, graded cue", "predicted", "kept, yes and no", "predicted (registered)",
+               "predicted (corrected afterwards)", "yes and no, over the units"], rows),
+        criteria(d["criteria"]),
+        "**Added after the results.** The registered prediction was too pessimistic: a factor was missing. The probit "
+        "slope is in units of the clean noise, and bringing it to the units of the judge's whole cue with the same "
+        "estimate shrinks its error; the bias left is kappa / (n (1 + B)^2). That gives a factor of "
+        f"{f(late['median_kappa_corrected'], 2)} (median), where the measured one is {f(late['median_factor_measured'], 2)} "
+        "at a target of 0.90 and " + ", ".join(f"{f(v, 2)} at {k}" for k, v in late["factor_by_target"].items() if k != "0.9")
+        + ". The criteria above use the registered prediction and are untouched."])
+
+
+def trace_left(d):
+    rows = [[r["v"], f(r["level"], 1), r["units"], f(r["push_raw"], 2), f(r["share_removed"], 2), f(r["excess_of_the_theorem"], 2),
+             f"{f(r['left_to_the_frame'], 2)} ({f(r['left_range'][0], 2)} to {f(r['left_range'][1], 2)})", f(r["frame_own_slope"], 2),
+             r["units_where_old_pair_is_below_the_judge_alone"]] for r in d["by_v_and_level"]]
+    return "\n\n".join([
+        "## E10, what the branch leaves to the frame (a reading added after the results)",
+        "`analysis/trace_left.py`: added on 20 November 2026 after the results of E10, not a test. The branch built "
+        "for a level removes the same share of the push at the two views, and what it leaves to the frame, in raw "
+        "log-odds per unit of frame, is close to the slope of the frame's own log-likelihood ratio. The excess of the "
+        "theorem is that of the best linear use of the three cues and depends on the machine: the two coincide where "
+        "the machine sees a quarter of the image, not where it sees everything. Last column: the units, of 25, where "
+        "the pair with the old partner at face value gives fewer right answers than the judge alone.",
+        table(["v", "level", "units", "push of the judge", "share removed", "excess of the theorem",
+               "left to the frame (min to max)", "the frame's own slope", "old pair below the judge alone"], rows)])
 
 
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
-            ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace),
+            ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
             ("e12_yesno.json", yesno))

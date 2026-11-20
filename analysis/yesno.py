@@ -14,6 +14,12 @@ linear use of the two cues. Share kept = (D_n^2 - D_1^2) / (D_all^2 - D_1^2), me
 draws. The prediction: n yes-or-no answers are worth n / kappa graded judgments, with kappa
 from the Fisher information (`cognitive_resonance.chart.yes_no_factor`). Writes Y1-Y4.
 
+Added after the results (not part of the registered test): the registered prediction left out a
+factor. The probit slope is in units of the clean noise, and bringing it to the units of the
+judge's whole cue with the same estimate shrinks its error by (1 + B)^(3/2); the bias left is
+kappa / (n (1 + B)^2), not kappa / n. The fields `kappa_corrected` and `predicted_yes_no_corrected`
+carry that reading; the criteria are untouched and still use the registered prediction.
+
     python analysis/yesno.py [--raw results/raw/trace] [--out results/e12_yesno.json]
 """
 from __future__ import annotations
@@ -109,10 +115,12 @@ def unit(path) -> dict | None:
             yesno.append(share(to_std(probit_slope(vans[pick], vy[pick], va[pick]))))
         by_n[str(n)] = {"graded": med(graded), "yes_no": med(yesno), "draws": len(graded),
                         "predicted_graded": theorem.share_kept_after(n, r, b),
-                        "predicted_yes_no": theorem.share_kept_after(n / kappa, r, b)}
+                        "predicted_yes_no": theorem.share_kept_after(n / kappa, r, b),
+                        "predicted_yes_no_corrected": theorem.share_kept_after(n * (1.0 + b) ** 2 / kappa, r, b)}
     need_g = needed(NS, [by_n[str(n)]["graded"] for n in NS])
     need_y = needed(NS, [by_n[str(n)]["yes_no"] for n in NS])
-    return {"task": d["task"], "seed": d["seed"], "v": d["v"], "b": b, "r": r, "kappa": kappa, "class_means": means,
+    return {"task": d["task"], "seed": d["seed"], "v": d["v"], "b": b, "r": r, "kappa": kappa,
+            "kappa_corrected": kappa / (1.0 + b) ** 2, "class_means": means,
             "beta_clean": slope / sd_clean, "d1": d1, "d_all_judgments": d_all, "gain_squared": d_all ** 2 - d1 ** 2,
             "right_answers_of_the_judge_on_validation": float(np.mean(vans == (vy == 1))),
             "needed_graded": need_g, "needed_yes_no": need_y,
@@ -156,9 +164,18 @@ def summary(units) -> dict:
     us = [u for u in units if u["gain_squared"] > 0.2]
     return {"units": len(us), "left_out": len(units) - len(us), "median_b": med([u["b"] for u in us]),
             "median_r": med([u["r"] for u in us]), "median_kappa": med([u["kappa"] for u in us]),
+            "added_after_the_results": {
+                "median_kappa_corrected": med([u["kappa_corrected"] for u in us]),
+                "median_factor_measured": med([u["factor"] for u in us]),
+                "factor_by_target": {f"{t:g}": med([needed(NS, [u["by_n"][str(n)]["yes_no"] for n in NS], t)
+                                                    / needed(NS, [u["by_n"][str(n)]["graded"] for n in NS], t) for u in us])
+                                     for t in (0.8, 0.9, 0.95, 0.975)},
+                "why": "bias left with yes and no = kappa / (n (1 + B)^2): the slope is needed in units of the "
+                       "judge's whole noise, and the same estimate sets the unit"},
             "kappa_range": [min(u["kappa"] for u in us), max(u["kappa"] for u in us)] if us else None,
             "by_n": {str(n): {k: med([u["by_n"][str(n)][k] for u in us])
-                              for k in ("graded", "yes_no", "predicted_graded", "predicted_yes_no")}
+                              for k in ("graded", "yes_no", "predicted_graded", "predicted_yes_no",
+                                        "predicted_yes_no_corrected")}
                      | {"yes_no_range": [min(u["by_n"][str(n)]["yes_no"] for u in us),
                                          max(u["by_n"][str(n)]["yes_no"] for u in us)] if us else None}
                      for n in NS}}

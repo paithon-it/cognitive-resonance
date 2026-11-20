@@ -678,3 +678,16 @@ def test_the_size_of_a_documented_bias():
     assert chart.bias_from_shift(0.066, 0.29) == pytest.approx(4 * b, rel=1e-9)
     assert chart.bias_from_shift(0.033, 0.5) < b                      # the same shift is a smaller push where phi is largest
     assert chart._probit(0.5) == pytest.approx(0.0, abs=1e-9) and chart._probit(0.975) == pytest.approx(1.96, abs=1e-3)
+
+
+def test_what_the_branch_leaves_to_the_frame(tmp_path):
+    """The reading added after E10: on synthetic files the branch leaves the frame's own log-likelihood slope."""
+    import trace
+    import trace_left
+    assert trace_left.own_slope(0.0) == 0.0 and trace_left.own_slope(1.0) == pytest.approx(0.7906, abs=1e-3)
+    synthetic.write_trace(tmp_path, tasks=("cat_dog",), seeds=(7,), n_images=1200, n_val=400)
+    units = [trace.unit((f, 20)) for f in raw.list_units(tmp_path, raw.TRACE_RE)]
+    rows = trace_left.rows(units)
+    assert len(rows) == 8
+    for r in rows:
+        assert r["left_to_the_frame"] == pytest.approx(r["frame_own_slope"], abs=0.05)

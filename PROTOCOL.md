@@ -1107,6 +1107,40 @@ have no criteria, and touch neither the criteria nor the outcomes of the registe
   how many units the partner beats the blind machine, and in how many the judge without
   the bias, alone, beats the judge corrected by the partner.
 
+**E10, E11 and E12.** From 20 November 2026; times are UTC, those of the repository come from
+GitHub's activity log.
+
+- Version 2.3 of this protocol arrives in the repository at 16:34:13 (`f6d9795`).
+- On the server the environment and the data are prepared between 16:33 and 16:36, with no
+  training.
+- At 16:38:18 a technical check: one epoch, one task, a seed outside the plan (99), in a
+  folder of its own deleted at once. It tells that the script runs to the end; its files
+  were read by no analysis.
+- The run starts at 16:38:53 and ends at 17:44:30: 3,936 seconds, three processes, one
+  session only (nobody else asked for the GPU), 50 files.
+- The analyses `analysis/trace.py` and `analysis/yesno.py` arrive in the repository at
+  16:41:43 (`84d27f8`); the first file of the run is from 16:43:56.
+- Environment of our own: torch 2.15.0+cu132, numpy 2.5.5. The folder on the server was
+  deleted after copying the files and comparing their checksums.
+
+**Readings added after the results of E10-E12.** From 20 November 2026. They are not tests,
+and touch neither criteria nor outcomes.
+
+- **What the branch leaves** (`analysis/trace_left.py`, `results/e10_trace_left.json`). T3
+  passed: with the whole view the excess of the theorem does not describe what the branch
+  removes. The branch removes the same shares at the two views, and leaves the frame a
+  coefficient close to the slope of its likelihood ratio (0.38, 0.89 and 1.51 against 0.36,
+  0.79 and 1.33). The excess of the theorem is that of the best use of the three cues and
+  depends on the machine; the branch, trained on the sum at face value, does not. They
+  coincide where the machine sees a quarter.
+- **Why the prediction of E12 was wrong** (`analysis/yesno.py`, fields `kappa_corrected` and
+  `predicted_yes_no_corrected`, added afterwards). The probit slope is in units of the clean
+  noise; bringing it to the units of the whole cue with the same estimate shrinks its error
+  by `(1 + B)^(3/2)`. The bias left with `n` yes and no is `kappa / (n (1 + B)^2)`, not
+  `kappa / n`: with the quantities of the test that is 1.8 times the graded judgments, where
+  the measured factor is 1.6 and the band written beforehand was 3 to 9. With a small bias
+  the factor goes back close to `kappa`.
+
 **The versions.** Version 1.1 is from the same day as version 1 and comes before any run: it
 specifies the computations of E0 and of the bootstrap, which in version 1 could not have
 been run in the time available. Version 1.2, from the same day, adds question Q6 and

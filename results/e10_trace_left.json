@@ -1,0 +1,142 @@
+{
+ "experiment": "E10, what the branch leaves to the frame",
+ "protocol": "§ 16, on the results of E10",
+ "status": "a reading added on 20 November 2026, after the results of E10 were seen: not a test",
+ "how": "per unit and level: (1 - share of the push removed by the branch built for the level) x raw push of the judge, beside the slope of the frame's own log-likelihood ratio, 2 mu_d / sd_d^2",
+ "by_v_and_level": [
+  {
+   "v": 25,
+   "level": 0.0,
+   "units": 25,
+   "push_raw": 1.7226005522469354,
+   "left_to_the_frame": -0.049629507890949255,
+   "left_range": [
+    -0.12140358497127934,
+    0.08625703685922718
+   ],
+   "frame_own_slope": 0.0,
+   "share_removed": 1.0276073294894577,
+   "excess_of_the_theorem": 1.0015055989079273,
+   "units_where_old_pair_is_below_the_judge_alone": 0,
+   "right_old_minus_soloist_points": 3.1100000000000017
+  },
+  {
+   "v": 25,
+   "level": 0.5,
+   "units": 25,
+   "push_raw": 1.679776795452656,
+   "left_to_the_frame": 0.38070134687552554,
+   "left_range": [
+    0.26694249969268163,
+    0.5140414275615179
+   ],
+   "frame_own_slope": 0.3644344934278313,
+   "share_removed": 0.7725971696876271,
+   "excess_of_the_theorem": 0.7465595341218886,
+   "units_where_old_pair_is_below_the_judge_alone": 0,
+   "right_old_minus_soloist_points": 0.9299999999999975
+  },
+  {
+   "v": 25,
+   "level": 1.0,
+   "units": 25,
+   "push_raw": 1.6414181674409145,
+   "left_to_the_frame": 0.8908965690969333,
+   "left_range": [
+    0.7518841166831028,
+    1.0729858088815727
+   ],
+   "frame_own_slope": 0.7905694150420948,
+   "share_removed": 0.4561516991320623,
+   "excess_of_the_theorem": 0.46457954107118904,
+   "units_where_old_pair_is_below_the_judge_alone": 18,
+   "right_old_minus_soloist_points": -1.1599999999999944
+  },
+  {
+   "v": 25,
+   "level": 1.5,
+   "units": 25,
+   "push_raw": 1.6110556085090757,
+   "left_to_the_frame": 1.507279013760972,
+   "left_range": [
+    1.373537192552322,
+    1.7615739814842024
+   ],
+   "frame_own_slope": 1.3258252147247767,
+   "share_removed": 0.05040790636982203,
+   "excess_of_the_theorem": 0.12333589125479327,
+   "units_where_old_pair_is_below_the_judge_alone": 25,
+   "right_old_minus_soloist_points": -2.4800000000000044
+  },
+  {
+   "v": 100,
+   "level": 0.0,
+   "units": 25,
+   "push_raw": 1.7226005522469354,
+   "left_to_the_frame": -0.02867579498001676,
+   "left_range": [
+    -0.11017112136647325,
+    0.09908097534392454
+   ],
+   "frame_own_slope": 0.0,
+   "share_removed": 1.0174556232295437,
+   "excess_of_the_theorem": 1.0043712382642973,
+   "units_where_old_pair_is_below_the_judge_alone": 0,
+   "right_old_minus_soloist_points": 1.4100000000000001
+  },
+  {
+   "v": 100,
+   "level": 0.5,
+   "units": 25,
+   "push_raw": 1.679776795452656,
+   "left_to_the_frame": 0.3975352286273062,
+   "left_range": [
+    0.2973582859656598,
+    0.5205516600995733
+   ],
+   "frame_own_slope": 0.3644344934278313,
+   "share_removed": 0.7661604926113489,
+   "excess_of_the_theorem": 0.4203533291646534,
+   "units_where_old_pair_is_below_the_judge_alone": 0,
+   "right_old_minus_soloist_points": 0.21999999999999797
+  },
+  {
+   "v": 100,
+   "level": 1.0,
+   "units": 25,
+   "push_raw": 1.6414181674409145,
+   "left_to_the_frame": 0.8801041932166104,
+   "left_range": [
+    0.8165417838676462,
+    1.0851395566192554
+   ],
+   "frame_own_slope": 0.7905694150420948,
+   "share_removed": 0.45652064033783546,
+   "excess_of_the_theorem": -0.22611442713113594,
+   "units_where_old_pair_is_below_the_judge_alone": 0,
+   "right_old_minus_soloist_points": -0.8199999999999985
+  },
+  {
+   "v": 100,
+   "level": 1.5,
+   "units": 25,
+   "push_raw": 1.6110556085090757,
+   "left_to_the_frame": 1.4969016781721765,
+   "left_range": [
+    1.3583166489520306,
+    1.7645164617169433
+   ],
+   "frame_own_slope": 1.3258252147247767,
+   "share_removed": 0.0536353087850751,
+   "excess_of_the_theorem": -0.9961817758902567,
+   "units_where_old_pair_is_below_the_judge_alone": 19,
+   "right_old_minus_soloist_points": -1.6700000000000048
+  }
+ ],
+ "environment": {
+  "python": "3.13.14",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "code_commit": "e65d38cdf7599b561e38bafbd51af494e2af9dcd"
+ }
+}
