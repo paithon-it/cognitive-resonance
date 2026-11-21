@@ -16,7 +16,8 @@ from .estimators import d_a, slope_within
 def _within(v: np.ndarray, y: np.ndarray) -> np.ndarray:
     out = np.array(v, float, copy=True)
     for c in (0, 1):
-        out[y == c] -= out[y == c].mean()
+        if (y == c).any():
+            out[y == c] -= out[y == c].mean()
     return out
 
 
@@ -48,7 +49,12 @@ def best_threshold(g: np.ndarray, y: np.ndarray) -> float:
 
 
 def measure(y, g0, g_a, g_b, a, learn, test) -> dict:
-    """Everything E16 measures with a corrector learned on `learn` and read on `test` (index arrays)."""
+    """Everything E16 measures with a corrector learned on `learn` and read on `test` (index arrays).
+
+    Right answers are counted twice: at threshold zero, as the judge would answer, and with the threshold that gives
+    the most right answers on `learn` (added after the exploration: the judge prefers one letter, and the sentence
+    with the opinion moves that preference).
+    """
     y, g0, g_a, g_b, a = (np.asarray(v) for v in (y, g0, g_a, g_b, a))
     g = met(g_a, g_b, a)
     beta, _ = readable_bias(g[learn], a[learn], y[learn])
@@ -57,12 +63,17 @@ def measure(y, g0, g_a, g_b, a, learn, test) -> dict:
     lost = d_clean - d_as
     agree = (a > 0) == (y == 1)
     t = test
+    cut = {k: best_threshold(v[learn], y[learn]) for k, v in (("clean", g0), ("as_it_is", g), ("corrected", corrected))}
     return {"beta_learned": beta, "d_clean": d_clean, "d_as_it_is": d_as, "d_corrected": d_corr,
             "kept_as_it_is": d_as / d_clean, "kept_corrected": d_corr / d_clean,
             "gives_back": (d_corr - d_as) / lost if lost > 1e-3 else None,
             "gain_corrected": d_corr / d_as,
             "right_clean": right(g0[t], y[t]), "right_as_it_is": right(g[t], y[t]),
             "right_corrected": right(corrected[t], y[t]),
+            "right_clean_with_threshold": right(g0[t], y[t], cut["clean"]),
+            "right_as_it_is_with_threshold": right(g[t], y[t], cut["as_it_is"]),
+            "right_corrected_with_threshold": right(corrected[t], y[t], cut["corrected"]),
+            "threshold_as_it_is": cut["as_it_is"], "threshold_corrected": cut["corrected"],
             "right_when_opinion_is_right": right(g[t][agree[t]], y[t][agree[t]]),
             "right_when_opinion_is_wrong": right(g[t][~agree[t]], y[t][~agree[t]])}
 

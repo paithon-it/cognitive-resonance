@@ -44,7 +44,8 @@ def judge(path: Path) -> dict:
     out["threshold"] = {"learned": cut, "right_clean_at_zero": op.right(g0[test], y[test]),
                         "right_clean_at_learned": op.right(g0[test], y[test], cut), "mean_of_the_judgment": float(g0.mean())}
     rng = np.random.default_rng(16)
-    boot = {"b": [], "kept_as_it_is": [], "kept_corrected": [], "gives_back": [], "right_gain": []}
+    boot = {"b": [], "kept_as_it_is": [], "kept_corrected": [], "gives_back": [], "right_gain": [],
+            "right_gain_with_threshold": []}
     for _ in range(RESAMPLES):
         i = rng.integers(0, n, n)                            # questions resampled; the corrector learns on the first half
         m = op.measure(y[i], g0[i], ga[i], gb[i], a[i], learn, test)
@@ -52,12 +53,15 @@ def judge(path: Path) -> dict:
         for k in ("kept_as_it_is", "kept_corrected", "gives_back"):
             boot[k].append(m[k])
         boot["right_gain"].append(m["right_corrected"] - m["right_as_it_is"])
+        boot["right_gain_with_threshold"].append(m["right_corrected_with_threshold"] - m["right_as_it_is_with_threshold"])
     out["intervals"] = {k: interval(v) for k, v in boot.items()}
     few = []
     for size in SIZES:
         kept, back = [], []
         for _ in range(DRAWS):
             some = rng.choice(learn, size, replace=False)
+            while not 0 < y[some].sum() < size:              # both answers among the judgments the corrector learns from
+                some = rng.choice(learn, size, replace=False)
             m = op.measure(y, g0, ga, gb, a, some, test)
             kept.append(m["kept_corrected"])
             back.append(m["gives_back"])
@@ -90,6 +94,8 @@ def main() -> None:
         print(name, "n", j["questions"], "| B", round(j["b"], 3), "| d clean", round(j["d_clean"], 2), "kept as it is", round(j["kept_as_it_is"], 3),
               "corrected", round(j["kept_corrected"], 3), "gives back", None if j["gives_back"] is None else round(j["gives_back"], 3),
               "| right", round(100 * j["right_clean"], 1), round(100 * j["right_as_it_is"], 1), round(100 * j["right_corrected"], 1),
+              "with threshold", round(100 * j["right_clean_with_threshold"], 1), round(100 * j["right_as_it_is_with_threshold"], 1),
+              round(100 * j["right_corrected_with_threshold"], 1),
               "| push by doubt", [round(x, 2) for x in j["push"]["mean_by_third_of_doubt"]])
     if "criteria" in out:
         print({k: v["outcome"] for k, v in out["criteria"].items()})

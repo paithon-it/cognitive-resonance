@@ -1468,6 +1468,18 @@ hanno criteri, e non toccano le mediane né gli esiti della corsa di conferma.
   che ha avuto solo il § 19 e le scelte fissate prima della conferma, senza le cifre viste
   sull'esplorazione e senza il primo codice. Stessi file, stesse persone, stesse mediane.
 
+**E16, dopo l'esplorazione e prima della conferma.** Del 21 novembre 2026. Sulle 1.414
+domande della partizione `validation` che restano sotto i 1.200 caratteri (di 1.531) il
+giudice primario preferisce una lettera (senza opinione il giudizio medio è +1,5) e la frase
+con l'opinione sposta quella preferenza: a soglia zero il giudice corretto dà circa le
+stesse risposte giuste di quello non corretto, anche se la sua sensibilità è più alta.
+Aggiunto, senza criteri: le risposte giuste contate anche con la soglia che ne dà di più
+sulla prima metà delle domande, per i tre giudizi (senza opinione, com'è, corretto). Nella
+lettura con pochi giudizi il correttore impara da campioni che contengono tutte e due le
+risposte. I criteri J1, J2 e J3 non cambiano. Valori dell'esplorazione, perché si veda da
+dove parte la conferma: `B` = 0,54; quota restituita 0,51, cioè sul bordo della fascia di
+J2, che non si sposta; spinta nel terzo più incerto 1,75 volte quella nel terzo più chiaro.
+
 **Letture aggiunte dopo altre tre revisioni.** Del 21 novembre 2026. Non sono prove, e non
 hanno criteri: i dati di E13 erano già stati visti.
 

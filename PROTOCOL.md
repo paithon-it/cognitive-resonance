@@ -1480,6 +1480,19 @@ no criteria, and touch neither the medians nor the outcomes of the confirmation 
   numbers seen on the exploration files and without the first code. Same files, same people,
   same medians.
 
+**E16, after the exploration and before the confirmation.** From 21 November 2026. On the
+1,414 questions of the `validation` split that stay below 1,200 characters (of 1,531) the
+primary judge prefers one letter (with no opinion the mean judgment is +1.5) and the
+sentence with the opinion moves that preference: at threshold zero the corrected judge
+gives about as many right answers as the uncorrected one, although its sensitivity is
+higher. Added, without criteria: right answers counted also with the threshold that gives
+the most of them on the first half of the questions, for the three judgments (with no
+opinion, as it is, corrected). In the reading with few judgments the corrector learns from
+samples that contain both answers. Criteria J1, J2 and J3 do not change. Values of the
+exploration, to show where the confirmation starts from: `B` = 0.54; share given back
+0.51, that is, on the edge of the band of J2, which is not moved; push in the most doubtful
+third 1.75 times that in the clearest third.
+
 **Readings added after three more reviews.** From 21 November 2026. They are not tests, and
 have no criteria: the data of E13 had already been seen.
 
