@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 2.5, 21 November 2026. Written and recorded in the repository **before any run**:
+Version 2.6, 21 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -1104,6 +1104,58 @@ judge and on the generic machine alone.
 If X2 does not pass, threshold (3) describes the bench only far from the threshold, and the
 article says so.
 
+## 22. E16. A judge with a bias nobody planted
+
+Added with version 2.6, on 21 November 2026. Three reviews ask for the same test: a judge
+that is not a network of the bench, with a bias we did not plant and a strong trace. On
+people the trace we have (E13) is weak; on the bench the bias is built. A language model
+used as a judge sits in between: its bias comes from someone else's training, and judgments
+can be collected at will.
+
+**What is done** (`gpu/judge.py`, `analysis/llm_judge.py`,
+`src/cognitive_resonance/opinion.py`). Two-option questions with a known answer: from MMLU
+(`cais/mmlu`, MIT licence) the right option and one wrong option drawn at random, in an
+order drawn at random; questions longer than 1,200 characters are dropped. Every question
+is asked three times: with no opinion, with whoever asks writing "I think the answer is A",
+and with "I think the answer is B". No text is generated: we read the difference between
+the scores of the two letters at the first token of the answer, which is the graded
+judgment. The trace is the opinion the judge meets, A or B, drawn at random for every
+question: it says nothing about the right answer. The judge "as it is" is the judgment
+given under the opinion it meets; the one with no opinion is the reference, which cannot be
+observed on a person.
+
+Primary judge: `Qwen/Qwen2.5-1.5B-Instruct` (open weights, Apache 2.0). Two more judges,
+descriptive and without criteria, if they fit in the memory of the card:
+`microsoft/Phi-3.5-mini-instruct` and `Qwen/Qwen2.5-7B-Instruct`. **Exploration and
+confirmation**: the code is written and tried on the `validation` split of MMLU (1,531
+questions); then it runs once on 6,000 questions of the `test` split, drawn with a seed
+that depends only on the name of the split. Whatever the exploration changes goes in the
+Deviations before the confirmation.
+
+**Measures.** Slope of the judgment on the trace at equal right answer, and `B`, variance of
+the push over the variance of the rest, as on the bench. A linear corrector learns the
+slope on the first half of the questions and removes it in the second: sensitivity (from
+the area under the curve) of the judge as it is and of the corrected judge, over that of
+the same judge with no opinion, on the same questions; the share given back, that is, how
+much of the sensitivity lost comes back with the correction; right answers in the three
+cases. The push question by question (half the distance between the two judgments) by how
+unsure the judge is with no opinion. Intervals at 95 per cent resampling the questions.
+
+- **J1, the bias is large (primary).** For the primary judge `B` is at least 0.2: more than
+  ten times the median measured on people (0.015).
+- **J2, the correction gives back much, not all (primary).** The share given back is between
+  0.5 and 0.95. If the push were an addend, as in the proposition, it would be 1; the
+  simulation with a push that weighs on the doubtful cases gave between 0.31 and 0.79.
+- **J3, the push weighs on the doubtful cases.** The mean push in the most doubtful third of
+  the questions is at least 1.2 times that in the clearest third.
+- Without a threshold: how many judgments the corrector needs (10, 20, 50, 100, 500); the
+  preference for one letter, which is a moved threshold and not a bias in the sense of the
+  article; the other two judges.
+
+It is a machine in the place of the person, not a person. It says what happens to the
+proposition with a bias that is strong and not additive; it says nothing about what a
+person does with an opinion.
+
 ## Deviations
 
 All dated 10 November 2026. The first come from the runs; the others are choices of the
@@ -1459,3 +1511,8 @@ any training of the two tests it adds: E14 (§ 20), what a shortcut leaves unlea
 the last layer trained again and a training three times as long, and E15 (§ 21), the
 threshold of the proposition crossed in fine steps. It does not touch criteria or outcomes
 of the recorded tests.
+
+Version 2.6, of the same day, adds before any of its runs E16 (§ 22): a language model as
+the judge, with the opinion of whoever asks as the trace. It does not touch criteria or
+outcomes of the recorded tests; E14 and E15 were running when it was written, and their
+files had not been analysed in full.

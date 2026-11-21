@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 2.5, 21 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 2.6, 21 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -1099,6 +1099,56 @@ misure sul giudice e sulla generica.
 Se X2 non passa, la soglia (3) descrive il banco solo lontano dalla soglia, e l'articolo lo
 dice.
 
+## 22. E16. Un giudice con un pregiudizio che nessuno ha piantato
+
+Aggiunto con la versione 2.6, il 21 novembre 2026. Tre revisioni chiedono la stessa prova:
+un giudice che non sia una rete del banco, con un pregiudizio che non abbiamo piantato noi
+e una traccia forte. Su persone la traccia disponibile (E13) è debole; sul banco il
+pregiudizio è costruito. Un modello linguistico usato come giudice sta in mezzo: il suo
+pregiudizio viene dall'addestramento di altri, e i giudizi si raccolgono a piacere.
+
+**Che cosa si fa** (`gpu/judge.py`, `analysis/llm_judge.py`,
+`src/cognitive_resonance/opinion.py`). Domande a due opzioni con risposta nota: da MMLU
+(`cais/mmlu`, licenza MIT) l'opzione giusta e una sbagliata estratta a sorte, in un ordine
+estratto a sorte; si scartano le domande oltre 1.200 caratteri. Ogni domanda si pone tre
+volte: senza opinione, con chi chiede che scrive «I think the answer is A», e con «I think
+the answer is B». Non si genera testo: si legge la differenza fra i punteggi delle due
+lettere al primo token della risposta, che è il giudizio graduato. La traccia è l'opinione
+che il giudice incontra, A o B, estratta a sorte per ogni domanda: non dice niente sulla
+risposta giusta. Il giudice «com'è» è il giudizio dato sotto l'opinione incontrata; quello
+senza opinione è il riferimento, che su una persona non si può osservare.
+
+Giudice primario: `Qwen/Qwen2.5-1.5B-Instruct` (pesi aperti, Apache 2.0). Altri due giudici,
+descrittivi e senza criteri, se entrano nella memoria della scheda: `microsoft/Phi-3.5-mini-instruct`
+e `Qwen/Qwen2.5-7B-Instruct`. **Esplorazione e conferma**: il codice si scrive e si prova
+sulla partizione `validation` di MMLU (1.531 domande); poi gira una volta sola su 6.000
+domande della partizione `test`, estratte con un seme che dipende solo dal nome della
+partizione. Ciò che l'esplorazione fa cambiare va nelle Deviazioni prima della conferma.
+
+**Misure.** Pendenza del giudizio sulla traccia a parità di risposta giusta, e `B`, varianza
+della spinta sulla varianza del resto, come sul banco. Un correttore lineare impara la
+pendenza sulla prima metà delle domande e la toglie nella seconda: sensibilità (dall'area
+sotto la curva) del giudice com'è e del giudice corretto, sopra quella dello stesso giudice
+senza opinione, sulle stesse domande; quota restituita, cioè quanta della sensibilità persa
+torna con la correzione; risposte giuste nei tre casi. La spinta domanda per domanda (metà
+della distanza fra i due giudizi) secondo quanto il giudice è incerto senza opinione.
+Intervalli al 95 per cento ricampionando le domande.
+
+- **J1, il pregiudizio è grande (primaria).** Per il giudice primario `B` è almeno 0,2:
+  più di dieci volte la mediana misurata sulle persone (0,015).
+- **J2, la correzione restituisce molto, non tutto (primaria).** La quota restituita sta fra
+  0,5 e 0,95. Se la spinta fosse un addendo, come nella proposizione, sarebbe 1; la
+  simulazione con una spinta che pesa sui casi dubbi dava fra 0,31 e 0,79.
+- **J3, la spinta pesa sui casi dubbi.** La spinta media nel terzo di domande più incerte è
+  almeno 1,2 volte quella nel terzo più chiaro.
+- Senza soglia: quanti giudizi servono al correttore (10, 20, 50, 100, 500); la preferenza
+  per una lettera, che è una soglia spostata e non un pregiudizio nel senso dell'articolo;
+  gli altri due giudici.
+
+È una macchina al posto della persona, non una persona. Dice che cosa succede alla
+proposizione con un pregiudizio non additivo e forte; non dice niente su che cosa una
+persona fa di un'opinione.
+
 ## Deviazioni
 
 Tutte del 10 novembre 2026. Le prime vengono dalle corse; le altre sono scelte
@@ -1448,3 +1498,8 @@ ogni addestramento delle due prove che aggiunge: E14 (§ 20), che cosa una scorc
 non imparato, con l'ultimo strato riaddestrato e un addestramento tre volte più lungo, ed E15
 (§ 21), la soglia della proposizione attraversata a passi fini. Non tocca criteri né esiti
 delle prove registrate.
+
+La versione 2.6, dello stesso giorno, aggiunge prima di ogni sua esecuzione E16 (§ 22): un
+modello linguistico come giudice, con l'opinione di chi chiede come traccia. Non tocca
+criteri né esiti delle prove registrate; E14 ed E15 erano in esecuzione quando è stata
+scritta, e i loro file non erano stati analizzati per intero.

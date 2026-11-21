@@ -919,3 +919,40 @@ def test_a_push_on_the_doubtful_cases_is_given_back_only_in_part_by_a_linear_cor
     for beta in {r["beta"] for r in rows}:
         back = [r["linear_gives_back"] for r in rows if r["beta"] == beta]        # additive first, then tighter and tighter
         assert back[0] == pytest.approx(1.0, abs=0.02) and all(a > b for a, b in zip(back, back[1:]))
+
+
+def _opinion_data(n, beta, tau, seed=0):
+    """A judge with a clean cue of sensitivity 1.5 and a push beta a k(g0): the same for every question, or only on the doubtful ones."""
+    rng = np.random.default_rng(seed)
+    y = rng.integers(0, 2, n)
+    g0 = 1.5 * (y - 0.5) + rng.standard_normal(n)
+    k = np.ones(n) if tau is None else np.exp(-g0 ** 2 / (2 * tau ** 2))
+    a = rng.choice([-1.0, 1.0], n)
+    return y, g0, g0 + beta * k, g0 - beta * k, a
+
+
+def test_an_opinion_that_only_adds_is_given_back_whole_by_a_linear_corrector():
+    from cognitive_resonance import opinion
+    y, g0, ga, gb, a = _opinion_data(40000, 1.0, None)
+    beta, b = opinion.readable_bias(opinion.met(ga, gb, a), a, y)
+    assert beta == pytest.approx(1.0, abs=0.02) and b == pytest.approx(1.0, abs=0.05)
+    m = opinion.measure(y, g0, ga, gb, a, np.arange(20000), np.arange(20000, 40000))
+    assert m["kept_as_it_is"] == pytest.approx(1 / np.sqrt(2), abs=0.03) and m["gives_back"] == pytest.approx(1.0, abs=0.03)
+    assert opinion.push(g0, ga, gb)["most_doubtful_over_clearest"] == pytest.approx(1.0, abs=1e-9)
+
+
+def test_an_opinion_that_weighs_on_the_doubtful_questions_is_given_back_in_part():
+    from cognitive_resonance import opinion
+    y, g0, ga, gb, a = _opinion_data(40000, 3.0, 0.7)
+    m = opinion.measure(y, g0, ga, gb, a, np.arange(20000), np.arange(20000, 40000))
+    assert m["kept_as_it_is"] < m["kept_corrected"] < 0.97 and 0.05 < m["gives_back"] < 0.9
+    assert opinion.push(g0, ga, gb)["most_doubtful_over_clearest"] > 2
+
+
+def test_the_best_threshold_finds_a_criterion_that_was_moved():
+    from cognitive_resonance import opinion
+    rng = np.random.default_rng(3)
+    y = rng.integers(0, 2, 20000)
+    g = 2.0 * (y - 0.5) + rng.standard_normal(20000) + 0.8
+    cut = opinion.best_threshold(g, y)
+    assert cut == pytest.approx(0.8, abs=0.15) and opinion.right(g, y, cut) > opinion.right(g, y) + 0.02
