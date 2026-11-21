@@ -1041,3 +1041,24 @@ def test_a_corrector_that_knows_the_judgment_follows_a_push_that_weighs_on_the_d
     assert d_a(state[test], y[test]) > d_a((g - beta * a)[test], y[test]) > d_a(g[test], y[test])
     shape = opinion.shape_of_the_push(g0, ga, gb, y, 0.0)
     assert shape["tau"] == pytest.approx(0.7, rel=0.1) and shape["variance_explained_by_the_bell"] > 0.99
+
+
+def test_the_bias_says_beforehand_what_a_correction_is_worth_in_right_answers():
+    from cognitive_resonance import chart
+    assert chart.right_answers_gained(0.747, 0.0148) == pytest.approx(0.0016, abs=2e-4)           # the people: a sixth of a point
+    assert chart.right_answers_gained(0.747, 0.0148, 3, 311) == pytest.approx(0.0006, abs=2e-4)   # less, once it must be learned
+    assert chart.right_answers_gained(0.676, 0.479) == pytest.approx(0.035, abs=3e-3)             # the small language model
+    rng = np.random.default_rng(5)                                                               # against a direct simulation
+    y = rng.integers(0, 2, 400000)
+    h = 1.4 * (y - 0.5) + rng.standard_normal(400000)
+    g = h + np.sqrt(0.5) * rng.standard_normal(400000)
+    right = lambda z: float(((z > 0) == (y == 1)).mean())                                         # noqa: E731
+    assert chart.right_answers_gained(right(g), 0.5) == pytest.approx(right(h) - right(g), abs=3e-3)
+    assert 0.014 < chart.from_repetition(0.04, 0.75) < chart.from_repetition(0.05, 0.75) < 0.027
+
+
+def test_two_specialised_judges_have_opposite_errors_with_no_bias_cancelled():
+    from cognitive_resonance import chart
+    s = chart.specialisation(0.95, 0.55)
+    assert s["alone"] == pytest.approx(0.75) and s["with_deferral"] == pytest.approx(0.95)
+    assert s["error_correlation"] == pytest.approx(-0.213, abs=2e-3) and s["angle"] == pytest.approx(102.3, abs=0.2)

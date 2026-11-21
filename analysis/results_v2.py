@@ -789,6 +789,36 @@ def e16_more(d):
     ])
 
 
+def stakes(d):
+    names = {"people": "People of E13 (history of their choices)", "qwen2.5-1.5b-instruct": "Qwen2.5 1.5B",
+             "phi-3.5-mini-instruct": "Phi-3.5 mini", "qwen2.5-7b-instruct": "Qwen2.5 7B"}
+    rows = [[names.get(r["who"], r["who"]), f(r["b"], 3), f(100 * r["right_as_it_is"], 1), f(100 * r["predicted"], 2),
+             f(100 * r["measured"], 2)] for r in d["rows"]]
+    b = d["b_of_the_people_three_ways"]
+    s = d["specialisation_example"]
+    return "\n\n".join([
+        "## What a bias is worth in right answers, said beforehand and measured (added after a fifth review)",
+        "`analysis/stakes.py`: a reading, not a test. Predicted: the right answers a Gaussian judge gains when a bias B is "
+        "removed, from the share it has as it is (`chart.right_answers_gained`). Measured: with the corrector less "
+        "without, on trials or questions the corrector has not seen (for the models, with the threshold learned on the "
+        "first half). In points out of a hundred.",
+        table(["judge", "B", "right as it is", "predicted gain", "measured gain"], rows),
+        f"For the people the prediction with the cost of learning the correction is {f(100 * d['rows'][0]['predicted_with_learning'], 2)}, "
+        f"and the mean measured change {f(100 * d['rows'][0]['measured_mean'], 2)}.",
+        "The bias of the people estimated three ways: linear on the graded judgment (E13) "
+        f"{f(b['linear_on_the_graded_judgment']['median'], 3)} ({f(b['linear_on_the_graded_judgment']['lo'], 3)} to "
+        f"{f(b['linear_on_the_graded_judgment']['hi'], 3)}); on the latent noise of a logistic model of the answer with the "
+        f"same traces (`analysis/people_latent.py`) {f(b['latent_noise_of_a_logistic_model']['median'], 3)} "
+        f"({f(b['latent_noise_of_a_logistic_model']['lo'], 3)} to {f(b['latent_noise_of_a_logistic_model']['hi'], 3)}); implied "
+        "by four to five points of extra repetition at three quarters of right answers "
+        f"{f(b['implied_by_the_repetition_in_the_literature'][0], 3)} to {f(b['implied_by_the_repetition_in_the_literature'][1], 3)}.",
+        f"The other way to a pair (`chart.specialisation`): two judges right 95 per cent of the times on their own half of "
+        f"the cases and 55 on the other are right {f(100 * s['alone'], 0)} per cent alone and {f(100 * s['with_deferral'], 0)} "
+        f"when the pair knows whom to listen to; their errors have correlation {f(s['error_correlation'], 2)} "
+        f"({f(s['angle'], 0)} degrees) with nobody's bias cancelled.",
+    ])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
@@ -797,4 +827,4 @@ SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors), ("e13_people_bias.json", e13),
             ("e13_people_audit.json", e13_audit), ("e13_people_more.json", e13_more),
             ("shortcut.json", shortcut), ("nonadditive.json", nonadditive), ("e14_unlearned.json", e14),
-            ("e15_crossing.json", e15), ("e16_llm_judge.json", e16), ("e16_llm_judge_more.json", e16_more))
+            ("e15_crossing.json", e15), ("e16_llm_judge.json", e16), ("e16_llm_judge_more.json", e16_more), ("stakes.json", stakes))

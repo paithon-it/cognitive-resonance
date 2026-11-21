@@ -46,6 +46,11 @@ soloist (`M`), *tailored machine* the partner (`Mramo`), *corrector* the blind c
 
 ## In short
 
+- **One quantity says beforehand what a correction is worth.** `B` is how much of a judge's noise can be read from a
+  trace. From it, the right answers a correction gains: 0.16 out of a hundred for the people of E13 (measured: none),
+  0.5, 3.5 and 4.7 for the three language models of E16 (measured 0.3, 3.9 and 5.2; `results/stakes.json`). The bias of
+  the people comes out the same three ways: 0.015 from the graded judgment, 0.019 on the latent noise of a logistic
+  model, 0.016 to 0.025 from the repetition measured in the literature.
 - **From the history of choices, no measurable gain.** On 1,968 people of the Confidence
   Database the bias readable from the history of their own trials is worth 0.015 of the rest
   of the noise in the median. Removing it leaves the right answers where they were (74.7 per
@@ -284,6 +289,8 @@ uv run python analysis/unlearned.py            # E14, results/e14_unlearned.json
 uv run python analysis/crossing.py             # E15, results/e15_crossing.json
 uv run python analysis/llm_judge.py test       # E16, results/e16_llm_judge.json
 uv run python analysis/llm_judge_more.py       # E16, where the loss comes from and a corrector that knows more
+uv run python analysis/people_latent.py        # E13, B on the latent noise of a logistic model of the answer
+uv run python analysis/stakes.py               # what a bias is worth in right answers, predicted and measured
 uv run python analysis/download_confidence_db.py   # the Confidence Database into data/confidence_db (CC0, 255 MB)
 uv run python analysis/people_bias.py          # E13, results/e13_people_bias.json
 uv run python analysis/people_bias_second.py   # E13 again, written from the protocol alone, results/e13_second_implementation.json

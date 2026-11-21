@@ -1,0 +1,60 @@
+{
+ "what": "a reading added after a fifth review; no criterion",
+ "rows": [
+  {
+   "who": "people",
+   "b": 0.01484079620004431,
+   "right_as_it_is": 0.7468333333333333,
+   "predicted": 0.0015691223368506924,
+   "predicted_with_learning": 0.0005474939678055124,
+   "measured": 0.0,
+   "measured_mean": -0.0006130339976477835
+  },
+  {
+   "who": "qwen2.5-7b-instruct",
+   "b": 0.04331620608633139,
+   "right_as_it_is": 0.8173333333333334,
+   "predicted": 0.005092002334649792,
+   "measured": 0.0030000000000000027,
+   "not_shown_the_opinion": 0.01633333333333331
+  },
+  {
+   "who": "qwen2.5-1.5b-instruct",
+   "b": 0.4785456806621232,
+   "right_as_it_is": 0.676,
+   "predicted": 0.03459877923117072,
+   "measured": 0.03933333333333333,
+   "not_shown_the_opinion": 0.07499999999999996
+  },
+  {
+   "who": "phi-3.5-mini-instruct",
+   "b": 0.6296317997480952,
+   "right_as_it_is": 0.6943333333333334,
+   "predicted": 0.04740574758280436,
+   "measured": 0.05233333333333334,
+   "not_shown_the_opinion": 0.1166666666666667
+  }
+ ],
+ "b_of_the_people_three_ways": {
+  "linear_on_the_graded_judgment": {
+   "median": 0.01484079620004431,
+   "lo": 0.01119707191652529,
+   "hi": 0.018289943857340278
+  },
+  "latent_noise_of_a_logistic_model": {
+   "median": 0.01914275603189549,
+   "lo": 0.014142646939561408,
+   "hi": 0.025470880018035404
+  },
+  "implied_by_the_repetition_in_the_literature": [
+   0.015844415736407626,
+   0.02475689958813692
+  ]
+ },
+ "specialisation_example": {
+  "alone": 0.75,
+  "with_deferral": 0.95,
+  "error_correlation": -0.21333333333333324,
+  "angle": 102.31776598283786
+ }
+}

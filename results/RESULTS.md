@@ -963,3 +963,20 @@ The shape of the push: its mean by fifth of the distance of the judgment with no
 | Qwen2.5 7B | 0.36, 0.29, 0.19, 0.09, 0.05 | 1.15 | 0.15 | 0.35 | 0.85 |
 
 The bell explains a small part of how the push changes from one question to the next: most of it depends on the question, and can be read neither from the trace nor from the judgment.
+
+## What a bias is worth in right answers, said beforehand and measured (added after a fifth review)
+
+`analysis/stakes.py`: a reading, not a test. Predicted: the right answers a Gaussian judge gains when a bias B is removed, from the share it has as it is (`chart.right_answers_gained`). Measured: with the corrector less without, on trials or questions the corrector has not seen (for the models, with the threshold learned on the first half). In points out of a hundred.
+
+| judge | B | right as it is | predicted gain | measured gain |
+|---|---|---|---|---|
+| People of E13 (history of their choices) | 0.015 | 74.7 | 0.16 | 0.00 |
+| Qwen2.5 7B | 0.043 | 81.7 | 0.51 | 0.30 |
+| Qwen2.5 1.5B | 0.479 | 67.6 | 3.46 | 3.93 |
+| Phi-3.5 mini | 0.630 | 69.4 | 4.74 | 5.23 |
+
+For the people the prediction with the cost of learning the correction is 0.05, and the mean measured change -0.06.
+
+The bias of the people estimated three ways: linear on the graded judgment (E13) 0.015 (0.011 to 0.018); on the latent noise of a logistic model of the answer with the same traces (`analysis/people_latent.py`) 0.019 (0.014 to 0.025); implied by four to five points of extra repetition at three quarters of right answers 0.016 to 0.025.
+
+The other way to a pair (`chart.specialisation`): two judges right 95 per cent of the times on their own half of the cases and 55 on the other are right 75 per cent alone and 95 when the pair knows whom to listen to; their errors have correlation -0.21 (102 degrees) with nobody's bias cancelled.

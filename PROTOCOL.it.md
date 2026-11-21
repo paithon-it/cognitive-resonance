@@ -1543,6 +1543,20 @@ E15 ed E16. Non sono prove e non hanno criteri.
 - **Un pregiudizio condiviso e costi diversi** (`chart.with_shared_bias`,
   `chart.criterion_for_costs`, `chart.decisions_at`): solo algebra, con i suoi test.
 
+**Letture aggiunte dopo una quinta revisione.** Del 21 novembre 2026. Non sono prove.
+
+- **B sul rumore latente** (`analysis/people_latent.py`, `results/e13_people_latent.json`): le
+  stesse tre tracce in un modello logistico della sola risposta, con lo stimolo, come nella
+  funzione psicometrica con la storia di Fründ, Wichmann e Macke (2014); `B` è la varianza
+  del termine della storia, tolta la parte dovuta all'errore di stima, sulla varianza del
+  rumore del modello.
+- **Che cosa vale un pregiudizio in risposte giuste** (`analysis/stakes.py`,
+  `results/stakes.json`, `chart.right_answers_gained`): previsto da `B` e misurato, per le
+  persone di E13 e per i tre modelli di E16; e `B` come lo implica la ripetizione misurata
+  in letteratura (`chart.from_repetition`).
+- **L'altra via** (`chart.specialisation`): due giudici specializzati hanno errori opposti
+  senza che il pregiudizio di nessuno sia cancellato. Solo un esempio numerico.
+
 La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca

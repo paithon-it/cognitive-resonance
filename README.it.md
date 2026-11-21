@@ -48,6 +48,11 @@ il correttore bendato (`Mblind`), e *giudice* la rete che sta al posto della per
 
 ## In breve
 
+- **Una grandezza sola dice in anticipo quanto vale correggere.** `B` è quanto del rumore di un giudice si legge da una
+  traccia. Da lì, le risposte giuste che una correzione guadagna: 0,16 su cento per le persone di E13 (misurate:
+  nessuna), 0,5, 3,5 e 4,7 per i tre modelli linguistici di E16 (misurate 0,3, 3,9 e 5,2; `results/stakes.json`). Il
+  pregiudizio delle persone viene uguale per tre vie: 0,015 dal giudizio graduato, 0,019 sul rumore latente di un
+  modello logistico, da 0,016 a 0,025 dalla ripetizione misurata in letteratura.
 - **Dalla storia delle scelte, nessun guadagno misurabile.** Su 1.968 persone del
   Confidence Database il pregiudizio che si legge dalla storia delle loro prove vale in
   mediana 0,015 del resto del rumore. Toglierlo lascia le risposte giuste dov'erano

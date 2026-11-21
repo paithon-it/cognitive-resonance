@@ -274,3 +274,37 @@ def decisions_at(d: float, criterion: float, cost_miss: float = 1.0, cost_false_
     miss, false_alarm = phi(criterion / d - d / 2), 1.0 - phi(criterion / d + d / 2)
     return {"miss": miss, "false_alarm": false_alarm, "right": 1.0 - prior * miss - (1 - prior) * false_alarm,
             "cost": prior * cost_miss * miss + (1 - prior) * cost_false_alarm * false_alarm}
+
+
+# --- added after a fifth review (21 November 2026): what a bias is worth in right answers, and the other way to a pair ----
+
+def right_answers_gained(right_as_it_is: float, b: float, traces: int = 0, judgments: float | None = None) -> float:
+    """Right answers gained (as a share) by removing a readable bias B from a Gaussian judge that is right
+    `right_as_it_is` of the times, at its best threshold. With `traces` and `judgments`, the correction is learned and
+    leaves a bias of traces / judgments: the sensitivity grows by sqrt((1 + B) / (1 + p / n))."""
+    from statistics import NormalDist
+    nd = NormalDist()
+    d = 2.0 * nd.inv_cdf(right_as_it_is)
+    learned = traces / judgments if judgments else 0.0
+    return nd.cdf(0.5 * d * math.sqrt((1.0 + b) / (1.0 + learned))) - right_as_it_is
+
+
+def from_repetition(extra_repeats: float, right: float) -> float:
+    """The readable bias implied by a tendency to repeat the last answer: `extra_repeats` is how much the probability
+    of repeating exceeds one half, `right` the share of right answers. A push c towards the last answer raises the
+    probability of repeating by c phi(d / 2); B is c^2 in units of the noise."""
+    from statistics import NormalDist
+    nd = NormalDist()
+    return (extra_repeats / nd.pdf(nd.inv_cdf(right))) ** 2
+
+
+def specialisation(strong: float, weak: float) -> dict:
+    """Two judges, each right `strong` of the times on its own half of the cases and `weak` on the other half.
+
+    Alone both are right (strong + weak) / 2; a pair that knows whom to listen to on each case is right `strong`. The
+    errors are negatively correlated although nobody's bias has been cancelled: the other way to a pair that beats both.
+    """
+    alone = 0.5 * (strong + weak)
+    both_wrong = (1 - strong) * (1 - weak)
+    corr = (both_wrong - (1 - alone) ** 2) / (alone * (1 - alone))
+    return {"alone": alone, "with_deferral": strong, "error_correlation": corr, "angle": math.degrees(math.acos(corr))}
