@@ -865,3 +865,37 @@ def test_the_shortcut_reading_says_that_what_is_learned_falls_with_the_shortcut(
     kept = [r["kept_frame_removed"] for r in d["by_mu"]]
     assert kept[0] == pytest.approx(1.0) and all(x >= y - 0.01 for x, y in zip(kept, kept[1:]))
     assert all(r["kept_frame_removed"] >= r["kept_as_it_is"] - 1e-9 for r in d["by_mu"])
+
+
+def test_the_answers_are_counted_before_and_after_the_correction():
+    from cognitive_resonance import readable
+    m = readable.person(*_simulated_person(0.7, seed=3, fine=True))
+    assert m["accuracy_after"] > m["accuracy_before"]                   # a large push, a fine scale: answers improve
+    assert m["changed"] == pytest.approx(m["changed_to_right"] + m["changed_to_wrong"])
+    assert m["accuracy_after"] - m["accuracy_before"] == pytest.approx(m["changed_to_right"] - m["changed_to_wrong"])
+    still = readable.person(*_simulated_person(0.0, seed=3))
+    assert abs(still["accuracy_after"] - still["accuracy_before"]) < 0.01
+
+
+def test_the_slopes_pulled_towards_the_group_go_from_the_person_to_the_group():
+    from cognitive_resonance import readable
+    a, b = (readable.person(*_simulated_person(p, seed=s)) for p, s in ((0.3, 4), (0.6, 5)))
+    own, (ox, oy), n = a["_moments_first"], b["_moments_first"], b["n_first"]
+    personal, group = readable.slopes(*own), readable.slopes(ox, oy)
+    assert np.allclose(readable.shrunk_slopes(own, ox, oy, n, 0.0), personal)
+    assert np.allclose(readable.shrunk_slopes(own, ox, oy, n, 1e9), group, atol=1e-4)
+    middle = readable.shrunk_slopes(own, ox, oy, n, float(a["n_first"]))
+    assert np.linalg.norm(middle - group) < np.linalg.norm(personal - group)
+
+
+def test_the_second_implementation_of_e13_gives_the_same_numbers():
+    first, second = (ANALYSIS.parent / "results" / n for n in ("e13_people_bias.json", "e13_second_implementation.json"))
+    if not (first.exists() and second.exists()):
+        pytest.skip("results of E13 not there")
+    a, b = json.loads(first.read_text()), json.loads(second.read_text())
+    for part, short in (("confirmation", "conf"), ("exploration", "expl")):
+        assert a[part]["people"] == b["counts"][short]["people"] and a[part]["files"] == b["counts"][short]["files_included"]
+        assert a[part]["b"]["median"] == pytest.approx(b[short]["median_B"], abs=1e-9)
+        assert a[part]["gain_personal"]["median"] == pytest.approx(b[short]["median_G_personal_auc"], abs=1e-4)
+        assert a[part]["gain_everyone"]["median"] == pytest.approx(b[short]["median_G_everyone"], abs=1e-4)
+        assert a[part]["gain_moments"]["median"] == pytest.approx(b[short]["median_G_personal_moments"], abs=1e-3)

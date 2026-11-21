@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import math
 import sys
 from pathlib import Path
 
@@ -29,6 +30,7 @@ ACCURACY = (0.55, 0.95)
 MIN_CLASS_SHARE = 0.20
 MIN_CONFIDENCE_LEVELS = 3
 RESAMPLES = 2000
+SHRINK_GRID = (0.0, 30.0, 100.0, 300.0, 1000.0, 3000.0, 1e9)    # trials the group counts for; 1e9 is the group alone
 
 
 def split_of(name: str) -> str:
@@ -111,14 +113,30 @@ def measure_file(name: str, people: dict) -> list[dict]:
                     "accuracy": float((p["stimulus"] == p["response"]).mean()),
                     "b": m["b"], "b_first": m["b_first"], "gain_personal": m["gain_personal"],
                     "gain_moments": m["gain_moments"],
-                    "d_second": m["d_second"], "b_shuffled": s["b"], "gain_shuffled": s["gain_personal"]})
+                    "d_second": m["d_second"], "b_shuffled": s["b"], "gain_shuffled": s["gain_personal"],
+                    **{k: m[k] for k in ("accuracy_before", "accuracy_after", "changed", "changed_to_right",
+                                         "changed_to_wrong")}})
         kept.append(m)
     xtx = sum(m["_moments_first"][0] for m in kept)
     xty = sum(m["_moments_first"][1] for m in kept)
-    for rec, m in zip(out, kept):
-        others = readable.slopes(xtx - m["_moments_first"][0], xty - m["_moments_first"][1])
-        rec["gain_everyone"] = readable.gain(*m["_second"], others)
+    n_first = sum(m["n_first"] for m in kept)
+    others = [(xtx - m["_moments_first"][0], xty - m["_moments_first"][1], n_first - m["n_first"]) for m in kept]
+    for rec, m, o in zip(out, kept, others):
+        rec["gain_everyone"] = readable.gain(*m["_second"], readable.slopes(o[0], o[1]))
         rec["gain_sq_predicted"] = readable.predicted_gain_sq(m["b_first"], m["n_first"])
+    # added after the confirmation run: a corrector between the two, the slopes of the person pulled towards those
+    # of the others. How hard is chosen file by file inside the first halves only (first quarter against second).
+    def missed(weight: float) -> float:
+        total = 0.0
+        for m, o in zip(kept, others):
+            (q1x, q1y, _, _), (q2x, q2y, q2g, _) = m["_quarters"]
+            beta = readable.shrunk_slopes((q1x, q1y), *o, weight)
+            total += q2g - 2.0 * float(beta @ q2y) + float(beta @ q2x @ beta)
+        return total
+    weight = min(SHRINK_GRID, key=missed)
+    for rec, m, o in zip(out, kept, others):
+        rec["gain_between"] = readable.gain(*m["_second"], readable.shrunk_slopes(m["_moments_first"], *o, weight))
+        rec["weight_of_the_group"] = weight
     return out
 
 
@@ -199,6 +217,29 @@ def summary(records: list[dict], seed: int) -> dict:
         by_file.append({"file": name, "people": len(rs), "b": float(np.median([r["b"] for r in rs])),
                         "gain_personal": float(np.median(gains)) if gains else None})
     out["by_file"] = by_file
+    # added after the confirmation run, descriptive: the answers themselves, the corrector in between, the tails
+    for key in ("accuracy_before", "accuracy_after", "changed", "changed_to_right", "changed_to_wrong", "gain_between"):
+        out[key] = median_ci(records, key, rng)
+    net = [r for r in records if r["accuracy_after"] is not None]
+    for r in net:
+        r["_net"] = r["accuracy_after"] - r["accuracy_before"]
+    out["accuracy_change"] = median_ci(net, "_net", rng)
+    out["accuracy_change_mean"] = float(np.mean([r["_net"] for r in net]))
+    out["share_accuracy_up"] = float(np.mean([r["_net"] > 0 for r in net]))
+    out["share_accuracy_down"] = float(np.mean([r["_net"] < 0 for r in net]))
+    for r in net:
+        del r["_net"]
+    cut = float(np.quantile([r["b_first"] for r in records], 0.9))
+    top = [r for r in records if r["b_first"] >= cut and r["gain_personal"] is not None]
+    out["top_tenth_by_b_first"] = {"people": len(top), "b_first_at_least": cut,
+                                   "b_first_median": float(np.median([r["b_first"] for r in top])),
+                                   "gain_personal_median": float(np.median([r["gain_personal"] for r in top])),
+                                   "gain_predicted_median": float(np.median([math.sqrt(max(r["gain_sq_predicted"], 0.0)) for r in top]))}
+    out["weights_of_the_group"] = sorted({(r["file"], r["weight_of_the_group"]) for r in records})
+    out["share_between_above_personal"] = float(np.mean([r["gain_between"] > r["gain_personal"] for r in both
+                                                          if r.get("gain_between") is not None]))
+    out["share_between_above_everyone"] = float(np.mean([r["gain_between"] > r["gain_everyone"] for r in both
+                                                          if r.get("gain_between") is not None]))
     out["files_b_above_zero"] = sum(f["b"] > 0 for f in by_file)
     out["files_gain_above_1"] = sum(f["gain_personal"] is not None and f["gain_personal"] > 1 for f in by_file)
     out["b_median_of_files"] = float(np.median([f["b"] for f in by_file]))

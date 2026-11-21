@@ -33,8 +33,9 @@ and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go
   (`cognitive_resonance.chart.pair_information`). It is the algebra of suppressor variables; the bench of small networks
   checks that training gets where the algebra says, on five tasks, with a planted bias of about 0.7.
 - **How much there is to give back, on people.** On 1,968 people of the Confidence Database the bias readable from the
-  history of their own trials is worth 0.015 of the rest of the noise in the median, and removing it gives 1.1 per
-  cent of sensitivity (E13, plan registered before the data were opened).
+  history of their own trials is worth 0.015 of the rest of the noise in the median. Removing it gives 1.1 per cent
+  of sensitivity to the graded judgment, and no more right answers (E13, plan registered before the data were
+  opened; a second implementation written from the protocol alone gives the same numbers).
 - **What no correction gives back.** A network trained with a shortcut learns less from the image: with the shortcut
   removed at test it keeps from 0.94 to 0.53 of the sensitivity of its twin trained without it, the less the stronger
   the shortcut (`results/shortcut.json`, a reading added afterwards).
@@ -118,7 +119,7 @@ What came out of the three tests of protocol 2.3 (50 files, seeds 7 to 11; media
 | E10 | 6 of 6 | with the machine seeing a quarter of the image the branch built for the level removes 77 and 46 per cent of the judge's push where the excess of the theorem is 75 and 46 (frame worth 0.5 and 1), and almost nothing where the judge's weight is almost right (1.5). With the whole view it removes the same shares where the theorem says 42 and -23: the mismatch seen on old data, written as an expectation, is confirmed |
 | E11 | 5 of 5 | at face value, with a frame worth 1 the partner that removes only the excess beats the one that removes everything by 0.18, in 25 units of 25; with a frame worth 1.5 the one that removes everything is 0.38 below the soloist with no branch, and gives fewer right answers than the judge alone in 25 units of 25. At the tuned weight the two partners differ by less than 1 per cent |
 | E12 | 1 of 4 | **the prediction was too pessimistic.** With yes-or-no answers 25 judgments keep 90 per cent of the gain, against 15 with the graded cue: 1.6 times as many, where the registered band was 3 to 9 (Y2); Y1 misses by one unit (19 of 25) and Y3 fails with it. A factor was missing in the prediction, found afterwards: the bias left is kappa / (n (1 + B)^2), which gives 1.8 |
-| E13 | 2 of 3 | **the readable bias of people is small.** On the 1,968 people of the 44 confirmation files the median B is 0.015 (0.011 to 0.018), where the bench had about 0.7 planted; with the trials shuffled it is zero, and it is above zero in 42 files of 44 (P1). A corrector learned on the first half of the trials of a person gives 1.1 per cent of sensitivity on the second half (1.006 to 1.016; P2 asked for less than 2), and no more than a corrector learned on the other people of the same experiment. P3 does not pass: the corrector gives a little more than the formula, because on a confidence scale of a few steps the trace reorders trials that fell on the same step |
+| E13 | 2 of 3 | **the readable bias of people is small.** On the 1,968 people of the 44 confirmation files the median B is 0.015 (0.011 to 0.018), where the bench had about 0.7 planted; with the trials shuffled it is zero, and it is above zero in 42 files of 44 (P1). A corrector learned on the first half of the trials of a person gives 1.1 per cent of sensitivity on the second half (1.006 to 1.016; P2 asked for less than 2), and no more than a corrector learned on the other people of the same experiment. P3 does not pass: the corrector gives a little more than the formula, because on a confidence scale of a few steps the trace reorders trials that fell on the same step. Counting the answers themselves, the corrector gives no more right answers (74.7 per cent before, 74.8 after). Checks added afterwards: a second implementation written from the protocol alone gives the same numbers; without the ten doubtful files the medians do not move (`results/e13_people_audit.json`) |
 
 Thirteen readings of data already collected, none of them a test (the last nine were added after the results of E6 to E9; the last three after those of E10):
 
@@ -215,6 +216,8 @@ uv run python analysis/factors.py              # the turing of the pair in its p
 uv run python analysis/shortcut.py             # what a shortcut costs twice, on the files of E1, results/shortcut.json
 uv run python analysis/download_confidence_db.py   # the Confidence Database into data/confidence_db (CC0, 255 MB)
 uv run python analysis/people_bias.py          # E13, results/e13_people_bias.json
+uv run python analysis/people_bias_second.py   # E13 again, written from the protocol alone, results/e13_second_implementation.json
+uv run python analysis/people_audit.py         # E13, the files checked one by one, results/e13_people_audit.json
 ```
 
 E3 and E3 bis import `compare_votes` from a local clone of turing-meter, and write its

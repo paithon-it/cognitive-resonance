@@ -558,6 +558,53 @@ def e13(d):
         f"{ci(c['personal_minus_everyone'], 4)}. At the median B the angle between the error of the person and that of "
         f"the corrector is {f(c['corrector_angle_at_median_b'], 0)} degrees. The gain was not computed for "
         f"{c['gain_not_computed']} people (sensitivity below 0.2 in the second half).",
+        "**Added after the confirmation run** (descriptive, no thresholds). *The answers themselves.* The gain above is in "
+        "the sensitivity of the graded judgment. Counting the answers, with the threshold that separates the two answers "
+        f"applied to the corrected judgment: {f(100 * c['accuracy_before']['median'], 1)} per cent right before and "
+        f"{f(100 * c['accuracy_after']['median'], 1)} after; the median change per person is "
+        f"{f(100 * c['accuracy_change']['median'], 2)} points (mean {f(100 * c['accuracy_change_mean'], 2)}), the answers go up "
+        f"in {f(100 * c['share_accuracy_up'], 0)} per cent of the people and down in {f(100 * c['share_accuracy_down'], 0)}. "
+        f"The correction changes {f(100 * c['changed']['median'], 1)} per cent of the answers in the median, "
+        f"{f(100 * c['changed_to_right']['median'], 2)} to right and {f(100 * c['changed_to_wrong']['median'], 2)} to wrong. "
+        "The corrector does not give more right answers: what it gives is a finer order of the graded judgments.",
+        f"*The tails.* Tenth and ninetieth percentile of the personal gain: {f(c['gain_personal']['p10'])} and "
+        f"{f(c['gain_personal']['p90'])}; with the trials shuffled {f(c['gain_shuffled']['p10'])} and "
+        f"{f(c['gain_shuffled']['p90'])}: the lower tail is sampling noise. In the tenth of the people with the largest B "
+        f"on the first half (at least {f(c['top_tenth_by_b_first']['b_first_at_least'])}, {c['top_tenth_by_b_first']['people']} "
+        f"people) the median gain on the second half is {f(c['top_tenth_by_b_first']['gain_personal_median'])}, where the "
+        f"formula gives {f(c['top_tenth_by_b_first']['gain_predicted_median'])}.",
+        f"*A corrector in between.* The slopes of the person pulled towards those of the other people of the file, as hard "
+        "as the first halves alone say (first quarter against second, one weight per file): median gain "
+        f"{ci(c['gain_between'])}, above the personal corrector in {f(100 * c['share_between_above_personal'], 0)} per cent of "
+        f"the people and above the corrector of everyone in {f(100 * c['share_between_above_everyone'], 0)}.",
+    ])
+
+
+def e13_audit(d):
+    c = d["confirmation"]
+    doubt = [f for f in d["files"] if f["split"] == "confirmation"
+             and (f["order_doubtful"] or f["history_says_something"] or f["confidence_doubtful"])]
+    return "\n\n".join([
+        "## E13, the files checked one by one (added after the confirmation run)",
+        "`analysis/people_audit.py`. Three checks on the included confirmation files, none of them a test. *The order.* "
+        f"{c['files_with_a_counter']} files of {c['files']} have a column that counts the trials: in none does the counter "
+        "go back inside a person; for the others the order of the rows stays an assumption. *The confidence.* In "
+        f"{c['files_confidence_doubtful']} file one value covers more than four fifths of the trials, and is more likely a "
+        f"code for \"not asked\" than a step of a scale; {c['files_confidence_negative']} files have a scale with negative "
+        "values, which the ranks handle. *The history and the stimulus.* In "
+        f"{c['files_history_says_something']} files the three traces predict the class beyond a band of 0.02 around one half "
+        "of the area under the curve, or the stimulus repeats more than 0.03 away from one half of the time.",
+        table(["confirmation files", "people", "median B", "median gain of the personal corrector"],
+              [["all", sum(f["people"] for f in d["files"] if f["split"] == "confirmation"), f(c["b_median_all"], 4), "see above"],
+               ["without those where the history says something of the stimulus", c["without_history_files"]["people"],
+                f(c["without_history_files"]["b_median"], 4), f(c["without_history_files"]["gain_median"])],
+               ["without the one with a doubtful confidence", c["without_confidence_files"]["people"],
+                f(c["without_confidence_files"]["b_median"], 4), f(c["without_confidence_files"]["gain_median"])],
+               ["without both", c["people_left"], f(c["b_median_left"], 4), f(c["gain_median_left"])]]),
+        "Doubtful files: " + ", ".join(f"`{f['file']}`" for f in doubt) + ".",
+        "*A second implementation.* `analysis/people_bias_second.py` is the same analysis written again by a separate "
+        "agent from § 19 of the protocol alone, without seeing the first script: same files, same people, and the same "
+        "medians (`results/e13_second_implementation.json`; `tests/test_v2.py` compares the two).",
     ])
 
 
@@ -585,4 +632,4 @@ SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
             ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
             ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors), ("e13_people_bias.json", e13),
-            ("shortcut.json", shortcut))
+            ("e13_people_audit.json", e13_audit), ("shortcut.json", shortcut))

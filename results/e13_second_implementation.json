@@ -1,0 +1,616 @@
+{
+ "counts": {
+  "conf": {
+   "files_read": 145,
+   "files_included": 44,
+   "people": 1968
+  },
+  "expl": {
+   "files_read": 35,
+   "files_included": 12,
+   "people": 464
+  }
+ },
+ "conf": {
+  "n_people": 1968,
+  "median_B": 0.014840796200043967,
+  "p10_B": -0.0011923499312422275,
+  "p90_B": 0.07898638700450641,
+  "n_nan_B": 0,
+  "median_B_shuffled": -0.0007302437557387038,
+  "p10_B_shuffled": -0.004025898037296151,
+  "p90_B_shuffled": 0.005163776903529561,
+  "n_nan_B_shuffled": 0,
+  "median_G_personal_auc": 1.0111652206762782,
+  "p10_G_personal_auc": 0.9626777425257751,
+  "p90_G_personal_auc": 1.0845902110092354,
+  "n_nan_G_personal_auc": 39,
+  "median_G_personal_moments": 1.0004108786744732,
+  "p10_G_personal_moments": 0.9763706441141422,
+  "p90_G_personal_moments": 1.0358827344412815,
+  "n_nan_G_personal_moments": 38,
+  "median_G_everyone": 1.0133498005800994,
+  "p10_G_everyone": 0.9745171132435405,
+  "p90_G_everyone": 1.082149850938712,
+  "n_nan_G_everyone": 39,
+  "median_G_personal_shuffled": 0.9982305135647538,
+  "p10_G_personal_shuffled": 0.962970726764616,
+  "p90_G_personal_shuffled": 1.037551752470035,
+  "n_nan_G_personal_shuffled": 10,
+  "guard_excluded_auc": 39,
+  "share_personal_gt_everyone": 0.4707102125453603,
+  "n_compared": 1929,
+  "median_diff_personal_minus_everyone": -0.0014426456473750626,
+  "median_B_CI95": [
+   0.011058946826006485,
+   0.018230285499890926
+  ],
+  "median_B_shuffled_CI95": [
+   -0.000998447643571145,
+   -0.0004602671554938881
+  ],
+  "files": {
+   "data_Adler_2018_Expt1.csv": 11,
+   "data_Arbuzova_2021_expt2.csv": 42,
+   "data_Arbuzova_unpub_3.csv": 35,
+   "data_Bocheva_unpub_Expt2.csv": 51,
+   "data_CalderTravis_unpub.csv": 48,
+   "data_Denison_2018.csv": 12,
+   "data_Desender_2014.csv": 35,
+   "data_Desender_2018_Exp1.csv": 18,
+   "data_Desender_2022_Exp1.csv": 37,
+   "data_Desender_2022_Exp1S.csv": 32,
+   "data_Desender_2022_Exp2B.csv": 99,
+   "data_Filevich_unpub.csv": 17,
+   "data_Haddara_2022_Expt1.csv": 394,
+   "data_Haddara_2022_Expt2.csv": 75,
+   "data_Hainguerlot_unpub.csv": 66,
+   "data_Hellmann_2023_Exp1.csv": 16,
+   "data_Hellmann_2023_Exp2.csv": 41,
+   "data_Jachs_2015_Exp2.csv": 12,
+   "data_Law_unpub.csv": 16,
+   "data_Maniscalco_2017_expt1.csv": 28,
+   "data_Maniscalco_2017_expt2.csv": 41,
+   "data_Maniscalco_2017_expt3.csv": 20,
+   "data_Matthews_2019.csv": 33,
+   "data_OHora_2017.csv": 18,
+   "data_OHora_unpub_1.csv": 28,
+   "data_OHora_unpub_2.csv": 21,
+   "data_Peters_unpub.csv": 36,
+   "data_Rausch_2016.csv": 20,
+   "data_Rausch_2018_Expt1.csv": 17,
+   "data_Rausch_2018_Expt2.csv": 32,
+   "data_Rausch_2020.csv": 24,
+   "data_Schmidt_2019_memory.csv": 26,
+   "data_Schmidt_2019_perception.csv": 26,
+   "data_Shekhar_2018.csv": 19,
+   "data_Shekhar_2021.csv": 20,
+   "data_Sherman_unpub_Expt1.csv": 40,
+   "data_Sherman_unpub_Expt2.csv": 24,
+   "data_Song_2011.csv": 18,
+   "data_VanBoxtel_2019_Expt1.csv": 45,
+   "data_VanBoxtel_2019_Expt2.csv": 31,
+   "data_Xue_2024_Exp2.csv": 20,
+   "data_Ye_2018.csv": 18,
+   "data_Yeon_unpub_Exp1.csv": 23,
+   "data_Zheng_2023.csv": 283
+  }
+ },
+ "expl": {
+  "n_people": 464,
+  "median_B": 0.011012775694262098,
+  "p10_B": 0.00016557714914530969,
+  "p90_B": 0.06817182159014143,
+  "n_nan_B": 0,
+  "median_B_shuffled": -0.00022664056570535432,
+  "p10_B_shuffled": -0.002865950495231748,
+  "p90_B_shuffled": 0.003066756981361504,
+  "n_nan_B_shuffled": 0,
+  "median_G_personal_auc": 0.9980579926848557,
+  "p10_G_personal_auc": 0.9716004382556185,
+  "p90_G_personal_auc": 1.0468195052955318,
+  "n_nan_G_personal_auc": 1,
+  "median_G_personal_moments": 0.9973963518785152,
+  "p10_G_personal_moments": 0.9795798233233853,
+  "p90_G_personal_moments": 1.02483629017687,
+  "n_nan_G_personal_moments": 1,
+  "median_G_everyone": 1.0014856342621774,
+  "p10_G_everyone": 0.9778654387537458,
+  "p90_G_everyone": 1.0453932803682602,
+  "n_nan_G_everyone": 1,
+  "median_G_personal_shuffled": 0.9990003929448512,
+  "p10_G_personal_shuffled": 0.9769379297079336,
+  "p90_G_personal_shuffled": 1.0263003455840967,
+  "n_nan_G_personal_shuffled": 0,
+  "guard_excluded_auc": 1,
+  "share_personal_gt_everyone": 0.4535637149028078,
+  "n_compared": 463,
+  "median_diff_personal_minus_everyone": -0.0007276960310339531,
+  "median_B_CI95": [
+   0.00808592202076091,
+   0.01926277672644512
+  ],
+  "median_B_shuffled_CI95": [
+   -0.0005923690356785074,
+   -0.000110246022930468
+  ],
+  "files": {
+   "data_Adler_2018_Expt3.csv": 15,
+   "data_Bang_2019_Exp1.csv": 12,
+   "data_Bocheva_unpub_Expt1.csv": 45,
+   "data_Faivre_2018_JN.csv": 54,
+   "data_Gajdos_2019.csv": 19,
+   "data_Hainguerlot_2018.csv": 61,
+   "data_Jachs_2015_Exp1.csv": 12,
+   "data_Maniscalco_2017_expt4.csv": 28,
+   "data_Sherman_2016_JOCN.csv": 18,
+   "data_Weidemann_2016.csv": 143,
+   "data_Xue_2024_Exp3.csv": 20,
+   "data_Yeon_unpub_Exp2.csv": 37
+  }
+ },
+ "excluded_files": {
+  "data_Adler_2018_Expt2.csv": "only 8 people",
+  "data_AguilarLleyda_2018.csv": "missing columns",
+  "data_AguilarLleyda_unpub.csv": "missing columns",
+  "data_Akdogan_2017_Exp1.csv": "not two-answer",
+  "data_Akdogan_2017_Exp2.csv": "not two-answer",
+  "data_Akdogan_2017_Exp3.csv": "not two-answer",
+  "data_Akdogan_2017_Exp4.csv": "not two-answer",
+  "data_Arbuzova_2021_expt1.csv": "only 0 people",
+  "data_Bang_2019_Exp2.csv": "only 0 people",
+  "data_Chandravadia_2020.csv": "only 0 people",
+  "data_Charalampaki_unpub_1.csv": "conf not oriented",
+  "data_Chetverikov_2014_exp3.csv": "not two-answer",
+  "data_Chetverikov_2014_exp4.csv": "not two-answer",
+  "data_Clark_2018.csv": "conf<3 values",
+  "data_Clark_unpub.csv": "only 0 people",
+  "data_Constant_2022.csv": "only 0 people",
+  "data_Desender_2016.csv": "not two-answer",
+  "data_Desender_2018_Exp2.csv": "not two-answer",
+  "data_Desender_2021_Cognit.csv": "conf not oriented",
+  "data_Desender_2021_PsyRes.csv": "not two-answer",
+  "data_Dildine_unpub.csv": "not two-answer",
+  "data_Double_2017.csv": "not two-answer",
+  "data_Duyan_2018_Exp1.csv": "not two-answer",
+  "data_Duyan_2018_Exp2.csv": "not two-answer",
+  "data_Duyan_2019.csv": "not two-answer",
+  "data_Duyan_unpub_Exp1.csv": "not two-answer",
+  "data_Duyan_unpub_Exp2.csv": "not two-answer",
+  "data_Duyan_unpub_logos.csv": "conf<3 values",
+  "data_Faivre_2018_bioRxiv.csv": "only 0 people",
+  "data_Fallow_unpub_1.csv": "only 0 people",
+  "data_Fallow_unpub_2.csv": "only 0 people",
+  "data_Fallow_unpub_3.csv": "only 0 people",
+  "data_Gallagher_2019_Exp1.csv": "not two-answer",
+  "data_Gallagher_2019_Exp2.csv": "not two-answer",
+  "data_Gherman_2018.csv": "only 0 people",
+  "data_Hetland_unpub.csv": "conf<3 values",
+  "data_Hu_2017.csv": "only 0 people",
+  "data_Jachs_2015_Exp3.csv": "conf<3 values",
+  "data_Jaquiery_unpub.csv": "only 0 people",
+  "data_Kantner_2010.csv": "only 0 people",
+  "data_Kantner_2012_E1.csv": "only 0 people",
+  "data_Kantner_2012_E2.csv": "only 0 people",
+  "data_Kantner_2012_E3.csv": "only 0 people",
+  "data_Kantner_2012_E4.csv": "only 0 people",
+  "data_Kantner_2014_E1.csv": "only 0 people",
+  "data_Kantner_2014_E2.csv": "only 0 people",
+  "data_Kantner_unpub1.csv": "only 0 people",
+  "data_Kantner_unpub2.csv": "only 0 people",
+  "data_Konishi_2019.csv": "missing columns",
+  "data_Kreis_2019.csv": "not two-answer",
+  "data_Kvam_2015_ch.csv": "only 9 people",
+  "data_Kvam_2015_nc.csv": "only 9 people",
+  "data_Kvam_2016.csv": "only 0 people",
+  "data_Lebreton_2018.csv": "only 0 people",
+  "data_Lempert_2015.csv": "only 0 people",
+  "data_Lindsay_2014.csv": "only 0 people",
+  "data_Lo_unpub.csv": "not two-answer",
+  "data_Locke_2020.csv": "conf<3 values",
+  "data_Martin_unpub.csv": "conf<3 values",
+  "data_Massoni_2017.csv": "only 0 people",
+  "data_Massoni_unpub.csv": "only 0 people",
+  "data_Matthews_2018_exp1.csv": "missing columns",
+  "data_Matthews_2018_exp2.csv": "missing columns",
+  "data_Matthews_unpub.csv": "missing columns",
+  "data_Mazancieux_2018.csv": "only 0 people",
+  "data_Mazor_2020.csv": "only 6 people",
+  "data_Mazor_2021_Expt1.csv": "only 0 people",
+  "data_Mazor_2021_Expt2.csv": "only 0 people",
+  "data_Mazor_2021_Expt3.csv": "only 0 people",
+  "data_Mazor_2021_Expt4.csv": "only 0 people",
+  "data_Mazor_2021_Expt5.csv": "only 0 people",
+  "data_Mazor_2021_Expt6.csv": "only 0 people",
+  "data_Mazor_2021_Expt7.csv": "only 0 people",
+  "data_Mei_2019_Exp1.csv": "conf<3 values",
+  "data_Mei_2019_Exp2.csv": "conf<3 values",
+  "data_Palser_2018.csv": "only 0 people",
+  "data_Paulewicz_unpub1.csv": "only 0 people",
+  "data_Paulewicz_unpub2.csv": "not two-answer",
+  "data_Paulewicz_unpub3.csv": "only 0 people",
+  "data_Paulewicz_unpub4.csv": "only 0 people",
+  "data_Pereira_2018.csv": "only 0 people",
+  "data_Prieto_unpub.csv": "only 0 people",
+  "data_Rahnev_2013.csv": "conf<3 values",
+  "data_Rahnev_2021.csv": "missing columns",
+  "data_Rausch_2014.csv": "not two-answer",
+  "data_Recht_unpub.csv": "conf<3 values",
+  "data_Reyes_2015.csv": "only 0 people",
+  "data_Reyes_unpub.csv": "only 0 people",
+  "data_Rouault_2018_Expt1.csv": "only 0 people",
+  "data_Rouault_2018_Expt2.csv": "only 0 people",
+  "data_Rouault_2019.csv": "only 0 people",
+  "data_Rouault_2020.csv": "only 0 people",
+  "data_Sadeghi_2017_memory.csv": "only 0 people",
+  "data_Sadeghi_2017_perception.csv": "only 0 people",
+  "data_Samaha_2016.csv": "not two-answer",
+  "data_Samaha_2017_exp1.csv": "not two-answer",
+  "data_Samaha_2017_exp2.csv": "not two-answer",
+  "data_Samaha_2017_exp3.csv": "not two-answer",
+  "data_Schurgin_2018.csv": "only 0 people",
+  "data_Seow_2019.csv": "missing columns",
+  "data_Sherman_2016_JN.csv": "conf<3 values",
+  "data_Siedlecka_2016.csv": "only 0 people",
+  "data_Siedlecka_2018_bioRxiv.csv": "only 0 people",
+  "data_Siedlecka_2019.csv": "only 9 people",
+  "data_Siedlecka_2019_Exp1.csv": "only 0 people",
+  "data_Siedlecka_2019_Exp2.csv": "only 0 people",
+  "data_Siedlecka_2021.csv": "not two-answer",
+  "data_Siedlecka_unpub.csv": "only 0 people",
+  "data_Sinanaj_2015.csv": "not two-answer",
+  "data_Skora_2016.csv": "only 0 people",
+  "data_Skora_unpub.csv": "only 0 people",
+  "data_Teuchies_2019.csv": "only 0 people",
+  "data_Wang_2017_NatComm.csv": "not two-answer",
+  "data_Wang_2017_Neuropsychologia.csv": "not two-answer",
+  "data_Wang_2018.csv": "not two-answer",
+  "data_Wierzchon_2012.csv": "only 0 people",
+  "data_Wierzchon_2014.csv": "only 0 people",
+  "data_Wierzchon_2019.csv": "only 0 people",
+  "data_Xiang_2021.csv": "not two-answer",
+  "data_Xu_2019_Exp1.csv": "only 0 people",
+  "data_Xu_2019_Exp2.csv": "only 0 people",
+  "data_Yeon_2019.csv": "not two-answer",
+  "data_Zheng_2023_NOC.csv": "missing columns",
+  "data_Zylberberg_2016.csv": "only 3 people"
+ },
+ "diag": {
+  "data_Adler_2018_Expt1.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.0043770343336498
+  },
+  "data_Adler_2018_Expt3.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.004276321159302734
+  },
+  "data_Arbuzova_2021_expt2.csv": {
+   "nconf": 6,
+   "cmin": 1.0,
+   "cmax": 6.0,
+   "stim_lag1": -0.0017917438124059482
+  },
+  "data_Arbuzova_unpub_3.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.013776950414509314
+  },
+  "data_Bang_2019_Exp1.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.0027881762534179757
+  },
+  "data_Bocheva_unpub_Expt1.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.0017265996338130848
+  },
+  "data_Bocheva_unpub_Expt2.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.005347696274039552
+  },
+  "data_CalderTravis_unpub.csv": {
+   "nconf": 13093,
+   "cmin": -89.7191405853171,
+   "cmax": 90.0,
+   "stim_lag1": -0.02411743225089263
+  },
+  "data_Denison_2018.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.01745515856947365
+  },
+  "data_Desender_2014.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.011505383921285807
+  },
+  "data_Desender_2018_Exp1.csv": {
+   "nconf": 49,
+   "cmin": 0.979999999999997,
+   "cmax": 50.0,
+   "stim_lag1": -0.029575616949655232
+  },
+  "data_Desender_2022_Exp1.csv": {
+   "nconf": 6,
+   "cmin": 1.0,
+   "cmax": 6.0,
+   "stim_lag1": -0.07944392829930505
+  },
+  "data_Desender_2022_Exp1S.csv": {
+   "nconf": 101,
+   "cmin": 0.0,
+   "cmax": 100.0,
+   "stim_lag1": -0.07112112981854402
+  },
+  "data_Desender_2022_Exp2B.csv": {
+   "nconf": 6,
+   "cmin": 1.0,
+   "cmax": 6.0,
+   "stim_lag1": -0.03674889376133531
+  },
+  "data_Faivre_2018_JN.csv": {
+   "nconf": 201,
+   "cmin": 0.0,
+   "cmax": 1.0,
+   "stim_lag1": -0.0620086728881205
+  },
+  "data_Filevich_unpub.csv": {
+   "nconf": 6,
+   "cmin": 1.0,
+   "cmax": 6.0,
+   "stim_lag1": -0.006425743392273778
+  },
+  "data_Gajdos_2019.csv": {
+   "nconf": 5,
+   "cmin": 0.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.005279964600915594
+  },
+  "data_Haddara_2022_Expt1.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.0002868722600444749
+  },
+  "data_Haddara_2022_Expt2.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.0016507908128473065
+  },
+  "data_Hainguerlot_2018.csv": {
+   "nconf": 6,
+   "cmin": 0.5,
+   "cmax": 1.0,
+   "stim_lag1": -0.12293037572177724
+  },
+  "data_Hainguerlot_unpub.csv": {
+   "nconf": 6,
+   "cmin": 0.5,
+   "cmax": 1.0,
+   "stim_lag1": -0.11721912507784606
+  },
+  "data_Hellmann_2023_Exp1.csv": {
+   "nconf": 253,
+   "cmin": -1.0,
+   "cmax": 1.0,
+   "stim_lag1": 0.0028254289502627644
+  },
+  "data_Hellmann_2023_Exp2.csv": {
+   "nconf": 482,
+   "cmin": -1.0,
+   "cmax": 1.0,
+   "stim_lag1": -0.01731717661830912
+  },
+  "data_Jachs_2015_Exp1.csv": {
+   "nconf": 3,
+   "cmin": 1.0,
+   "cmax": 3.0,
+   "stim_lag1": -0.07971464403309371
+  },
+  "data_Jachs_2015_Exp2.csv": {
+   "nconf": 3,
+   "cmin": 1.0,
+   "cmax": 3.0,
+   "stim_lag1": -0.11767973129831219
+  },
+  "data_Law_unpub.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.006429691083559141
+  },
+  "data_Maniscalco_2017_expt1.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.0222945089974403
+  },
+  "data_Maniscalco_2017_expt2.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.03439060280683715
+  },
+  "data_Maniscalco_2017_expt3.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.08160172641599323
+  },
+  "data_Maniscalco_2017_expt4.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.07392278579253349
+  },
+  "data_Matthews_2019.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.009560908072728648
+  },
+  "data_OHora_2017.csv": {
+   "nconf": 5,
+   "cmin": 10.0,
+   "cmax": 50.0,
+   "stim_lag1": -0.018398016695292282
+  },
+  "data_OHora_unpub_1.csv": {
+   "nconf": 5,
+   "cmin": 10.0,
+   "cmax": 50.0,
+   "stim_lag1": -0.0007073162945567703
+  },
+  "data_OHora_unpub_2.csv": {
+   "nconf": 10,
+   "cmin": -50.0,
+   "cmax": 50.0,
+   "stim_lag1": -0.003487140483997713
+  },
+  "data_Peters_unpub.csv": {
+   "nconf": 101,
+   "cmin": 0.0,
+   "cmax": 100.0,
+   "stim_lag1": 0.02455483905616635
+  },
+  "data_Rausch_2016.csv": {
+   "nconf": 253,
+   "cmin": -12.0,
+   "cmax": 12.0231,
+   "stim_lag1": 0.010246257436264459
+  },
+  "data_Rausch_2018_Expt1.csv": {
+   "nconf": 252,
+   "cmin": -1.0,
+   "cmax": 1.0,
+   "stim_lag1": -0.0015361613083293099
+  },
+  "data_Rausch_2018_Expt2.csv": {
+   "nconf": 252,
+   "cmin": -1.0,
+   "cmax": 1.0,
+   "stim_lag1": 0.0018776513035436851
+  },
+  "data_Rausch_2020.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.005846597762711765
+  },
+  "data_Schmidt_2019_memory.csv": {
+   "nconf": 101,
+   "cmin": 1.0,
+   "cmax": 6.0,
+   "stim_lag1": 0.004210718512577162
+  },
+  "data_Schmidt_2019_perception.csv": {
+   "nconf": 101,
+   "cmin": 1.0,
+   "cmax": 6.0,
+   "stim_lag1": 0.0058315867606083625
+  },
+  "data_Shekhar_2018.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.016302356026538355
+  },
+  "data_Shekhar_2021.csv": {
+   "nconf": 501,
+   "cmin": 50.0,
+   "cmax": 100.0,
+   "stim_lag1": 0.0020099487533866514
+  },
+  "data_Sherman_2016_JOCN.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.23441694836014768
+  },
+  "data_Sherman_unpub_Expt1.csv": {
+   "nconf": 51,
+   "cmin": 50.0,
+   "cmax": 100.0,
+   "stim_lag1": -0.011926762979588093
+  },
+  "data_Sherman_unpub_Expt2.csv": {
+   "nconf": 51,
+   "cmin": 50.0,
+   "cmax": 100.0,
+   "stim_lag1": -0.020964042442066497
+  },
+  "data_Song_2011.csv": {
+   "nconf": 6,
+   "cmin": 1.0,
+   "cmax": 6.0,
+   "stim_lag1": -0.01508151957023097
+  },
+  "data_VanBoxtel_2019_Expt1.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.0049028460667118615
+  },
+  "data_VanBoxtel_2019_Expt2.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.0006925795520848238
+  },
+  "data_Weidemann_2016.csv": {
+   "nconf": 7,
+   "cmin": 0.0,
+   "cmax": 6.0,
+   "stim_lag1": 0.06600729784495045
+  },
+  "data_Xue_2024_Exp2.csv": {
+   "nconf": 653,
+   "cmin": 0.5,
+   "cmax": 1.46,
+   "stim_lag1": 0.01618631821954491
+  },
+  "data_Xue_2024_Exp3.csv": {
+   "nconf": 576,
+   "cmin": 0.5,
+   "cmax": 1.273,
+   "stim_lag1": -0.007724106274393519
+  },
+  "data_Ye_2018.csv": {
+   "nconf": 5,
+   "cmin": 0.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.009413165347191919
+  },
+  "data_Yeon_unpub_Exp1.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": 0.0025361803100653535
+  },
+  "data_Yeon_unpub_Exp2.csv": {
+   "nconf": 4,
+   "cmin": 1.0,
+   "cmax": 4.0,
+   "stim_lag1": -0.031049906148046404
+  },
+  "data_Zheng_2023.csv": {
+   "nconf": 3,
+   "cmin": -1.0,
+   "cmax": 2.0,
+   "stim_lag1": -0.006686102510572111
+  }
+ }
+}

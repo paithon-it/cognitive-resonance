@@ -770,6 +770,27 @@ The same two sides on the pairs of people and language models already measured (
 
 - **P4, tailored or for everyone** (no threshold): the personal corrector gives more than the corrector of everyone in 47 per cent of the people; median difference -0.0014 (-0.0029 to -0.0000). At the median B the angle between the error of the person and that of the corrector is 97 degrees. The gain was not computed for 39 people (sensitivity below 0.2 in the second half).
 
+**Added after the confirmation run** (descriptive, no thresholds). *The answers themselves.* The gain above is in the sensitivity of the graded judgment. Counting the answers, with the threshold that separates the two answers applied to the corrected judgment: 74.7 per cent right before and 74.8 after; the median change per person is 0.00 points (mean -0.06), the answers go up in 29 per cent of the people and down in 32. The correction changes 1.5 per cent of the answers in the median, 0.66 to right and 0.64 to wrong. The corrector does not give more right answers: what it gives is a finer order of the graded judgments.
+
+*The tails.* Tenth and ninetieth percentile of the personal gain: 0.963 and 1.084; with the trials shuffled 0.961 and 1.035: the lower tail is sampling noise. In the tenth of the people with the largest B on the first half (at least 0.075, 185 people) the median gain on the second half is 1.044, where the formula gives 1.056.
+
+*A corrector in between.* The slopes of the person pulled towards those of the other people of the file, as hard as the first halves alone say (first quarter against second, one weight per file): median gain 1.016 (1.010 to 1.020), above the personal corrector in 59 per cent of the people and above the corrector of everyone in 52.
+
+## E13, the files checked one by one (added after the confirmation run)
+
+`analysis/people_audit.py`. Three checks on the included confirmation files, none of them a test. *The order.* 5 files of 44 have a column that counts the trials: in none does the counter go back inside a person; for the others the order of the rows stays an assumption. *The confidence.* In 1 file one value covers more than four fifths of the trials, and is more likely a code for "not asked" than a step of a scale; 8 files have a scale with negative values, which the ranks handle. *The history and the stimulus.* In 9 files the three traces predict the class beyond a band of 0.02 around one half of the area under the curve, or the stimulus repeats more than 0.03 away from one half of the time.
+
+| confirmation files | people | median B | median gain of the personal corrector |
+|---|---|---|---|
+| all | 1968 | 0.0148 | see above |
+| without those where the history says something of the stimulus | 1616 | 0.0149 | 1.012 |
+| without the one with a doubtful confidence | 1685 | 0.0150 | 1.011 |
+| without both | 1333 | 0.0152 | 1.011 |
+
+Doubtful files: `data_Desender_2022_Exp1.csv`, `data_Desender_2022_Exp1S.csv`, `data_Desender_2022_Exp2B.csv`, `data_Hainguerlot_unpub.csv`, `data_Hellmann_2023_Exp2.csv`, `data_Jachs_2015_Exp2.csv`, `data_Maniscalco_2017_expt3.csv`, `data_Schmidt_2019_memory.csv`, `data_Shekhar_2018.csv`, `data_Zheng_2023.csv`.
+
+*A second implementation.* `analysis/people_bias_second.py` is the same analysis written again by a separate agent from § 19 of the protocol alone, without seeing the first script: same files, same people, and the same medians (`results/e13_second_implementation.json`; `tests/test_v2.py` compares the two).
+
 ## What a shortcut costs twice (a reading added after the results)
 
 `analysis/shortcut.py`, on the files of E1: added on 20 November 2026, not a test. In training the frame says something about the class (strength mu); at test it says nothing, and is a readable bias. For every network: the sensitivity as it is, the sensitivity with the frame removed (slope of the cue on the frame, at equal class), and both over the sensitivity of the network of the same task, seed and role trained without the shortcut. Removing the bias gives back what the bias was covering; it does not give back what the network did not learn from the image while it leaned on the frame. Medians over five tasks, two seeds and three networks.

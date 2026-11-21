@@ -1336,6 +1336,30 @@ prove, e non hanno criteri.
   una scala di sicurezza a pochi gradini il correttore rende un po' più della formula. Vale
   come spiegazione, non come criterio.
 
+**E13, controlli aggiunti dopo altre due revisioni.** Del 21 novembre 2026. Non sono prove, non
+hanno criteri, e non toccano le mediane né gli esiti della corsa di conferma.
+
+- **Le risposte contate** (`cognitive_resonance.readable.decisions`). Il guadagno di P2 è nella
+  sensibilità del giudizio graduato. Qui si contano le risposte: la soglia che separa le due
+  risposte nel giudizio della persona si applica al giudizio corretto (con le tracce centrate
+  sulla prima metà), e si guarda quante risposte cambiano, quante in meglio e quante in peggio.
+- **Le code.** Decimo e novantesimo percentile del guadagno con le prove rimescolate, accanto a
+  quelli veri; e il guadagno, sulla seconda metà, del decimo di persone con il `B` più grande
+  sulla prima.
+- **Un correttore intermedio** (`shrunk_slopes`). Le pendenze della persona tirate verso quelle
+  delle altre persone del file. Quanto tirare si sceglie file per file sulle sole prime metà
+  (primo quarto contro secondo), fra sette pesi da zero (solo la persona) a un miliardo di
+  prove (solo il gruppo).
+- **I file uno per uno** (`analysis/people_audit.py`, `results/e13_people_audit.json`). Dove un
+  file ha una colonna che conta le prove, se le righe la seguono. Se un valore solo della
+  sicurezza copre più di quattro quinti delle prove. Se le tre tracce prevedono la classe
+  (area sotto la curva sulla seconda metà fuori da 0,5 ± 0,02) o lo stimolo si ripete lontano
+  da metà delle volte (± 0,03). Poi le mediane rilette senza i file dubbi.
+- **Una seconda implementazione** (`analysis/people_bias_second.py`,
+  `results/e13_second_implementation.json`). La stessa analisi riscritta da un agente separato
+  che ha avuto solo il § 19 e le scelte fissate prima della conferma, senza le cifre viste
+  sull'esplorazione e senza il primo codice. Stessi file, stesse persone, stesse mediane.
+
 La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca

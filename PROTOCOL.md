@@ -1343,6 +1343,33 @@ tests, and have no criteria.
   on the data: with a confidence scale of a few steps the corrector gives a little more than
   the formula. It stands as an explanation, not as a criterion.
 
+**E13, checks added after two more reviews.** From 21 November 2026. They are not tests, have
+no criteria, and touch neither the medians nor the outcomes of the confirmation run.
+
+- **The answers counted** (`cognitive_resonance.readable.decisions`). The gain of P2 is in the
+  sensitivity of the graded judgment. Here the answers are counted: the threshold that
+  separates the two answers in the judgment of the person is applied to the corrected
+  judgment (with the traces centred on the first half), and we look at how many answers
+  change, how many for the better and how many for the worse.
+- **The tails.** Tenth and ninetieth percentile of the gain with the trials shuffled, next to
+  the real ones; and the gain, on the second half, of the tenth of the people with the largest
+  `B` on the first.
+- **A corrector in between** (`shrunk_slopes`). The slopes of the person pulled towards those of
+  the other people of the file. How hard is chosen file by file on the first halves alone
+  (first quarter against second), among seven weights from zero (the person alone) to a
+  billion trials (the group alone).
+- **The files one by one** (`analysis/people_audit.py`, `results/e13_people_audit.json`). Where a
+  file has a column that counts the trials, whether the rows follow it. Whether one value of
+  the confidence covers more than four fifths of the trials. Whether the three traces predict
+  the class (area under the curve on the second half outside 0.5 ± 0.02) or the stimulus
+  repeats far from half of the time (± 0.03). Then the medians read again without the
+  doubtful files.
+- **A second implementation** (`analysis/people_bias_second.py`,
+  `results/e13_second_implementation.json`). The same analysis written again by a separate
+  agent that was given only § 19 and the choices fixed before the confirmation, without the
+  numbers seen on the exploration files and without the first code. Same files, same people,
+  same medians.
+
 Version 2.4, of the same day, comes from two independent reviews of the article and before
 opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
 people, on the public data of the Confidence Database. It does not touch criteria or

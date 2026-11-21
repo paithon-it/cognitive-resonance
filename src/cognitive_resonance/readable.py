@@ -93,6 +93,27 @@ def gain_moments(g: np.ndarray, a: np.ndarray, y: np.ndarray, beta: np.ndarray) 
     return _d_moments(g - a @ beta, y) / before
 
 
+def decisions(g_all: np.ndarray, response: np.ndarray, corrected: np.ndarray, y: np.ndarray, where: slice) -> dict:
+    """Right answers before and after the correction, counted on the answers themselves (added after the first run).
+
+    The answer of the person is on which side of a threshold the graded judgment falls; the threshold is the point of
+    the judgment that separates the two answers. After the correction the same threshold is applied to the corrected
+    judgment: some answers change, some for the better and some for the worse.
+    """
+    response = np.asarray(response)
+    lows, highs = g_all[response == 0], g_all[response == 1]
+    if not (lows.size and highs.size):
+        return {"accuracy_before": None, "accuracy_after": None, "changed": None, "changed_to_right": None,
+                "changed_to_wrong": None}
+    threshold = 0.5 * (lows.max() + highs.min())
+    before, after = g_all[1:][where] > threshold, corrected > threshold
+    right = y == 1
+    moved = before != after
+    return {"accuracy_before": float((before == right).mean()), "accuracy_after": float((after == right).mean()),
+            "changed": float(moved.mean()), "changed_to_right": float((moved & (after == right)).mean()),
+            "changed_to_wrong": float((moved & (after != right)).mean())}
+
+
 def person(stimulus: np.ndarray, response: np.ndarray, confidence: np.ndarray) -> dict:
     """Everything E13 measures on one person. `stimulus` and `response` are 0 or 1, in the order of the trials."""
     stimulus = np.asarray(stimulus).astype(int)
@@ -102,12 +123,29 @@ def person(stimulus: np.ndarray, response: np.ndarray, confidence: np.ndarray) -
     first, second = slice(0, half), slice(half, None)
     m1 = moments(g[first], a[first], y[first])
     beta = slopes(m1[0], m1[1])
-    return {"n": int(g.size), "n_first": int(half), "b": readable_bias(g, a, y),
-            "b_first": readable_bias(g[first], a[first], y[first]),
-            "gain_personal": gain(g[second], a[second], y[second], beta),
-            "gain_moments": gain_moments(g[second], a[second], y[second], beta),
-            "d_second": float(d_a(g[second], y[second])),
-            "_moments_first": (m1[0], m1[1]), "_second": (g[second], a[second], y[second])}
+    quarter = half // 2
+    q1, q2 = slice(0, quarter), slice(quarter, half)
+    centre = a[first].mean(axis=0)
+    out = {"n": int(g.size), "n_first": int(half), "b": readable_bias(g, a, y),
+           "b_first": readable_bias(g[first], a[first], y[first]),
+           "gain_personal": gain(g[second], a[second], y[second], beta),
+           "gain_moments": gain_moments(g[second], a[second], y[second], beta),
+           "d_second": float(d_a(g[second], y[second])),
+           "_moments_first": (m1[0], m1[1]), "_second": (g[second], a[second], y[second]),
+           "_quarters": (moments(g[q1], a[q1], y[q1]), moments(g[q2], a[q2], y[q2]))}
+    out.update(decisions(g_all, response, g[second] - (a[second] - centre) @ beta, y[second], second))
+    return out
+
+
+def shrunk_slopes(own: tuple, others_xtx: np.ndarray, others_xty: np.ndarray, others_n: int, weight: float) -> np.ndarray:
+    """Slopes of a person pulled towards those of the other people of the file (added after the first run).
+
+    `weight` is how many trials the group counts for: zero gives the personal slopes, a very large number those of
+    the group. The pull uses the average moments of the others, so that it does not depend on the scale of the traces.
+    """
+    prior = slopes(others_xtx, others_xty)
+    metric = others_xtx / max(others_n, 1)
+    return np.linalg.lstsq(own[0] + weight * metric, own[1] + weight * metric @ prior, rcond=None)[0]
 
 
 def predicted_gain_sq(b_first: float, n_first: int, traces: int = TRACES) -> float:
