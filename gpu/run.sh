@@ -31,7 +31,7 @@ case "$STAGE" in
     done
     wait "${pids[@]}"
     python gpu/pilot.py choose "$OUT/pilot" > "$OUT/logs/pilot-choose.log" 2>&1 ;;
-  bench|rephase|rephase_bis|rephase_ter|trust|views|chart|shape|trace)
+  bench|rephase|rephase_bis|rephase_ter|trust|views|chart|shape|trace|shortcut|crossing)
     for w in $(seq 0 $((W - 1))); do
       python "gpu/$STAGE.py" "$OUT/$STAGE" "$CFG" "$w" "$W" ${3:+"$3"} ${4:+"$4"} > "$OUT/logs/$STAGE-$w.log" 2>&1 & pids+=($!)
     done

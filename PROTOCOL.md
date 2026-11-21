@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 2.4, 20 November 2026. Written and recorded in the repository **before any run**:
+Version 2.5, 21 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -1046,6 +1046,64 @@ written by those who run it, on the same day: the split between exploration and 
 prevents choosing estimators and thresholds while looking at the confirmation files, it does
 not replace a replication done by others.
 
+## 20. E14. What a shortcut leaves unlearned
+
+Added with version 2.5, on 21 November 2026, after three reviews asking for the same thing.
+The reading on the files of E1 (`analysis/shortcut.py`) removed the frame in one way only,
+subtracting from the output of the network its slope on the frame, and after 30 epochs: it
+does not tell "not learned" from "learned and not used", nor from "learned later".
+
+**What is done** (`gpu/shortcut.py`). The "plus" networks of E1, with the same seeds, for
+shortcuts of strength 0, 1, 1.5 and 2, three seeds (0, 1, 2), five tasks, trained for 30 and
+for 90 epochs. For every network two corrections applied afterwards: the frame removed from
+the output, as before, and the last layer trained again (a logistic regression on the 192
+features before the last layer, on the validation presentations, where the frame says
+nothing; penalty 0.001 fixed beforehand), read on the test set. The reference is the
+network of the same task, seed and length trained without the shortcut (strength 0), with
+the frame removed from the output. "Kept" is the sensitivity (from the area under the curve)
+over that of the reference; "the best" is the higher of the two corrections. The counts are
+by task, on the median of the seeds.
+
+- **L1, the last layer gives more back (primary).** At strength 2 and 30 epochs what is
+  kept with the last layer retrained exceeds by at least 0.05 what is kept with the frame
+  removed from the output, in at least 4 tasks of 5.
+- **L2, something stays unlearned (primary).** At strength 2 and 90 epochs the best of the
+  two corrections keeps less than 0.90, in at least 4 tasks of 5. If it keeps 0.90 or more,
+  the sentence "it did not learn it" falls: it was learned and not used, or only late, and
+  the article says so.
+- **L3, the dose.** The best of the two corrections falls with the strength of the shortcut
+  (rank correlation between strength and kept not above -0.9) in at least 4 tasks of 5, at
+  both lengths.
+- Without a threshold: how much what is kept changes from 30 to 90 epochs, and what is
+  kept at strengths 1 and 1.5.
+
+## 21. E15. The threshold crossed
+
+Added with version 2.5. In E8 the threshold of the proposition (who wins, beside the judge,
+between the corrector and the generic machine) is tested only far from the threshold: the
+generic machine sees a quarter, a half or the whole image, and the corrector wins in 5 tasks
+of 5 in the first two cases and in none in the third.
+
+**What is done** (`gpu/crossing.py`). Judge, corrector, frames and seeds are those of E8
+(the raw files of E8 are not touched). Only the generic machine is trained, with its seed of
+E8, at seven widths: 14, 16, 18, 20, 22, 24 and 26 columns of the inside, of 28 (14 is the
+half of E8, done again as a check). For every task, seed and width we measure, at the best
+weights as in E8, the pair of the judge with the generic machine (`D_1`) and with the trained
+corrector of E8, and the prediction of the proposition for `D_1` from the measures on the
+judge and on the generic machine alone.
+
+- **X1, there is a crossing.** For every task, on the median of the seeds, the sign of `D_1`
+  minus the pair with the corrector changes only once between 14 and 28 columns (28 is E8),
+  from negative to positive.
+- **X2, where the proposition says (primary).** The width at which the two pairs cross
+  (linear interpolation between the two neighbouring widths) is at most 3 columns away from
+  the width at which the two predictions of the proposition cross, in at least 4 tasks of 5.
+- **X3, the control machine.** At 14 columns the sensitivity of the generic machine trained
+  again is within 3 per cent of that of E8, as a median over the units.
+
+If X2 does not pass, threshold (3) describes the bench only far from the threshold, and the
+article says so.
+
 ## Deviations
 
 All dated 10 November 2026. The first come from the runs; the others are choices of the
@@ -1374,3 +1432,9 @@ Version 2.4, of the same day, comes from two independent reviews of the article 
 opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
 people, on the public data of the Confidence Database. It does not touch criteria or
 outcomes of the recorded tests.
+
+Version 2.5, of 21 November 2026, comes from three more reviews of the article and before
+any training of the two tests it adds: E14 (§ 20), what a shortcut leaves unlearned, with
+the last layer trained again and a training three times as long, and E15 (§ 21), the
+threshold of the proposition crossed in fine steps. It does not touch criteria or outcomes
+of the recorded tests.

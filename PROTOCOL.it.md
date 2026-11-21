@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 2.4, 20 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 2.5, 21 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -1041,6 +1041,64 @@ compiti sono percettivi o di memoria, di laboratorio. E il piano lo ha scritto c
 lo stesso giorno: la divisione fra esplorazione e conferma impedisce di scegliere stimatori
 e soglie guardando i file di conferma, non sostituisce una replica fatta da altri.
 
+## 20. E14. Che cosa lascia non imparato una scorciatoia
+
+Aggiunto con la versione 2.5, il 21 novembre 2026, dopo tre revisioni che chiedono la stessa
+cosa. La lettura sui file di E1 (`analysis/shortcut.py`) toglieva la cornice in un modo
+solo, sottraendo dall'uscita della rete la pendenza sulla cornice, e dopo 30 epoche: non
+distingue «non imparato» da «imparato e non usato», né da «imparato più tardi».
+
+**Che cosa si fa** (`gpu/shortcut.py`). Le reti «plus» di E1, con gli stessi semi, per
+scorciatoie di forza 0, 1, 1,5 e 2, tre semi (0, 1, 2), cinque compiti, addestrate per 30 e
+per 90 epoche. Per ogni rete due correzioni messe dopo: la cornice tolta dall'uscita, come
+prima, e l'ultimo strato riaddestrato (una regressione logistica sulle 192 caratteristiche
+prima dell'ultimo strato, sulle presentazioni di validazione, dove la cornice non dice
+niente; penalità 0,001 fissata prima), letta sulla prova. Il riferimento è la rete dello
+stesso compito, seme e durata addestrata senza scorciatoia (forza 0), con la cornice tolta
+dall'uscita. «Tenuto» è la sensibilità (dall'area sotto la curva) divisa per quella del
+riferimento; «il meglio» è la più alta fra le due correzioni. I conti sono per compito,
+sulla mediana dei semi.
+
+- **L1, l'ultimo strato rende di più (primaria).** A forza 2 e 30 epoche il tenuto con
+  l'ultimo strato riaddestrato supera di almeno 0,05 quello con la cornice tolta
+  dall'uscita, in almeno 4 compiti su 5.
+- **L2, qualcosa resta non imparato (primaria).** A forza 2 e 90 epoche il meglio delle
+  due correzioni tiene meno di 0,90, in almeno 4 compiti su 5. Se tiene 0,90 o più, la
+  frase «non l'ha imparato» cade: era imparato e non usato, o solo in ritardo, e l'articolo
+  lo dice.
+- **L3, la dose.** Il meglio delle due correzioni scende con la forza della scorciatoia
+  (correlazione per ranghi fra forza e tenuto non sopra -0,9) in almeno 4 compiti su 5, a
+  tutte e due le durate.
+- Senza soglia: quanto cambia il tenuto da 30 a 90 epoche, e il tenuto alle forze 1 e 1,5.
+
+## 21. E15. La soglia attraversata
+
+Aggiunto con la versione 2.5. In E8 la soglia della proposizione (chi vince, accanto al
+giudice, fra il correttore e la macchina generica) è provata solo lontano dalla soglia: la
+generica vede un quarto, metà o tutta la fotografia, e il correttore vince in 5 compiti su
+5 nei primi due casi e in nessuno nel terzo.
+
+**Che cosa si fa** (`gpu/crossing.py`). Giudice, correttore, cornici e semi sono quelli di
+E8 (i file grezzi di E8 non si toccano). Si addestra soltanto la macchina generica, con il
+suo seme di E8, a sette larghezze: 14, 16, 18, 20, 22, 24 e 26 colonne dell'interno su 28
+(14 è la metà di E8, rifatta come controllo). Per ogni compito, seme e larghezza si
+misurano, ai pesi migliori come in E8, la coppia del giudice con la generica (`D_1`) e con
+il correttore addestrato di E8, e la previsione della proposizione per `D_1` dalle sole
+misure sul giudice e sulla generica.
+
+- **X1, l'incrocio c'è.** Per ogni compito, sulla mediana dei semi, il segno di
+  `D_1` meno la coppia con il correttore cambia una volta sola fra 14 e 28 colonne (28 è
+  E8), da negativo a positivo.
+- **X2, dove dice la proposizione (primaria).** La larghezza a cui le due coppie si
+  incrociano (interpolazione lineare fra le due larghezze vicine) dista dalla larghezza a
+  cui si incrociano le due previsioni della proposizione al più 3 colonne, in almeno 4
+  compiti su 5.
+- **X3, la macchina di controllo.** A 14 colonne la sensibilità della generica rifatta
+  dista da quella di E8 meno del 3 per cento, in mediana sulle unità.
+
+Se X2 non passa, la soglia (3) descrive il banco solo lontano dalla soglia, e l'articolo lo
+dice.
+
 ## Deviazioni
 
 Tutte del 10 novembre 2026. Le prime vengono dalle corse; le altre sono scelte
@@ -1364,3 +1422,9 @@ La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'a
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca
 criteri né esiti delle prove registrate.
+
+La versione 2.5, del 21 novembre 2026, viene da altre tre revisioni dell'articolo e prima di
+ogni addestramento delle due prove che aggiunge: E14 (§ 20), che cosa una scorciatoia lascia
+non imparato, con l'ultimo strato riaddestrato e un addestramento tre volte più lungo, ed E15
+(§ 21), la soglia della proposizione attraversata a passi fini. Non tocca criteri né esiti
+delle prove registrate.
