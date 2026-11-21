@@ -46,6 +46,11 @@ soloist (`M`), *tailored machine* the partner (`Mramo`), *corrector* the blind c
 
 ## In short
 
+- **One quantity says beforehand what a correction is worth.** `B` is how much of a judge's noise can be read from a
+  trace. From it, the right answers a correction gains: 0.16 out of a hundred for the people of E13 (measured: none),
+  0.5, 3.5 and 4.7 for the three language models of E16 (measured 0.3, 3.9 and 5.2; `results/stakes.json`). The bias of
+  the people comes out the same three ways: 0.015 from the graded judgment, 0.019 on the latent noise of a logistic
+  model, 0.016 to 0.025 from the repetition measured in the literature.
 - **From the history of choices, no measurable gain.** On 1,968 people of the Confidence
   Database the bias readable from the history of their own trials is worth 0.015 of the rest
   of the noise in the median. Removing it leaves the right answers where they were (74.7 per
@@ -62,6 +67,9 @@ soloist (`M`), *tailored machine* the partner (`Mramo`), *corrector* the blind c
   and right answers fall from 75.2 to 67.5 per cent. A corrector that knows only the
   opinion brings them back to 71.4 and gives back 0.49 of the sensitivity lost, where the
   expectation said at least half (E16; Phi-3.5 mini: B 0.63, share given back 0.40; Qwen2.5 7B: B 0.04, share given back 0.30).
+  The sentence with the opinion costs from 2 to 8 per cent of sensitivity whichever opinion it carries, and a corrector
+  that also knows the judgment it corrects gives back about as much as the linear one (0.48, 0.51 and 0.34;
+  `results/e16_llm_judge_more.json`, readings added afterwards).
 - **What a machine built on its user can give.** It gives back the part of what the person
   knows, and the machine does not, that the person's readable bias was covering, and nothing
   more: in squared sensitivity the pair is worth `d_m^2 + P` with a machine that also reads
@@ -71,7 +79,9 @@ soloist (`M`), *tailored machine* the partner (`Mramo`), *corrector* the blind c
   tasks, with a planted bias of about 0.7.
 - **Where the corrector stops winning.** Beside the judge a corrector that knows nothing of
   the task beats the generic machine until the machine sees between 14 and 19 columns
-  of 28; the proposition puts the crossing a median of 0.2 columns away (E15).
+  of 28; the proposition puts the crossing a median of 0.2 columns away (E15). The condition is a band
+  (`chart.blind_band`): when the two noises resemble each other more than the bias weighs (`r^2 > B`), a very weak
+  machine, taken with a negative weight, beats the corrector again. That lower edge has not been tested.
 - **What counts as a bias depends on the pair.** A trace that says something true deserves a
   weight that grows with what the machine sees; only the excess is a bias, and a machine that
   removes all of it does harm (E10, E11).
@@ -216,7 +226,9 @@ Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RES
   `analysis/crossing.py` (E15), `gpu/judge.py`, `src/cognitive_resonance/opinion.py` and `analysis/llm_judge.py` (E16).
 - `gpu/`: the scripts that train the networks and write the raw cues.
 - `tests/`: the identities, the estimators on data simulated from the model, the readers.
-- `results/`: the derived results. The raw cues (`results/raw/**/*.npz`) are not tracked.
+- `results/`: the derived results. The raw cues (`results/raw/**/*.npz`) are not tracked. The judgments of the
+  language models of E16 are the exception (`results/raw/judge/*.npz`, a quarter of a megabyte): with them
+  `analysis/llm_judge.py`, `analysis/llm_judge_more.py` and `analysis/stakes.py` run with no GPU.
 
 ## Rerunning it
 
@@ -278,6 +290,9 @@ uv run python analysis/manifest_later.py       # the manifests of E14 to E16 fro
 uv run python analysis/unlearned.py            # E14, results/e14_unlearned.json
 uv run python analysis/crossing.py             # E15, results/e15_crossing.json
 uv run python analysis/llm_judge.py test       # E16, results/e16_llm_judge.json
+uv run python analysis/llm_judge_more.py       # E16, where the loss comes from and a corrector that knows more
+uv run python analysis/people_latent.py        # E13, B on the latent noise of a logistic model of the answer
+uv run python analysis/stakes.py               # what a bias is worth in right answers, predicted and measured
 uv run python analysis/download_confidence_db.py   # the Confidence Database into data/confidence_db (CC0, 255 MB)
 uv run python analysis/people_bias.py          # E13, results/e13_people_bias.json
 uv run python analysis/people_bias_second.py   # E13 again, written from the protocol alone, results/e13_second_implementation.json

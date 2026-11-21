@@ -993,3 +993,72 @@ def test_the_language_model_follows_the_opinion_and_a_linear_corrector_gives_bac
         assert j["right_as_it_is"] < j["right_corrected"] < j["right_clean"]
         assert j["right_when_opinion_is_wrong"] < j["right_clean"] < j["right_when_opinion_is_right"]
         assert j["push"]["mean_by_third_of_doubt"][0] > j["push"]["mean_by_third_of_doubt"][2]
+
+
+def test_the_corrector_beats_the_generic_machine_inside_a_band_and_not_below_it():
+    from cognitive_resonance import chart
+    lo, hi = chart.blind_band(0.31, 0.015)                      # noises that resemble each other more than the bias weighs
+    assert lo == pytest.approx(0.190, abs=2e-3) and hi == pytest.approx(0.421, abs=2e-3)
+    d1 = lambda x: chart.pair_information(1.0, x, 0.31, 0.015)["person_with_generic"]                    # noqa: E731
+    assert d1(0.05) > 1.0 > d1(0.30) and d1(0.50) > 1.0          # a very weak machine wins again: a reference for the shared noise
+    assert chart.blind_band(0.0, 1.0) == pytest.approx((0.0, 1 / np.sqrt(2)))                     # B above r^2: only the upper edge
+    assert chart.blind_band(-0.3, 0.05)[1] < 0                   # opposite noises and a small bias: the corrector never wins
+
+
+def test_a_bias_the_two_share_cannot_be_cancelled_by_the_pair():
+    from cognitive_resonance import chart
+    d_h, d_m, r, beta = 2.0, 1.5, 0.3, 0.8
+    for gamma in (0.0, 0.8, -0.8):
+        sigma = np.array([[1 + beta ** 2, r + beta * gamma], [r + beta * gamma, 1 + gamma ** 2]])
+        delta = np.array([d_h, d_m])
+        assert chart.with_shared_bias(d_h, d_m, r, beta, gamma) == pytest.approx(float(delta @ np.linalg.solve(sigma, delta)))
+    private = chart.with_shared_bias(d_h, d_m, r, beta, 0.0)
+    assert private == pytest.approx(chart.pair_information(d_h, d_m, r, beta ** 2)["person_with_generic"])
+    assert chart.with_shared_bias(d_h, d_m, r, beta, 0.8) < private < chart.pair_information(d_h, d_m, r, beta ** 2)["person_with_tailored"]
+    assert chart.angle_with_shared_bias(0.0, 1.0, 1.0) == pytest.approx(60.0)                      # the same push closes the angle
+    assert chart.with_shared_bias(1.0, 1.0, 0.0, 1.0, 1.0) == pytest.approx(2 / 3)                # two judges with the same bias: less than one without
+
+
+def test_caution_under_unequal_costs_is_not_an_error_and_removing_it_costs():
+    from cognitive_resonance import chart
+    lam = chart.criterion_for_costs(5.0, 1.0)
+    assert lam == pytest.approx(-np.log(5.0))
+    grid = np.linspace(-4, 4, 801)
+    costs = [chart.decisions_at(2.0, x, 5.0, 1.0)["cost"] for x in grid]
+    assert grid[int(np.argmin(costs))] == pytest.approx(lam, abs=0.02)                             # the criterion is the best one
+    cautious, corrected = chart.decisions_at(2.0, lam, 5.0, 1.0), chart.decisions_at(2.0, 0.0, 5.0, 1.0)
+    assert corrected["right"] > cautious["right"] + 0.05 and corrected["cost"] > 1.5 * cautious["cost"]
+
+
+def test_a_corrector_that_knows_the_judgment_follows_a_push_that_weighs_on_the_doubt():
+    from cognitive_resonance import opinion
+    from cognitive_resonance.estimators import d_a
+    y, g0, ga, gb, a = _opinion_data(40000, 3.0, 0.7)
+    g = opinion.met(ga, gb, a)
+    learn, test = np.arange(20000), np.arange(20000, 40000)
+    beta, _ = opinion.readable_bias(g[learn], a[learn], y[learn])
+    state = opinion.state_corrector(g, a, y, learn)
+    assert d_a(state[test], y[test]) > d_a((g - beta * a)[test], y[test]) > d_a(g[test], y[test])
+    shape = opinion.shape_of_the_push(g0, ga, gb, y, 0.0)
+    assert shape["tau"] == pytest.approx(0.7, rel=0.1) and shape["variance_explained_by_the_bell"] > 0.99
+
+
+def test_the_bias_says_beforehand_what_a_correction_is_worth_in_right_answers():
+    from cognitive_resonance import chart
+    assert chart.right_answers_gained(0.747, 0.0148) == pytest.approx(0.0016, abs=2e-4)           # the people: a sixth of a point
+    assert chart.right_answers_gained(0.747, 0.0148, 3, 311) == pytest.approx(0.0006, abs=2e-4)   # less, once it must be learned
+    assert chart.right_answers_gained(0.676, 0.479) == pytest.approx(0.035, abs=3e-3)             # the small language model
+    rng = np.random.default_rng(5)                                                               # against a direct simulation
+    y = rng.integers(0, 2, 400000)
+    h = 1.4 * (y - 0.5) + rng.standard_normal(400000)
+    g = h + np.sqrt(0.5) * rng.standard_normal(400000)
+    right = lambda z: float(((z > 0) == (y == 1)).mean())                                         # noqa: E731
+    assert chart.right_answers_gained(right(g), 0.5) == pytest.approx(right(h) - right(g), abs=3e-3)
+    assert 0.014 < chart.from_repetition(0.04, 0.75) < chart.from_repetition(0.05, 0.75) < 0.027
+
+
+def test_two_specialised_judges_have_opposite_errors_with_no_bias_cancelled():
+    from cognitive_resonance import chart
+    s = chart.specialisation(0.95, 0.55)
+    assert s["alone"] == pytest.approx(0.75) and s["with_deferral"] == pytest.approx(0.95)
+    assert s["error_correlation"] == pytest.approx(-0.213, abs=2e-3) and s["angle"] == pytest.approx(102.3, abs=0.2)

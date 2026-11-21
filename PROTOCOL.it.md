@@ -1522,6 +1522,41 @@ hanno criteri: i dati di E13 erano già stati visti.
   intermedia di E13 per una persona di un file, perché una persona possa rifare il conto a
   mano o in un foglio di calcolo. Non entra nell'analisi.
 
+**Letture aggiunte dopo una quarta revisione.** Del 21 novembre 2026, dopo i risultati di E14,
+E15 ed E16. Non sono prove e non hanno criteri.
+
+- **La fascia, non la soglia.** La revisione ha trovato nell'articolo la condizione in cui
+  il correttore batte la macchina generica scritta con un estremo solo. La condizione
+  giusta è una fascia, ed è quella di `chart.blind_band` fin dalla versione 2.1: quando
+  `r^2` supera `B` l'estremo basso è sopra zero, e una macchina molto debole, presa con
+  peso negativo, torna a valere più del correttore. E15 ha attraversato l'estremo alto;
+  l'estremo basso non è stato messo alla prova.
+- **La curva della personalizzazione in due misure** (`analysis/people_more.py`). Oltre al
+  guadagno dall'area sotto la curva, quello che non vede l'ordine delle prove dentro un
+  gradino della scala (`readable.gain_moments`): è la misura della proposizione. Le
+  mediane e gli intervalli già pubblicati non cambiano.
+- **E16, da dove viene la perdita e un correttore che sa di più**
+  (`analysis/llm_judge_more.py`, `results/e16_llm_judge_more.json`): il giudice con la sola
+  spinta e con la sola frase senza spinta; un correttore che conosce la traccia e il
+  giudizio che corregge; la forma della spinta secondo la distanza dal dubbio, confrontata
+  con la campana della simulazione.
+- **Un pregiudizio condiviso e costi diversi** (`chart.with_shared_bias`,
+  `chart.criterion_for_costs`, `chart.decisions_at`): solo algebra, con i suoi test.
+
+**Letture aggiunte dopo una quinta revisione.** Del 21 novembre 2026. Non sono prove.
+
+- **B sul rumore latente** (`analysis/people_latent.py`, `results/e13_people_latent.json`): le
+  stesse tre tracce in un modello logistico della sola risposta, con lo stimolo, come nella
+  funzione psicometrica con la storia di Fründ, Wichmann e Macke (2014); `B` è la varianza
+  del termine della storia, tolta la parte dovuta all'errore di stima, sulla varianza del
+  rumore del modello.
+- **Che cosa vale un pregiudizio in risposte giuste** (`analysis/stakes.py`,
+  `results/stakes.json`, `chart.right_answers_gained`): previsto da `B` e misurato, per le
+  persone di E13 e per i tre modelli di E16; e `B` come lo implica la ripetizione misurata
+  in letteratura (`chart.from_repetition`).
+- **L'altra via** (`chart.specialisation`): due giudici specializzati hanno errori opposti
+  senza che il pregiudizio di nessuno sia cancellato. Solo un esempio numerico.
+
 La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca

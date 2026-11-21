@@ -63,14 +63,19 @@ def curve_of_file(people: list, weight: float) -> list:
         others = (xtx - m["first"][0], xty - m["first"][1], n_all - m["half"])
         h, second = m["half"], slice(m["half"], None)
         test = (m["g"][second], m["a"][second], m["y"][second])
-        row = {"n_first": h, "group": readable.gain(*test, readable.slopes(others[0], others[1])), "sizes": {}}
+        row = {"n_first": h, "group": readable.gain(*test, readable.slopes(others[0], others[1])),
+               "group_moments": readable.gain_moments(*test, readable.slopes(others[0], others[1])), "sizes": {}}
         for n in SIZES:
             if n > h or row["group"] is None:
                 continue
             last = slice(h - n, h)
             own = readable.moments(m["g"][last], m["a"][last], m["y"][last])[:2]
-            row["sizes"][n] = {"personal": readable.gain(*test, readable.slopes(*own)),
-                               "between": readable.gain(*test, readable.shrunk_slopes(own, *others, weight))}
+            mine, shrunk = readable.slopes(*own), readable.shrunk_slopes(own, *others, weight)
+            # the same gains with the sensitivity that does not see the order inside one step of the scale (added
+            # after a fourth review: the two measures tell the variance removed from the ties the trace breaks)
+            row["sizes"][n] = {"personal": readable.gain(*test, mine), "between": readable.gain(*test, shrunk),
+                               "personal_moments": readable.gain_moments(*test, mine),
+                               "between_moments": readable.gain_moments(*test, shrunk)}
         out.append(row)
     return out
 
@@ -131,6 +136,15 @@ def main() -> None:
             long.append({"n": n, "personal": med_ci(by("personal", only=SIZES[-1]), rng),
                          "between": med_ci(by("between", only=SIZES[-1]), rng),
                          "group": med_ci(group(only=SIZES[-1]), rng)})
+        rng2 = np.random.default_rng(1315)                    # its own stream: the intervals above stay what they were
+        for row, lrow in zip(rows, long):
+            n = row["n"]
+            for target, only in ((row, None), (lrow, SIZES[-1])):
+                for key in ("personal_moments", "between_moments"):
+                    target[key] = med_ci({f: [r["sizes"][n][key] for r in rs if n in r["sizes"] and r["sizes"][n][key] is not None
+                                              and (only is None or r["n_first"] >= only)] for f, rs in curves.items()}, rng2)
+                target["group_moments"] = med_ci({f: [r["group_moments"] for r in rs if n in r["sizes"] and r["group_moments"] is not None
+                                                      and (only is None or r["n_first"] >= only)] for f, rs in curves.items()}, rng2)
         # paired, person by person: how often the personal corrector beats the group one at each size
         for row in rows:
             n = row["n"]
@@ -163,6 +177,8 @@ def main() -> None:
               round(row["share_personal_above_group"], 3))
     print("with 800:", [(r["n"], r["personal"]["people"], round(r["personal"]["median"], 4), round(r["between"]["median"], 4),
                          round(r["group"]["median"], 4)) for r in c["curve_people_with_800"]])
+    print("with 800, not seeing the order inside a step:", [(r["n"], round(r["personal_moments"]["median"], 4),
+          round(r["between_moments"]["median"], 4), round(r["group_moments"]["median"], 4)) for r in c["curve_people_with_800"]])
     th, mp = c["threshold"], c["map"]
     print("threshold: own", round(th["accuracy_own"]["median"], 4), "best", round(th["accuracy_best_threshold"]["median"], 4),
           "change median", round(th["change"]["median"], 4), "mean", round(th["change"]["mean"], 4), "moved",

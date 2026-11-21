@@ -1,0 +1,46 @@
+{
+ "what": "a reading added after a fifth review; no criterion",
+ "noise_variance_of_the_model": 3.289868133696453,
+ "confirmation": {
+  "b_latent": {
+   "median": 0.01914275603189549,
+   "mean": 0.04380802773898886,
+   "lo": 0.014142646939561408,
+   "hi": 0.025470880018035404,
+   "people": 1966,
+   "files": 44
+  },
+  "b_latent_shuffled": {
+   "median": -0.0009867360381663182,
+   "mean": 0.0006071195397788631,
+   "lo": -0.0014189395418439334,
+   "hi": -0.0006492387498686303,
+   "people": 1966,
+   "files": 44
+  },
+  "not_fitted": 2,
+  "spearman_with_the_linear_estimate": 0.3020453970108185,
+  "people_matched_to_e13": 1540
+ },
+ "exploration": {
+  "b_latent": {
+   "median": 0.016839162290866832,
+   "mean": 0.04562717365793617,
+   "lo": 0.012211727873430127,
+   "hi": 0.02682776286759288,
+   "people": 463,
+   "files": 12
+  },
+  "b_latent_shuffled": {
+   "median": -0.0007389801445335398,
+   "mean": -0.00024703850002494136,
+   "lo": -0.001952411102037385,
+   "hi": -0.0003125603375861532,
+   "people": 463,
+   "files": 12
+  },
+  "not_fitted": 1,
+  "spearman_with_the_linear_estimate": 0.3701466352629143,
+  "people_matched_to_e13": 259
+ }
+}

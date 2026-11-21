@@ -644,6 +644,12 @@ def e13_more(d):
         table(["n", "people", "personal", "in between", "group", "personal above group"], rows),
         "The same on the people who have at least 800 trials to learn from, so that the columns compare the same people:",
         table(["n", "people", "personal", "in between", "group"], fixed),
+        "And with the sensitivity that does not see the order of the trials inside one step of the scale (difference of "
+        "the class means over the deviation at equal class), on the same people: it is the measure of the proposition, "
+        "which counts the variance removed and not the ties the trace breaks (added after a fourth review).",
+        table(["n", "people", "personal", "in between", "group"],
+              [[r["n"], r["personal_moments"]["people"], pc(r["personal_moments"]["median"]), pc(r["between_moments"]["median"]),
+                pc(r["group_moments"]["median"])] for r in c["curve_people_with_800"]]),
         "*The threshold and the map.* The best threshold learned on the first half and applied to the second: right "
         f"answers {f(100 * th['accuracy_own']['median'], 1)} per cent with the person's own threshold and "
         f"{f(100 * th['accuracy_best_threshold']['median'], 1)} with the learned one; mean change "
@@ -750,6 +756,69 @@ def e16(d):
     return "\n\n".join(parts)
 
 
+def e16_more(d):
+    names = {"qwen2.5-1.5b-instruct": "Qwen2.5 1.5B (primary)", "phi-3.5-mini-instruct": "Phi-3.5 mini",
+             "qwen2.5-7b-instruct": "Qwen2.5 7B"}
+    rows, shape = [], []
+    for k, j in d["judges"].items():
+        kp, gb, s = j["kept"], j["gives_back"], j["shape"]
+        rows.append([names.get(k, k), f(kp["as_it_is"], 3), f(kp["middle_alone"], 3), f(kp["push_alone"], 3), f(kp["linear"], 3),
+                     f(kp["state"], 3), f(gb["linear"], 2), f(gb["state"], 2), f(100 * j["right"]["no_opinion"], 1),
+                     f(100 * j["right"]["state"], 1)])
+        shape.append([names.get(k, k), ", ".join(f(x["push"], 2) for x in s["profile"]), f(s["tau"], 2),
+                      f(s["variance_explained_by_the_bell"], 2), f(gb["linear_on_push_alone"], 2),
+                      f(j["simulation_at_that_shape"]["linear_gives_back"], 2)])
+    return "\n\n".join([
+        "## E16, where the loss comes from and a corrector that knows more (added after a fourth review)",
+        "`analysis/llm_judge_more.py`: readings, not tests. The judgment under an opinion is the middle of the two "
+        "judgments plus or minus half their distance. \"Middle alone\" is the judge with what the sentence does "
+        "whichever opinion it carries, and no push; \"push alone\" is the judge with no opinion plus the push. The "
+        "state corrector knows the trace and the judgment it corrects (a map from the judgment to the log-odds of the "
+        "right answer for each of the two opinions, learned on the first half), and nothing of the question. Kept is "
+        "over the judge with no opinion; right answers with the threshold learned on the first half.",
+        table(["judge", "kept, as it is", "middle alone", "push alone", "linear corrector", "state corrector",
+               "share given back, linear", "state", "right, no opinion", "right, state corrector"], rows),
+        "The shape of the push: its mean by fifth of the distance of the judgment with no opinion from the doubt (in "
+        "deviations of its noise), the width of the bell of `analysis/nonadditive.py` that fits it, how much of the "
+        "variation of the push from question to question that bell explains, and what a linear corrector gives back "
+        "on the judge with the push alone, measured and in the simulation with a push of that size and width.",
+        table(["judge", "push by fifth, from the most doubtful", "tau", "explained by the bell",
+               "linear on the push alone, measured", "simulated"], shape),
+        "The bell explains a small part of how the push changes from one question to the next: most of it depends on the "
+        "question, and can be read neither from the trace nor from the judgment.",
+    ])
+
+
+def stakes(d):
+    names = {"people": "People of E13 (history of their choices)", "qwen2.5-1.5b-instruct": "Qwen2.5 1.5B",
+             "phi-3.5-mini-instruct": "Phi-3.5 mini", "qwen2.5-7b-instruct": "Qwen2.5 7B"}
+    rows = [[names.get(r["who"], r["who"]), f(r["b"], 3), f(100 * r["right_as_it_is"], 1), f(100 * r["predicted"], 2),
+             f(100 * r["measured"], 2)] for r in d["rows"]]
+    b = d["b_of_the_people_three_ways"]
+    s = d["specialisation_example"]
+    return "\n\n".join([
+        "## What a bias is worth in right answers, said beforehand and measured (added after a fifth review)",
+        "`analysis/stakes.py`: a reading, not a test. Predicted: the right answers a Gaussian judge gains when a bias B is "
+        "removed, from the share it has as it is (`chart.right_answers_gained`). Measured: with the corrector less "
+        "without, on trials or questions the corrector has not seen (for the models, with the threshold learned on the "
+        "first half). In points out of a hundred.",
+        table(["judge", "B", "right as it is", "predicted gain", "measured gain"], rows),
+        f"For the people the prediction with the cost of learning the correction is {f(100 * d['rows'][0]['predicted_with_learning'], 2)}, "
+        f"and the mean measured change {f(100 * d['rows'][0]['measured_mean'], 2)}.",
+        "The bias of the people estimated three ways: linear on the graded judgment (E13) "
+        f"{f(b['linear_on_the_graded_judgment']['median'], 3)} ({f(b['linear_on_the_graded_judgment']['lo'], 3)} to "
+        f"{f(b['linear_on_the_graded_judgment']['hi'], 3)}); on the latent noise of a logistic model of the answer with the "
+        f"same traces (`analysis/people_latent.py`) {f(b['latent_noise_of_a_logistic_model']['median'], 3)} "
+        f"({f(b['latent_noise_of_a_logistic_model']['lo'], 3)} to {f(b['latent_noise_of_a_logistic_model']['hi'], 3)}); implied "
+        "by four to five points of extra repetition at three quarters of right answers "
+        f"{f(b['implied_by_the_repetition_in_the_literature'][0], 3)} to {f(b['implied_by_the_repetition_in_the_literature'][1], 3)}.",
+        f"The other way to a pair (`chart.specialisation`): two judges right 95 per cent of the times on their own half of "
+        f"the cases and 55 on the other are right {f(100 * s['alone'], 0)} per cent alone and {f(100 * s['with_deferral'], 0)} "
+        f"when the pair knows whom to listen to; their errors have correlation {f(s['error_correlation'], 2)} "
+        f"({f(s['angle'], 0)} degrees) with nobody's bias cancelled.",
+    ])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
@@ -758,4 +827,4 @@ SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors), ("e13_people_bias.json", e13),
             ("e13_people_audit.json", e13_audit), ("e13_people_more.json", e13_more),
             ("shortcut.json", shortcut), ("nonadditive.json", nonadditive), ("e14_unlearned.json", e14),
-            ("e15_crossing.json", e15), ("e16_llm_judge.json", e16))
+            ("e15_crossing.json", e15), ("e16_llm_judge.json", e16), ("e16_llm_judge_more.json", e16_more), ("stakes.json", stakes))
