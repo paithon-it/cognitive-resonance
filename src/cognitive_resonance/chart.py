@@ -240,3 +240,37 @@ def left_under_a_ceiling(ceiling: float) -> float:
 def left_by_an_open_warning(weight: float) -> float:
     """Share of the bias that stays when the correction is shown apart and the person applies a share of it."""
     return (1.0 - weight) ** 2
+
+
+# --- added after a fourth review (21 November 2026): a bias the two share, and errors that do not cost the same ----------
+
+def with_shared_bias(d_h: float, d_m: float, r: float, beta: float, gamma: float) -> float:
+    """Squared sensitivity of the pair when the same trace pushes both: cues h + beta a and m + gamma a, best weights.
+
+    gamma = 0 is the pair with the generic machine of the proposition. With the same sign the trace adds to the
+    correlation of the two errors, (r + beta gamma) / sqrt((1 + beta^2)(1 + gamma^2)), and the pair cannot cancel it;
+    with opposite signs the pair cancels part of it by itself. A machine that reads the trace removes it from both:
+    the pair is again worth d_m^2 + P.
+    """
+    num = d_h ** 2 * (1 + gamma ** 2) - 2 * d_h * d_m * (r + beta * gamma) + d_m ** 2 * (1 + beta ** 2)
+    return num / ((1 + beta ** 2) * (1 + gamma ** 2) - (r + beta * gamma) ** 2)
+
+
+def angle_with_shared_bias(r: float, beta: float, gamma: float) -> float:
+    """Degrees between the two errors when the same trace pushes both."""
+    return math.degrees(math.acos((r + beta * gamma) / math.sqrt((1 + beta ** 2) * (1 + gamma ** 2))))
+
+
+def criterion_for_costs(cost_miss: float, cost_false_alarm: float, prior: float = 0.5) -> float:
+    """The threshold on the log-odds that minimises the expected cost: say "yes" above it. Zero when the two errors
+    cost the same and the two answers are equally likely."""
+    return math.log(cost_false_alarm * (1 - prior) / (cost_miss * prior))
+
+
+def decisions_at(d: float, criterion: float, cost_miss: float = 1.0, cost_false_alarm: float = 1.0, prior: float = 0.5) -> dict:
+    """Right answers and expected cost of a Gaussian judge of sensitivity d that says "yes" above `criterion` (log-odds)."""
+    from statistics import NormalDist
+    phi = NormalDist().cdf
+    miss, false_alarm = phi(criterion / d - d / 2), 1.0 - phi(criterion / d + d / 2)
+    return {"miss": miss, "false_alarm": false_alarm, "right": 1.0 - prior * miss - (1 - prior) * false_alarm,
+            "cost": prior * cost_miss * miss + (1 - prior) * cost_false_alarm * false_alarm}

@@ -1,0 +1,164 @@
+{
+ "what": "readings added after a fourth review; no criterion",
+ "judges": {
+  "qwen2.5-1.5b-instruct": {
+   "questions": 6000,
+   "kept": {
+    "as_it_is": 0.7152132896977899,
+    "middle_alone": 0.9234340742984969,
+    "push_alone": 0.8612273563562157,
+    "linear": 0.8538053549411969,
+    "linear_on_push_alone": 0.962197500841944,
+    "state": 0.8527224056136468
+   },
+   "gives_back": {
+    "linear": 0.4866521513463035,
+    "state": 0.4828494832849991,
+    "linear_on_push_alone": 0.7275940115755718
+   },
+   "right": {
+    "no_opinion": 0.751,
+    "state": 0.7173333333333334
+   },
+   "shape": {
+    "noise_sd": 7.200059642669306,
+    "profile": [
+     {
+      "distance": 0.2141295018054919,
+      "push": 0.6799748542149001
+     },
+     {
+      "distance": 0.6393502446594135,
+      "push": 0.6930075656703854
+     },
+     {
+      "distance": 1.0864938637348303,
+      "push": 0.6440920686601574
+     },
+     {
+      "distance": 1.5192039952247924,
+      "push": 0.528595339154582
+     },
+     {
+      "distance": 1.953817834887486,
+      "push": 0.33031250652858307
+     }
+    ],
+    "tau": 1.7288,
+    "beta_at_the_doubt": 0.7303467272593218,
+    "rms_push": 0.6614929050877082,
+    "variance_explained_by_the_bell": 0.16676843177633538
+   },
+   "simulation_at_that_shape": {
+    "kept_as_it_is": 0.814734667757708,
+    "linear_gives_back": 0.9618384689207846
+   }
+  },
+  "phi-3.5-mini-instruct": {
+   "questions": 6000,
+   "kept": {
+    "as_it_is": 0.6349313138257537,
+    "middle_alone": 0.9320446289596238,
+    "push_alone": 0.7061912316003124,
+    "linear": 0.7815494003217305,
+    "linear_on_push_alone": 0.875651015943125,
+    "state": 0.8224422554470586
+   },
+   "gives_back": {
+    "linear": 0.401617810698769,
+    "state": 0.5136319512537059,
+    "linear_on_push_alone": 0.5767689823071761
+   },
+   "right": {
+    "no_opinion": 0.811,
+    "state": 0.766
+   },
+   "shape": {
+    "noise_sd": 14.591645471884268,
+    "profile": [
+     {
+      "distance": 0.26923429822504585,
+      "push": 1.3083417284119394
+     },
+     {
+      "distance": 0.838511254059933,
+      "push": 1.250662688088477
+     },
+     {
+      "distance": 1.3599400464511724,
+      "push": 0.8925319039362299
+     },
+     {
+      "distance": 1.7307133103068497,
+      "push": 0.5490992727715802
+     },
+     {
+      "distance": 2.0682613208805467,
+      "push": 0.388363463879779
+     }
+    ],
+    "tau": 1.2917,
+    "beta_at_the_doubt": 1.4403162878834106,
+    "rms_push": 1.0881177002731077,
+    "variance_explained_by_the_bell": 0.3241907714748623
+   },
+   "simulation_at_that_shape": {
+    "kept_as_it_is": 0.680585206355295,
+    "linear_gives_back": 0.8384532659446191
+   }
+  },
+  "qwen2.5-7b-instruct": {
+   "questions": 6000,
+   "kept": {
+    "as_it_is": 0.9327178118136216,
+    "middle_alone": 0.9824509531060488,
+    "push_alone": 0.950989246561118,
+    "linear": 0.952810724399011,
+    "linear_on_push_alone": 0.9681610629043043,
+    "state": 0.9554912875362963
+   },
+   "gives_back": {
+    "linear": 0.298636431528209,
+    "state": 0.33847703733401063,
+    "linear_on_push_alone": 0.35036834038064807
+   },
+   "right": {
+    "no_opinion": 0.8336666666666667,
+    "state": 0.8243333333333334
+   },
+   "shape": {
+    "noise_sd": 12.369393701130152,
+    "profile": [
+     {
+      "distance": 0.3352010135412178,
+      "push": 0.3593262075953954
+     },
+     {
+      "distance": 0.9695922467138287,
+      "push": 0.2932720668369184
+     },
+     {
+      "distance": 1.47388553575178,
+      "push": 0.1911221486775328
+     },
+     {
+      "distance": 1.8317879794294587,
+      "push": 0.09382605318054929
+     },
+     {
+      "distance": 2.1129551220089815,
+      "push": 0.04588102572173727
+     }
+    ],
+    "tau": 1.1495,
+    "beta_at_the_doubt": 0.39243877980328773,
+    "rms_push": 0.36186760166709536,
+    "variance_explained_by_the_bell": 0.14986980397435357
+   },
+   "simulation_at_that_shape": {
+    "kept_as_it_is": 0.9159977916110604,
+    "linear_gives_back": 0.8544691995454866
+   }
+  }
+ }
+}

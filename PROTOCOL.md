@@ -1536,6 +1536,27 @@ have no criteria: the data of E13 had already been seen.
   quantity of E13 for one person of one file, so that a human can redo the count by hand or
   in a spreadsheet. It does not enter the analysis.
 
+**Readings added after a fourth review.** From 21 November 2026, after the results of E14, E15
+and E16. They are not tests and have no criteria.
+
+- **The band, not the threshold.** The review found in the article the condition under
+  which the corrector beats the generic machine written with one edge only. The right
+  condition is a band, and it is that of `chart.blind_band` since version 2.1: when `r^2`
+  exceeds `B` the lower edge is above zero, and a very weak machine, taken with a negative
+  weight, is again worth more than the corrector. E15 crossed the upper edge; the lower
+  edge has not been put to the test.
+- **The curve of personalisation in two measures** (`analysis/people_more.py`). Besides the
+  gain from the area under the curve, the one that does not see the order of the trials
+  inside one step of the scale (`readable.gain_moments`): it is the measure of the
+  proposition. The medians and intervals already published do not change.
+- **E16, where the loss comes from and a corrector that knows more**
+  (`analysis/llm_judge_more.py`, `results/e16_llm_judge_more.json`): the judge with the push
+  alone and with the sentence alone and no push; a corrector that knows the trace and the
+  judgment it corrects; the shape of the push by the distance from the doubt, against the
+  bell of the simulation.
+- **A bias the two share, and unequal costs** (`chart.with_shared_bias`,
+  `chart.criterion_for_costs`, `chart.decisions_at`): algebra only, with its tests.
+
 Version 2.4, of the same day, comes from two independent reviews of the article and before
 opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
 people, on the public data of the Confidence Database. It does not touch criteria or

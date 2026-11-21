@@ -813,6 +813,16 @@ The same on the people who have at least 800 trials to learn from, so that the c
 | 400 | 143 | 1.0 | 1.4 | 1.3 |
 | 800 | 143 | 1.4 | 1.6 | 1.3 |
 
+And with the sensitivity that does not see the order of the trials inside one step of the scale (difference of the class means over the deviation at equal class), on the same people: it is the measure of the proposition, which counts the variance removed and not the ties the trace breaks (added after a fourth review).
+
+| n | people | personal | in between | group |
+|---|---|---|---|---|
+| 50 | 143 | -4.4 | 0.3 | 0.4 |
+| 100 | 143 | -0.9 | 0.5 | 0.4 |
+| 200 | 143 | -0.2 | 0.4 | 0.4 |
+| 400 | 143 | 0.2 | 0.5 | 0.4 |
+| 800 | 143 | 0.3 | 0.5 | 0.4 |
+
 *The threshold and the map.* The best threshold learned on the first half and applied to the second: right answers 74.7 per cent with the person's own threshold and 74.6 with the learned one; mean change -0.26 points, up in 18 per cent of the people and down in 25. A map from every step of the judgment to the log-odds measured on the first half: mean change -2.5 points; with many steps the map is noisy (89 per cent of the people have steps out of order in it).
 
 ## What a shortcut costs twice (a reading added after the results)
@@ -933,3 +943,23 @@ How many judgments the corrector needs (primary judge; medians over 200 draws):
 | 50 | 0.852 | 0.48 |
 | 100 | 0.852 | 0.48 |
 | 500 | 0.854 | 0.49 |
+
+## E16, where the loss comes from and a corrector that knows more (added after a fourth review)
+
+`analysis/llm_judge_more.py`: readings, not tests. The judgment under an opinion is the middle of the two judgments plus or minus half their distance. "Middle alone" is the judge with what the sentence does whichever opinion it carries, and no push; "push alone" is the judge with no opinion plus the push. The state corrector knows the trace and the judgment it corrects (a map from the judgment to the log-odds of the right answer for each of the two opinions, learned on the first half), and nothing of the question. Kept is over the judge with no opinion; right answers with the threshold learned on the first half.
+
+| judge | kept, as it is | middle alone | push alone | linear corrector | state corrector | share given back, linear | state | right, no opinion | right, state corrector |
+|---|---|---|---|---|---|---|---|---|---|
+| Qwen2.5 1.5B (primary) | 0.715 | 0.923 | 0.861 | 0.854 | 0.853 | 0.49 | 0.48 | 75.1 | 71.7 |
+| Phi-3.5 mini | 0.635 | 0.932 | 0.706 | 0.782 | 0.822 | 0.40 | 0.51 | 81.1 | 76.6 |
+| Qwen2.5 7B | 0.933 | 0.982 | 0.951 | 0.953 | 0.955 | 0.30 | 0.34 | 83.4 | 82.4 |
+
+The shape of the push: its mean by fifth of the distance of the judgment with no opinion from the doubt (in deviations of its noise), the width of the bell of `analysis/nonadditive.py` that fits it, how much of the variation of the push from question to question that bell explains, and what a linear corrector gives back on the judge with the push alone, measured and in the simulation with a push of that size and width.
+
+| judge | push by fifth, from the most doubtful | tau | explained by the bell | linear on the push alone, measured | simulated |
+|---|---|---|---|---|---|
+| Qwen2.5 1.5B (primary) | 0.68, 0.69, 0.64, 0.53, 0.33 | 1.73 | 0.17 | 0.73 | 0.96 |
+| Phi-3.5 mini | 1.31, 1.25, 0.89, 0.55, 0.39 | 1.29 | 0.32 | 0.58 | 0.84 |
+| Qwen2.5 7B | 0.36, 0.29, 0.19, 0.09, 0.05 | 1.15 | 0.15 | 0.35 | 0.85 |
+
+The bell explains a small part of how the push changes from one question to the next: most of it depends on the question, and can be read neither from the trace nor from the judgment.

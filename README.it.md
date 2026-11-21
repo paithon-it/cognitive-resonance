@@ -62,13 +62,18 @@ il correttore bendato (`Mblind`), e *giudice* la rete che sta al posto della per
   B = 0,48, e le risposte giuste scendono dal 75,2 al 67,5 per cento. Un correttore che
   conosce solo l'opinione le riporta al 71,4 e restituisce 0,49 della sensibilità persa,
   dove l'attesa diceva almeno la metà (E16; Phi-3.5 mini: B 0,63, quota restituita 0,40; Qwen2.5 7B: B 0,04, quota restituita 0,30).
+  La frase con l'opinione costa dal 2 all'8 per cento di sensibilità qualunque opinione porti, e un correttore che
+  conosce anche il giudizio che corregge restituisce circa quanto quello lineare (0,48, 0,51 e 0,34;
+  `results/e16_llm_judge_more.json`, letture aggiunte dopo).
 - **Che cosa può dare una macchina costruita su chi la usa.** Restituisce la parte di ciò
   che la persona sa, e la macchina no, che il pregiudizio copriva, e niente di più
   (`cognitive_resonance.chart.pair_information`). È l'algebra delle variabili soppressore;
   il banco controlla che l'addestramento arrivi dove dice l'algebra.
 - **Dove il correttore smette di vincere.** Accanto al giudice un correttore che del compito
   non sa niente batte la macchina generica finché questa vede fra 14 e 19 colonne su 28; la
-  proposizione mette l'incrocio a 0,2 colonne di distanza, in mediana (E15).
+  proposizione mette l'incrocio a 0,2 colonne di distanza, in mediana (E15). La condizione è una fascia
+  (`chart.blind_band`): quando i due rumori si somigliano più di quanto pesi il pregiudizio (`r^2 > B`), una macchina
+  molto debole, presa con peso negativo, torna a battere il correttore. Quell'estremo basso non è stato messo alla prova.
 - **Che cosa sia un pregiudizio lo decide la coppia.** Una traccia che dice qualcosa di vero
   merita un peso che cresce con ciò che la macchina vede; solo l'eccesso è pregiudizio, e una
   macchina che lo toglie tutto fa danno (E10, E11).

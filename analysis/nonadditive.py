@@ -26,11 +26,12 @@ TAUS = (None, 2.0, 1.0, 0.5)
 BETAS = (0.5, 0.85)
 
 
-def one(beta: float, tau: float | None, seed: int) -> dict:
+def one(beta: float, tau: float | None, seed: int, d: float = D, two_valued: bool = False) -> dict:
+    """`d` is the sensitivity of the clean cue; with `two_valued` the trace is +1 or -1, as an opinion is."""
     rng = np.random.default_rng(seed)
     y = rng.integers(0, 2, N)
-    h = D * (y - 0.5) + rng.standard_normal(N)
-    a = rng.standard_normal(N)
+    h = d * (y - 0.5) + rng.standard_normal(N)
+    a = rng.choice([-1.0, 1.0], N) if two_valued else rng.standard_normal(N)
     shape = (lambda x: np.ones_like(x)) if tau is None else (lambda x: np.exp(-x * x / (2 * tau * tau)))
     c = 1.0 / np.sqrt(np.mean(shape(h) ** 2))
     k = lambda x: c * shape(x)                                                                    # noqa: E731
