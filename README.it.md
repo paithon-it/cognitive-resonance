@@ -24,6 +24,13 @@ regione oltre i 90 gradi era rimasta inesplorata. Qui ci si va.
 > più sotto). Il protocollo sta in [`PROTOCOL.it.md`](PROTOCOL.it.md) (traduzione inglese
 > [`PROTOCOL.md`](PROTOCOL.md)); ciò che è cambiato dopo una corsa sta nella sua sezione
 > «Deviazioni».
+>
+> Il 20 novembre si sono aggiunte tre prove sullo stesso banco (E10-E12, protocollo 2.3) e la
+> prima su persone misurate una per una (E13, protocollo 2.4), sui dati pubblici del
+> Confidence Database: su 1.968 persone il pregiudizio che si legge dalla storia delle prove
+> vale in mediana 0,015 del rumore (sul banco ne avevamo piantato circa 0,7), e un correttore
+> che non vede lo stimolo rende l'1,1 per cento di sensibilità. Le tabelle complete e
+> aggiornate stanno nel [README inglese](README.md) e in [`results/RESULTS.md`](results/RESULTS.md).
 
 ## L'identità
 

@@ -1,5 +1,6 @@
 """E6 and E7 (protocol §§ 12-13): the readers, the measures at a fixed weight, and the two analyses on
 synthetic files whose answer is known."""
+import json
 import math
 import sys
 from pathlib import Path
@@ -691,3 +692,210 @@ def test_what_the_branch_leaves_to_the_frame(tmp_path):
     assert len(rows) == 8
     for r in rows:
         assert r["left_to_the_frame"] == pytest.approx(r["frame_own_slope"], abs=0.05)
+
+
+def test_the_turing_of_the_pair_in_three_factors(tmp_path):
+    """The equation is the theorem divided by the judge alone; a blind machine is worth sqrt(1 + B)."""
+    from cognitive_resonance import chart
+    for d_h, d_m, r, b in ((2.9, 1.9, 0.5, 0.7), (2.0, 3.0, 0.8, 0.2), (1.2, 2.5, -0.3, 1.5)):
+        f = chart.pair_factors(d_h, d_m, r, b)
+        alone = d_h / math.sqrt(1 + b)
+        assert f["tu_partner"] == pytest.approx(chart.with_partner(d_h, d_m, r) / alone, rel=1e-12)
+        assert f["tu_soloist"] == pytest.approx(chart.with_soloist(d_h, d_m, r, b) / alone, rel=1e-12)
+        assert f["tu_blind"] == pytest.approx(math.sqrt(1 + b)) and f["tu_partner"] >= f["tu_soloist"]
+        assert f["judge_adds_to_machine"] == pytest.approx(chart.with_partner(d_h, d_m, r) / d_m - 1, rel=1e-12)
+    same = chart.pair_factors(2.0, 2.0, -0.5, 0.0)          # two equal judges, opposite errors: the peak of the curve
+    assert same["tu_partner"] == pytest.approx(1 / math.cos(math.radians(120) / 2), rel=1e-9)
+    assert chart.pair_factors(2.0, 2.0, 0.3, 3.0)["angle_blind"] == pytest.approx(150.0, abs=1e-6)
+    import factors
+    synthetic.write_chart(tmp_path, tasks=("cat_dog",), seeds=(2,), n_images=600, n_val=300)
+    u = factors.chart_unit(tmp_path / "cat_dog_v25_s2.npz")
+    assert u["bench"] == "chart" and u["measured"]["tu_partner"] == pytest.approx(u["factors"]["tu_partner"], rel=0.1)
+    assert u["measured"]["tu_blind"] == pytest.approx(u["factors"]["tu_blind"], rel=0.1)
+    assert u["factors"]["together"] == pytest.approx(u["factors"]["strength"] + u["factors"]["private"])
+    assert u["measured"]["judge_without_bias_over_judge"] > 1 and 0.5 < u["measured"]["accuracy_without_bias_plus_soloist"] <= 1
+    part = chart.pair_factors(2.0, 1.2, 0.6, 0.5)           # the machine sees a part of what the judge sees: r = q
+    assert part["together"] == pytest.approx(1.0) and part["tu_partner"] == pytest.approx(part["tu_blind"])
+    assert chart.pair_factors(2.0, 3.0, 2.0 / 3.0, 0.5)["private"] == pytest.approx(0.0, abs=1e-12)   # r = 1 / q
+    assert chart.pair_factors(2.0, 3.0, 0.0, 0.5)["together"] == pytest.approx(1 + 1.5 ** 2)
+    for q in (0.3, 1.0, 2.5):                               # independent errors: what one adds, the other loses
+        g = chart.pair_factors(1.0, q, 0.0, 0.4)
+        assert (g["tu_without_bias"] ** 2 - 1) * (g["yield_on_machine"] ** 2 - 1) == pytest.approx(1.0)
+        assert g["exchange"] == pytest.approx(1.0)
+    for q, r in ((0.7, 0.5), (1.0, -0.5), (2.0, 0.3)):
+        g = chart.pair_factors(1.0, q, r, 0.0)
+        assert g["exchange"] == pytest.approx(((1 + r * r - r * (q + 1 / q)) / (1 - r * r)) ** 2)
+        assert g["tu_partner"] == pytest.approx(g["tu_without_bias"])
+    assert chart.pair_factors(1.0, 1.0, -0.5, 0.0)["yield_on_machine"] == pytest.approx(2.0)
+    people = tmp_path / "people.json"
+    people.write_text(json.dumps({"comparisons": [
+        {"source": "x", "task": "t", "machine": "m", "mode": "letter", "d_h": 1.0, "d_m": 2.0, "rho": 0.0, "k": 2.0},
+        {"source": "x", "task": "t", "machine": "n", "mode": "letter", "d_h": 2.0, "d_m": 1.0, "rho": 0.5, "k": 0.5}]}))
+    read = factors.people(people)
+    assert read["comparisons"][0]["exchange"] == pytest.approx(1.0) and read["comparisons"][0]["tu"] == pytest.approx(math.sqrt(5))
+    assert read["comparisons"][1]["tu"] == pytest.approx(1.0) and read["by_source"][-1]["comparisons"] == 2   # r = q: nothing to add
+    assert factors.people(tmp_path / "missing.json") is None
+
+
+# --- E13: the readable bias of a person --------------------------------------------------------
+
+def _simulated_person(push: float, n: int = 6000, seed: int = 0, d: float = 1.5, fine: bool = False):
+    """A person whose judgment leans towards their previous answer by `push` (in units of the clean noise)."""
+    rng = np.random.default_rng(seed)
+    stimulus = rng.integers(0, 2, n)
+    clean = d * (stimulus - 0.5) + rng.standard_normal(n)
+    judgment, previous = np.empty(n), 0.0
+    for t in range(n):
+        judgment[t] = clean[t] + push * previous
+        previous = 1.0 if judgment[t] > 0 else -1.0
+    response = (judgment > 0).astype(int)
+    confidence = np.abs(judgment) if fine else np.digitize(np.abs(judgment), [0.5, 1.2, 2.0])   # four steps
+    return stimulus, response, confidence
+
+
+def test_the_graded_judgment_orders_the_trials_from_one_sure_answer_to_the_other():
+    from cognitive_resonance import readable
+    g = readable.graded_judgment(np.array([0, 0, 1, 1]), np.array([3.0, 1.0, 1.0, 3.0]))
+    assert np.all(np.diff(g) > 0) and abs(g.sum()) < 1e-12
+    a = readable.history(np.array([0, 1, 1]), np.array([-1.0, 0.5, 2.0]))
+    assert a.shape == (2, 3) and a[0].tolist() == [-1.0, -1.0, -1.0] and a[1].tolist() == [1.0, 0.5, -0.25]
+
+
+def test_a_person_without_a_readable_bias_has_nothing_to_give_back():
+    from cognitive_resonance import readable
+    m = readable.person(*_simulated_person(0.0, seed=1))
+    assert abs(m["b"]) < 0.01 and abs(m["gain_personal"] - 1.0) < 0.01
+
+
+def test_a_planted_push_is_read_and_removing_it_gives_what_the_formula_says():
+    from cognitive_resonance import readable
+    weak, strong = (readable.person(*_simulated_person(p, seed=2, fine=True)) for p in (0.15, 0.3))
+    assert 0.01 < weak["b"] < strong["b"] < 0.15                       # planted: 0.0225 and 0.09
+    assert 1.0 < weak["gain_personal"] < strong["gain_personal"]
+    for m in (weak, strong):
+        predicted = readable.predicted_gain_sq(m["b_first"], m["n_first"])
+        assert abs(m["gain_personal"] ** 2 - predicted) < 0.03
+        assert abs(m["gain_moments"] ** 2 - predicted) < 0.03
+    assert 90 < readable.corrector_angle(weak["b"]) < readable.corrector_angle(strong["b"]) < 180
+
+
+def test_with_a_scale_of_a_few_steps_the_corrector_gives_more_than_the_formula():
+    """The trace also reorders the trials that fell on the same step: a gain the Gaussian count does not have."""
+    from cognitive_resonance import readable
+    gaps = []
+    for seed in range(4):
+        m = readable.person(*_simulated_person(0.15, seed=seed))
+        gaps.append(m["gain_personal"] ** 2 - readable.predicted_gain_sq(m["b_first"], m["n_first"]))
+    assert 0.0 < float(np.mean(gaps)) < 0.08
+
+
+def test_the_files_of_e13_are_split_by_their_name_and_the_split_does_not_move():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("people_bias", ANALYSIS / "people_bias.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.split_of("data_Adler_2018_Expt1.csv") == mod.split_of("DATA_ADLER_2018_EXPT1.CSV")
+    parts = [mod.split_of(f"data_{i}.csv") for i in range(400)]
+    assert 0.12 < parts.count("exploration") / 400 < 0.26
+
+
+def test_a_file_of_e13_is_read_with_text_labels_a_byte_order_mark_and_any_case(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("people_bias", ANALYSIS / "people_bias.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    rows = ["﻿subj_idx,STIMULUS,Response,confidence"]
+    for i in range(60):
+        stimulus = "old" if i % 3 else "new"
+        wrong = i % 5 == 0
+        response = ("new" if stimulus == "old" else "old") if wrong else stimulus
+        rows.append(f"s{i % 2},{stimulus},{response},{1 if wrong else 2 + i % 2}")
+    rows += ["s0,old,NaN,2", "s0,old,old,", ",old,old,2"]
+    path = tmp_path / "data_test.csv"
+    path.write_text("\n".join(rows), encoding="utf-8")
+    people, status = mod.read_file(path)
+    assert status == "read" and sorted(people) == ["s0", "s1"]
+    assert sum(p["stimulus"].size for p in people.values()) == 60
+    assert set(np.unique(people["s0"]["stimulus"])) == {0, 1}
+    path.write_text("Subj_idx,Stimulus,Response,Confidence\n1,1,1,2\n1,2,3,1\n1,3,1,3\n", encoding="utf-8")
+    assert mod.read_file(path) == (None, "not a two-answer task")
+
+
+def test_in_information_the_parts_of_the_pair_add_up_and_the_bias_only_covers():
+    from cognitive_resonance import chart
+    d_h, d_m, r, b = 2.0, 1.5, 0.4, 0.7
+    info, old = chart.pair_information(d_h, d_m, r, b), chart.pair_factors(d_h, d_m, r, b)
+    alone = info["person_alone"]
+    assert info["person_with_tailored"] / alone == pytest.approx(old["tu_partner"] ** 2)
+    assert info["person_with_generic"] / alone == pytest.approx(old["tu_soloist"] ** 2)
+    assert info["person_with_corrector"] / alone == pytest.approx(old["tu_blind"] ** 2)
+    assert info["person_with_tailored"] - info["person_with_generic"] == pytest.approx(info["covered_by_the_bias"])
+    assert info["covered_by_the_bias"] == pytest.approx(b / (1 - r * r + b) * info["private"])
+    assert chart.pair_information(d_h, d_m, r, 0.0)["covered_by_the_bias"] == 0.0
+
+
+def test_opposite_errors_are_a_hidden_common_cause_with_opposite_signs():
+    from cognitive_resonance import chart
+    rng = np.random.default_rng(0)
+    c_h, c_m, s = chart.opposite_errors_as_a_common_cause(-0.6)
+    z, n_h, n_m = rng.standard_normal((3, 400_000))
+    e_h, e_m = c_h * z + s * n_h, c_m * z + s * n_m
+    assert e_h.var() == pytest.approx(1.0, abs=0.01) and e_m.var() == pytest.approx(1.0, abs=0.01)
+    assert np.corrcoef(e_h, e_m)[0, 1] == pytest.approx(-0.6, abs=0.01)
+    # what is left of e_h once Z is known does not go with anything the machine computes from Z and its own noise
+    assert abs(np.corrcoef(e_h - c_h * z, e_m)[0, 1]) < 0.01
+
+
+def test_a_correction_with_a_ceiling_leaves_the_large_pushes():
+    from cognitive_resonance import chart
+    rng = np.random.default_rng(1)
+    a = rng.standard_normal(1_000_000)
+    for s in (0.0, 0.5, 1.0, 2.0):
+        left = np.clip(np.abs(a) - s, 0.0, None)
+        assert chart.left_under_a_ceiling(s) == pytest.approx(float((left ** 2).mean()), abs=0.005)
+    assert chart.left_under_a_ceiling(0.0) == pytest.approx(1.0)
+    assert chart.left_by_an_open_warning(0.5) == 0.25
+
+
+def test_the_shortcut_reading_says_that_what_is_learned_falls_with_the_shortcut():
+    path = ANALYSIS.parent / "results" / "shortcut.json"
+    if not path.exists():
+        pytest.skip("results/shortcut.json not there")
+    d = json.loads(path.read_text())
+    kept = [r["kept_frame_removed"] for r in d["by_mu"]]
+    assert kept[0] == pytest.approx(1.0) and all(x >= y - 0.01 for x, y in zip(kept, kept[1:]))
+    assert all(r["kept_frame_removed"] >= r["kept_as_it_is"] - 1e-9 for r in d["by_mu"])
+
+
+def test_the_answers_are_counted_before_and_after_the_correction():
+    from cognitive_resonance import readable
+    m = readable.person(*_simulated_person(0.7, seed=3, fine=True))
+    assert m["accuracy_after"] > m["accuracy_before"]                   # a large push, a fine scale: answers improve
+    assert m["changed"] == pytest.approx(m["changed_to_right"] + m["changed_to_wrong"])
+    assert m["accuracy_after"] - m["accuracy_before"] == pytest.approx(m["changed_to_right"] - m["changed_to_wrong"])
+    still = readable.person(*_simulated_person(0.0, seed=3))
+    assert abs(still["accuracy_after"] - still["accuracy_before"]) < 0.01
+
+
+def test_the_slopes_pulled_towards_the_group_go_from_the_person_to_the_group():
+    from cognitive_resonance import readable
+    a, b = (readable.person(*_simulated_person(p, seed=s)) for p, s in ((0.3, 4), (0.6, 5)))
+    own, (ox, oy), n = a["_moments_first"], b["_moments_first"], b["n_first"]
+    personal, group = readable.slopes(*own), readable.slopes(ox, oy)
+    assert np.allclose(readable.shrunk_slopes(own, ox, oy, n, 0.0), personal)
+    assert np.allclose(readable.shrunk_slopes(own, ox, oy, n, 1e9), group, atol=1e-4)
+    middle = readable.shrunk_slopes(own, ox, oy, n, float(a["n_first"]))
+    assert np.linalg.norm(middle - group) < np.linalg.norm(personal - group)
+
+
+def test_the_second_implementation_of_e13_gives_the_same_numbers():
+    first, second = (ANALYSIS.parent / "results" / n for n in ("e13_people_bias.json", "e13_second_implementation.json"))
+    if not (first.exists() and second.exists()):
+        pytest.skip("results of E13 not there")
+    a, b = json.loads(first.read_text()), json.loads(second.read_text())
+    for part, short in (("confirmation", "conf"), ("exploration", "expl")):
+        assert a[part]["people"] == b["counts"][short]["people"] and a[part]["files"] == b["counts"][short]["files_included"]
+        assert a[part]["b"]["median"] == pytest.approx(b[short]["median_B"], abs=1e-9)
+        assert a[part]["gain_personal"]["median"] == pytest.approx(b[short]["median_G_personal_auc"], abs=1e-4)
+        assert a[part]["gain_everyone"]["median"] == pytest.approx(b[short]["median_G_everyone"], abs=1e-4)
+        assert a[part]["gain_moments"]["median"] == pytest.approx(b[short]["median_G_personal_moments"], abs=1e-3)

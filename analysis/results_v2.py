@@ -463,9 +463,173 @@ def trace_left(d):
                "left to the frame (min to max)", "the frame's own slope", "old pair below the judge alone"], rows)])
 
 
+def pair_factors(d):
+    name = {"curve": "the curve (E1)", "chart": "the chart (E8)", "trace": "the chart, new seeds (E10, level 0)"}
+    pct = lambda x, nd: f(100.0 * x, nd) + "%"                                                # noqa: E731
+    rows = []
+    for s in d["by_bench_and_condition"]:
+        g = lambda k: f(s.get(k), 2) if s.get(k) is not None else "n/a"                      # noqa: E731
+        rows.append([name[s["bench"]], s["condition"], s["units"], g("resonance"), g("strength"), g("private"),
+                     f"{g('tu_partner')} / {g('measured_tu_partner')}", f"{g('tu_blind')} / {g('measured_tu_blind')}",
+                     f"{g('tu_soloist')} / {g('measured_tu_soloist')}",
+                     f"{f(s['angle_partner'], 0)} / {f(s['measured_angle_partner'], 0)}",
+                     g("share_of_log_turing_from_resonance")])
+    return "\n\n".join([
+        "## The turing of the pair: one factor and two addends (a reading added after the results)",
+        "`analysis/factors.py`: added on 20 November 2026, not a test. The theorem of the three machines divided by "
+        "what the judge is worth alone: with the partner Tu^2 = (1 + B)(q^2 + p), with q = d_m / d_h and "
+        "p = (1 - r q)^2 / (1 - r^2) (`cognitive_resonance.chart.pair_factors`). 1 + B is what cancelling the readable "
+        "bias is worth, q^2 what the machine knows of the task, p what the judge knows and the machine does not; with "
+        "the soloist p shrinks by (1 - r^2) / (1 - r^2 + B), with the blind machine Tu^2 = 1 + B. Each cell gives the "
+        "turing from the equation and the measured one (tuned pair over the judge alone); medians over the units. On "
+        "the bench of the curve the second network carries the opposite push itself and is read as a partner. Last "
+        "column: the share of ln Tu^2 that comes from 1 + B.",
+        table(["bench", "condition", "units", "1 + B", "q^2", "p", "partner: equation / measured",
+               "blind machine: equation / measured", "soloist: equation / measured", "angle with the partner: equation / measured",
+               "share of the turing from 1 + B"], rows),
+        "The same pairs seen from the two sides, and the judge that never learned the bias (H0 in E8, C_0 in E10: the same "
+        "network trained where the frame says nothing). `q^2 + p` is what the two know together in units of the judge "
+        "without its bias: the turing the equation leaves once the bias is gone. What the judge adds to the machine is the "
+        "pair with the partner over the soloist alone, minus one. The last columns compare two ways of removing the bias: "
+        "in the machine (judge + partner) or in the judge (judge without bias + soloist); right answers of the raw sums, "
+        "and in how many units the second is above the first.",
+        table(["bench", "condition", "q^2 + p", "judge adds to the machine: equation / measured",
+               "judge without bias alone, over the judge", "turing of the judge without bias with the soloist",
+               "its pair over the soloist alone",
+               "that pair over the pair judge + partner", "right answers: judge / judge without bias",
+               "judge + partner / judge without bias + soloist", "units where the second is above"],
+              [[name[s["bench"]], s["condition"], f(s["together"], 2),
+                f"{pct(s['judge_adds_to_machine'], 0)} / {pct(s['measured_judge_adds_to_machine'], 0)}",
+                f(s["measured_judge_without_bias_over_judge"], 2), f(s["measured_tu_without_bias"], 2),
+                f(s["measured_yield_on_machine_without_bias"], 2),
+                f(s["measured_pair_without_bias_over_pair_partner"], 3),
+                f"{pct(s['measured_accuracy_judge'], 1)} / {pct(s['measured_accuracy_judge_without_bias'], 1)}",
+                f"{pct(s['measured_accuracy_judge_plus_partner'], 1)} / {pct(s['measured_accuracy_without_bias_plus_soloist'], 1)}",
+                f"{s['units_without_bias_plus_soloist_above_partner']} of {s['units']}"]
+               for s in d["by_bench_and_condition"] if s["bench"] != "curve"])]
+        + ([] if not d.get("people") else [
+            "The same two sides on the pairs of people and language models already measured (`results/e4_private.json`: "
+            "sensitivities and correlation of the errors from the earlier article, with the people's biases still inside). "
+            "Ideal pairs, the best use of the two cues: the turing is the best pair over the people alone, the yield over "
+            "the machine alone. Medians over the comparisons; the product is (Tu^2 - 1)(yield^2 - 1), 1 for independent errors.",
+            table(["data", "comparisons", "machine over people (k)", "angle between the errors", "turing", "yield on the machine",
+                   "product", "people add less than 5%", "both add more than 10%", "angles (min-max)"],
+                  [[s["source"], s["comparisons"], f(s["k"], 2), f(s["angle"], 0), f(s["tu"], 2), f(s["yield_on_machine"], 2),
+                    f(s["exchange"], 2), s["people_add_under_5_percent"], s["both_add_over_10_percent"],
+                    f"{f(s['angle_min'], 0)}-{f(s['angle_max'], 0)}"] for s in d["people"]["by_source"]])]))
+
+
+def e13(d):
+    ci = lambda v, nd=3: f"{f(v['median'], nd)} ({f(v['lo'], nd)} to {f(v['hi'], nd)})"                # noqa: E731
+    c, k = d["confirmation"], d["criteria"]
+    verdict = lambda ok: "**passes**" if ok else "**does not pass**"                                  # noqa: E731
+    rows = [[name, s["people"], s["files"], f(s["trials_median"], 0), ci(s["b"], 4), ci(s["b_shuffled"], 4),
+             ci(s["gain_personal"]), ci(s["gain_moments"]), ci(s["gain_everyone"]), ci(s["gain_shuffled"])]
+            for name, s in (("confirmation", c), ("exploration", d["exploration"])) if s.get("people")]
+    fm = c["formula"]
+    return "\n\n".join([
+        "## E13. The readable bias, measured on people (protocol § 19)",
+        "`analysis/people_bias.py`, on the Confidence Database (Rahnev and colleagues, 2020; CC0, not copied here: "
+        "`analysis/download_confidence_db.py`). For every person the graded judgment is the response with its "
+        "confidence, the trace is the history of their previous trials, and the corrector sees no stimulus. The plan "
+        "was in the repository before a data file was opened; the code was written on simulated people and on the "
+        f"exploration files ({d['files_by_split']['exploration']['read']} files, chosen by the SHA-1 of the name), "
+        f"recorded, and then run once on the {d['files_by_split']['confirmation']['read']} confirmation files. "
+        "Medians over people, 95 per cent interval resampling the files.",
+        table(["files", "people", "files included", "trials per person", "B", "B, trials shuffled",
+               "gain of the personal corrector", "the same, sensitivity from the moments", "gain of the corrector of everyone",
+               "gain, trials shuffled"], rows),
+        f"- **P1, it is there** {verdict(k['P1_there'])}: median B {ci(c['b'], 4)}; with the trials shuffled "
+        f"{ci(c['b_shuffled'], 4)}, below 0.002 in absolute value. The median is above zero in "
+        f"{c['files_b_above_zero']} files of {c['files']}.",
+        f"- **P2, it is small** {verdict(k['P2_small'])}: median gain of the personal corrector {ci(c['gain_personal'])}, "
+        f"below 1.02; tenth and ninetieth percentile {f(c['gain_personal']['p10'])} and {f(c['gain_personal']['p90'])}. "
+        f"B is above 0.05 in {f(100 * c['share_b_above_0_05'], 0)} per cent of the people and above 0.2 in "
+        f"{f(100 * c['share_b_above_0_2'], 1)} per cent.",
+        f"- **P3, it follows the formula** {verdict(k['P3_formula'])}: measured gain squared minus "
+        f"(1 + B_1) / (1 + 3 / n_1), median {ci(fm['gap'], 4)}, outside the band of 0.01; rank correlation "
+        f"{f(fm['spearman'], 2)} ({f(fm['spearman_lo'], 2)} to {f(fm['spearman_hi'], 2)}). The corrector gives a little "
+        "more than the formula. The gain with the sensitivity from the moments, which does not see the order of the "
+        f"trials inside one step of the confidence scale, is {ci(c['gain_moments'], 4)}: what the corrector gives on "
+        "these scales comes from reordering trials that fell on the same step, as on simulated people with a scale of "
+        "four steps (an explanation added after the result).",
+        f"- **P4, tailored or for everyone** (no threshold): the personal corrector gives more than the corrector of "
+        f"everyone in {f(100 * c['share_personal_above_everyone'], 0)} per cent of the people; median difference "
+        f"{ci(c['personal_minus_everyone'], 4)}. At the median B the angle between the error of the person and that of "
+        f"the corrector is {f(c['corrector_angle_at_median_b'], 0)} degrees. The gain was not computed for "
+        f"{c['gain_not_computed']} people (sensitivity below 0.2 in the second half).",
+        "**Added after the confirmation run** (descriptive, no thresholds). *The answers themselves.* The gain above is in "
+        "the sensitivity of the graded judgment. Counting the answers, with the threshold that separates the two answers "
+        f"applied to the corrected judgment: {f(100 * c['accuracy_before']['median'], 1)} per cent right before and "
+        f"{f(100 * c['accuracy_after']['median'], 1)} after; the median change per person is "
+        f"{f(100 * c['accuracy_change']['median'], 2)} points (mean {f(100 * c['accuracy_change_mean'], 2)}), the answers go up "
+        f"in {f(100 * c['share_accuracy_up'], 0)} per cent of the people and down in {f(100 * c['share_accuracy_down'], 0)}. "
+        f"The correction changes {f(100 * c['changed']['median'], 1)} per cent of the answers in the median, "
+        f"{f(100 * c['changed_to_right']['median'], 2)} to right and {f(100 * c['changed_to_wrong']['median'], 2)} to wrong. "
+        "The corrector does not give more right answers: what it gives is a finer order of the graded judgments.",
+        f"*The tails.* Tenth and ninetieth percentile of the personal gain: {f(c['gain_personal']['p10'])} and "
+        f"{f(c['gain_personal']['p90'])}; with the trials shuffled {f(c['gain_shuffled']['p10'])} and "
+        f"{f(c['gain_shuffled']['p90'])}: the lower tail is sampling noise. In the tenth of the people with the largest B "
+        f"on the first half (at least {f(c['top_tenth_by_b_first']['b_first_at_least'])}, {c['top_tenth_by_b_first']['people']} "
+        f"people) the median gain on the second half is {f(c['top_tenth_by_b_first']['gain_personal_median'])}, where the "
+        f"formula gives {f(c['top_tenth_by_b_first']['gain_predicted_median'])}.",
+        f"*A corrector in between.* The slopes of the person pulled towards those of the other people of the file, as hard "
+        "as the first halves alone say (first quarter against second, one weight per file): median gain "
+        f"{ci(c['gain_between'])}, above the personal corrector in {f(100 * c['share_between_above_personal'], 0)} per cent of "
+        f"the people and above the corrector of everyone in {f(100 * c['share_between_above_everyone'], 0)}.",
+    ])
+
+
+def e13_audit(d):
+    c = d["confirmation"]
+    doubt = [f for f in d["files"] if f["split"] == "confirmation"
+             and (f["order_doubtful"] or f["history_says_something"] or f["confidence_doubtful"])]
+    return "\n\n".join([
+        "## E13, the files checked one by one (added after the confirmation run)",
+        "`analysis/people_audit.py`. Three checks on the included confirmation files, none of them a test. *The order.* "
+        f"{c['files_with_a_counter']} files of {c['files']} have a column that counts the trials: in none does the counter "
+        "go back inside a person; for the others the order of the rows stays an assumption. *The confidence.* In "
+        f"{c['files_confidence_doubtful']} file one value covers more than four fifths of the trials, and is more likely a "
+        f"code for \"not asked\" than a step of a scale; {c['files_confidence_negative']} files have a scale with negative "
+        "values, which the ranks handle. *The history and the stimulus.* In "
+        f"{c['files_history_says_something']} files the three traces predict the class beyond a band of 0.02 around one half "
+        "of the area under the curve, or the stimulus repeats more than 0.03 away from one half of the time.",
+        table(["confirmation files", "people", "median B", "median gain of the personal corrector"],
+              [["all", sum(f["people"] for f in d["files"] if f["split"] == "confirmation"), f(c["b_median_all"], 4), "see above"],
+               ["without those where the history says something of the stimulus", c["without_history_files"]["people"],
+                f(c["without_history_files"]["b_median"], 4), f(c["without_history_files"]["gain_median"])],
+               ["without the one with a doubtful confidence", c["without_confidence_files"]["people"],
+                f(c["without_confidence_files"]["b_median"], 4), f(c["without_confidence_files"]["gain_median"])],
+               ["without both", c["people_left"], f(c["b_median_left"], 4), f(c["gain_median_left"])]]),
+        "Doubtful files: " + ", ".join(f"`{f['file']}`" for f in doubt) + ".",
+        "*A second implementation.* `analysis/people_bias_second.py` is the same analysis written again by a separate "
+        "agent from § 19 of the protocol alone, without seeing the first script: same files, same people, and the same "
+        "medians (`results/e13_second_implementation.json`; `tests/test_v2.py` compares the two).",
+    ])
+
+
+def shortcut(d):
+    rows = [[f(r["mu"], 2), r["networks"], f(r["b"], 2), f(r["d_as_it_is"], 2), f(r["d_frame_removed"], 2),
+             f(r["kept_as_it_is"], 3), f(r["kept_frame_removed"], 3), f(r["given_back"], 2)] for r in d["by_mu"]]
+    return "\n\n".join([
+        "## What a shortcut costs twice (a reading added after the results)",
+        "`analysis/shortcut.py`, on the files of E1: added on 20 November 2026, not a test. In training the frame says "
+        "something about the class (strength mu); at test it says nothing, and is a readable bias. For every network: "
+        "the sensitivity as it is, the sensitivity with the frame removed (slope of the cue on the frame, at equal "
+        "class), and both over the sensitivity of the network of the same task, seed and role trained without the "
+        "shortcut. Removing the bias gives back what the bias was covering; it does not give back what the network did "
+        "not learn from the image while it leaned on the frame. Medians over five tasks, two seeds and three networks.",
+        table(["mu in training", "networks", "B at test", "sensitivity as it is", "with the frame removed",
+               "kept, as it is", "kept, with the frame removed", "share of the loss given back"], rows),
+        f"What is kept with the frame removed falls with mu in {d['tasks_where_what_is_learned_falls_with_the_shortcut']} "
+        f"tasks of {d['tasks']} (rank correlation of -0.9 or below).",
+    ])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
             ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
-            ("e12_yesno.json", yesno))
+            ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors), ("e13_people_bias.json", e13),
+            ("e13_people_audit.json", e13_audit), ("shortcut.json", shortcut))

@@ -73,6 +73,43 @@ def gain_informative(d_h: float, d_m: float, r: float, beta: float, d_a: float) 
     return (beta * (d_h - r * d_m) - d_a * (1 - r ** 2)) ** 2 / ((1 - r ** 2) * (1 + beta ** 2 - r ** 2))
 
 
+# --- the turing of the pair: one factor and two addends -------------------------------------------------------------------------
+
+def pair_factors(d_h: float, d_m: float, r: float, b: float) -> dict:
+    """The turing of a pair, measured against the judge alone with its bias in (d_H = d_h / sqrt(1 + B)), as a product.
+
+    With q = d_m / d_h (how many times the machine is worth the judge without its bias) and
+    p = (1 - r q)^2 / (1 - r^2) (the private part, in units of d_h^2):
+
+        with the partner         Tu^2 = (1 + B) (q^2 + p)
+        with the soloist         Tu^2 = (1 + B) (q^2 + p (1 - r^2) / (1 - r^2 + B))
+        with the blind machine   Tu^2 = 1 + B
+
+    1 + B is the factor of resonance: what cancelling the readable bias is worth. q^2 is what the machine knows of
+    the task, p what the judge knows and the machine does not. It is the theorem of the three machines divided by
+    d_H^2: the same algebra, rearranged. q^2 + p ("together") is what the two know together, in units of the judge
+    without its bias: it is 1 when the machine sees a part of what the judge sees (r = q), q^2 when the judge sees a
+    part of what the machine sees (r = 1 / q), 1 + q^2 when their errors are independent. Also returned: the pair
+    seen from the two sides once the bias is gone, the turing sqrt(q^2 + p) and the yield on the machine
+    sqrt(1 + p / q^2) (what the judge adds to the machine is that, minus one). With independent errors the two are
+    tied: (Tu^2 - 1)(yield^2 - 1) = 1, and in general the product is ((1 + r^2 - r (q + 1 / q)) / (1 - r^2))^2
+    ("exchange"). And the angles between the errors of the judge and of a blind machine or of a partner built for
+    weight 1 (noise correlations -sqrt(B / (1 + B)) and (r - B) / (1 + B))."""
+    q = d_m / d_h
+    p = (1.0 - r * q) ** 2 / (1.0 - r * r)
+    seen = p * (1.0 - r * r) / (1.0 - r * r + b)
+    out = {"resonance": 1.0 + b, "strength": q * q, "private": p, "together": q * q + p, "private_with_soloist": seen,
+           "tu_partner": math.sqrt((1.0 + b) * (q * q + p)), "tu_soloist": math.sqrt((1.0 + b) * (q * q + seen)),
+           "tu_blind": math.sqrt(1.0 + b),
+           "angle_blind": math.degrees(math.acos(-math.sqrt(b / (1.0 + b)))),
+           "angle_partner": math.degrees(math.acos(max(-1.0, min(1.0, (r - b) / (1.0 + b)))))}
+    out["tu_without_bias"] = math.sqrt(q * q + p)
+    out["yield_on_machine"] = math.sqrt(1.0 + p / (q * q)) if q > 0 else None
+    out["judge_adds_to_machine"] = out["yield_on_machine"] - 1.0 if q > 0 else None
+    out["exchange"] = (q * q + p - 1.0) * (p / (q * q)) if q > 0 else None
+    return out
+
+
 # --- how well the machine has to know the judge ---------------------------------------------------------------------
 
 def bias_left_after(n: float) -> float:
@@ -154,3 +191,52 @@ def gain_if_bias(d_big_h: float, d_m: float, rho: float, b: float) -> float | No
     bias a machine can read: P_obs * B / (1 - rho^2 (1 + B)). None when rho^2 (1 + B) >= 1 (no such judge)."""
     den = 1 - rho ** 2 * (1 + b)
     return private_observed(d_big_h, d_m, rho) * b / den if den > 0 else None
+
+
+def _phi(x: float) -> float:
+    return math.exp(-0.5 * x * x) / math.sqrt(2.0 * math.pi)
+
+
+def _Phi(x: float) -> float:
+    return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
+
+
+def pair_information(d_h: float, d_m: float, r: float, b: float) -> dict:
+    """The four pairs of the proposition in d'^2, where the parts add up.
+
+    The person alone is worth d_h^2 / (1 + B); with a corrector that reads only the bias, d_h^2; with a machine that
+    knows the task, d_m^2 plus the private part P shrunk by (1 - r^2) / (1 - r^2 + B); with a machine that also reads
+    the bias, d_m^2 + P. The bias never adds anything: it only covers a share of P.
+    """
+    private = (d_h - r * d_m) ** 2 / (1.0 - r * r)
+    reaching = private * (1.0 - r * r) / (1.0 - r * r + b)
+    return {"person_alone": d_h ** 2 / (1.0 + b), "person_with_corrector": d_h ** 2, "machine_alone": d_m ** 2,
+            "private": private, "private_reaching_the_pair": reaching, "covered_by_the_bias": private - reaching,
+            "person_with_generic": d_m ** 2 + reaching, "person_with_tailored": d_m ** 2 + private}
+
+
+def opposite_errors_as_a_common_cause(r: float) -> tuple[float, float, float]:
+    """Two unit errors with correlation r < 0 as one hidden cause Z entering with opposite signs.
+
+    e_h = c Z + s n_h and e_m = -c Z + s n_m, with c = sqrt(|r|) and s = sqrt(1 - |r|): returns (c, -c, s). Errors in
+    antiphase are a shared disturbance that nobody has labelled, the corrector's case with the trace unknown.
+    """
+    if not -1.0 < r < 0.0:
+        raise ValueError("r must be negative")
+    c = math.sqrt(-r)
+    return c, -c, math.sqrt(1.0 + r)
+
+
+def left_under_a_ceiling(ceiling: float) -> float:
+    """Share of a Gaussian bias that stays when no correction larger than `ceiling` gets through.
+
+    The push is beta a with a ~ N(0, 1); `ceiling` is in units of beta. What stays is (|a| - ceiling)+, and its mean
+    square is 2 [(1 + s^2)(1 - Phi(s)) - s phi(s)].
+    """
+    s = max(0.0, ceiling)
+    return 2.0 * ((1.0 + s * s) * (1.0 - _Phi(s)) - s * _phi(s))
+
+
+def left_by_an_open_warning(weight: float) -> float:
+    """Share of the bias that stays when the correction is shown apart and the person applies a share of it."""
+    return (1.0 - weight) ** 2

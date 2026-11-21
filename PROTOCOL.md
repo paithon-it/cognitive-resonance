@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 2.3, 20 November 2026. Written and recorded in the repository **before any run**:
+Version 2.4, 20 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -945,6 +945,107 @@ whoever answers yes or no. If it does not pass because more than nine times as m
 because Y4 does not pass, the estimate from plain answers with this model is not enough, and
 the article says so.
 
+## 19. E13. The readable bias, on people
+
+Added with version 2.4, on 20 November 2026, after two independent reviews of the article.
+It is the first test on people measured one by one. It needs no training.
+
+**Why.** On the bench we planted the bias ourselves, and it is worth about 0.7 of the clean
+noise of the judge. On people we only have a calculation, made on the asylum judges of Chen,
+Moskowitz and Shue: between 0.002 and 0.01. Neither number measures how much, in a person,
+the noise of the judgment can be read from a trace, nor how much removing it gives back. The
+data to measure it are public: the collection of Rahnev and colleagues (2020, Confidence
+Database, `osf.io/s46pr`, CC0 licence) has, trial by trial, the stimulus, the response and
+the confidence stated by thousands of people in tasks with two answers.
+
+**What is measured.** For each person the graded judgment is the response with its
+confidence. The trace is the history of their previous trials, which says nothing about the
+stimulus about to arrive. The corrector is the blind machine of § 14: it does not see the
+stimulus, it knows only the person. `B` is the variance of the part of the judgment that the
+trace predicts, at equal class, divided by the variance of the rest.
+
+**Data and inclusion**, fixed before opening a data file (when this paragraph was written
+only the list of the folders of the OSF project had been read).
+
+- The files: every `data_*.csv` of the folder "Confidence Database".
+- Required columns: `Subj_idx`, `Stimulus`, `Response`, `Confidence`. Rows with a missing or
+  non-numeric value in one of the four are removed first; the history is computed on the
+  rows that remain.
+- Two-answer task: after cleaning, `Stimulus` and `Response` have the same two distinct
+  values. The other files stay out.
+- Confidence with at least three distinct values in the file, and oriented: over the whole
+  file the mean confidence of the correct responses exceeds that of the wrong ones.
+  Otherwise the file stays out.
+- Order: the rows of a person, in the order of the file, are their trials in the order in
+  which they did them. It is an assumption: where it does not hold, the measured bias is
+  smaller than the true one.
+- Person included: at least 400 valid trials, between 55 and 95 per cent correct, each class
+  in at least 20 per cent of the trials, at least three distinct confidence values.
+- File included: at least 10 included people. The unit that is resampled is the file.
+
+**The graded judgment.** For each person the trials are ordered from the most confident
+response for the first class to the most confident for the second (key: sign of the response
+times one plus the rank of the confidence), and each trial gets the normal score of its mean
+rank, `Phi^-1((rank - 0.5) / n)`, over all the trials of the person.
+
+**The trace**, three numbers known before the stimulus appears: the sign of the previous
+response, the previous graded judgment, the mean of the graded judgments of the twenty
+previous trials (of those that exist, if fewer). The first trial of each person stays out.
+
+**The estimators.**
+
+- `B` of a person: the least-squares regression of the judgment on the class (two means)
+  and on the three traces, over all their trials; partial `R^2` of the traces, adjusted for
+  the degrees of freedom (`1 - (1 - R^2)(n - 2)/(n - 5)`), and `B = R^2 / (1 - R^2)`. It can
+  come out negative.
+- The personal corrector: the slopes estimated on the first half of the trials of the person
+  are removed from the judgment in the second half. The gain `G` is the sensitivity of the
+  corrected judgment divided by that of the judgment as it is, both on the second half, from
+  the area under the ROC curve (`d' = sqrt(2) Phi^-1(AUC)`).
+- The corrector of everyone: the same slopes estimated on the first halves of the other
+  people of the same file (judgments and traces centred within person and class), applied to
+  the second half of the person.
+- The control: the trials of each person shuffled once (seed derived from the file name and
+  the person), and everything redone. There the history says nothing.
+- Summary: the median over people, with the 95 per cent interval from 2,000 resamplings of
+  the files.
+
+**Exploration and confirmation.** The files are split by a rule written beforehand: the first
+hexadecimal digit of the SHA-1 of the file name (lowercase) is 0, 1 or 2 for the exploration
+files, anything else for the confirmation files. The code is written and tested on simulated
+data and on the exploration files only, then recorded in the repository, and only then run
+once on the confirmation files. The criteria are read on the confirmation files; the
+exploration files are reported apart. Any change to the code after the first confirmation
+run goes under "Deviations".
+
+**Expectations.**
+
+- **P1, it is there (primary).** The median of `B` over people is greater than zero, with an
+  interval that excludes zero. In the shuffled control the interval of the median contains
+  zero, or the median is below 0.002 in absolute value.
+- **P2, it is small (primary).** The median gain of the personal corrector is below 1.02.
+  The article claims that cancelling the readable bias of a person gives back little: if the
+  median is 1.02 or more, it gives back more than we wrote, and the article says so.
+- **P3, it follows the formula.** For each person the predicted gain is
+  `G^2 = (1 + B_1) / (1 + 3/n_1)`, with `B_1` estimated as above on the first half only and
+  `n_1` the trials of the first half: it is (4) with the bias left after `n` judgments,
+  `p/n` with three traces. On the confirmation people the median of measured `G^2` minus
+  predicted `G^2` lies between -0.01 and 0.01, and the rank correlation between the two is
+  positive, with an interval that excludes zero.
+- **P4, tailored or for everyone (no threshold).** In how many people the personal corrector
+  gives more than the corrector of everyone, and by how much in the median.
+- Reported without a threshold: the share of people with `B` above 0.05 and above 0.2; the
+  tenth and ninetieth percentile of `B` and of `G`; the angle between the error of the
+  person and that of the corrector, `arccos(-sqrt(B/(1 + B)))`, at the median of `B`.
+
+**What it does not say.** The trace is one family only, the history of the trials, chosen
+beforehand from the literature (Fründ, Wichmann and Macke, 2014): biases readable from
+something else do not enter. The stated confidence is a scale with a few steps, not a
+continuous cue. The tasks are perceptual or memory tasks, in the laboratory. And the plan was
+written by those who run it, on the same day: the split between exploration and confirmation
+prevents choosing estimators and thresholds while looking at the confirmation files, it does
+not replace a replication done by others.
+
 ## Deviations
 
 All dated 10 November 2026. The first come from the runs; the others are choices of the
@@ -1133,6 +1234,11 @@ and touch neither criteria nor outcomes.
   0.79 and 1.33). The excess of the theorem is that of the best use of the three cues and
   depends on the machine; the branch, trained on the sum at face value, does not. They
   coincide where the machine sees a quarter.
+- **The turing of the pair, one factor and two addends** (`analysis/factors.py`, `results/pair_factors.json`). The theorem of § 14
+  divided by what the judge is worth alone: with the partner `Tu^2 = (1 + B)(q^2 + p)`, with
+  `q = d_m / d_h` and `p = (1 - r q)^2 / (1 - r^2)`; with the soloist `p` shrinks by
+  `(1 - r^2) / (1 - r^2 + B)`, with the blind machine `1 + B` is left. It is the same algebra
+  rearranged (`cognitive_resonance.chart.pair_factors`), read on the files of E1, E8 and E10.
 - **Why the prediction of E12 was wrong** (`analysis/yesno.py`, fields `kappa_corrected` and
   `predicted_yes_no_corrected`, added afterwards). The probit slope is in units of the clean
   noise; bringing it to the units of the whole cue with the same estimate shrinks its error
@@ -1191,3 +1297,80 @@ same run, with seeds never used before. The three readings made after the result
 (informative trace, how many judgments, new branch against old) become three tests with
 their expectations written beforehand; the thresholds come from the old data, and say so.
 It touches neither the criteria nor the outcomes of the registered tests.
+
+**E13, before the confirmation run.** From 20 November 2026, on the exploration files only
+(35 files, 12 included, 464 people) and on simulated people, with the confirmation files
+never opened.
+
+- **Reading the files.** Some files have a byte-order mark at the start of the header, or
+  the column names in lowercase: with the first version of the code they looked as if the
+  required columns were missing. The header is now read without that mark and without
+  regard to case.
+- **Stimulus and response written as words.** § 19 removed the rows with a non-numeric
+  value in one of the four columns, and so left out the files that write the two answers as
+  words ("old" and "new"). Stimulus and response are now read as labels: the files in which
+  they have the same two values stay in. Confidence stays a number.
+- **A guard.** The gain of a person is not computed if in the second half the sensitivity
+  of the judgment as it is lies below 0.2; how many they are is reported.
+- **One more measure, with no threshold.** On simulated people with a confidence scale of
+  four steps the corrector gives more than the formula of P3, because the trace also
+  reorders the trials that fell on the same step. Next to the gain from the area under the
+  curve we report the one with the sensitivity as the difference of the means over the
+  within-class deviation, which does not see the order inside a step.
+- **What was seen on the exploration files**, for the record: median `B` 0.011, median gain
+  of the personal corrector 0.998. Expectations and thresholds of P1-P4 do not change.
+
+**Readings added after two independent reviews.** From 20 and 21 November 2026. They are not
+tests, and have no criteria.
+
+- **A shortcut costs twice** (`analysis/shortcut.py`, `results/shortcut.json`), on the files
+  of E1. In training the frame says something about the class, at test it does not: there
+  it is a readable bias. For every network we measure the sensitivity as it is, the one with
+  the frame removed, and the sensitivity of the network of the same task, seed and role
+  trained without the shortcut. Removing the frame gives back what the bias covered, not
+  what the network did not learn from the image while it leaned on the frame.
+- **E13, file by file** (`analysis/people_bias.py`): after the confirmation run the medians
+  of `B` and of the gain by file were added, with the count of the files in which they are
+  above zero and above one. In the output people are numbered in the order of the file,
+  without their identifier. Medians and criteria of the confirmation run do not change.
+- **Three calculations of the model** (`cognitive_resonance.chart`): the proposition written
+  in `d'^2`, where the parts add up (`pair_information`); two opposite errors as one hidden
+  common cause entering with opposite signs (`opposite_errors_as_a_common_cause`); how much
+  of a bias stays if no correction larger than a ceiling reaches the person
+  (`left_under_a_ceiling`), and how much if the correction is shown apart and the person
+  applies a share of it (`left_by_an_open_warning`).
+- **P3 of E13 does not pass**, and the explanation came first on simulated people and then
+  on the data: with a confidence scale of a few steps the corrector gives a little more than
+  the formula. It stands as an explanation, not as a criterion.
+
+**E13, checks added after two more reviews.** From 21 November 2026. They are not tests, have
+no criteria, and touch neither the medians nor the outcomes of the confirmation run.
+
+- **The answers counted** (`cognitive_resonance.readable.decisions`). The gain of P2 is in the
+  sensitivity of the graded judgment. Here the answers are counted: the threshold that
+  separates the two answers in the judgment of the person is applied to the corrected
+  judgment (with the traces centred on the first half), and we look at how many answers
+  change, how many for the better and how many for the worse.
+- **The tails.** Tenth and ninetieth percentile of the gain with the trials shuffled, next to
+  the real ones; and the gain, on the second half, of the tenth of the people with the largest
+  `B` on the first.
+- **A corrector in between** (`shrunk_slopes`). The slopes of the person pulled towards those of
+  the other people of the file. How hard is chosen file by file on the first halves alone
+  (first quarter against second), among seven weights from zero (the person alone) to a
+  billion trials (the group alone).
+- **The files one by one** (`analysis/people_audit.py`, `results/e13_people_audit.json`). Where a
+  file has a column that counts the trials, whether the rows follow it. Whether one value of
+  the confidence covers more than four fifths of the trials. Whether the three traces predict
+  the class (area under the curve on the second half outside 0.5 ± 0.02) or the stimulus
+  repeats far from half of the time (± 0.03). Then the medians read again without the
+  doubtful files.
+- **A second implementation** (`analysis/people_bias_second.py`,
+  `results/e13_second_implementation.json`). The same analysis written again by a separate
+  agent that was given only § 19 and the choices fixed before the confirmation, without the
+  numbers seen on the exploration files and without the first code. Same files, same people,
+  same medians.
+
+Version 2.4, of the same day, comes from two independent reviews of the article and before
+opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
+people, on the public data of the Confidence Database. It does not touch criteria or
+outcomes of the recorded tests.
