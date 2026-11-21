@@ -1428,6 +1428,27 @@ no criteria, and touch neither the medians nor the outcomes of the confirmation 
   numbers seen on the exploration files and without the first code. Same files, same people,
   same medians.
 
+**Readings added after three more reviews.** From 21 November 2026. They are not tests, and
+have no criteria: the data of E13 had already been seen.
+
+- **The curve of personalisation** (`analysis/people_more.py`, `results/e13_people_more.json`).
+  The corrector of a person learns from the `n` trials just before the second half
+  (`n` = 50, 100, 200, 400, 800), that of the group from the first halves of the other
+  people of the file, the one in between brings the first closer to the second with the
+  weight chosen for that file by E13. All three are measured on the second half of the
+  person.
+- **What the definition leaves out** (same script). The best threshold learned on the first
+  half and applied to the second; a map from every step of the judgment to the log-odds of
+  the class measured on the first half, read on the second.
+- **A bias that depends on uncertainty** (`analysis/nonadditive.py`,
+  `results/nonadditive.json`). A simulation, with no data: the push is `beta a k(h)`, with
+  `k` falling as the clean cue moves away from zero and the same variance for every width;
+  the judgment as it is, a linear corrector and one that knows the shape of `k` are
+  compared.
+- **One person, step by step** (`analysis/people_by_hand.py`). It prints every intermediate
+  quantity of E13 for one person of one file, so that a human can redo the count by hand or
+  in a spreadsheet. It does not enter the analysis.
+
 Version 2.4, of the same day, comes from two independent reviews of the article and before
 opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
 people, on the public data of the Confidence Database. It does not touch criteria or

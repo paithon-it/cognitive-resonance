@@ -626,10 +626,55 @@ def shortcut(d):
     ])
 
 
+def e13_more(d):
+    c = d["confirmation"]
+    pc = lambda x: f(100.0 * (x - 1.0), 1)                                                          # noqa: E731
+    rows = [[r["n"], r["personal"]["people"], pc(r["personal"]["median"]), pc(r["between"]["median"]),
+             pc(r["group"]["median"]), f(100 * r["share_personal_above_group"], 0) + "%"] for r in c["curve"]]
+    fixed = [[r["n"], r["personal"]["people"], pc(r["personal"]["median"]), pc(r["between"]["median"]),
+              pc(r["group"]["median"])] for r in c["curve_people_with_800"]]
+    th, mp = c["threshold"], c["map"]
+    return "\n\n".join([
+        "## E13, the curve of personalisation and what the definition leaves out (added after the confirmation run)",
+        "`analysis/people_more.py`: two readings, not tests. *The curve.* The corrector of a person learns from the n "
+        "trials just before the second half; the corrector of the group from the first halves of the other people of the "
+        "file; the one in between pulls the first towards the second. Gain in sensitivity of the graded judgment on the "
+        "second half, in per cent, medians over the people who have at least n trials to learn from; last column, in how "
+        "many of them the personal corrector is above the group one.",
+        table(["n", "people", "personal", "in between", "group", "personal above group"], rows),
+        "The same on the people who have at least 800 trials to learn from, so that the columns compare the same people:",
+        table(["n", "people", "personal", "in between", "group"], fixed),
+        "*The threshold and the map.* The best threshold learned on the first half and applied to the second: right "
+        f"answers {f(100 * th['accuracy_own']['median'], 1)} per cent with the person's own threshold and "
+        f"{f(100 * th['accuracy_best_threshold']['median'], 1)} with the learned one; mean change "
+        f"{f(100 * th['change']['mean'], 2)} points, up in {f(100 * th['share_up'], 0)} per cent of the people and down in "
+        f"{f(100 * th['share_down'], 0)}. A map from every step of the judgment to the log-odds measured on the first half: "
+        f"mean change {f(100 * mp['change']['mean'], 1)} points; with many steps the map is noisy "
+        f"({f(100 * mp['share_with_steps_out_of_order'], 0)} per cent of the people have steps out of order in it).",
+    ])
+
+
+def nonadditive(d):
+    rows = [[f(r["beta"], 2), "additive" if r["tau"] is None else f(r["tau"], 1), f(r["as_it_is"]["kept"], 3),
+             f(r["linear"]["kept"], 3), f(r["linear_gives_back"], 2), f(100 * r["as_it_is"]["right_clear"], 1),
+             f(100 * r["linear"]["right_clear"], 1), f(100 * r["as_it_is"]["right_doubtful"], 1),
+             f(100 * r["linear"]["right_doubtful"], 1)] for r in d["rows"]]
+    return "\n\n".join([
+        "## A bias that depends on how unsure the person is (a simulation, added after the reviews)",
+        "`analysis/nonadditive.py`: no data. The push is beta a k(h), with k(h) proportional to exp(-h^2 / (2 tau^2)) and "
+        "the same variance beta^2 for every tau; the linear corrector removes the slope of the judgment on the trace. "
+        "Sensitivity kept over that of the clean cue; right answers on the clear cases (|h| > 1.5) and on the doubtful "
+        "ones (|h| < 0.5).",
+        table(["beta", "tau", "kept as it is", "kept with the linear corrector", "share of the loss it gives back",
+               "clear cases, as it is", "corrected", "doubtful cases, as it is", "corrected"], rows),
+    ])
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
             ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
             ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors), ("e13_people_bias.json", e13),
-            ("e13_people_audit.json", e13_audit), ("shortcut.json", shortcut))
+            ("e13_people_audit.json", e13_audit), ("e13_people_more.json", e13_more),
+            ("shortcut.json", shortcut), ("nonadditive.json", nonadditive))

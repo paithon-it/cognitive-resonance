@@ -1418,6 +1418,26 @@ hanno criteri, e non toccano le mediane né gli esiti della corsa di conferma.
   che ha avuto solo il § 19 e le scelte fissate prima della conferma, senza le cifre viste
   sull'esplorazione e senza il primo codice. Stessi file, stesse persone, stesse mediane.
 
+**Letture aggiunte dopo altre tre revisioni.** Del 21 novembre 2026. Non sono prove, e non
+hanno criteri: i dati di E13 erano già stati visti.
+
+- **La curva della personalizzazione** (`analysis/people_more.py`, `results/e13_people_more.json`).
+  Il correttore di una persona impara dalle `n` prove subito prima della seconda metà
+  (`n` = 50, 100, 200, 400, 800), quello del gruppo dalle prime metà delle altre persone del
+  file, quello fra i due avvicina il primo al secondo con il peso scelto per quel file da
+  E13. Tutti e tre si misurano sulla seconda metà della persona.
+- **Ciò che la definizione lascia fuori** (stesso script). La soglia migliore imparata sulla
+  prima metà e applicata alla seconda; una mappa da ogni gradino del giudizio alle quote
+  logaritmiche della classe misurate sulla prima metà, letta sulla seconda.
+- **Un pregiudizio che dipende dall'incertezza** (`analysis/nonadditive.py`,
+  `results/nonadditive.json`). Una simulazione, senza dati: la spinta vale
+  `beta a k(h)`, con `k` che scende quando l'indizio pulito è lontano da zero e la stessa
+  varianza per ogni larghezza; si confrontano il giudizio com'è, un correttore lineare e
+  uno che conosce la forma di `k`.
+- **Una persona, passo per passo** (`analysis/people_by_hand.py`). Stampa ogni grandezza
+  intermedia di E13 per una persona di un file, perché una persona possa rifare il conto a
+  mano o in un foglio di calcolo. Non entra nell'analisi.
+
 La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca

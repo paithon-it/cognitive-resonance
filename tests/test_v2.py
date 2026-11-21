@@ -899,3 +899,23 @@ def test_the_second_implementation_of_e13_gives_the_same_numbers():
         assert a[part]["gain_personal"]["median"] == pytest.approx(b[short]["median_G_personal_auc"], abs=1e-4)
         assert a[part]["gain_everyone"]["median"] == pytest.approx(b[short]["median_G_everyone"], abs=1e-4)
         assert a[part]["gain_moments"]["median"] == pytest.approx(b[short]["median_G_personal_moments"], abs=1e-3)
+
+
+def test_the_curve_of_personalisation_has_the_personal_corrector_below_the_group_with_few_trials():
+    path = ANALYSIS.parent / "results" / "e13_people_more.json"
+    if not path.exists():
+        pytest.skip("results/e13_people_more.json not there")
+    rows = json.loads(path.read_text())["confirmation"]["curve_people_with_800"]
+    personal = [r["personal"]["median"] for r in rows]
+    assert personal[0] < 1.0 < personal[-1] and all(a <= b + 1e-3 for a, b in zip(personal, personal[1:]))
+    assert rows[0]["personal"]["median"] < rows[0]["group"]["median"]
+
+
+def test_a_push_on_the_doubtful_cases_is_given_back_only_in_part_by_a_linear_corrector():
+    path = ANALYSIS.parent / "results" / "nonadditive.json"
+    if not path.exists():
+        pytest.skip("results/nonadditive.json not there")
+    rows = json.loads(path.read_text())["rows"]
+    for beta in {r["beta"] for r in rows}:
+        back = [r["linear_gives_back"] for r in rows if r["beta"] == beta]        # additive first, then tighter and tighter
+        assert back[0] == pytest.approx(1.0, abs=0.02) and all(a > b for a, b in zip(back, back[1:]))

@@ -791,6 +791,30 @@ Doubtful files: `data_Desender_2022_Exp1.csv`, `data_Desender_2022_Exp1S.csv`, `
 
 *A second implementation.* `analysis/people_bias_second.py` is the same analysis written again by a separate agent from § 19 of the protocol alone, without seeing the first script: same files, same people, and the same medians (`results/e13_second_implementation.json`; `tests/test_v2.py` compares the two).
 
+## E13, the curve of personalisation and what the definition leaves out (added after the confirmation run)
+
+`analysis/people_more.py`: two readings, not tests. *The curve.* The corrector of a person learns from the n trials just before the second half; the corrector of the group from the first halves of the other people of the file; the one in between pulls the first towards the second. Gain in sensitivity of the graded judgment on the second half, in per cent, medians over the people who have at least n trials to learn from; last column, in how many of them the personal corrector is above the group one.
+
+| n | people | personal | in between | group | personal above group |
+|---|---|---|---|---|---|
+| 50 | 1929 | -2.0 | 1.4 | 1.3 | 25% |
+| 100 | 1929 | -0.2 | 1.5 | 1.3 | 35% |
+| 200 | 1902 | 0.8 | 1.7 | 1.4 | 43% |
+| 400 | 509 | 1.0 | 1.3 | 1.0 | 51% |
+| 800 | 143 | 1.4 | 1.6 | 1.3 | 52% |
+
+The same on the people who have at least 800 trials to learn from, so that the columns compare the same people:
+
+| n | people | personal | in between | group |
+|---|---|---|---|---|
+| 50 | 143 | -2.7 | 1.2 | 1.3 |
+| 100 | 143 | -0.0 | 1.2 | 1.3 |
+| 200 | 143 | 0.7 | 1.3 | 1.3 |
+| 400 | 143 | 1.0 | 1.4 | 1.3 |
+| 800 | 143 | 1.4 | 1.6 | 1.3 |
+
+*The threshold and the map.* The best threshold learned on the first half and applied to the second: right answers 74.7 per cent with the person's own threshold and 74.6 with the learned one; mean change -0.26 points, up in 18 per cent of the people and down in 25. A map from every step of the judgment to the log-odds measured on the first half: mean change -2.5 points; with many steps the map is noisy (89 per cent of the people have steps out of order in it).
+
 ## What a shortcut costs twice (a reading added after the results)
 
 `analysis/shortcut.py`, on the files of E1: added on 20 November 2026, not a test. In training the frame says something about the class (strength mu); at test it says nothing, and is a readable bias. For every network: the sensitivity as it is, the sensitivity with the frame removed (slope of the cue on the frame, at equal class), and both over the sensitivity of the network of the same task, seed and role trained without the shortcut. Removing the bias gives back what the bias was covering; it does not give back what the network did not learn from the image while it leaned on the frame. Medians over five tasks, two seeds and three networks.
@@ -806,3 +830,18 @@ Doubtful files: `data_Desender_2022_Exp1.csv`, `data_Desender_2022_Exp1S.csv`, `
 | 2.00 | 30 | 8.14 | 0.59 | 1.81 | 0.175 | 0.532 | 0.43 |
 
 What is kept with the frame removed falls with mu in 5 tasks of 5 (rank correlation of -0.9 or below).
+
+## A bias that depends on how unsure the person is (a simulation, added after the reviews)
+
+`analysis/nonadditive.py`: no data. The push is beta a k(h), with k(h) proportional to exp(-h^2 / (2 tau^2)) and the same variance beta^2 for every tau; the linear corrector removes the slope of the judgment on the trace. Sensitivity kept over that of the clean cue; right answers on the clear cases (|h| > 1.5) and on the doubtful ones (|h| < 0.5).
+
+| beta | tau | kept as it is | kept with the linear corrector | share of the loss it gives back | clear cases, as it is | corrected | doubtful cases, as it is | corrected |
+|---|---|---|---|---|---|---|---|---|
+| 0.50 | additive | 0.895 | 1.000 | 1.00 | 98.0 | 98.0 | 55.6 | 62.0 |
+| 0.50 | 2.0 | 0.878 | 0.996 | 0.97 | 98.0 | 98.0 | 54.9 | 61.4 |
+| 0.50 | 1.0 | 0.864 | 0.972 | 0.79 | 98.0 | 98.0 | 54.1 | 58.1 |
+| 0.50 | 0.5 | 0.859 | 0.919 | 0.42 | 98.0 | 98.0 | 53.7 | 55.8 |
+| 0.85 | additive | 0.762 | 1.000 | 1.00 | 96.8 | 98.0 | 53.5 | 62.0 |
+| 0.85 | 2.0 | 0.747 | 0.988 | 0.95 | 97.6 | 98.0 | 53.0 | 60.2 |
+| 0.85 | 1.0 | 0.740 | 0.925 | 0.71 | 98.0 | 98.0 | 52.4 | 55.5 |
+| 0.85 | 0.5 | 0.747 | 0.824 | 0.31 | 98.0 | 98.0 | 52.2 | 53.7 |
