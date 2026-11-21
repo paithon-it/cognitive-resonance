@@ -226,7 +226,9 @@ Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RES
   `analysis/crossing.py` (E15), `gpu/judge.py`, `src/cognitive_resonance/opinion.py` and `analysis/llm_judge.py` (E16).
 - `gpu/`: the scripts that train the networks and write the raw cues.
 - `tests/`: the identities, the estimators on data simulated from the model, the readers.
-- `results/`: the derived results. The raw cues (`results/raw/**/*.npz`) are not tracked.
+- `results/`: the derived results. The raw cues (`results/raw/**/*.npz`) are not tracked. The judgments of the
+  language models of E16 are the exception (`results/raw/judge/*.npz`, a quarter of a megabyte): with them
+  `analysis/llm_judge.py`, `analysis/llm_judge_more.py` and `analysis/stakes.py` run with no GPU.
 
 ## Rerunning it
 
