@@ -1493,6 +1493,28 @@ exploration, to show where the confirmation starts from: `B` = 0.54; share given
 0.51, that is, on the edge of the band of J2, which is not moved; push in the most doubtful
 third 1.75 times that in the clearest third.
 
+**E14, E15 and E16: the runs.** From 21 November 2026; times are UTC, those of the repository
+come from the service that hosts it.
+
+- Protocol 2.5 (E14 and E15) reached the repository at 00:44 (`b9e2217`); the trainings
+  started at 00:48 and ended at 01:48 (E15, 25 units) and 02:20 (E14, 30 units), on one
+  GPU shared with the runs of E16. Nothing was changed after the start. While they ran,
+  the files already finished were read twice to try the analysis scripts; criteria and code
+  of the two tests were not touched after that.
+- **E15, the task with no predicted crossing.** For one task of five (airplane and ship) the
+  proposition already puts the generic machine above the corrector at the narrowest width
+  tried: there is no predicted crossing between 14 and 28 columns, and the task does not
+  count among those that pass X2 (4 of 5, as required). The measured crossing there is at
+  14.1 columns.
+- Protocol 2.6 (E16) reached the repository at 01:20 (`7879eb9`), what the exploration
+  changed at 01:26:10 (`5d14619`), and the confirmation of the primary judge started at
+  01:26:21. The other two judges ran afterwards with the same code and the same questions:
+  Phi-3.5-mini from 01:48, Qwen2.5-7B from 02:20, when the card had room. J2 does not pass:
+  the share given back is 0.487, below the 0.5 written beforehand.
+- The folder on the server was deleted after the files had been copied back and compared
+  (same checksums); `analysis/manifest_later.py` writes the manifests of the three stages
+  from the per-unit records.
+
 **Readings added after three more reviews.** From 21 November 2026. They are not tests, and
 have no criteria: the data of E13 had already been seen.
 

@@ -845,3 +845,91 @@ What is kept with the frame removed falls with mu in 5 tasks of 5 (rank correlat
 | 0.85 | 2.0 | 0.747 | 0.988 | 0.95 | 97.6 | 98.0 | 53.0 | 60.2 |
 | 0.85 | 1.0 | 0.740 | 0.925 | 0.71 | 98.0 | 98.0 | 52.4 | 55.5 |
 | 0.85 | 0.5 | 0.747 | 0.824 | 0.31 | 98.0 | 98.0 | 52.2 | 53.7 |
+
+## E14. What a shortcut leaves unlearned (protocol § 20)
+
+`gpu/shortcut.py`, `analysis/unlearned.py`. The "plus" networks of E1 again, three seeds, trained for 30 and for 90 epochs with shortcuts of four strengths. Two corrections applied afterwards: the frame removed from the output, and the last layer trained again where the frame says nothing (a logistic regression on the 192 features, fitted on the validation presentations). "Kept" is the sensitivity over that of the network of the same task, seed and length trained without the shortcut, with the frame removed from its output; the best is the higher of the two corrections. Medians over the five tasks of the median over the seeds; last column, the lowest and the highest task. The last layer trained again costs something of its own: on the network with no shortcut it keeps less than 1, because it learns from fewer presentations.
+
+| epochs | strength in training | networks | kept, as it is | frame removed from the output | last layer trained again | the best of the two | tasks |
+|---|---|---|---|---|---|---|---|
+| 30 | 0.00 | 15 | 1.000 | 1.000 | 0.971 | 1.000 | 1.00 to 1.00 |
+| 30 | 1.00 | 15 | 0.726 | 0.928 | 0.899 | 0.928 | 0.89 to 0.97 |
+| 30 | 1.50 | 15 | 0.379 | 0.798 | 0.782 | 0.798 | 0.72 to 0.88 |
+| 30 | 2.00 | 15 | 0.173 | 0.532 | 0.660 | 0.660 | 0.47 to 0.74 |
+| 90 | 0.00 | 15 | 1.000 | 1.000 | 0.983 | 1.000 | 1.00 to 1.00 |
+| 90 | 1.00 | 15 | 0.897 | 0.986 | 0.938 | 0.986 | 0.96 to 1.00 |
+| 90 | 1.50 | 15 | 0.560 | 0.890 | 0.874 | 0.890 | 0.88 to 0.96 |
+| 90 | 2.00 | 15 | 0.267 | 0.639 | 0.743 | 0.743 | 0.70 to 0.86 |
+
+- **L1** **passes**: at mu = 2 and 30 epochs, kept with the last layer retrained exceeds kept with the frame removed from the output by more than 0.05, in at least 4 tasks of 5. Numbers: tasks passing 5; median kept out 0.532; median kept last 0.660.
+
+- **L2** **passes**: at mu = 2 and 90 epochs, the best of the two corrections keeps less than 0.9, in at least 4 tasks of 5. Numbers: tasks passing 5; median kept best 0.743; kept best by task airplane-ship: 0.817, automobile-truck: 0.862, bird-frog: 0.723, cat-dog: 0.699, deer-horse: 0.743.
+
+- **L3** **passes**: the best of the two corrections falls with mu (rank correlation not above -0.9) at both lengths, in at least 4 tasks of 5. Numbers: tasks passing 5.
+
+From 30 to 90 epochs, at the strongest shortcut, the best of the two corrections changes by 0.157 (median over the tasks).
+
+## E15. The threshold crossed (protocol § 21)
+
+`gpu/crossing.py`, `analysis/crossing.py`. Judge, trained corrector, frames and seeds are those of E8; the generic machine is trained again at seven widths between the half and the whole image. For every width, the pair of the judge with the generic machine minus the pair of the judge with the corrector, at the best weights: measured, and predicted by the proposition from the measures on the judge and on the generic machine alone. Medians over the units.
+
+| columns the machine sees (of 28) | measured | predicted |
+|---|---|---|
+| 14 | -0.093 | -0.108 |
+| 16 | -0.021 | -0.009 |
+| 18 | 0.045 | 0.053 |
+| 20 | 0.119 | 0.130 |
+| 22 | 0.152 | 0.160 |
+| 24 | 0.182 | 0.186 |
+| 26 | 0.208 | 0.218 |
+| 28 | 0.226 | 0.233 |
+
+The width at which the two pairs cross, task by task on the median of the seeds:
+
+| task | seeds | measured crossing | predicted crossing |
+|---|---|---|---|
+| airplane-ship | 5 | 14.1 | n/a |
+| automobile-truck | 5 | 16.8 | 15.2 |
+| bird-frog | 5 | 16.9 | 16.9 |
+| cat-dog | 5 | 16.1 | 15.9 |
+| deer-horse | 5 | 19.3 | 19.0 |
+
+- **X1** **passes**: for every task, on the median of the seeds, D1 minus the pair with the corrector changes sign only once between 14 and 28 columns, from negative to positive. Numbers: tasks passing 5.
+
+- **X2** **passes**: the measured crossing is at most 3 columns from the predicted one, in at least 4 tasks of 5. Numbers: tasks passing 4; median gap in columns 0.238.
+
+- **X3** **passes**: at 14 columns the generic machine trained again is within 0.03 of the sensitivity of that of E8, median over the units. Numbers: median relative difference 0.003.
+
+## E16. A judge with a bias nobody planted (protocol § 22)
+
+`gpu/judge.py`, `analysis/llm_judge.py`. A language model answers two-option questions of MMLU with a known answer, three times each: with no opinion, with whoever asks saying "I think the answer is A", and saying B. The trace is the opinion it meets, drawn at random. The corrector learns the slope of the judgment on the trace on the first half of the questions and removes it on the second; "kept" is the sensitivity over that of the same judge with no opinion, on the same questions; the share given back is how much of the sensitivity lost returns. Intervals at 95 per cent, resampling the questions.
+
+| judge | questions | B | sensitivity with no opinion | kept, as it is | kept, corrected | share given back | push, most doubtful third over clearest |
+|---|---|---|---|---|---|---|---|
+| Qwen2.5 1.5B (primary) | 6000 | 0.48 (0.43 to 0.52) | 1.43 | 0.715 | 0.854 | 0.49 (0.37 to 0.53) | 1.73 |
+| Phi-3.5 mini | 6000 | 0.63 (0.58 to 0.69) | 1.87 | 0.635 | 0.782 | 0.40 (0.34 to 0.46) | 3.00 |
+| Qwen2.5 7B | 6000 | 0.04 (0.03 to 0.06) | 2.02 | 0.933 | 0.953 | 0.30 (0.13 to 0.42) | 8.50 |
+
+Right answers out of a hundred on the second half: at threshold zero, and with the threshold learned on the first half (added after the exploration); last two columns, the judge as it is when the opinion it meets is right and when it is wrong.
+
+| judge | no opinion | as it is | corrected | no opinion, threshold | as it is, threshold | corrected, threshold | opinion right | opinion wrong |
+|---|---|---|---|---|---|---|---|---|
+| Qwen2.5 1.5B (primary) | 75.2 | 67.5 | 71.4 | 75.1 | 67.6 | 71.5 | 91.6 | 42.9 |
+| Phi-3.5 mini | 81.5 | 70.5 | 74.5 | 81.1 | 69.4 | 74.7 | 96.0 | 44.4 |
+| Qwen2.5 7B | 83.7 | 81.4 | 82.3 | 83.4 | 81.7 | 82.0 | 89.6 | 72.9 |
+
+- **J1** **passes**: for the primary judge the bias readable from the opinion it meets is at least 0.2. Numbers: b 0.479.
+
+- **J2** **does not pass**: a linear corrector learned on half of the questions gives back between 0.5 and 0.95 of the sensitivity lost to the opinion, on the other half. Numbers: gives back 0.487.
+
+- **J3** **passes**: the mean push in the most doubtful third of the questions is at least 1.2 times that in the clearest third. Numbers: ratio 1.732.
+
+How many judgments the corrector needs (primary judge; medians over 200 draws):
+
+| judgments | kept, corrected | share given back |
+|---|---|---|
+| 10 | 0.833 | 0.42 |
+| 20 | 0.844 | 0.45 |
+| 50 | 0.852 | 0.48 |
+| 100 | 0.852 | 0.48 |
+| 500 | 0.854 | 0.49 |

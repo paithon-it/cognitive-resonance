@@ -1,0 +1,107 @@
+{
+ "protocol": "§ 22, E16",
+ "split": "validation",
+ "judges": {
+  "qwen2.5-1.5b-instruct": {
+   "questions": 1414,
+   "beta": 4.221944653945287,
+   "b": 0.5400121763054668,
+   "beta_learned": 4.140549991410595,
+   "d_clean": 1.4857657517910934,
+   "d_as_it_is": 1.0913699500479837,
+   "d_corrected": 1.2925982401190572,
+   "kept_as_it_is": 0.7345504826264404,
+   "kept_corrected": 0.8699879093059102,
+   "gives_back": 0.510219148331969,
+   "gain_corrected": 1.1843813732110053,
+   "right_clean": 0.7553041018387553,
+   "right_as_it_is": 0.7072135785007072,
+   "right_corrected": 0.7114568599717115,
+   "right_clean_with_threshold": 0.7581329561527581,
+   "right_as_it_is_with_threshold": 0.7072135785007072,
+   "right_corrected_with_threshold": 0.727015558698727,
+   "threshold_as_it_is": 0.921875,
+   "threshold_corrected": 4.867262508589405,
+   "right_when_opinion_is_right": 0.9393139841688655,
+   "right_when_opinion_is_wrong": 0.43902439024390244,
+   "push": {
+    "mean": 4.160134149575672,
+    "sd": 2.4236853060488657,
+    "share_towards_the_opinion": 0.9717114568599717,
+    "mean_by_third_of_doubt": [
+     4.9062830338266386,
+     4.7729222074468085,
+     2.799329883227176
+    ],
+    "most_doubtful_over_clearest": 1.752663401060287,
+    "spearman_with_clearness": -0.4021261935917333,
+    "shift_of_the_middle": 3.7225884770959374
+   },
+   "predicted_gain_if_additive": 1.264410130472683,
+   "threshold": {
+    "learned": -0.984375,
+    "right_clean_at_zero": 0.7553041018387553,
+    "right_clean_at_learned": 0.7581329561527581,
+    "mean_of_the_judgment": 1.5292830622347948
+   },
+   "intervals": {
+    "b": {
+     "lo": 0.44967196202096404,
+     "hi": 0.6445998992112009
+    },
+    "kept_as_it_is": {
+     "lo": 0.6324735350093185,
+     "hi": 0.8018129222334827
+    },
+    "kept_corrected": {
+     "lo": 0.785437926137314,
+     "hi": 0.921325588750438
+    },
+    "gives_back": {
+     "lo": 0.32725777115620547,
+     "hi": 0.6605309710090924
+    },
+    "right_gain": {
+     "lo": -0.018387553041018356,
+     "hi": 0.04667609618104662
+    },
+    "right_gain_with_threshold": {
+     "lo": -0.008486562942008447,
+     "hi": 0.06647807637906644
+    }
+   },
+   "with_few_judgments": [
+    {
+     "judgments": 10,
+     "kept_corrected": 0.8491081143105321,
+     "gives_back": 0.43156089646559054,
+     "kept_corrected_p10": 0.7508177037010743
+    },
+    {
+     "judgments": 20,
+     "kept_corrected": 0.8616265628614865,
+     "gives_back": 0.47872032879312254,
+     "kept_corrected_p10": 0.820582891751912
+    },
+    {
+     "judgments": 50,
+     "kept_corrected": 0.8676666531528596,
+     "gives_back": 0.5014745245857375,
+     "kept_corrected_p10": 0.8508097777866673
+    },
+    {
+     "judgments": 100,
+     "kept_corrected": 0.8690007424282079,
+     "gives_back": 0.5065002985579343,
+     "kept_corrected_p10": 0.8627510228357725
+    },
+    {
+     "judgments": 500,
+     "kept_corrected": 0.8699879093059102,
+     "gives_back": 0.510219148331969,
+     "kept_corrected_p10": 0.8693490474922588
+    }
+   ]
+  }
+ }
+}

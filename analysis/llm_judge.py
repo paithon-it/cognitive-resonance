@@ -75,6 +75,7 @@ def main() -> None:
     split = sys.argv[1] if len(sys.argv) > 1 else "test"
     files = sorted((ROOT / "results" / "raw" / "judge").glob(f"*_{split}.npz"))
     judges = {f.stem[: -len(split) - 1]: judge(f) for f in files}
+    judges = {k: judges[k] for k in sorted(judges, key=lambda k: (k != PRIMARY, k))}            # the primary judge first
     out = {"protocol": "§ 22, E16", "split": split, "judges": judges}
     if PRIMARY in judges and split == "test":
         p = judges[PRIMARY]

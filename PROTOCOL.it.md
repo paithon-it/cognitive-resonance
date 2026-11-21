@@ -1480,6 +1480,28 @@ risposte. I criteri J1, J2 e J3 non cambiano. Valori dell'esplorazione, perché 
 dove parte la conferma: `B` = 0,54; quota restituita 0,51, cioè sul bordo della fascia di
 J2, che non si sposta; spinta nel terzo più incerto 1,75 volte quella nel terzo più chiaro.
 
+**E14, E15 ed E16: le corse.** Del 21 novembre 2026; le ore sono UTC, quelle del repository
+vengono dal servizio che lo ospita.
+
+- Il protocollo 2.5 (E14 ed E15) è arrivato nel repository alle 00:44 (`b9e2217`); gli
+  addestramenti sono partiti alle 00:48 e finiti alle 01:48 (E15, 25 unità) e alle 02:20
+  (E14, 30 unità), su una GPU condivisa con le corse di E16. Dopo la partenza non è stato
+  cambiato niente. Mentre giravano, i file già finiti sono stati letti due volte per provare
+  gli script di analisi; criteri e codice delle due prove non sono stati toccati dopo.
+- **E15, il compito senza incrocio previsto.** Per un compito su cinque (aereo e nave) la
+  proposizione mette la macchina generica sopra il correttore già alla larghezza più stretta
+  provata: fra 14 e 28 colonne non c'è un incrocio previsto, e il compito non conta fra
+  quelli che passano X2 (4 su 5, quanti ne servivano). L'incrocio misurato lì è a 14,1
+  colonne.
+- Il protocollo 2.6 (E16) è arrivato nel repository alle 01:20 (`7879eb9`), ciò che
+  l'esplorazione ha cambiato alle 01:26:10 (`5d14619`), e la conferma del giudice primario
+  è partita alle 01:26:21. Gli altri due giudici sono venuti dopo, con lo stesso codice e
+  le stesse domande: Phi-3.5-mini dalle 01:48, Qwen2.5-7B dalle 02:20, quando la scheda
+  aveva posto. J2 non passa: la quota restituita è 0,487, sotto lo 0,5 scritto prima.
+- La cartella sul server è stata cancellata dopo aver copiato i file e averli confrontati
+  (stesse impronte); `analysis/manifest_later.py` scrive i manifest delle tre prove dai
+  resoconti delle singole unità.
+
 **Letture aggiunte dopo altre tre revisioni.** Del 21 novembre 2026. Non sono prove, e non
 hanno criteri: i dati di E13 erano già stati visti.
 

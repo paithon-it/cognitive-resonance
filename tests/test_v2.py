@@ -956,3 +956,40 @@ def test_the_best_threshold_finds_a_criterion_that_was_moved():
     g = 2.0 * (y - 0.5) + rng.standard_normal(20000) + 0.8
     cut = opinion.best_threshold(g, y)
     assert cut == pytest.approx(0.8, abs=0.15) and opinion.right(g, y, cut) > opinion.right(g, y) + 0.02
+
+
+def _result(name):
+    path = ANALYSIS.parent / "results" / name
+    if not path.exists():
+        pytest.skip(f"results/{name} not there")
+    return json.loads(path.read_text())
+
+
+def test_the_threshold_is_crossed_once_and_where_the_proposition_puts_it():
+    d = _result("e15_crossing.json")
+    gaps = [abs(b["crossing_measured"] - b["crossing_predicted"]) for b in d["by_task"]
+            if b["crossing_measured"] is not None and b["crossing_predicted"] is not None]
+    assert len(gaps) >= 4 and max(gaps) <= 3.0
+    for b in d["by_task"]:                                   # the generic machine overtakes the corrector as it sees more
+        assert b["measured"][0] < 0 < b["measured"][-1]
+
+
+def test_a_new_last_layer_and_a_longer_training_give_back_part_of_what_a_strong_shortcut_left():
+    d = _result("e14_unlearned.json")
+    row = {(r["epochs"], r["mu"]): r for r in d["table"]}
+    short, long = min(d["lengths"]), max(d["lengths"])
+    top = max(d["mus"])
+    assert row[(short, top)]["kept_last"] > row[(short, top)]["kept_out"]          # learned and not used
+    assert row[(long, top)]["kept_best"] > row[(short, top)]["kept_best"]          # learned later
+    assert row[(long, top)]["kept_best"] < 0.95                                    # and something is still missing
+    assert row[(short, 0.0)]["kept_out"] == pytest.approx(1.0)                     # the reference is the network itself
+
+
+def test_the_language_model_follows_the_opinion_and_a_linear_corrector_gives_back_part():
+    d = _result("e16_llm_judge.json")
+    assert d["judges"]["qwen2.5-1.5b-instruct"]["b"] > 0.2                       # the primary judge; a larger one gives way less
+    for j in d["judges"].values():
+        assert j["b"] > 0 and j["kept_as_it_is"] < j["kept_corrected"] < 1.0
+        assert j["right_as_it_is"] < j["right_corrected"] < j["right_clean"]
+        assert j["right_when_opinion_is_wrong"] < j["right_clean"] < j["right_when_opinion_is_right"]
+        assert j["push"]["mean_by_third_of_doubt"][0] > j["push"]["mean_by_third_of_doubt"][2]
