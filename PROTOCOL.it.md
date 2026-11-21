@@ -1,6 +1,6 @@
 # Risonanza cognitiva: protocollo
 
-Versione 2.4, 20 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
+Versione 2.6, 21 novembre 2026. Scritto e registrato nel repository **prima di ogni corsa**:
 ipotesi, stimatori e criteri stanno qui sotto, e ciò che cambierà dopo va nella sezione
 «Deviazioni» in fondo, con la data e il motivo. Lingua originale: italiano
 (`PROTOCOL.md` è la traduzione).
@@ -1041,6 +1041,114 @@ compiti sono percettivi o di memoria, di laboratorio. E il piano lo ha scritto c
 lo stesso giorno: la divisione fra esplorazione e conferma impedisce di scegliere stimatori
 e soglie guardando i file di conferma, non sostituisce una replica fatta da altri.
 
+## 20. E14. Che cosa lascia non imparato una scorciatoia
+
+Aggiunto con la versione 2.5, il 21 novembre 2026, dopo tre revisioni che chiedono la stessa
+cosa. La lettura sui file di E1 (`analysis/shortcut.py`) toglieva la cornice in un modo
+solo, sottraendo dall'uscita della rete la pendenza sulla cornice, e dopo 30 epoche: non
+distingue «non imparato» da «imparato e non usato», né da «imparato più tardi».
+
+**Che cosa si fa** (`gpu/shortcut.py`). Le reti «plus» di E1, con gli stessi semi, per
+scorciatoie di forza 0, 1, 1,5 e 2, tre semi (0, 1, 2), cinque compiti, addestrate per 30 e
+per 90 epoche. Per ogni rete due correzioni messe dopo: la cornice tolta dall'uscita, come
+prima, e l'ultimo strato riaddestrato (una regressione logistica sulle 192 caratteristiche
+prima dell'ultimo strato, sulle presentazioni di validazione, dove la cornice non dice
+niente; penalità 0,001 fissata prima), letta sulla prova. Il riferimento è la rete dello
+stesso compito, seme e durata addestrata senza scorciatoia (forza 0), con la cornice tolta
+dall'uscita. «Tenuto» è la sensibilità (dall'area sotto la curva) divisa per quella del
+riferimento; «il meglio» è la più alta fra le due correzioni. I conti sono per compito,
+sulla mediana dei semi.
+
+- **L1, l'ultimo strato rende di più (primaria).** A forza 2 e 30 epoche il tenuto con
+  l'ultimo strato riaddestrato supera di almeno 0,05 quello con la cornice tolta
+  dall'uscita, in almeno 4 compiti su 5.
+- **L2, qualcosa resta non imparato (primaria).** A forza 2 e 90 epoche il meglio delle
+  due correzioni tiene meno di 0,90, in almeno 4 compiti su 5. Se tiene 0,90 o più, la
+  frase «non l'ha imparato» cade: era imparato e non usato, o solo in ritardo, e l'articolo
+  lo dice.
+- **L3, la dose.** Il meglio delle due correzioni scende con la forza della scorciatoia
+  (correlazione per ranghi fra forza e tenuto non sopra -0,9) in almeno 4 compiti su 5, a
+  tutte e due le durate.
+- Senza soglia: quanto cambia il tenuto da 30 a 90 epoche, e il tenuto alle forze 1 e 1,5.
+
+## 21. E15. La soglia attraversata
+
+Aggiunto con la versione 2.5. In E8 la soglia della proposizione (chi vince, accanto al
+giudice, fra il correttore e la macchina generica) è provata solo lontano dalla soglia: la
+generica vede un quarto, metà o tutta la fotografia, e il correttore vince in 5 compiti su
+5 nei primi due casi e in nessuno nel terzo.
+
+**Che cosa si fa** (`gpu/crossing.py`). Giudice, correttore, cornici e semi sono quelli di
+E8 (i file grezzi di E8 non si toccano). Si addestra soltanto la macchina generica, con il
+suo seme di E8, a sette larghezze: 14, 16, 18, 20, 22, 24 e 26 colonne dell'interno su 28
+(14 è la metà di E8, rifatta come controllo). Per ogni compito, seme e larghezza si
+misurano, ai pesi migliori come in E8, la coppia del giudice con la generica (`D_1`) e con
+il correttore addestrato di E8, e la previsione della proposizione per `D_1` dalle sole
+misure sul giudice e sulla generica.
+
+- **X1, l'incrocio c'è.** Per ogni compito, sulla mediana dei semi, il segno di
+  `D_1` meno la coppia con il correttore cambia una volta sola fra 14 e 28 colonne (28 è
+  E8), da negativo a positivo.
+- **X2, dove dice la proposizione (primaria).** La larghezza a cui le due coppie si
+  incrociano (interpolazione lineare fra le due larghezze vicine) dista dalla larghezza a
+  cui si incrociano le due previsioni della proposizione al più 3 colonne, in almeno 4
+  compiti su 5.
+- **X3, la macchina di controllo.** A 14 colonne la sensibilità della generica rifatta
+  dista da quella di E8 meno del 3 per cento, in mediana sulle unità.
+
+Se X2 non passa, la soglia (3) descrive il banco solo lontano dalla soglia, e l'articolo lo
+dice.
+
+## 22. E16. Un giudice con un pregiudizio che nessuno ha piantato
+
+Aggiunto con la versione 2.6, il 21 novembre 2026. Tre revisioni chiedono la stessa prova:
+un giudice che non sia una rete del banco, con un pregiudizio che non abbiamo piantato noi
+e una traccia forte. Su persone la traccia disponibile (E13) è debole; sul banco il
+pregiudizio è costruito. Un modello linguistico usato come giudice sta in mezzo: il suo
+pregiudizio viene dall'addestramento di altri, e i giudizi si raccolgono a piacere.
+
+**Che cosa si fa** (`gpu/judge.py`, `analysis/llm_judge.py`,
+`src/cognitive_resonance/opinion.py`). Domande a due opzioni con risposta nota: da MMLU
+(`cais/mmlu`, licenza MIT) l'opzione giusta e una sbagliata estratta a sorte, in un ordine
+estratto a sorte; si scartano le domande oltre 1.200 caratteri. Ogni domanda si pone tre
+volte: senza opinione, con chi chiede che scrive «I think the answer is A», e con «I think
+the answer is B». Non si genera testo: si legge la differenza fra i punteggi delle due
+lettere al primo token della risposta, che è il giudizio graduato. La traccia è l'opinione
+che il giudice incontra, A o B, estratta a sorte per ogni domanda: non dice niente sulla
+risposta giusta. Il giudice «com'è» è il giudizio dato sotto l'opinione incontrata; quello
+senza opinione è il riferimento, che su una persona non si può osservare.
+
+Giudice primario: `Qwen/Qwen2.5-1.5B-Instruct` (pesi aperti, Apache 2.0). Altri due giudici,
+descrittivi e senza criteri, se entrano nella memoria della scheda: `microsoft/Phi-3.5-mini-instruct`
+e `Qwen/Qwen2.5-7B-Instruct`. **Esplorazione e conferma**: il codice si scrive e si prova
+sulla partizione `validation` di MMLU (1.531 domande); poi gira una volta sola su 6.000
+domande della partizione `test`, estratte con un seme che dipende solo dal nome della
+partizione. Ciò che l'esplorazione fa cambiare va nelle Deviazioni prima della conferma.
+
+**Misure.** Pendenza del giudizio sulla traccia a parità di risposta giusta, e `B`, varianza
+della spinta sulla varianza del resto, come sul banco. Un correttore lineare impara la
+pendenza sulla prima metà delle domande e la toglie nella seconda: sensibilità (dall'area
+sotto la curva) del giudice com'è e del giudice corretto, sopra quella dello stesso giudice
+senza opinione, sulle stesse domande; quota restituita, cioè quanta della sensibilità persa
+torna con la correzione; risposte giuste nei tre casi. La spinta domanda per domanda (metà
+della distanza fra i due giudizi) secondo quanto il giudice è incerto senza opinione.
+Intervalli al 95 per cento ricampionando le domande.
+
+- **J1, il pregiudizio è grande (primaria).** Per il giudice primario `B` è almeno 0,2:
+  più di dieci volte la mediana misurata sulle persone (0,015).
+- **J2, la correzione restituisce molto, non tutto (primaria).** La quota restituita sta fra
+  0,5 e 0,95. Se la spinta fosse un addendo, come nella proposizione, sarebbe 1; la
+  simulazione con una spinta che pesa sui casi dubbi dava fra 0,31 e 0,79.
+- **J3, la spinta pesa sui casi dubbi.** La spinta media nel terzo di domande più incerte è
+  almeno 1,2 volte quella nel terzo più chiaro.
+- Senza soglia: quanti giudizi servono al correttore (10, 20, 50, 100, 500); la preferenza
+  per una lettera, che è una soglia spostata e non un pregiudizio nel senso dell'articolo;
+  gli altri due giudici.
+
+È una macchina al posto della persona, non una persona. Dice che cosa succede alla
+proposizione con un pregiudizio non additivo e forte; non dice niente su che cosa una
+persona fa di un'opinione.
+
 ## Deviazioni
 
 Tutte del 10 novembre 2026. Le prime vengono dalle corse; le altre sono scelte
@@ -1360,7 +1468,72 @@ hanno criteri, e non toccano le mediane né gli esiti della corsa di conferma.
   che ha avuto solo il § 19 e le scelte fissate prima della conferma, senza le cifre viste
   sull'esplorazione e senza il primo codice. Stessi file, stesse persone, stesse mediane.
 
+**E16, dopo l'esplorazione e prima della conferma.** Del 21 novembre 2026. Sulle 1.414
+domande della partizione `validation` che restano sotto i 1.200 caratteri (di 1.531) il
+giudice primario preferisce una lettera (senza opinione il giudizio medio è +1,5) e la frase
+con l'opinione sposta quella preferenza: a soglia zero il giudice corretto dà circa le
+stesse risposte giuste di quello non corretto, anche se la sua sensibilità è più alta.
+Aggiunto, senza criteri: le risposte giuste contate anche con la soglia che ne dà di più
+sulla prima metà delle domande, per i tre giudizi (senza opinione, com'è, corretto). Nella
+lettura con pochi giudizi il correttore impara da campioni che contengono tutte e due le
+risposte. I criteri J1, J2 e J3 non cambiano. Valori dell'esplorazione, perché si veda da
+dove parte la conferma: `B` = 0,54; quota restituita 0,51, cioè sul bordo della fascia di
+J2, che non si sposta; spinta nel terzo più incerto 1,75 volte quella nel terzo più chiaro.
+
+**E14, E15 ed E16: le corse.** Del 21 novembre 2026; le ore sono UTC, quelle del repository
+vengono dal servizio che lo ospita.
+
+- Il protocollo 2.5 (E14 ed E15) è arrivato nel repository alle 00:44 (`b9e2217`); gli
+  addestramenti sono partiti alle 00:48 e finiti alle 01:48 (E15, 25 unità) e alle 02:20
+  (E14, 30 unità), su una GPU condivisa con le corse di E16. Dopo la partenza non è stato
+  cambiato niente. Mentre giravano, i file già finiti sono stati letti due volte per provare
+  gli script di analisi; criteri e codice delle due prove non sono stati toccati dopo.
+- **E15, il compito senza incrocio previsto.** Per un compito su cinque (aereo e nave) la
+  proposizione mette la macchina generica sopra il correttore già alla larghezza più stretta
+  provata: fra 14 e 28 colonne non c'è un incrocio previsto, e il compito non conta fra
+  quelli che passano X2 (4 su 5, quanti ne servivano). L'incrocio misurato lì è a 14,1
+  colonne.
+- Il protocollo 2.6 (E16) è arrivato nel repository alle 01:20 (`7879eb9`), ciò che
+  l'esplorazione ha cambiato alle 01:26:10 (`5d14619`), e la conferma del giudice primario
+  è partita alle 01:26:21. Gli altri due giudici sono venuti dopo, con lo stesso codice e
+  le stesse domande: Phi-3.5-mini dalle 01:48, Qwen2.5-7B dalle 02:20, quando la scheda
+  aveva posto. J2 non passa: la quota restituita è 0,487, sotto lo 0,5 scritto prima.
+- La cartella sul server è stata cancellata dopo aver copiato i file e averli confrontati
+  (stesse impronte); `analysis/manifest_later.py` scrive i manifest delle tre prove dai
+  resoconti delle singole unità.
+
+**Letture aggiunte dopo altre tre revisioni.** Del 21 novembre 2026. Non sono prove, e non
+hanno criteri: i dati di E13 erano già stati visti.
+
+- **La curva della personalizzazione** (`analysis/people_more.py`, `results/e13_people_more.json`).
+  Il correttore di una persona impara dalle `n` prove subito prima della seconda metà
+  (`n` = 50, 100, 200, 400, 800), quello del gruppo dalle prime metà delle altre persone del
+  file, quello fra i due avvicina il primo al secondo con il peso scelto per quel file da
+  E13. Tutti e tre si misurano sulla seconda metà della persona.
+- **Ciò che la definizione lascia fuori** (stesso script). La soglia migliore imparata sulla
+  prima metà e applicata alla seconda; una mappa da ogni gradino del giudizio alle quote
+  logaritmiche della classe misurate sulla prima metà, letta sulla seconda.
+- **Un pregiudizio che dipende dall'incertezza** (`analysis/nonadditive.py`,
+  `results/nonadditive.json`). Una simulazione, senza dati: la spinta vale
+  `beta a k(h)`, con `k` che scende quando l'indizio pulito è lontano da zero e la stessa
+  varianza per ogni larghezza; si confrontano il giudizio com'è, un correttore lineare e
+  uno che conosce la forma di `k`.
+- **Una persona, passo per passo** (`analysis/people_by_hand.py`). Stampa ogni grandezza
+  intermedia di E13 per una persona di un file, perché una persona possa rifare il conto a
+  mano o in un foglio di calcolo. Non entra nell'analisi.
+
 La versione 2.4, dello stesso giorno, viene da due revisioni indipendenti dell'articolo e
 prima di aprire un file di dati della prova che aggiunge: E13 (§ 19), la misura del
 pregiudizio che si legge su persone, sui dati pubblici del Confidence Database. Non tocca
 criteri né esiti delle prove registrate.
+
+La versione 2.5, del 21 novembre 2026, viene da altre tre revisioni dell'articolo e prima di
+ogni addestramento delle due prove che aggiunge: E14 (§ 20), che cosa una scorciatoia lascia
+non imparato, con l'ultimo strato riaddestrato e un addestramento tre volte più lungo, ed E15
+(§ 21), la soglia della proposizione attraversata a passi fini. Non tocca criteri né esiti
+delle prove registrate.
+
+La versione 2.6, dello stesso giorno, aggiunge prima di ogni sua esecuzione E16 (§ 22): un
+modello linguistico come giudice, con l'opinione di chi chiede come traccia. Non tocca
+criteri né esiti delle prove registrate; E14 ed E15 erano in esecuzione quando è stata
+scritta, e i loro file non erano stati analizzati per intero.

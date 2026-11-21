@@ -2,45 +2,87 @@
 
 > **English** · [Italiano](README.it.md)
 
-**When two minds err in opposite directions, their errors cancel. How far does the
-pair go, and does it behave like a resonant circuit?**
+**A machine built on its user, one that knows their errors and errs the other way: is the
+pair worth far more than the two? That was the hypothesis. It did not hold.**
 
-This is the sequel to [turing-meter](https://github.com/paithon-it/turing-meter) and to
-its first experiment, `angle-between-errors`, the measurements behind the paithon.it
-article [*Intelligenza apparente*](https://paithon.it/intelligenza-apparente/) (in
-Italian; doi:[10.5281/zenodo.24107649](https://doi.org/10.5281/zenodo.24107649)). There
-the angle `phi` between the errors of a person and of a machine was measured between 59
-and 81 degrees, and the region beyond 90 degrees was left unexplored. Here we go there.
+Against a person's error a machine can do one thing: cancel the part of it that can be
+read from a trace. Nothing measured here oscillates or is amplified, and the name of the
+repository is the name of the hypothesis. What is left is a unit for how much there is to
+cancel, a measure of what it costs to learn it, and a bench of small networks that checks
+the algebra. These are the measurements behind the paithon.it article
+[*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in Italian, with an
+English translation; doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)).
 
-> Status: **version 2, runs done** (19 November 2026). E0 to E5 are told in the paithon.it
-> article [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/) (in Italian;
-> doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Four new
-> experiments, E6 to E9, were **registered before their runs**: protocol 2.1 was pushed to
-> this repository before any training, on five seeds that no earlier run used; version 2.2
-> added a reading of E6 before any of its files existed. Of their 29 criteria, **25 pass
-> and 4 do not** (table below). On 20 November three readings made after those results became
-> three more tests, E10 to E12, registered with protocol 2.3 before their run, on seeds 7 to
-> 11: of their 15 criteria, **12 pass and 3 do not**. The same day a first test on people measured one by
-> one, E13, was registered with protocol 2.4 before a data file was opened: of its 3 criteria, **2 pass and 1 does not**. The protocol is in [`PROTOCOL.md`](PROTOCOL.md) (Italian
-> original [`PROTOCOL.it.md`](PROTOCOL.it.md)); what changed after a run is in its
-> "Deviations" section.
+It is the sequel to [turing-meter](https://github.com/paithon-it/turing-meter) and to its
+first experiment, `angle-between-errors`, the measurements behind
+[*Intelligenza apparente*](https://paithon.it/intelligenza-apparente/) (in Italian;
+doi:[10.5281/zenodo.24107649](https://doi.org/10.5281/zenodo.24107649)). There the angle
+`phi` between the errors of a person and of a machine lay between 59 and 81 degrees, and
+the region beyond 90 degrees was left unexplored. The first version of this project went
+there by reading the pair as a resonant circuit ("The identity", below). That reading is
+exact as algebra; it does not give a machine that errs opposite to a person where it cannot
+read the person's error.
+
+> Status: **protocol 2.6** (21 November 2026). The expectations of every test are written
+> and pushed to this repository before its run; the protocol is in
+> [`PROTOCOL.md`](PROTOCOL.md) (Italian original [`PROTOCOL.it.md`](PROTOCOL.it.md)), and
+> what changed after a run is in its "Deviations" section. They are written by the same
+> system that then runs the tests, minutes before, and on the bench with thresholds sized
+> on earlier runs of the same tasks: they keep a threshold from being chosen afterwards,
+> and they are not preregistrations in the full sense. Code, analyses and reviews come from
+> language models; no human reader has checked this work yet.
+>
+> | Tests | Protocol | Criteria that pass |
+> |---|---|---|
+> | E6 to E9, on the bench | 2.1 and 2.2, 19 November | 25 of 29 |
+> | E10 to E12, on the bench | 2.3, 20 November | 12 of 15 |
+> | E13, on people | 2.4, 20 November | 2 of 3 |
+> | E14 and E15, on the bench | 2.5, 21 November | 3 of 3 and 3 of 3 |
+> | E16, a language model as the judge | 2.6, 21 November | 2 of 3 |
+
+**Names.** The article calls *generic machine* what the code and the older tables call the
+soloist (`M`), *tailored machine* the partner (`Mramo`), *corrector* the blind corrector
+(`Mblind`), and *judge* the network that stands in for the person.
 
 ## In short
 
-- **What a machine built on its user can give.** It gives back the part of what the person knows, and the machine does
-  not, that the person's readable bias was covering, and nothing more: in squared sensitivity the pair is worth
-  `d_m^2 + P` with a machine that also reads the bias and `d_m^2 + P (1 - r^2) / (1 - r^2 + B)` with one that does not
-  (`cognitive_resonance.chart.pair_information`). It is the algebra of suppressor variables; the bench of small networks
-  checks that training gets where the algebra says, on five tasks, with a planted bias of about 0.7.
-- **How much there is to give back, on people.** On 1,968 people of the Confidence Database the bias readable from the
-  history of their own trials is worth 0.015 of the rest of the noise in the median. Removing it gives 1.1 per cent
-  of sensitivity to the graded judgment, and no more right answers (E13, plan registered before the data were
-  opened; a second implementation written from the protocol alone gives the same numbers).
-- **What no correction gives back.** A network trained with a shortcut learns less from the image: with the shortcut
-  removed at test it keeps from 0.94 to 0.53 of the sensitivity of its twin trained without it, the less the stronger
-  the shortcut (`results/shortcut.json`, a reading added afterwards).
-- **Opposite errors.** Errors in antiphase are a hidden common cause entering with opposite signs: a machine can build
-  them only on the part of the person's error it can read, and there building them is correcting.
+- **From the history of choices, no measurable gain.** On 1,968 people of the Confidence
+  Database the bias readable from the history of their own trials is worth 0.015 of the rest
+  of the noise in the median. Removing it leaves the right answers where they were (74.7 per
+  cent before, 74.8 after; they go down in 32 per cent of the people and up in 29). The
+  graded judgment gains 1.1 per cent of sensitivity, an effect of a scale with few steps. It is
+  a lower bound: one weak trace, laboratory tasks, no machine beside the person (E13; a
+  second implementation written from the protocol alone gives the same numbers).
+- **Knowing a person costs data.** On the people with at least 800 trials to learn from, a
+  corrector learned from a person's own trials takes away 2.7 per cent of sensitivity
+  with 50 trials, gives nothing with 100, and matches one learned from the other people only
+  at 800 (`results/e13_people_more.json`, a reading added afterwards).
+- **Where the bias is strong, correcting counts and is not enough.** A small open language
+  model answering 6,000 two-option questions follows the opinion of whoever asks: B = 0.48,
+  and right answers fall from 75.2 to 67.5 per cent. A corrector that knows only the
+  opinion brings them back to 71.4 and gives back 0.49 of the sensitivity lost, where the
+  expectation said at least half (E16; Phi-3.5 mini: B 0.63, share given back 0.40; Qwen2.5 7B: B 0.04, share given back 0.30).
+- **What a machine built on its user can give.** It gives back the part of what the person
+  knows, and the machine does not, that the person's readable bias was covering, and nothing
+  more: in squared sensitivity the pair is worth `d_m^2 + P` with a machine that also reads
+  the bias and `d_m^2 + P (1 - r^2) / (1 - r^2 + B)` with one that does not
+  (`cognitive_resonance.chart.pair_information`). It is the algebra of suppressor variables;
+  the bench of small networks checks that training gets where the algebra says, on five
+  tasks, with a planted bias of about 0.7.
+- **Where the corrector stops winning.** Beside the judge a corrector that knows nothing of
+  the task beats the generic machine until the machine sees between 14 and 19 columns
+  of 28; the proposition puts the crossing a median of 0.2 columns away (E15).
+- **What counts as a bias depends on the pair.** A trace that says something true deserves a
+  weight that grows with what the machine sees; only the excess is a bias, and a machine that
+  removes all of it does harm (E10, E11).
+- **What a strong shortcut leaves.** A network trained with a shortcut learns less from the
+  image. With the strongest shortcut, removing the frame from the output keeps 0.53 of the
+  sensitivity of its twin trained without it; retraining the last layer keeps 0.66; training
+  three times as long, 0.74. With a shortcut of strength 1 almost everything comes back
+  (0.99) (E14).
+- **Opposite errors.** Errors in antiphase are a hidden common cause entering with opposite
+  signs: a machine can build them only on the part of the person's error it can read, and
+  there building them is correcting.
 
 ## The identity
 
@@ -100,6 +142,9 @@ one page in [`docs/identity.md`](docs/identity.md).
 | E11 | on the same files: at a fixed weight, is a partner that removes the whole push worse than one that removes only the excess, and worse than no correction at all? (v2.3) | GPU runs |
 | E12 | on the same files: how many yes-or-no answers of the judge does a correction need, against judgments with a graded cue? (v2.3) | analysis |
 | E13 | on people: how much of the judgment of a person can be read from the history of their own trials, and what does a corrector that sees no stimulus give back? The Confidence Database (CC0), 180 files split into exploration and confirmation by the hash of their name before any was opened (v2.4) | analysis, public data |
+| E14 | what a shortcut leaves unlearned: the "plus" networks of E1 trained for 30 and 90 epochs, with the frame removed from the output and with the last layer trained again where the frame says nothing (v2.5) | GPU runs |
+| E15 | the threshold crossed: the generic machine of E8 trained again at seven widths between half and the whole image, to see where it overtakes the corrector beside the judge, and where the proposition says it should (v2.5) | GPU runs |
+| E16 | a judge with a bias nobody planted: an open language model on two-option questions of MMLU, with the opinion of whoever asks as the trace; the same question with no opinion gives the clean judgment (v2.6) | GPU runs, public data |
 
 What came out of the four new experiments (25 units each for E6, 75 for the others; medians
 over five tasks and five seeds):
@@ -121,6 +166,14 @@ What came out of the three tests of protocol 2.3 (50 files, seeds 7 to 11; media
 | E12 | 1 of 4 | **the prediction was too pessimistic.** With yes-or-no answers 25 judgments keep 90 per cent of the gain, against 15 with the graded cue: 1.6 times as many, where the registered band was 3 to 9 (Y2); Y1 misses by one unit (19 of 25) and Y3 fails with it. A factor was missing in the prediction, found afterwards: the bias left is kappa / (n (1 + B)^2), which gives 1.8 |
 | E13 | 2 of 3 | **the readable bias of people is small.** On the 1,968 people of the 44 confirmation files the median B is 0.015 (0.011 to 0.018), where the bench had about 0.7 planted; with the trials shuffled it is zero, and it is above zero in 42 files of 44 (P1). A corrector learned on the first half of the trials of a person gives 1.1 per cent of sensitivity on the second half (1.006 to 1.016; P2 asked for less than 2), and no more than a corrector learned on the other people of the same experiment. P3 does not pass: the corrector gives a little more than the formula, because on a confidence scale of a few steps the trace reorders trials that fell on the same step. Counting the answers themselves, the corrector gives no more right answers (74.7 per cent before, 74.8 after). Checks added afterwards: a second implementation written from the protocol alone gives the same numbers; without the ten doubtful files the medians do not move (`results/e13_people_audit.json`) |
 
+What came out of the three tests of protocols 2.5 and 2.6 (21 November):
+
+| | Criteria that pass | In short |
+|---|---|---|
+| E14 | 3 of 3 | **part of what a shortcut seemed to leave unlearned comes back.** With the strongest shortcut the network keeps 0.53 of the sensitivity of its twin with the frame removed from the output, 0.66 with the last layer trained again (learned and not used), and 0.74 after a training three times as long (learned later): between 0.14 and 0.30 is still missing, depending on the task. At strength 1 almost nothing is missing after 90 epochs (0.99). The last layer trained again costs 0.03 of its own on the network with no shortcut |
+| E15 | 3 of 3 | **the threshold is where the proposition puts it.** In every task the generic machine overtakes the corrector once, between 14.1 and 19.3 columns of 28; in 4 tasks of 5 the predicted crossing is at most 1.6 columns away (median 0.2); in the fifth the proposition has no crossing in the range |
+| E16 | 2 of 3 | **a strong bias that is not an addend.** For the primary judge B = 0.48; right answers 75.2 with no opinion, 67.5 with it, 71.4 with a linear corrector, which gains 19 per cent of sensitivity where the proposition says 21. **Not confirmed (J2)**: it gives back 0.487 of the sensitivity lost, below the 0.5 written beforehand: the opinion costs more than what the trace lets one read, and the push is 1.7 times larger on the doubtful questions. Without criteria: Phi-3.5 mini B = 0.63, share given back 0.40; Qwen2.5 7B B = 0.04, share given back 0.30, with the push 8.5 times larger on the doubtful questions |
+
 Thirteen readings of data already collected, none of them a test (the last nine were added after the results of E6 to E9; the last three after those of E10):
 
 | | What | Result file |
@@ -136,7 +189,7 @@ Thirteen readings of data already collected, none of them a test (the last nine 
 | the theorem on people | on the 74 pairs of people and machines of turing-meter: with a bias of the size documented on asylum judges (B between 0.002 and 0.01) the best pair would grow by less than 0.1 per cent in the median; if half of a person's noise were a readable bias, by about 14 per cent. The bias of the people is not measured | `results/e4_private.json` |
 | the pairs at face value, on old data | the look at the resampled files of E8 that sized the expectations of E11 | `results/e8_informative_face.json` |
 | the turing of the pair, one factor and two addends | the theorem divided by what the judge is worth alone: Tu^2 = (1 + B)(q^2 + p). The factor is the bias cancelled; inside the sum, what the machine knows of the task and the private part of the judge. In d'^2 the parts simply add up, D^2 = d_m^2 + P (`cognitive_resonance.chart.pair_information`). On the three benches it gives the measured turings (1.34 against 1.33 with the partner, 1.32 against 1.33 with the blind machine, where the machine sees a quarter of the image). The same script measures the other way of removing the bias: a judge trained without it, with the soloist, gives more right answers than the judge with the partner in 25 pairs of 25 at every view, at a turing between 1.01 and 1.04 | `results/pair_factors.json` |
-| what a shortcut costs twice | on the files of E1: a network trained where the frame says something about the class, tested where it says nothing. Removing the frame at test gives back what the bias covered, not what the network did not learn from the image while it leaned on the frame: with the frame removed it keeps 0.94 of the sensitivity of the same network trained without shortcut at mu = 1, 0.80 at 1.5, 0.53 at 2, falling with mu in 5 tasks of 5 | `results/shortcut.json` |
+| what a shortcut costs twice | on the files of E1: a network trained where the frame says something about the class, tested where it says nothing. Removing the frame from the output gives back what the bias covered, not everything the network lost while it leaned on the frame (E14 tells what was learned and not used, and what is learned later): with the frame removed it keeps 0.94 of the sensitivity of the same network trained without shortcut at mu = 1, 0.80 at 1.5, 0.53 at 2, falling with mu in 5 tasks of 5 | `results/shortcut.json` |
 | what the branch leaves | on the results of E10: at both views the branch leaves the frame about the slope of its own log-likelihood ratio (0.38, 0.89, 1.51 against 0.36, 0.79, 1.33), whatever the machine sees | `results/e10_trace_left.json` |
 
 Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RESULTS.md).
@@ -157,6 +210,10 @@ Results, with the outcome of every criterion: [`results/RESULTS.md`](results/RES
   by which a machine is chosen.
 - `src/cognitive_resonance/chart.py`: the theorem of the three machines (the pair with
   the soloist, with the partner, and the band in which a blind corrector wins).
+- For protocols 2.4 to 2.6: `src/cognitive_resonance/readable.py` and `analysis/people_bias.py` (E13, with
+  `people_bias_second.py`, `people_audit.py`, `people_more.py` and `people_by_hand.py`, which prints every step for one
+  person), `analysis/nonadditive.py`, `gpu/shortcut.py` and `analysis/unlearned.py` (E14), `gpu/crossing.py` and
+  `analysis/crossing.py` (E15), `gpu/judge.py`, `src/cognitive_resonance/opinion.py` and `analysis/llm_judge.py` (E16).
 - `gpu/`: the scripts that train the networks and write the raw cues.
 - `tests/`: the identities, the estimators on data simulated from the model, the readers.
 - `results/`: the derived results. The raw cues (`results/raw/**/*.npz`) are not tracked.
@@ -214,6 +271,13 @@ uv run python analysis/yesno.py                # E12, results/e12_yesno.json
 uv run python analysis/trace_left.py           # what the branch leaves (after trace.py), results/e10_trace_left.json
 uv run python analysis/factors.py              # the turing of the pair in its parts, on the files of E1, E8 and E10, results/pair_factors.json
 uv run python analysis/shortcut.py             # what a shortcut costs twice, on the files of E1, results/shortcut.json
+uv run python analysis/people_more.py          # E13, the curve of personalisation, the threshold and the map (after download_confidence_db.py)
+uv run python analysis/people_by_hand.py       # E13, every step for one person, to redo it by hand
+uv run python analysis/nonadditive.py          # a push that depends on uncertainty, simulated
+uv run python analysis/manifest_later.py       # the manifests of E14 to E16 from the per-unit records
+uv run python analysis/unlearned.py            # E14, results/e14_unlearned.json
+uv run python analysis/crossing.py             # E15, results/e15_crossing.json
+uv run python analysis/llm_judge.py test       # E16, results/e16_llm_judge.json
 uv run python analysis/download_confidence_db.py   # the Confidence Database into data/confidence_db (CC0, 255 MB)
 uv run python analysis/people_bias.py          # E13, results/e13_people_bias.json
 uv run python analysis/people_bias_second.py   # E13 again, written from the protocol alone, results/e13_second_implementation.json

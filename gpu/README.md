@@ -88,3 +88,17 @@ An optional `rnd/out/deviations.json` (`{"bench": ["..."], ...}`) is copied into
   The fine-tuning keeps E3's halves, schedule and seeds, shared by the three recipes; the people's cue is
   `u_c = log((v_c + 0.5) / (n + 5))`; `somma` minimises the cross-entropy of `u + logits`, `mista` that plus the
   machine's own cross-entropy, `controllo` the machine's alone.
+
+## E14, E15 and E16 (protocols 2.5 and 2.6)
+
+```sh
+bash gpu/run.sh shortcut 2        # E14: 30 units (five tasks, three seeds, 30 and 90 epochs), about 90 minutes on an L4
+bash gpu/run.sh crossing 1        # E15: 25 units, seven widths of the generic machine each, about an hour
+pip install "transformers>=4.46,<5" pyarrow   # only for E16, inside the venv, after sourcing gpu/env.sh
+python -I gpu/judge.py "$RND/out/judge" Qwen/Qwen2.5-1.5B-Instruct validation     # the exploration, 1,414 questions
+bash gpu/judge_queue.sh           # the confirmation: the primary judge, then the other two when the card has room
+```
+
+`gpu/judge.py` downloads the questions (`cais/mmlu`) and the weights of the models into `$RND/hf`; it generates no
+text. The manifests of the three stages are written afterwards by `analysis/manifest_later.py`, from the per-unit
+records copied back with the cues.

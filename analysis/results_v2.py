@@ -626,10 +626,136 @@ def shortcut(d):
     ])
 
 
+def e13_more(d):
+    c = d["confirmation"]
+    pc = lambda x: f(100.0 * (x - 1.0), 1)                                                          # noqa: E731
+    rows = [[r["n"], r["personal"]["people"], pc(r["personal"]["median"]), pc(r["between"]["median"]),
+             pc(r["group"]["median"]), f(100 * r["share_personal_above_group"], 0) + "%"] for r in c["curve"]]
+    fixed = [[r["n"], r["personal"]["people"], pc(r["personal"]["median"]), pc(r["between"]["median"]),
+              pc(r["group"]["median"])] for r in c["curve_people_with_800"]]
+    th, mp = c["threshold"], c["map"]
+    return "\n\n".join([
+        "## E13, the curve of personalisation and what the definition leaves out (added after the confirmation run)",
+        "`analysis/people_more.py`: two readings, not tests. *The curve.* The corrector of a person learns from the n "
+        "trials just before the second half; the corrector of the group from the first halves of the other people of the "
+        "file; the one in between pulls the first towards the second. Gain in sensitivity of the graded judgment on the "
+        "second half, in per cent, medians over the people who have at least n trials to learn from; last column, in how "
+        "many of them the personal corrector is above the group one.",
+        table(["n", "people", "personal", "in between", "group", "personal above group"], rows),
+        "The same on the people who have at least 800 trials to learn from, so that the columns compare the same people:",
+        table(["n", "people", "personal", "in between", "group"], fixed),
+        "*The threshold and the map.* The best threshold learned on the first half and applied to the second: right "
+        f"answers {f(100 * th['accuracy_own']['median'], 1)} per cent with the person's own threshold and "
+        f"{f(100 * th['accuracy_best_threshold']['median'], 1)} with the learned one; mean change "
+        f"{f(100 * th['change']['mean'], 2)} points, up in {f(100 * th['share_up'], 0)} per cent of the people and down in "
+        f"{f(100 * th['share_down'], 0)}. A map from every step of the judgment to the log-odds measured on the first half: "
+        f"mean change {f(100 * mp['change']['mean'], 1)} points; with many steps the map is noisy "
+        f"({f(100 * mp['share_with_steps_out_of_order'], 0)} per cent of the people have steps out of order in it).",
+    ])
+
+
+def nonadditive(d):
+    rows = [[f(r["beta"], 2), "additive" if r["tau"] is None else f(r["tau"], 1), f(r["as_it_is"]["kept"], 3),
+             f(r["linear"]["kept"], 3), f(r["linear_gives_back"], 2), f(100 * r["as_it_is"]["right_clear"], 1),
+             f(100 * r["linear"]["right_clear"], 1), f(100 * r["as_it_is"]["right_doubtful"], 1),
+             f(100 * r["linear"]["right_doubtful"], 1)] for r in d["rows"]]
+    return "\n\n".join([
+        "## A bias that depends on how unsure the person is (a simulation, added after the reviews)",
+        "`analysis/nonadditive.py`: no data. The push is beta a k(h), with k(h) proportional to exp(-h^2 / (2 tau^2)) and "
+        "the same variance beta^2 for every tau; the linear corrector removes the slope of the judgment on the trace. "
+        "Sensitivity kept over that of the clean cue; right answers on the clear cases (|h| > 1.5) and on the doubtful "
+        "ones (|h| < 0.5).",
+        table(["beta", "tau", "kept as it is", "kept with the linear corrector", "share of the loss it gives back",
+               "clear cases, as it is", "corrected", "doubtful cases, as it is", "corrected"], rows),
+    ])
+
+
+def e14(d):
+    rows = [[r["epochs"], f(r["mu"], 2), r["networks"], f(r["kept_as_it_is"], 3), f(r["kept_out"], 3), f(r["kept_last"], 3),
+             f(r["kept_best"], 3), f"{f(r['kept_best_min_task'], 2)} to {f(r['kept_best_max_task'], 2)}"] for r in d["table"]]
+    ch = d["from_short_to_long_at_strongest"]
+    return "\n\n".join([
+        "## E14. What a shortcut leaves unlearned (protocol § 20)",
+        "`gpu/shortcut.py`, `analysis/unlearned.py`. The \"plus\" networks of E1 again, three seeds, trained for 30 and for "
+        "90 epochs with shortcuts of four strengths. Two corrections applied afterwards: the frame removed from the output, "
+        "and the last layer trained again where the frame says nothing (a logistic regression on the 192 features, fitted "
+        "on the validation presentations). \"Kept\" is the sensitivity over that of the network of the same task, seed "
+        "and length trained without the shortcut, with the frame removed from its output; the best is the higher of the two "
+        "corrections. Medians over the five tasks of the median over the seeds; last column, the lowest and the highest task. "
+        "The last layer trained again costs something of its own: on the network with no shortcut it keeps less than 1, "
+        "because it learns from fewer presentations.",
+        table(["epochs", "strength in training", "networks", "kept, as it is", "frame removed from the output",
+               "last layer trained again", "the best of the two", "tasks"], rows),
+        criteria(d["criteria"]),
+        f"From 30 to 90 epochs, at the strongest shortcut, the best of the two corrections changes by {f(ch['median'], 3)} "
+        "(median over the tasks).",
+    ])
+
+
+def e15(d):
+    rows = [[b["task"], b["seeds"], f(b["crossing_measured"], 1), f(b["crossing_predicted"], 1)] for b in d["by_task"]]
+    widths = d["widths"]
+    line = [[w, f(d["median_measured_by_width"][str(w)], 3), f(d["median_predicted_by_width"][str(w)], 3)] for w in widths]
+    return "\n\n".join([
+        "## E15. The threshold crossed (protocol § 21)",
+        "`gpu/crossing.py`, `analysis/crossing.py`. Judge, trained corrector, frames and seeds are those of E8; the generic "
+        "machine is trained again at seven widths between the half and the whole image. For every width, the pair of the "
+        "judge with the generic machine minus the pair of the judge with the corrector, at the best weights: measured, and "
+        "predicted by the proposition from the measures on the judge and on the generic machine alone. Medians over the units.",
+        table(["columns the machine sees (of 28)", "measured", "predicted"], line),
+        "The width at which the two pairs cross, task by task on the median of the seeds:",
+        table(["task", "seeds", "measured crossing", "predicted crossing"], rows),
+        criteria(d["criteria"]),
+    ])
+
+
+def e16(d):
+    names = {"qwen2.5-1.5b-instruct": "Qwen2.5 1.5B (primary)", "phi-3.5-mini-instruct": "Phi-3.5 mini",
+             "qwen2.5-7b-instruct": "Qwen2.5 7B"}
+    pc = lambda x: f(100 * x, 1)                                                                     # noqa: E731
+    rows, few = [], []
+    for k, j in d["judges"].items():
+        i = j["intervals"]
+        rows.append([names.get(k, k), j["questions"], f"{f(j['b'], 2)} ({f(i['b']['lo'], 2)} to {f(i['b']['hi'], 2)})",
+                     f(j["d_clean"], 2), f(j["kept_as_it_is"], 3), f(j["kept_corrected"], 3),
+                     f"{f(j['gives_back'], 2)} ({f(i['gives_back']['lo'], 2)} to {f(i['gives_back']['hi'], 2)})",
+                     f(j["push"]["most_doubtful_over_clearest"], 2)])
+        few.append([names.get(k, k), pc(j["right_clean"]), pc(j["right_as_it_is"]), pc(j["right_corrected"]),
+                    pc(j["right_clean_with_threshold"]), pc(j["right_as_it_is_with_threshold"]),
+                    pc(j["right_corrected_with_threshold"]), pc(j["right_when_opinion_is_right"]),
+                    pc(j["right_when_opinion_is_wrong"])])
+    p = d["judges"].get("qwen2.5-1.5b-instruct")
+    parts = [
+        "## E16. A judge with a bias nobody planted (protocol § 22)",
+        "`gpu/judge.py`, `analysis/llm_judge.py`. A language model answers two-option questions of MMLU with a known answer, "
+        "three times each: with no opinion, with whoever asks saying \"I think the answer is A\", and saying B. The trace "
+        "is the opinion it meets, drawn at random. The corrector learns the slope of the judgment on the trace on the first "
+        "half of the questions and removes it on the second; \"kept\" is the sensitivity over that of the same judge with "
+        "no opinion, on the same questions; the share given back is how much of the sensitivity lost returns. Intervals at "
+        "95 per cent, resampling the questions.",
+        table(["judge", "questions", "B", "sensitivity with no opinion", "kept, as it is", "kept, corrected",
+               "share given back", "push, most doubtful third over clearest"], rows),
+        "Right answers out of a hundred on the second half: at threshold zero, and with the threshold learned on the first "
+        "half (added after the exploration); last two columns, the judge as it is when the opinion it meets is right and "
+        "when it is wrong.",
+        table(["judge", "no opinion", "as it is", "corrected", "no opinion, threshold", "as it is, threshold",
+               "corrected, threshold", "opinion right", "opinion wrong"], few),
+    ]
+    if "criteria" in d:
+        parts.append(criteria(d["criteria"]))
+    if p:
+        parts.append("How many judgments the corrector needs (primary judge; medians over 200 draws):")
+        parts.append(table(["judgments", "kept, corrected", "share given back"],
+                           [[r["judgments"], f(r["kept_corrected"], 3), f(r["gives_back"], 2)] for r in p["with_few_judgments"]]))
+    return "\n\n".join(parts)
+
+
 SECTIONS = (("identity.json", identity), ("e6_trust_from_e2ter.json", e6_old),
             ("e6_design_from_e2ter.json", design_old), ("e6_trust.json", e6), ("e6_design.json", design),
             ("chart_from_e2.json", chart_old), ("e6_push.json", push), ("e8_chart.json", e8), ("e8_judgments.json", judgments), ("e8_informative.json", informative),
             ("e7_views.json", e7), ("chart_from_e7.json", chart_e7), ("e4_private.json", private_people),
             ("e9_shape.json", e9), ("e8_informative_face.json", informative_face), ("e10_trace.json", trace), ("e10_trace_left.json", trace_left),
             ("e12_yesno.json", yesno), ("pair_factors.json", pair_factors), ("e13_people_bias.json", e13),
-            ("e13_people_audit.json", e13_audit), ("shortcut.json", shortcut))
+            ("e13_people_audit.json", e13_audit), ("e13_people_more.json", e13_more),
+            ("shortcut.json", shortcut), ("nonadditive.json", nonadditive), ("e14_unlearned.json", e14),
+            ("e15_crossing.json", e15), ("e16_llm_judge.json", e16))

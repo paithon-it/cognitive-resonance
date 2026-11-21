@@ -4,33 +4,84 @@
 > traduzione del README; il protocollo è nato in italiano (`PROTOCOL.it.md`), codice e
 > risultati sono in inglese.
 
-**Quando due menti sbagliano in versi opposti, i loro errori si cancellano. Fin dove
-arriva la coppia, e si comporta come un circuito risonante?**
+**Una macchina costruita su chi la usa, che conosce i suoi errori e sbaglia al contrario:
+la coppia vale molto più dei due? Era l'ipotesi. Non ha retto.**
+
+Contro l'errore di una persona una macchina può fare una cosa sola: cancellare la parte che
+si legge da una traccia. Niente, in ciò che è stato misurato qui, oscilla o viene
+amplificato, e il nome del repository è il nome dell'ipotesi. Restano un'unità per dire
+quanto c'è da cancellare, la misura di quanto costa impararlo, e un banco di piccole reti
+che controlla l'algebra. Sono le misure dell'articolo di paithon.it
+[*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/)
+(doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)).
 
 È il seguito di [turing-meter](https://github.com/paithon-it/turing-meter) e del suo
-primo esperimento, `angle-between-errors`, le misure dell'articolo di paithon.it
+primo esperimento, `angle-between-errors`, le misure dell'articolo
 [*Intelligenza apparente*](https://paithon.it/intelligenza-apparente/)
 (doi:[10.5281/zenodo.24107649](https://doi.org/10.5281/zenodo.24107649)). Lì l'angolo
 `phi` fra gli errori di una persona e di una macchina stava fra 59 e 81 gradi, e la
-regione oltre i 90 gradi era rimasta inesplorata. Qui ci si va.
+regione oltre i 90 gradi era rimasta inesplorata. La prima versione di questo progetto ci
+è andata leggendo la coppia come un circuito risonante («L'identità», più sotto). Come
+algebra quella lettura è esatta; non dà una macchina che sbaglia al contrario di una
+persona dove non ne legge l'errore.
 
-> Stato: **versione 2, corse fatte** (19 novembre 2026). Da E0 a E5 le racconta l'articolo
-> di paithon.it [*Risonanza cognitiva*](https://paithon.it/risonanza-cognitiva/)
-> (doi:[10.5281/zenodo.24140355](https://doi.org/10.5281/zenodo.24140355)). Quattro
-> esperimenti nuovi, da E6 a E9, sono stati **registrati prima delle corse**: il protocollo
-> 2.1 è stato pubblicato in questo repository prima di ogni addestramento, su cinque semi
-> che nessuna corsa precedente ha usato; la versione 2.2 ha aggiunto una lettura di E6
-> prima che un suo file esistesse. Dei loro 29 criteri, **25 passano e 4 no** (tabella
-> più sotto). Il protocollo sta in [`PROTOCOL.it.md`](PROTOCOL.it.md) (traduzione inglese
-> [`PROTOCOL.md`](PROTOCOL.md)); ciò che è cambiato dopo una corsa sta nella sua sezione
-> «Deviazioni».
+> Stato: **protocollo 2.6** (21 novembre 2026). Le attese di ogni prova sono scritte e
+> spinte in questo repository prima della sua esecuzione; il protocollo sta in
+> [`PROTOCOL.it.md`](PROTOCOL.it.md) (traduzione inglese [`PROTOCOL.md`](PROTOCOL.md)), e
+> ciò che è cambiato dopo una corsa sta nella sua sezione «Deviazioni». Le scrive lo stesso
+> sistema che poi esegue le prove, pochi minuti prima, e sul banco con soglie prese da
+> corse precedenti sugli stessi compiti: impediscono di scegliere una soglia dopo, non sono
+> preregistrazioni nel senso pieno. Codice, analisi e revisioni vengono da modelli
+> linguistici; nessun lettore umano ha ancora controllato questo lavoro.
 >
-> Il 20 novembre si sono aggiunte tre prove sullo stesso banco (E10-E12, protocollo 2.3) e la
-> prima su persone misurate una per una (E13, protocollo 2.4), sui dati pubblici del
-> Confidence Database: su 1.968 persone il pregiudizio che si legge dalla storia delle prove
-> vale in mediana 0,015 del rumore (sul banco ne avevamo piantato circa 0,7), e un correttore
-> che non vede lo stimolo rende l'1,1 per cento di sensibilità. Le tabelle complete e
-> aggiornate stanno nel [README inglese](README.md) e in [`results/RESULTS.md`](results/RESULTS.md).
+> | Prove | Protocollo | Criteri che passano |
+> |---|---|---|
+> | Da E6 a E9, sul banco | 2.1 e 2.2, 19 novembre | 25 su 29 |
+> | Da E10 a E12, sul banco | 2.3, 20 novembre | 12 su 15 |
+> | E13, su persone | 2.4, 20 novembre | 2 su 3 |
+> | E14 ed E15, sul banco | 2.5, 21 novembre | 3 su 3 e 3 su 3 |
+> | E16, un modello linguistico come giudice | 2.6, 21 novembre | 2 su 3 |
+
+**I nomi.** L'articolo chiama *macchina generica* ciò che il codice e le tabelle più
+vecchie chiamano solista (`M`), *macchina su misura* il compagno (`Mramo`), *correttore*
+il correttore bendato (`Mblind`), e *giudice* la rete che sta al posto della persona.
+
+## In breve
+
+- **Dalla storia delle scelte, nessun guadagno misurabile.** Su 1.968 persone del
+  Confidence Database il pregiudizio che si legge dalla storia delle loro prove vale in
+  mediana 0,015 del resto del rumore. Toglierlo lascia le risposte giuste dov'erano
+  (74,7 per cento prima, 74,8 dopo). Il giudizio graduato guadagna l'1,1 per cento
+  di sensibilità, un effetto della scala a pochi gradini. È un limite inferiore: una traccia
+  sola e debole, compiti di laboratorio, nessuna macchina accanto (E13).
+- **Conoscere una persona costa dati.** Un correttore imparato dalle prove di una persona
+  toglie il 2,7 per cento di sensibilità con 50 prove, non dà niente con 100, e
+  raggiunge quello imparato dalle altre persone solo a 800 (`results/e13_people_more.json`).
+- **Dove il pregiudizio è forte, correggere conta e non basta.** Un modello linguistico
+  aperto e piccolo, davanti a 6.000 domande a due opzioni, segue l'opinione di chi chiede:
+  B = 0,48, e le risposte giuste scendono dal 75,2 al 67,5 per cento. Un correttore che
+  conosce solo l'opinione le riporta al 71,4 e restituisce 0,49 della sensibilità persa,
+  dove l'attesa diceva almeno la metà (E16; Phi-3.5 mini: B 0,63, quota restituita 0,40; Qwen2.5 7B: B 0,04, quota restituita 0,30).
+- **Che cosa può dare una macchina costruita su chi la usa.** Restituisce la parte di ciò
+  che la persona sa, e la macchina no, che il pregiudizio copriva, e niente di più
+  (`cognitive_resonance.chart.pair_information`). È l'algebra delle variabili soppressore;
+  il banco controlla che l'addestramento arrivi dove dice l'algebra.
+- **Dove il correttore smette di vincere.** Accanto al giudice un correttore che del compito
+  non sa niente batte la macchina generica finché questa vede fra 14 e 19 colonne su 28; la
+  proposizione mette l'incrocio a 0,2 colonne di distanza, in mediana (E15).
+- **Che cosa sia un pregiudizio lo decide la coppia.** Una traccia che dice qualcosa di vero
+  merita un peso che cresce con ciò che la macchina vede; solo l'eccesso è pregiudizio, e una
+  macchina che lo toglie tutto fa danno (E10, E11).
+- **Che cosa lascia una scorciatoia forte.** Con la scorciatoia più forte, togliere la cornice
+  dall'uscita tiene 0,53 della sensibilità della gemella senza scorciatoia; riaddestrare
+  l'ultimo strato 0,66; addestrare tre volte più a lungo 0,74. A forza 1 torna quasi
+  tutto (0,99) (E14).
+- **Errori opposti.** Errori in controfase sono una causa comune nascosta che entra con
+  segni opposti: una macchina può costruirli solo sulla parte dell'errore che legge, e lì
+  costruirli vuol dire correggere.
+
+Le tabelle complete e aggiornate stanno nel [README inglese](README.md) e in
+[`results/RESULTS.md`](results/RESULTS.md).
 
 ## L'identità
 

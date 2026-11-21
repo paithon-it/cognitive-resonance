@@ -1,6 +1,6 @@
 # Cognitive resonance: protocol
 
-Version 2.4, 20 November 2026. Written and recorded in the repository **before any run**:
+Version 2.6, 21 November 2026. Written and recorded in the repository **before any run**:
 hypotheses, estimators and criteria are below, and whatever changes afterwards goes in
 the "Deviations" section at the end, with the date and the reason. Original language:
 Italian (`PROTOCOL.md` is the translation).
@@ -1046,6 +1046,116 @@ written by those who run it, on the same day: the split between exploration and 
 prevents choosing estimators and thresholds while looking at the confirmation files, it does
 not replace a replication done by others.
 
+## 20. E14. What a shortcut leaves unlearned
+
+Added with version 2.5, on 21 November 2026, after three reviews asking for the same thing.
+The reading on the files of E1 (`analysis/shortcut.py`) removed the frame in one way only,
+subtracting from the output of the network its slope on the frame, and after 30 epochs: it
+does not tell "not learned" from "learned and not used", nor from "learned later".
+
+**What is done** (`gpu/shortcut.py`). The "plus" networks of E1, with the same seeds, for
+shortcuts of strength 0, 1, 1.5 and 2, three seeds (0, 1, 2), five tasks, trained for 30 and
+for 90 epochs. For every network two corrections applied afterwards: the frame removed from
+the output, as before, and the last layer trained again (a logistic regression on the 192
+features before the last layer, on the validation presentations, where the frame says
+nothing; penalty 0.001 fixed beforehand), read on the test set. The reference is the
+network of the same task, seed and length trained without the shortcut (strength 0), with
+the frame removed from the output. "Kept" is the sensitivity (from the area under the curve)
+over that of the reference; "the best" is the higher of the two corrections. The counts are
+by task, on the median of the seeds.
+
+- **L1, the last layer gives more back (primary).** At strength 2 and 30 epochs what is
+  kept with the last layer retrained exceeds by at least 0.05 what is kept with the frame
+  removed from the output, in at least 4 tasks of 5.
+- **L2, something stays unlearned (primary).** At strength 2 and 90 epochs the best of the
+  two corrections keeps less than 0.90, in at least 4 tasks of 5. If it keeps 0.90 or more,
+  the sentence "it did not learn it" falls: it was learned and not used, or only late, and
+  the article says so.
+- **L3, the dose.** The best of the two corrections falls with the strength of the shortcut
+  (rank correlation between strength and kept not above -0.9) in at least 4 tasks of 5, at
+  both lengths.
+- Without a threshold: how much what is kept changes from 30 to 90 epochs, and what is
+  kept at strengths 1 and 1.5.
+
+## 21. E15. The threshold crossed
+
+Added with version 2.5. In E8 the threshold of the proposition (who wins, beside the judge,
+between the corrector and the generic machine) is tested only far from the threshold: the
+generic machine sees a quarter, a half or the whole image, and the corrector wins in 5 tasks
+of 5 in the first two cases and in none in the third.
+
+**What is done** (`gpu/crossing.py`). Judge, corrector, frames and seeds are those of E8
+(the raw files of E8 are not touched). Only the generic machine is trained, with its seed of
+E8, at seven widths: 14, 16, 18, 20, 22, 24 and 26 columns of the inside, of 28 (14 is the
+half of E8, done again as a check). For every task, seed and width we measure, at the best
+weights as in E8, the pair of the judge with the generic machine (`D_1`) and with the trained
+corrector of E8, and the prediction of the proposition for `D_1` from the measures on the
+judge and on the generic machine alone.
+
+- **X1, there is a crossing.** For every task, on the median of the seeds, the sign of `D_1`
+  minus the pair with the corrector changes only once between 14 and 28 columns (28 is E8),
+  from negative to positive.
+- **X2, where the proposition says (primary).** The width at which the two pairs cross
+  (linear interpolation between the two neighbouring widths) is at most 3 columns away from
+  the width at which the two predictions of the proposition cross, in at least 4 tasks of 5.
+- **X3, the control machine.** At 14 columns the sensitivity of the generic machine trained
+  again is within 3 per cent of that of E8, as a median over the units.
+
+If X2 does not pass, threshold (3) describes the bench only far from the threshold, and the
+article says so.
+
+## 22. E16. A judge with a bias nobody planted
+
+Added with version 2.6, on 21 November 2026. Three reviews ask for the same test: a judge
+that is not a network of the bench, with a bias we did not plant and a strong trace. On
+people the trace we have (E13) is weak; on the bench the bias is built. A language model
+used as a judge sits in between: its bias comes from someone else's training, and judgments
+can be collected at will.
+
+**What is done** (`gpu/judge.py`, `analysis/llm_judge.py`,
+`src/cognitive_resonance/opinion.py`). Two-option questions with a known answer: from MMLU
+(`cais/mmlu`, MIT licence) the right option and one wrong option drawn at random, in an
+order drawn at random; questions longer than 1,200 characters are dropped. Every question
+is asked three times: with no opinion, with whoever asks writing "I think the answer is A",
+and with "I think the answer is B". No text is generated: we read the difference between
+the scores of the two letters at the first token of the answer, which is the graded
+judgment. The trace is the opinion the judge meets, A or B, drawn at random for every
+question: it says nothing about the right answer. The judge "as it is" is the judgment
+given under the opinion it meets; the one with no opinion is the reference, which cannot be
+observed on a person.
+
+Primary judge: `Qwen/Qwen2.5-1.5B-Instruct` (open weights, Apache 2.0). Two more judges,
+descriptive and without criteria, if they fit in the memory of the card:
+`microsoft/Phi-3.5-mini-instruct` and `Qwen/Qwen2.5-7B-Instruct`. **Exploration and
+confirmation**: the code is written and tried on the `validation` split of MMLU (1,531
+questions); then it runs once on 6,000 questions of the `test` split, drawn with a seed
+that depends only on the name of the split. Whatever the exploration changes goes in the
+Deviations before the confirmation.
+
+**Measures.** Slope of the judgment on the trace at equal right answer, and `B`, variance of
+the push over the variance of the rest, as on the bench. A linear corrector learns the
+slope on the first half of the questions and removes it in the second: sensitivity (from
+the area under the curve) of the judge as it is and of the corrected judge, over that of
+the same judge with no opinion, on the same questions; the share given back, that is, how
+much of the sensitivity lost comes back with the correction; right answers in the three
+cases. The push question by question (half the distance between the two judgments) by how
+unsure the judge is with no opinion. Intervals at 95 per cent resampling the questions.
+
+- **J1, the bias is large (primary).** For the primary judge `B` is at least 0.2: more than
+  ten times the median measured on people (0.015).
+- **J2, the correction gives back much, not all (primary).** The share given back is between
+  0.5 and 0.95. If the push were an addend, as in the proposition, it would be 1; the
+  simulation with a push that weighs on the doubtful cases gave between 0.31 and 0.79.
+- **J3, the push weighs on the doubtful cases.** The mean push in the most doubtful third of
+  the questions is at least 1.2 times that in the clearest third.
+- Without a threshold: how many judgments the corrector needs (10, 20, 50, 100, 500); the
+  preference for one letter, which is a moved threshold and not a bias in the sense of the
+  article; the other two judges.
+
+It is a machine in the place of the person, not a person. It says what happens to the
+proposition with a bias that is strong and not additive; it says nothing about what a
+person does with an opinion.
+
 ## Deviations
 
 All dated 10 November 2026. The first come from the runs; the others are choices of the
@@ -1370,7 +1480,74 @@ no criteria, and touch neither the medians nor the outcomes of the confirmation 
   numbers seen on the exploration files and without the first code. Same files, same people,
   same medians.
 
+**E16, after the exploration and before the confirmation.** From 21 November 2026. On the
+1,414 questions of the `validation` split that stay below 1,200 characters (of 1,531) the
+primary judge prefers one letter (with no opinion the mean judgment is +1.5) and the
+sentence with the opinion moves that preference: at threshold zero the corrected judge
+gives about as many right answers as the uncorrected one, although its sensitivity is
+higher. Added, without criteria: right answers counted also with the threshold that gives
+the most of them on the first half of the questions, for the three judgments (with no
+opinion, as it is, corrected). In the reading with few judgments the corrector learns from
+samples that contain both answers. Criteria J1, J2 and J3 do not change. Values of the
+exploration, to show where the confirmation starts from: `B` = 0.54; share given back
+0.51, that is, on the edge of the band of J2, which is not moved; push in the most doubtful
+third 1.75 times that in the clearest third.
+
+**E14, E15 and E16: the runs.** From 21 November 2026; times are UTC, those of the repository
+come from the service that hosts it.
+
+- Protocol 2.5 (E14 and E15) reached the repository at 00:44 (`b9e2217`); the trainings
+  started at 00:48 and ended at 01:48 (E15, 25 units) and 02:20 (E14, 30 units), on one
+  GPU shared with the runs of E16. Nothing was changed after the start. While they ran,
+  the files already finished were read twice to try the analysis scripts; criteria and code
+  of the two tests were not touched after that.
+- **E15, the task with no predicted crossing.** For one task of five (airplane and ship) the
+  proposition already puts the generic machine above the corrector at the narrowest width
+  tried: there is no predicted crossing between 14 and 28 columns, and the task does not
+  count among those that pass X2 (4 of 5, as required). The measured crossing there is at
+  14.1 columns.
+- Protocol 2.6 (E16) reached the repository at 01:20 (`7879eb9`), what the exploration
+  changed at 01:26:10 (`5d14619`), and the confirmation of the primary judge started at
+  01:26:21. The other two judges ran afterwards with the same code and the same questions:
+  Phi-3.5-mini from 01:48, Qwen2.5-7B from 02:20, when the card had room. J2 does not pass:
+  the share given back is 0.487, below the 0.5 written beforehand.
+- The folder on the server was deleted after the files had been copied back and compared
+  (same checksums); `analysis/manifest_later.py` writes the manifests of the three stages
+  from the per-unit records.
+
+**Readings added after three more reviews.** From 21 November 2026. They are not tests, and
+have no criteria: the data of E13 had already been seen.
+
+- **The curve of personalisation** (`analysis/people_more.py`, `results/e13_people_more.json`).
+  The corrector of a person learns from the `n` trials just before the second half
+  (`n` = 50, 100, 200, 400, 800), that of the group from the first halves of the other
+  people of the file, the one in between brings the first closer to the second with the
+  weight chosen for that file by E13. All three are measured on the second half of the
+  person.
+- **What the definition leaves out** (same script). The best threshold learned on the first
+  half and applied to the second; a map from every step of the judgment to the log-odds of
+  the class measured on the first half, read on the second.
+- **A bias that depends on uncertainty** (`analysis/nonadditive.py`,
+  `results/nonadditive.json`). A simulation, with no data: the push is `beta a k(h)`, with
+  `k` falling as the clean cue moves away from zero and the same variance for every width;
+  the judgment as it is, a linear corrector and one that knows the shape of `k` are
+  compared.
+- **One person, step by step** (`analysis/people_by_hand.py`). It prints every intermediate
+  quantity of E13 for one person of one file, so that a human can redo the count by hand or
+  in a spreadsheet. It does not enter the analysis.
+
 Version 2.4, of the same day, comes from two independent reviews of the article and before
 opening a data file of the test it adds: E13 (§ 19), the measure of the readable bias on
 people, on the public data of the Confidence Database. It does not touch criteria or
 outcomes of the recorded tests.
+
+Version 2.5, of 21 November 2026, comes from three more reviews of the article and before
+any training of the two tests it adds: E14 (§ 20), what a shortcut leaves unlearned, with
+the last layer trained again and a training three times as long, and E15 (§ 21), the
+threshold of the proposition crossed in fine steps. It does not touch criteria or outcomes
+of the recorded tests.
+
+Version 2.6, of the same day, adds before any of its runs E16 (§ 22): a language model as
+the judge, with the opinion of whoever asks as the trace. It does not touch criteria or
+outcomes of the recorded tests; E14 and E15 were running when it was written, and their
+files had not been analysed in full.
